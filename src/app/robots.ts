@@ -24,6 +24,8 @@ export default function robots(): MetadataRoute.Robots {
         ],
         disallow: [
           "/*/quizzes/*/play",
+          "/*/results",
+          "/*/results/",
           "/*/checkout",
           "/*/checkout/",
           "/*/unsubscribe",

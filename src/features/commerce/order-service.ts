@@ -69,6 +69,16 @@ export async function createOrder(
     throw new Error("Quiz associado à sessão não encontrado.");
   }
 
+  const expectedProductCode = sessionRecord.quiz_versions?.quizzes?.product_code;
+  const normalizedInputCode = input.productCode.toUpperCase().replace(/^PROD_/, "");
+  if (
+    expectedProductCode &&
+    normalizedInputCode !== expectedProductCode &&
+    !normalizedInputCode.startsWith("BUNDLE")
+  ) {
+    throw new Error(`Produto não encontrado para o mercado ou incompatível com o quiz: ${input.productCode}`);
+  }
+
   // 2. Resolve approved editorial price on server (reject client price injection)
   const { data: priceRecord, error: priceError } = await supabase
     .from("product_prices")
