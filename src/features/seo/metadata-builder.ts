@@ -1,8 +1,7 @@
 import type { Metadata } from "next";
 import { type Locale, locales } from "@/lib/i18n/config";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
 
 export interface BuildMetadataInput {
   locale: Locale;
@@ -58,7 +57,8 @@ export function buildPageMetadata({
       description,
       url: canonicalUrl,
       siteName: "Meqyro",
-      locale: locale === "pt" ? "pt_BR" : locale === "en" ? "en_US" : locale === "es" ? "es_ES" : "fr_FR",
+      locale:
+        locale === "pt" ? "pt_BR" : locale === "en" ? "en_US" : locale === "es" ? "es_ES" : "fr_FR",
       type: "website",
       images: [
         {

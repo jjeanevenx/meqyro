@@ -1,10 +1,5 @@
 export type CareerFitDimension =
-  | "TECHNICAL"
-  | "MANAGERIAL"
-  | "CREATIVE"
-  | "AUTONOMOUS"
-  | "SECURITY"
-  | "CAUSE";
+  "TECHNICAL" | "MANAGERIAL" | "CREATIVE" | "AUTONOMOUS" | "SECURITY" | "CAUSE";
 
 export interface CareerFitItem {
   id: string;

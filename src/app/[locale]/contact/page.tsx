@@ -28,7 +28,8 @@ export async function generateMetadata({
     locale,
     path: "/contact",
     title: titles[locale as Locale],
-    description: "Canal oficial de atendimento, dúvidas sobre pagamentos, relatórios e privacidade.",
+    description:
+      "Canal oficial de atendimento, dúvidas sobre pagamentos, relatórios e privacidade.",
   });
 }
 
@@ -50,11 +51,10 @@ export default async function ContactPage({ params }: ContactPageProps) {
           >
             <ArrowLeft size={14} /> Voltar à página inicial
           </Link>
-          <h1 className="text-3xl font-serif font-bold text-stone-900">
-            Fale com a Meqyro
-          </h1>
+          <h1 className="text-3xl font-serif font-bold text-stone-900">Fale com a Meqyro</h1>
           <p className="text-sm text-stone-600 mt-2">
-            Estamos à disposição para ajudar com pagamentos, acesso a relatórios e solicitações de privacidade.
+            Estamos à disposição para ajudar com pagamentos, acesso a relatórios e solicitações de
+            privacidade.
           </p>
         </div>
 
@@ -106,7 +106,9 @@ export default async function ContactPage({ params }: ContactPageProps) {
               <span>Garantia de 7 Dias e Cancelamento</span>
             </div>
             <p className="text-xs text-stone-600 leading-relaxed">
-              Em conformidade com o Código de Defesa do Consumidor e padrões internacionais de comércio eletrônico, você possui até 7 dias corridos após a compra para solicitar reembolso integral sem complicações enviando seu e-mail de compra para nosso suporte.
+              Em conformidade com o Código de Defesa do Consumidor e padrões internacionais de
+              comércio eletrônico, você possui até 7 dias corridos após a compra para solicitar
+              reembolso integral sem complicações enviando seu e-mail de compra para nosso suporte.
             </p>
           </div>
         </div>

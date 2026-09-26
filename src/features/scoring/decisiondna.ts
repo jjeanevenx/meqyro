@@ -1,8 +1,4 @@
-export type DecisionStyleType =
-  | "ANALYTICAL"
-  | "INTUITIVE"
-  | "PRAGMATIC"
-  | "COLLABORATIVE";
+export type DecisionStyleType = "ANALYTICAL" | "INTUITIVE" | "PRAGMATIC" | "COLLABORATIVE";
 
 export interface DecisionDnaItem {
   id: string;

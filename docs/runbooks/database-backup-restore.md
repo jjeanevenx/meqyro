@@ -8,6 +8,7 @@
 ## 1. Estratégia de Backup
 
 O banco de dados PostgreSQL opera na infraestrutura gerenciada Supabase com:
+
 - **Snapshots diários automatizados** com retenção de 30 dias.
 - **Point-in-Time Recovery (PITR)** habilitado com intervalo de WALs de até 7 dias.
 

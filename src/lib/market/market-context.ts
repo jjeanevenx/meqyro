@@ -41,12 +41,36 @@ export function resolveMarketContext(input: {
   market?: string;
   source?: MarketSource;
 }): MarketContext {
-  const country = input.country?.toUpperCase() ?? (input.locale === "pt" ? "BR" : "US");
-  const market = isMarket(input.market) ? input.market : marketForCountry(country);
+  // Se o usuário definiu explicitamente um market via cookie, usar esse
+  if (input.market && isMarket(input.market)) {
+    const country = input.country?.toUpperCase() ?? input.market;
+    return {
+      locale: input.locale,
+      country,
+      source: "user",
+      ...marketDefinitions[input.market],
+    };
+  }
+
+  // Se há um país fornecido (via geolocation/edge), mapear para mercado
+  if (input.country) {
+    const country = input.country.toUpperCase();
+    const market = marketForCountry(country);
+    return {
+      locale: input.locale,
+      country,
+      source: input.source ?? "edge",
+      ...marketDefinitions[market],
+    };
+  }
+
+  // Sem informação de país: padrão para US (mercado principal)
+  // NÃO usar locale como fallback para country - locale controla apenas idioma
+  const market = "US";
   return {
     locale: input.locale,
-    country,
-    source: input.source ?? (input.market ? "user" : "locale-fallback"),
+    country: "US",
+    source: "locale-fallback",
     ...marketDefinitions[market],
   };
 }

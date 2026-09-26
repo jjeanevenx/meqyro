@@ -3,13 +3,17 @@ import { notFound } from "next/navigation";
 import { cookies } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft, Share2, Copy, Sparkles, MessageCircle } from "lucide-react";
-import { isLocale, locales } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { resolveMarketContext } from "@/lib/market/market-context";
 import { getProtectedResult } from "@/features/results/result-service";
 import { ResultView } from "@/components/patterns/result-view";
 import { ButtonLink } from "@/components/ui/button-link";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { getSiteUrl } from "@/lib/config/env";
+
+export const dynamic = "force-dynamic";
 
 const VALID_SLUGS = [
   "brainrank",
@@ -25,15 +29,6 @@ type QuizSlug = (typeof VALID_SLUGS)[number];
 
 function isValidSlug(slug: string): slug is QuizSlug {
   return (VALID_SLUGS as readonly string[]).includes(slug);
-}
-
-export function generateStaticParams() {
-  return locales.flatMap((locale) =>
-    VALID_SLUGS.map((slug) => ({
-      locale,
-      slug,
-    })),
-  );
 }
 
 export async function generateMetadata({
@@ -65,6 +60,9 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
   if (!isLocale(locale)) notFound();
   if (!isValidSlug(slug)) notFound();
 
+  const safeLocale: Locale = locale === "en" || locale === "es" || locale === "fr" ? locale : "pt";
+  const dict = getDictionary(safeLocale);
+
   const cookieStore = await cookies();
   const tokenFromCookie = cookieStore.get(anonymousSessionCookie)?.value;
   const sessionToken = query.token ?? tokenFromCookie;
@@ -77,25 +75,25 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
     source: marketCookie ? "user" : "locale-fallback",
   });
 
+  const quizInfo = dict.quizzes[slug] ?? dict.quizzes.brainrank;
+
   if (!sessionId || !sessionToken) {
     return (
       <main className="min-h-screen bg-stone-50 py-16 px-4">
         <div className="max-w-md mx-auto text-center space-y-6">
           <h1 className="text-2xl font-serif font-bold text-stone-900">
-            Nenhum resultado recente encontrado
+            {dict.resultView.noResultFound}
           </h1>
-          <p className="text-stone-600 text-sm">
-            Para ver seus resultados e pontuações, inicie ou conclua o desafio.
-          </p>
+          <p className="text-stone-600 text-sm">{dict.common.loading}</p>
           <ButtonLink href={`/${locale}/quizzes/${slug}/play`} variant="primary">
-            Iniciar {slug.replace(/-/g, " ").toUpperCase()}
+            {dict.resultView.startQuizCta}
           </ButtonLink>
           <div>
             <Link
               href={`/${locale}/quizzes/${slug}`}
               className="text-xs text-stone-500 hover:text-stone-900 inline-flex items-center gap-1"
             >
-              <ArrowLeft size={14} /> Voltar à página do desafio
+              <ArrowLeft size={14} /> {dict.common.back}
             </Link>
           </div>
         </div>
@@ -116,21 +114,28 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
       <main className="min-h-screen bg-stone-50 py-16 px-4">
         <div className="max-w-md mx-auto text-center space-y-6">
           <h1 className="text-2xl font-serif font-bold text-stone-900">
-            Sessão expirada ou não encontrada
+            {dict.resultView.noResultFound}
           </h1>
           <p className="text-stone-600 text-sm">
-            {err instanceof Error ? err.message : "Não foi possível carregar seu resultado."}
+            {err instanceof Error ? err.message : dict.common.error}
           </p>
           <ButtonLink href={`/${locale}/quizzes/${slug}/play`} variant="primary">
-            Fazer um novo teste
+            {dict.resultView.startQuizCta}
           </ButtonLink>
         </div>
       </main>
     );
   }
 
-  const shareText = `Fiz o desafio ${slug.replace(/-/g, " ").toUpperCase()} no Meqyro! Descubra também seus pontos fortes:`;
-  const shareUrl = `https://meqyro.com/${locale}/quizzes/${slug}?ref=${sessionId.slice(0, 8)}`;
+  const siteUrl = getSiteUrl();
+  const shareText = {
+    pt: `Fiz o desafio ${quizInfo.name} no Meqyro! Descubra também seus pontos fortes:`,
+    en: `I took the ${quizInfo.name} challenge on Meqyro! Discover your strengths too:`,
+    es: `¡Hice el desafío ${quizInfo.name} en Meqyro! Descubre tus puntos fuertes:`,
+    fr: `J'ai passé le test ${quizInfo.name} sur Meqyro ! Découvrez aussi vos points forts :`,
+  }[safeLocale];
+
+  const shareUrl = `${siteUrl}/${locale}/quizzes/${slug}?ref=${sessionId.slice(0, 8)}`;
 
   return (
     <main className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6">
@@ -140,7 +145,7 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
             href={`/${locale}/quizzes/${slug}`}
             className="text-xs text-stone-500 hover:text-stone-900 inline-flex items-center gap-1 transition-colors"
           >
-            <ArrowLeft size={14} /> Sobre este teste
+            <ArrowLeft size={14} /> {dict.common.back}
           </Link>
           <span className="text-xs font-medium text-stone-500 uppercase tracking-wider">
             Meqyro Results
@@ -159,8 +164,8 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
         <section className="bg-white border border-stone-200 rounded-xl p-6 shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <h2 className="text-sm font-semibold text-stone-900">Compartilhar meu resultado</h2>
-              <p className="text-xs text-stone-500">Convide amigos para comparar raciocínio e perfil.</p>
+              <h2 className="text-sm font-semibold text-stone-900">{dict.resultView.shareTitle}</h2>
+              <p className="text-xs text-stone-500">{quizInfo.tagline}</p>
             </div>
             <Share2 size={18} className="text-stone-400" />
           </div>
@@ -190,30 +195,24 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
             >
               <span className="font-bold text-blue-600">f</span> Facebook
             </a>
-            <button
-              type="button"
-              onClick={undefined}
+            <a
+              href={shareUrl}
               className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-medium text-stone-700 transition-colors"
             >
-              <Copy size={14} /> Copiar link
-            </button>
+              <Copy size={14} /> {dict.common.copyLink}
+            </a>
           </div>
         </section>
 
         {/* Post-Purchase Cross-Sell / Discovery Link */}
         <section className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-6 text-center space-y-4">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-medium">
-            <Sparkles size={14} /> Continue Descobrindo
+            <Sparkles size={14} /> {dict.nav.discover}
           </div>
-          <h2 className="text-base font-semibold text-stone-900">
-            Descubra outras facetas da sua mente e personalidade
-          </h2>
-          <p className="text-xs text-stone-600 max-w-md mx-auto">
-            Experimente outros desafios objetivos de autoconhecimento sem necessidade de cadastro.
-          </p>
+          <h2 className="text-base font-semibold text-stone-900">{dict.hero.body}</h2>
           <div className="pt-2">
             <ButtonLink href={`/${locale}/discover`} variant="primary">
-              Ver catálogo completo de testes
+              {dict.nav.catalog}
             </ButtonLink>
           </div>
         </section>

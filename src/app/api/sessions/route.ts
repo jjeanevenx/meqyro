@@ -84,10 +84,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    return NextResponse.json(
-      { session },
-      { status: 200, headers: { "x-request-id": requestId } },
-    );
+    return NextResponse.json({ session }, { status: 200, headers: { "x-request-id": requestId } });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : String(error);
 

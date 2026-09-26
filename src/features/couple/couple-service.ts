@@ -10,8 +10,7 @@ import {
   type IndividualCoupleScore,
 } from "@/features/scoring/coupledna";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
 
 function generateInviteCode(): string {
   return `CP-${randomBytes(4).toString("hex").toUpperCase()}`;
@@ -31,7 +30,11 @@ export async function createCoupleInvite(
     .eq("id", initiatorSessionId)
     .single();
 
-  if (sessionErr || !session || !matchesAnonymousSessionToken(initiatorToken, session.access_token_hash)) {
+  if (
+    sessionErr ||
+    !session ||
+    !matchesAnonymousSessionToken(initiatorToken, session.access_token_hash)
+  ) {
     return null;
   }
 
@@ -56,14 +59,11 @@ export async function createCoupleInvite(
   }
 
   // Register initiator bilateral consent
-  await supabase
-    .schema("meqyro")
-    .from("couple_consents")
-    .insert({
-      invite_id: invite.id,
-      session_id: initiatorSessionId,
-      can_share_comparison: true,
-    });
+  await supabase.schema("meqyro").from("couple_consents").insert({
+    invite_id: invite.id,
+    session_id: initiatorSessionId,
+    can_share_comparison: true,
+  });
 
   const inviteUrl = `${SITE_URL}/${locale}/quizzes/coupledna/play?invite=${inviteCode}`;
 
@@ -93,7 +93,11 @@ export async function acceptCoupleInvite(
     .eq("id", partnerSessionId)
     .single();
 
-  if (sessionErr || !session || !matchesAnonymousSessionToken(partnerToken, session.access_token_hash)) {
+  if (
+    sessionErr ||
+    !session ||
+    !matchesAnonymousSessionToken(partnerToken, session.access_token_hash)
+  ) {
     return null;
   }
 
@@ -129,17 +133,14 @@ export async function acceptCoupleInvite(
     .eq("id", invite.id);
 
   // Register partner bilateral consent
-  await supabase
-    .schema("meqyro")
-    .from("couple_consents")
-    .upsert(
-      {
-        invite_id: invite.id,
-        session_id: partnerSessionId,
-        can_share_comparison: true,
-      },
-      { onConflict: "invite_id,session_id" },
-    );
+  await supabase.schema("meqyro").from("couple_consents").upsert(
+    {
+      invite_id: invite.id,
+      session_id: partnerSessionId,
+      can_share_comparison: true,
+    },
+    { onConflict: "invite_id,session_id" },
+  );
 
   logEvent("info", "couple_invite_accepted", {
     inviteCode,
@@ -163,7 +164,11 @@ export async function getCoupleComparison(
     .eq("id", requestingSessionId)
     .single();
 
-  if (sessionErr || !session || !matchesAnonymousSessionToken(requestingToken, session.access_token_hash)) {
+  if (
+    sessionErr ||
+    !session ||
+    !matchesAnonymousSessionToken(requestingToken, session.access_token_hash)
+  ) {
     return null;
   }
 
@@ -189,8 +194,26 @@ export async function getCoupleComparison(
   if (!invite.partner_session_id) {
     // Partner has not joined yet
     return coupleDnaScoringV1.compareBilateral(
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
       false,
     );
   }
@@ -208,8 +231,26 @@ export async function getCoupleComparison(
 
   if (!hasInitiatorConsent || !hasPartnerConsent) {
     return coupleDnaScoringV1.compareBilateral(
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
       false,
     );
   }
@@ -227,8 +268,26 @@ export async function getCoupleComparison(
   if (!resultA || !resultB) {
     // One or both haven't completed the quiz yet
     return coupleDnaScoringV1.compareBilateral(
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
-      { dimensionScores: { COMMUNICATION: 0, LIFE_VALUES: 0, CONFLICT_MANAGEMENT: 0, FINANCES: 0, FUTURE_PLANS: 0 }, totalResponses: 0 },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
+      {
+        dimensionScores: {
+          COMMUNICATION: 0,
+          LIFE_VALUES: 0,
+          CONFLICT_MANAGEMENT: 0,
+          FINANCES: 0,
+          FUTURE_PLANS: 0,
+        },
+        totalResponses: 0,
+      },
       false,
     );
   }

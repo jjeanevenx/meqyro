@@ -5,6 +5,7 @@ import type { getDictionary } from "@/lib/i18n/dictionaries";
 import type { MarketContext } from "@/lib/market/market-context";
 import { brainRankPrice, formatMoney } from "@/lib/market/prices";
 import { ButtonLink } from "@/components/ui/button-link";
+import type { Experience } from "@/content/experiences";
 
 const icons = [Grid3X3, Box, BarChart3, Eye, Puzzle, Gauge];
 
@@ -12,10 +13,12 @@ export function BrainRankHero({
   locale,
   dictionary,
   market,
+  experience,
 }: {
   locale: Locale;
   dictionary: ReturnType<typeof getDictionary>;
   market: MarketContext;
+  experience: Experience;
 }) {
   const price = formatMoney(brainRankPrice(market.market), market.currency, locale);
   return (
@@ -23,17 +26,17 @@ export function BrainRankHero({
       <div className="brainrank__copy">
         <div className="brainrank__signal">
           <Binary aria-hidden="true" size={18} />
-          <span>{dictionary.brainrank.label}</span>
+          <span>{dictionary.brainrank.featuredLabel}</span>
         </div>
         <h2 id="brainrank-title">
           <span>Brain</span>Rank
         </h2>
-        <h3>{dictionary.brainrank.title}</h3>
-        <p>{dictionary.brainrank.body}</p>
+        <h3>{experience.title[locale]}</h3>
+        <p>{experience.description[locale]}</p>
         <div className="brainrank__facts">
           <span>
             <Clock3 aria-hidden="true" />
-            {dictionary.brainrank.duration}
+            {experience.duration}
           </span>
           <span>
             <BarChart3 aria-hidden="true" />
@@ -62,7 +65,12 @@ export function BrainRankHero({
         })}
       </div>
       <div className="brainrank__action">
-        <ButtonLink href={`/${locale}/quizzes/brainrank`}>{dictionary.brainrank.cta}</ButtonLink>
+        <ButtonLink href={`/${locale}/quizzes/brainrank?source=home_featured`}>
+          {dictionary.brainrank.cta}
+        </ButtonLink>
+        <ButtonLink href={`/${locale}/discover`} variant="secondary">
+          {dictionary.brainrank.exploreAll}
+        </ButtonLink>
         <small>
           {dictionary.brainrank.disclaimer} · {price}
         </small>

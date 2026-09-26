@@ -28,7 +28,8 @@ export async function generateMetadata({
     locale,
     path: `/couple/${code}`,
     title: titles[locale as Locale],
-    description: "Você foi convidado(a) para responder ao CoupleDNA e comparar sua compatibilidade.",
+    description:
+      "Você foi convidado(a) para responder ao CoupleDNA e comparar sua compatibilidade.",
     isPrivate: true,
   });
 }
@@ -47,6 +48,8 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       desc: string;
       privacyNote: string;
       cta: string;
+      howItWorks: string;
+      footer: string;
       steps: [string, string, string];
     }
   > = {
@@ -54,8 +57,11 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       badge: "Convite para Casal",
       title: "Seu par convidou você para o CoupleDNA",
       desc: "Descubra como seus valores de vida, estilo de comunicação, finanças e planos futuros se alinham.",
-      privacyNote: "Suas respostas individuais permanecem confidenciais. Apenas o índice de sintonia bilateral será comparado.",
+      privacyNote:
+        "Suas respostas individuais permanecem confidenciais. Apenas o índice de sintonia bilateral será comparado.",
       cta: "Começar meu teste agora",
+      howItWorks: "Como funciona:",
+      footer: "Meqyro CoupleDNA • Sem cadastro ou criação de senha necessária",
       steps: [
         "Você responde a 25 perguntas rápidas (6 min).",
         "Ambos confirmam o consentimento mútuo de compartilhamento.",
@@ -66,8 +72,11 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       badge: "Couple Invite",
       title: "Your partner invited you to CoupleDNA",
       desc: "Discover how your communication styles, core values, finances, and future plans align.",
-      privacyNote: "Your individual answers remain strictly confidential. Only bilateral alignment scores are revealed.",
+      privacyNote:
+        "Your individual answers remain strictly confidential. Only bilateral alignment scores are revealed.",
       cta: "Start my assessment",
+      howItWorks: "How it works:",
+      footer: "Meqyro CoupleDNA • No account or password required",
       steps: [
         "Answer 25 quick prompts (around 6 min).",
         "Both partners confirm mutual consent.",
@@ -78,8 +87,11 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       badge: "Invitación en Pareja",
       title: "Tu pareja te ha invitado a CoupleDNA",
       desc: "Descubre cómo se alinean sus valores esenciales, comunicación, finanzas y planes a futuro.",
-      privacyNote: "Tus respuestas individuales son confidenciales. Solo se compara el grado de armonía bilateral.",
+      privacyNote:
+        "Tus respuestas individuales son confidenciales. Solo se compara el grado de armonía bilateral.",
       cta: "Comenzar mi reto ahora",
+      howItWorks: "Cómo funciona:",
+      footer: "Meqyro CoupleDNA • Sin registro ni contraseña requerida",
       steps: [
         "Responde 25 preguntas ágiles (6 min).",
         "Ambos confirman el consentimiento mutuo.",
@@ -90,8 +102,11 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       badge: "Invitation de Couple",
       title: "Votre partenaire vous invite sur CoupleDNA",
       desc: "Découvrez vos harmonies en matière de communication, valeurs de vie, finances et projets d'avenir.",
-      privacyNote: "Vos réponses restent confidentielles. Seule l'adéquation bilatérale est révélée.",
+      privacyNote:
+        "Vos réponses restent confidentielles. Seule l'adéquation bilatérale est révélée.",
       cta: "Commencer mon test",
+      howItWorks: "Comment ça fonctionne :",
+      footer: "Meqyro CoupleDNA • Aucune inscription ni mot de passe requis",
       steps: [
         "Répondez à 25 affirmations simples (6 min).",
         "Chacun confirme son accord bilatéral.",
@@ -116,15 +131,13 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
           <h1 className="text-2xl font-serif font-bold text-stone-900 leading-snug">
             {text.title}
           </h1>
-          <p className="text-xs text-stone-600 leading-relaxed">
-            {text.desc}
-          </p>
+          <p className="text-xs text-stone-600 leading-relaxed">{text.desc}</p>
         </div>
 
         {/* 3 Steps */}
         <div className="text-left bg-stone-50 border border-stone-200 rounded-2xl p-5 space-y-3">
           <span className="text-xs font-bold uppercase tracking-wider text-stone-700">
-            Como funciona:
+            {text.howItWorks}
           </span>
           <ol className="space-y-2 text-xs text-stone-600">
             {text.steps.map((step, idx) => (
@@ -151,9 +164,7 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
           </ButtonLink>
         </div>
 
-        <p className="text-[11px] text-stone-400">
-          Meqyro CoupleDNA • Sem cadastro ou criação de senha necessária
-        </p>
+        <p className="text-[11px] text-stone-400">{text.footer}</p>
       </div>
     </main>
   );

@@ -1,12 +1,12 @@
 "use client";
 
 import type { PublicQuestion } from "@/features/quiz-engine/contracts";
-import { SingleChoiceRenderer } from "./single-choice";
-import { LikertScaleRenderer } from "./likert-scale";
+import { SingleChoiceRenderer, SingleChoiceQuestion } from "./single-choice";
+import { LikertScaleRenderer, LikertQuestion } from "./likert-scale";
 
-export { SingleChoiceRenderer, LikertScaleRenderer };
+export { SingleChoiceRenderer, SingleChoiceQuestion, LikertScaleRenderer, LikertQuestion };
 
-type QuestionRendererProps = {
+export type QuestionRendererProps = {
   question: PublicQuestion;
   selectedOptionId?: string;
   selectedValue?: number;

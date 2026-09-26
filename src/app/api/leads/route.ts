@@ -10,20 +10,14 @@ export async function POST(req: NextRequest) {
     const { sessionId, email, marketingConsent, locale, market } = body;
 
     if (!sessionId || !email) {
-      return NextResponse.json(
-        { error: "Sessão e e-mail são obrigatórios." },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Sessão e e-mail são obrigatórios." }, { status: 400 });
     }
 
     const cookieStore = await cookies();
     const sessionToken = body.sessionToken ?? cookieStore.get(anonymousSessionCookie)?.value;
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { error: "Token de sessão não encontrado." },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Token de sessão não encontrado." }, { status: 401 });
     }
 
     const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim();

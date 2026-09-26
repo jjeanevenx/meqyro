@@ -1,6 +1,7 @@
 import "server-only";
 
 import { createHmac, timingSafeEqual } from "node:crypto";
+import { getSiteUrl } from "@/lib/config/env";
 import type {
   PaymentProvider,
   PaymentProviderName,
@@ -25,8 +26,12 @@ export class InfinitePayAdapter implements PaymentProvider {
 
   async createCheckout(input: CheckoutInput): Promise<CheckoutResult> {
     if (!this.apiKey) {
-      // Test/development simulated checkout session
-      const mockAttemptId = `inf_test_${input.orderNumber}_${Date.now()}`;
+      if (process.env.NODE_ENV === "production") {
+        throw new Error("InfinitePay API key is not configured in production environment.");
+      }
+
+      // Test/development simulated checkout session only
+      const mockAttemptId = `inf_test_${input.orderNumber}`;
       const mockCheckoutUrl = `${input.successUrl}${
         input.successUrl.includes("?") ? "&" : "?"
       }order=${input.orderNumber}&provider=infinitepay`;
@@ -39,6 +44,8 @@ export class InfinitePayAdapter implements PaymentProvider {
       };
     }
 
+    const siteUrl = getSiteUrl();
+
     const payload = {
       order_nsu: input.orderNumber,
       amount: input.amount,
@@ -48,7 +55,7 @@ export class InfinitePayAdapter implements PaymentProvider {
       },
       payment_methods: ["pix", "credit_card"],
       redirect_url: input.successUrl,
-      webhook_url: `${process.env.NEXT_PUBLIC_APP_URL}/api/webhooks/infinitepay`,
+      webhook_url: `${siteUrl}/api/webhooks/infinitepay`,
       items: [
         {
           id: input.productCode,
@@ -84,10 +91,12 @@ export class InfinitePayAdapter implements PaymentProvider {
 
   async getPaymentStatus(input: PaymentLookup): Promise<PaymentStatus> {
     if (!this.apiKey) {
+      if (process.env.NODE_ENV === "production") {
+        throw new Error("InfinitePay API key is not configured in production environment.");
+      }
+
       return {
-        status: "CONFIRMED",
-        paidAt: new Date().toISOString(),
-        transactionId: `inf_txn_${input.orderId}`,
+        status: "PENDING",
       };
     }
 
@@ -122,48 +131,102 @@ export class InfinitePayAdapter implements PaymentProvider {
     const rawBody =
       typeof input.payload === "string" ? input.payload : JSON.stringify(input.payload);
 
-    if (this.webhookSecret && input.signature) {
-      const expectedHmac = createHmac("sha256", this.webhookSecret)
-        .update(rawBody, "utf8")
-        .digest("hex");
-
-      const actualBuf = Buffer.from(input.signature, "hex");
-      const expectedBuf = Buffer.from(expectedHmac, "hex");
-
-      if (actualBuf.length !== expectedBuf.length || !timingSafeEqual(actualBuf, expectedBuf)) {
-        throw new Error("InfinitePay webhook signature mismatch");
-      }
+    // 1. Fail-closed secret check
+    if (!this.webhookSecret) {
+      throw new Error("INFINITEPAY_WEBHOOK_SECRET is not configured on server.");
     }
 
-    const event = typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload;
-    const eventType = event.event ?? event.type ?? "transaction.paid";
-    const eventId = event.event_id ?? event.id ?? `inf_evt_${Date.now()}`;
-    const transaction = event.data ?? event;
+    // 2. Fail-closed signature check
+    const headerSig =
+      (input.headers?.["x-infinitepay-signature"] as string | undefined) ??
+      (input.headers?.["X-InfinitePay-Signature"] as string | undefined);
+    const signature = input.signature ?? headerSig;
 
-    const isPaid =
+    if (!signature) {
+      throw new Error("Missing InfinitePay webhook signature header.");
+    }
+
+    // 3. Constant-time cryptographic HMAC verification
+    const expectedHmac = createHmac("sha256", this.webhookSecret)
+      .update(rawBody, "utf8")
+      .digest("hex");
+
+    const actualBuf = Buffer.from(signature.replace(/^sha256=/, ""), "hex");
+    const expectedBuf = Buffer.from(expectedHmac, "hex");
+
+    if (actualBuf.length !== expectedBuf.length || !timingSafeEqual(actualBuf, expectedBuf)) {
+      throw new Error("InfinitePay webhook signature mismatch.");
+    }
+
+    // 4. Payload parsing
+    let event: Record<string, unknown>;
+    try {
+      event = typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload;
+    } catch {
+      throw new Error("Malformed JSON payload in InfinitePay webhook.");
+    }
+
+    const transaction =
+      (event.data as Record<string, unknown> | undefined) ??
+      (event.transaction as Record<string, unknown> | undefined) ??
+      event;
+
+    // Stable event ID from provider (reject Date.now() generation)
+    const eventId = (event.event_id ??
+      event.id ??
+      transaction.transaction_id ??
+      transaction.nsu ??
+      transaction.id) as string | undefined;
+
+    if (!eventId || typeof eventId !== "string" || eventId.trim().length === 0) {
+      throw new Error("InfinitePay webhook missing required stable provider event ID.");
+    }
+
+    const eventType = (event.event ?? event.type ?? "transaction.paid") as string;
+    const orderNumber = (transaction.order_nsu ?? event.order_nsu ?? transaction.order_number) as
+      string | undefined;
+    const orderId = (transaction.order_id ??
+      (transaction.metadata as Record<string, string> | undefined)?.order_id) as string | undefined;
+
+    const statusStr = String(transaction.status ?? "").toLowerCase();
+
+    if (
       eventType === "transaction.paid" ||
-      transaction.status === "paid" ||
-      transaction.status === "approved";
-
-    if (isPaid) {
+      eventType === "payment.approved" ||
+      statusStr === "paid" ||
+      statusStr === "approved"
+    ) {
       return {
         provider: "infinitepay",
         providerEventId: String(eventId),
         eventType,
-        orderNumber: transaction.order_nsu ?? transaction.metadata?.order_number,
+        orderId,
+        orderNumber,
         status: "CONFIRMED",
-        amount: transaction.amount,
+        amount: typeof transaction.amount === "number" ? transaction.amount : undefined,
         currency: "BRL",
       };
     }
 
-    if (eventType === "transaction.refunded" || transaction.status === "refunded") {
+    if (eventType === "transaction.refunded" || statusStr === "refunded") {
       return {
         provider: "infinitepay",
         providerEventId: String(eventId),
         eventType,
-        orderNumber: transaction.order_nsu ?? transaction.metadata?.order_number,
+        orderId,
+        orderNumber,
         status: "REFUNDED",
+      };
+    }
+
+    if (eventType === "transaction.chargeback" || statusStr === "chargeback") {
+      return {
+        provider: "infinitepay",
+        providerEventId: String(eventId),
+        eventType,
+        orderId,
+        orderNumber,
+        status: "CHARGEBACK",
       };
     }
 

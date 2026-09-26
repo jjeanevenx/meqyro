@@ -20,10 +20,7 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     const sessionToken = tokenFromCookie ?? tokenFromHeader ?? tokenFromQuery;
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { error: "Token de sessão não fornecido." },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Token de sessão não fornecido." }, { status: 401 });
     }
 
     const localeParam = req.nextUrl.searchParams.get("locale") ?? "pt";

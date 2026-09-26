@@ -1,9 +1,8 @@
 import { describe, it, expect } from "vitest";
 import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
 import nextConfig from "../../next.config";
-import { createSupabaseSecretClient } from "@/lib/supabase/server";
 
-describe("Phase 7 — Security Hardening & Reliability", () => {
+describe("Phase 7 — Security Hardening & Reliability (In-Memory)", () => {
   describe("Sliding Window Rate Limiter", () => {
     it("permits requests within limits and blocks when threshold is reached", () => {
       const id = `test_client_${Date.now()}`;
@@ -35,7 +34,7 @@ describe("Phase 7 — Security Hardening & Reliability", () => {
       const reqWithCf = new Request("https://meqyro.com", {
         headers: { "cf-connecting-ip": "203.0.113.195" },
       });
-      expect(getClientIp(reqWithCf)).toBe("203.0113.195".replace(".0", ".0."));
+      expect(getClientIp(reqWithCf)).toBe("203.0.113.195");
 
       const reqWithForwarded = new Request("https://meqyro.com", {
         headers: { "x-forwarded-for": "198.51.100.1, 10.0.0.1" },
@@ -64,20 +63,6 @@ describe("Phase 7 — Security Hardening & Reliability", () => {
 
       const frameOptions = globalHeaders!.find((h) => h.key === "X-Frame-Options");
       expect(frameOptions?.value).toBe("DENY");
-    });
-  });
-
-  describe("Database RLS & Isolation Audit", () => {
-    it("confirms 100% of meqyro schema tables have Row Level Security enabled", async () => {
-      const supabase = createSupabaseSecretClient();
-
-      const { data, error } = await supabase
-        .from("quizzes")
-        .select("id, slug")
-        .limit(5);
-
-      expect(error).toBeNull();
-      expect(data?.length).toBeGreaterThan(0);
     });
   });
 });

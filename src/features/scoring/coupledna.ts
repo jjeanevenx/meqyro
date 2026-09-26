@@ -1,9 +1,5 @@
 export type CoupleDimension =
-  | "COMMUNICATION"
-  | "LIFE_VALUES"
-  | "CONFLICT_MANAGEMENT"
-  | "FINANCES"
-  | "FUTURE_PLANS";
+  "COMMUNICATION" | "LIFE_VALUES" | "CONFLICT_MANAGEMENT" | "FINANCES" | "FUTURE_PLANS";
 
 export interface CoupleDnaItem {
   id: string;

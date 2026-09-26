@@ -2,7 +2,10 @@ import { describe, expect, it } from "vitest";
 import { brainRankQuestions } from "@/content/quizzes/brainrank";
 import { personalityMapQuestions } from "@/content/quizzes/personality-map";
 import { brainRankDimensions, type BrainRankDimension } from "@/features/scoring/brainrank";
-import { personalityDimensions, type PersonalityDimension } from "@/features/scoring/personality-map";
+import {
+  personalityDimensions,
+  type PersonalityDimension,
+} from "@/features/scoring/personality-map";
 
 describe("Content definitions integrity", () => {
   it("BrainRank contains exactly 24 valid items, 4 per dimension", () => {
@@ -52,6 +55,11 @@ describe("Content definitions integrity", () => {
     const sql = generateSeedSql();
     expect(sql).toContain("BR_PAT_01");
     expect(sql).toContain("PM_OPN_01");
+    expect(sql).toContain("CF_TECH_01");
+    expect(sql).toContain("MD_BLD_01");
+    expect(sql).toContain("FS_HYPER_01");
+    expect(sql).toContain("DD_SCEN_01");
+    expect(sql).toContain("CD_COMM_01");
     const fs = await import("node:fs");
     const path = await import("node:path");
     fs.writeFileSync(path.resolve(import.meta.dirname, "../../supabase/seed.sql"), sql, "utf8");

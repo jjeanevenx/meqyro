@@ -38,9 +38,7 @@ function UnsubscribeContent() {
       } catch (err: unknown) {
         if (isMounted) {
           setStatus("error");
-          setErrorMessage(
-            err instanceof Error ? err.message : "Token inválido ou expirado.",
-          );
+          setErrorMessage(err instanceof Error ? err.message : "Token inválido ou expirado.");
         }
       }
     }
@@ -65,10 +63,12 @@ function UnsubscribeContent() {
           <CheckCircle2 size={44} className="text-emerald-600 mb-4" />
           <h1>Inscrição Cancelada</h1>
           <p>
-            Você foi descadastrado com sucesso de todas as comunicações de marketing e novidades da Meqyro.
+            Você foi descadastrado com sucesso de todas as comunicações de marketing e novidades da
+            Meqyro.
           </p>
           <small className="text-muted block mt-2 mb-6">
-            Caso você tenha resultados salvos ou pedidos ativos, notificações estritamente transacionais continuarão disponíveis para acesso e segurança.
+            Caso você tenha resultados salvos ou pedidos ativos, notificações estritamente
+            transacionais continuarão disponíveis para acesso e segurança.
           </small>
           <Link href="/" className="button button--secondary">
             Voltar ao Início
@@ -87,7 +87,8 @@ function UnsubscribeContent() {
         <div className="unsubscribe-state">
           <h1>Cancelar Inscrição de E-mails</h1>
           <p>
-            Nenhum token de cancelamento foi fornecido. Para cancelar, clique no link presente no rodapé de um dos e-mails recebidos.
+            Nenhum token de cancelamento foi fornecido. Para cancelar, clique no link presente no
+            rodapé de um dos e-mails recebidos.
           </p>
           <Link href="/" className="button button--secondary mt-6">
             Voltar ao Início

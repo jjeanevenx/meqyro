@@ -48,10 +48,14 @@ export default async function ArticlesIndexPage({ params }: ArticlesPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
 
-  const labels: Record<Locale, { title: string; subtitle: string; readMore: string; minRead: string }> = {
+  const labels: Record<
+    Locale,
+    { title: string; subtitle: string; readMore: string; minRead: string }
+  > = {
     pt: {
       title: "Artigos e Fundamentos",
-      subtitle: "Conhecimento rigoroso e prático sobre como nossa mente pensa, decide e se conecta.",
+      subtitle:
+        "Conhecimento rigoroso e prático sobre como nossa mente pensa, decide e se conecta.",
       readMore: "Ler artigo completo",
       minRead: "min de leitura",
     },
@@ -63,7 +67,8 @@ export default async function ArticlesIndexPage({ params }: ArticlesPageProps) {
     },
     es: {
       title: "Artículos y Fundamentos",
-      subtitle: "Conocimiento riguroso y práctico sobre cómo pensamos, decidimos y nos relacionamos.",
+      subtitle:
+        "Conocimiento riguroso y práctico sobre cómo pensamos, decidimos y nos relacionamos.",
       readMore: "Leer artículo completo",
       minRead: "min de lectura",
     },
@@ -87,9 +92,7 @@ export default async function ArticlesIndexPage({ params }: ArticlesPageProps) {
           <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 tracking-tight">
             {copy.title}
           </h1>
-          <p className="text-sm text-stone-600 max-w-lg mx-auto">
-            {copy.subtitle}
-          </p>
+          <p className="text-sm text-stone-600 max-w-lg mx-auto">{copy.subtitle}</p>
         </header>
 
         <div className="space-y-6">

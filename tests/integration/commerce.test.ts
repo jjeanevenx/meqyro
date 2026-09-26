@@ -1,12 +1,16 @@
 import { describe, it, expect } from "vitest";
+import { createHmac } from "node:crypto";
 import { startQuizSession } from "@/features/quiz-engine/session-service";
 import { createOrder, getOrderById } from "@/features/commerce/order-service";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
 import { reconcileUnfulfilledPaidOrders } from "@/features/commerce/reconciliation-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
+import { isSupabaseAvailable } from "./db-check";
 
-describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
+const isOnline = await isSupabaseAvailable();
+
+describe.skipIf(!isOnline)("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
   it("creates order with approved server price and state machine transition", async () => {
     const { session, token } = await startQuizSession({
       quizSlug: "brainrank",
@@ -30,7 +34,7 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
     expect(result.order.status).toBe("PENDING");
     expect(result.checkoutUrl).toBeDefined();
 
-    const stored = await getOrderById(result.order.id);
+    const stored = await getOrderById(result.order.id, { allowInternal: true });
     expect(stored?.status).toBe("PENDING");
   });
 
@@ -67,7 +71,7 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
     expect(grants?.[0]?.product_code).toBe("BRAINRANK");
 
     // Verify order status is FULFILLED
-    const updatedOrder = await getOrderById(order.id);
+    const updatedOrder = await getOrderById(order.id, { allowInternal: true });
     expect(updatedOrder?.status).toBe("FULFILLED");
 
     // 2. Second fulfillment (Idempotency guarantee)
@@ -117,22 +121,29 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
       },
     };
 
+    const now = Math.floor(Date.now() / 1000);
+    const payloadStr = JSON.stringify(webhookPayload);
+    const sig = createHmac("sha256", process.env.STRIPE_WEBHOOK_SECRET!)
+      .update(`${now}.${payloadStr}`)
+      .digest("hex");
+    const headers = { "stripe-signature": `t=${now},v1=${sig}` };
+
     // First delivery
     const res1 = await handleWebhook("stripe", {
       payload: webhookPayload,
-      headers: {},
+      headers,
     });
     expect(res1.handled).toBe(true);
     expect(res1.duplicate).toBeUndefined();
 
     // Verify order is FULFILLED
-    const fulfilledOrder = await getOrderById(order.id);
+    const fulfilledOrder = await getOrderById(order.id, { allowInternal: true });
     expect(fulfilledOrder?.status).toBe("FULFILLED");
 
     // Duplicate webhook delivery (e.g. Stripe network retry)
     const res2 = await handleWebhook("stripe", {
       payload: webhookPayload,
-      headers: {},
+      headers,
     });
     expect(res2.handled).toBe(true);
     expect(res2.duplicate).toBe(true);
@@ -163,7 +174,7 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
     expect(reconcileResult.repairedCount).toBeGreaterThanOrEqual(1);
 
     // Verify order is now FULFILLED and grant exists
-    const repairedOrder = await getOrderById(order.id);
+    const repairedOrder = await getOrderById(order.id, { allowInternal: true });
     expect(repairedOrder?.status).toBe("FULFILLED");
 
     const { data: grants } = await supabase
@@ -175,10 +186,13 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
     expect(grants?.length).toBe(1);
 
     // Now test Refund: revokes grant and transitions order to REFUNDED
-    const refundResult = await refundOrder(order.id, "Customer requested cancellation within 7 days");
+    const refundResult = await refundOrder(
+      order.id,
+      "Customer requested cancellation within 7 days",
+    );
     expect(refundResult.success).toBe(true);
 
-    const refundedOrder = await getOrderById(order.id);
+    const refundedOrder = await getOrderById(order.id, { allowInternal: true });
     expect(refundedOrder?.status).toBe("REFUNDED");
 
     // Grant should now be revoked
@@ -227,4 +241,3 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
     expect(grantedCodes).toEqual(["BRAINRANK", "DECISIONDNA", "PERSONALITY_MAP"]);
   });
 });
-

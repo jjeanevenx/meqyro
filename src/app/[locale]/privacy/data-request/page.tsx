@@ -75,8 +75,9 @@ export default function DataRequestPage() {
         ) : (
           <form onSubmit={handleSubmit} className="data-request-form">
             <p className="data-request-intro">
-              Para garantir sua segurança e evitar o acesso indevido por terceiros, enviaremos
-              um link de confirmação para o endereço de e-mail informado antes de processar qualquer dado.
+              Para garantir sua segurança e evitar o acesso indevido por terceiros, enviaremos um
+              link de confirmação para o endereço de e-mail informado antes de processar qualquer
+              dado.
             </p>
 
             {error ? (
@@ -112,7 +113,9 @@ export default function DataRequestPage() {
                 disabled={isSubmitting}
               >
                 <option value="EXPORT">Exportar meus dados e histórico de resultados</option>
-                <option value="DELETION">Excluir todos os meus dados e pontuações (Esquecimento)</option>
+                <option value="DELETION">
+                  Excluir todos os meus dados e pontuações (Esquecimento)
+                </option>
                 <option value="RECTIFICATION">Solicitar retificação de dados</option>
               </select>
             </div>

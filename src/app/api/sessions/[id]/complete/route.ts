@@ -4,10 +4,7 @@ import { completeQuizSession } from "@/features/quiz-engine/session-service";
 import { createRequestId } from "@/lib/observability/request-id";
 import { logEvent } from "@/lib/observability/logger";
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const requestId = request.headers.get("x-request-id") ?? createRequestId();
   const { id: sessionId } = await params;
   const token = request.cookies.get(anonymousSessionCookie)?.value;
@@ -33,10 +30,7 @@ export async function POST(
       strongestDimension: result.strongestDimension,
     });
 
-    return NextResponse.json(
-      { result },
-      { status: 200, headers: { "x-request-id": requestId } },
-    );
+    return NextResponse.json({ result }, { status: 200, headers: { "x-request-id": requestId } });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : String(error);
     const errName = error instanceof Error ? error.name : "";

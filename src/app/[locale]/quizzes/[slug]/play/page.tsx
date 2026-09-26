@@ -1,10 +1,17 @@
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cookies } from "next/headers";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { resolveMarketContext } from "@/lib/market/market-context";
 import { QuizRunner } from "@/components/patterns/quiz-runner";
 import type { ActiveSession } from "@/features/quiz-engine/contracts";
+import { validateAndRecoverSession } from "@/features/quiz-engine/session-service";
+import {
+  anonymousSessionCookie,
+  anonymousSessionTtlSeconds,
+} from "@/lib/security/anonymous-session";
+
+export const dynamic = "force-dynamic";
 
 const VALID_SLUGS = [
   "brainrank",
@@ -55,7 +62,36 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
     source: marketCookie ? "user" : "locale-fallback",
   });
 
-  const initialSession: ActiveSession | null = null;
+  let initialSession: ActiveSession | null = null;
+
+  // Real session recovery flow
+  if (query.session && query.recover) {
+    try {
+      const recovered = await validateAndRecoverSession({
+        sessionId: query.session,
+        recoveryToken: query.recover,
+        quizSlug: slug,
+      });
+
+      if (recovered.status === "COMPLETED") {
+        redirect(recovered.resultRedirectUrl);
+      }
+
+      initialSession = recovered.session;
+
+      // Authenticate subsequent requests via HttpOnly cookie
+      cookieStore.set(anonymousSessionCookie, recovered.token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        path: "/",
+        maxAge: anonymousSessionTtlSeconds,
+      });
+    } catch {
+      // Fail-closed without disclosing session state; proceed as standard fresh session
+      initialSession = null;
+    }
+  }
 
   return (
     <QuizRunner

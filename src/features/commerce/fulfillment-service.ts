@@ -16,7 +16,9 @@ export async function fulfillOrder(
   // 1. Fetch order
   const { data: order, error: orderError } = await supabase
     .from("orders")
-    .select("id, session_id, lead_id, status, customer_email, order_number, amount, currency, referral_code")
+    .select(
+      "id, session_id, lead_id, status, customer_email, order_number, amount, currency, referral_code",
+    )
     .eq("id", orderId)
     .single();
 

@@ -44,7 +44,7 @@ export type VerifiedPaymentEvent = {
   eventType: string;
   orderId?: string;
   orderNumber?: string;
-  status: "CONFIRMED" | "FAILED" | "REFUNDED" | "IGNORED";
+  status: "CONFIRMED" | "FAILED" | "REFUNDED" | "CHARGEBACK" | "IGNORED";
   amount?: number;
   currency?: string;
 };

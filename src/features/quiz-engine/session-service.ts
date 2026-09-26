@@ -1,5 +1,6 @@
 import "server-only";
 
+import { timingSafeEqual } from "node:crypto";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import {
   createAnonymousSessionToken,
@@ -7,17 +8,18 @@ import {
   matchesAnonymousSessionToken,
   anonymousSessionTtlSeconds,
 } from "@/lib/security/anonymous-session";
-import type {
-  ActiveSession,
-  PartialResultSummary,
-  ScoringAnswer,
-} from "./contracts";
+import { hashToken } from "@/features/privacy/consent-service";
+import type { ActiveSession, PartialResultSummary, ScoringAnswer } from "./contracts";
 import { brainRankScoringV1, type BrainRankItem } from "@/features/scoring/brainrank";
 import { personalityMapScoringV1, type PersonalityItem } from "@/features/scoring/personality-map";
 import { careerFitScoringV1, type CareerFitItem } from "@/features/scoring/careerfit";
 import { moneyDnaScoringV1, type MoneyDnaItem } from "@/features/scoring/moneydna";
 import { focusStyleScoringV1, type FocusStyleItem } from "@/features/scoring/focusstyle";
-import { decisionDnaScoringV1, type DecisionDnaItem, type DecisionStyleType } from "@/features/scoring/decisiondna";
+import {
+  decisionDnaScoringV1,
+  type DecisionDnaItem,
+  type DecisionStyleType,
+} from "@/features/scoring/decisiondna";
 import { coupleDnaScoringV1, type CoupleDnaItem } from "@/features/scoring/coupledna";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
 import { recordReferralClick } from "@/features/referrals/referral-service";
@@ -58,7 +60,9 @@ export async function startQuizSession(input: {
     .single();
 
   if (quizError || !quiz) {
-    throw new SessionNotFoundError(`Quiz ${input.quizSlug} not found: ${quizError?.message ?? "empty data"} (code: ${quizError?.code})`);
+    throw new SessionNotFoundError(
+      `Quiz ${input.quizSlug} not found: ${quizError?.message ?? "empty data"} (code: ${quizError?.code})`,
+    );
   }
 
   type VersionRecord = {
@@ -71,8 +75,7 @@ export async function startQuizSession(input: {
   const rawVersions = quiz.quiz_versions as unknown as VersionRecord | VersionRecord[];
   const versions = Array.isArray(rawVersions) ? rawVersions : [rawVersions];
   const activeVersion =
-    versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED") ??
-    versions[0];
+    versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED") ?? versions[0];
 
   if (!activeVersion) {
     throw new SessionNotFoundError(`No active version for ${input.quizSlug}`);
@@ -96,7 +99,9 @@ export async function startQuizSession(input: {
       expires_at: expiresAt,
       referral_code: input.referralCode ?? null,
     })
-    .select("id, quiz_version_id, quiz_version, scoring_version, locale, market, status, current_position, expires_at")
+    .select(
+      "id, quiz_version_id, quiz_version, scoring_version, locale, market, status, current_position, expires_at",
+    )
     .single();
 
   if (sessionError || !session) {
@@ -144,7 +149,8 @@ export async function getActiveSession(
 
   const { data: session, error } = await supabase
     .from("quiz_sessions")
-    .select(`
+    .select(
+      `
       id,
       quiz_version_id,
       quiz_version,
@@ -156,7 +162,8 @@ export async function getActiveSession(
       current_position,
       expires_at,
       quizzes:quiz_versions(quizzes(slug))
-    `)
+    `,
+    )
     .eq("id", sessionId)
     .single();
 
@@ -175,7 +182,10 @@ export async function getActiveSession(
     .select("question_id, option_id, numeric_value, duration_ms")
     .eq("session_id", sessionId);
 
-  const answersMap: Record<string, { optionId?: string; numericValue?: number; durationMs?: number }> = {};
+  const answersMap: Record<
+    string,
+    { optionId?: string; numericValue?: number; durationMs?: number }
+  > = {};
   for (const ans of answersData ?? []) {
     answersMap[ans.question_id] = {
       ...(ans.option_id ? { optionId: ans.option_id } : {}),
@@ -199,6 +209,152 @@ export async function getActiveSession(
     currentPosition: session.current_position,
     expiresAt: session.expires_at,
     answers: answersMap,
+  };
+}
+
+export type RecoverSessionResult =
+  | {
+      status: "COMPLETED";
+      sessionId: string;
+      token: string;
+      quizSlug: string;
+      resultRedirectUrl: string;
+    }
+  | {
+      status: "ACTIVE";
+      session: ActiveSession;
+      token: string;
+    };
+
+export async function validateAndRecoverSession(input: {
+  sessionId: string;
+  recoveryToken: string;
+  quizSlug: string;
+}): Promise<RecoverSessionResult> {
+  const supabase = createSupabaseSecretClient();
+  const tokenHash = hashToken(input.recoveryToken);
+
+  // 1. Verify recovery_tokens record
+  const { data: recoveryRecord, error: recoveryError } = await supabase
+    .from("recovery_tokens")
+    .select("id, session_id, token_hash, expires_at, used_at, usage_count, max_uses, revoked_at")
+    .eq("session_id", input.sessionId)
+    .single();
+
+  if (recoveryError || !recoveryRecord) {
+    throw new SessionNotFoundError("Link de recuperação inválido ou expirado.");
+  }
+
+  // Constant-time check
+  const actual = Buffer.from(tokenHash, "hex");
+  const expected = Buffer.from(recoveryRecord.token_hash, "hex");
+  if (actual.length !== expected.length || !timingSafeEqual(actual, expected)) {
+    throw new SessionNotFoundError("Link de recuperação inválido ou expirado.");
+  }
+
+  // Expiration check
+  if (new Date(recoveryRecord.expires_at) < new Date()) {
+    throw new SessionNotFoundError("Link de recuperação inválido ou expirado.");
+  }
+
+  // Revocation check
+  if (recoveryRecord.revoked_at) {
+    throw new SessionNotFoundError("Link de recuperação inválido ou expirado.");
+  }
+
+  // Max uses check
+  const maxUses = recoveryRecord.max_uses ?? 10;
+  const currentUses = recoveryRecord.usage_count ?? 0;
+  if (currentUses >= maxUses) {
+    throw new SessionNotFoundError("Limite de utilizações deste link de recuperação excedido.");
+  }
+
+  // Increment usage count
+  await supabase
+    .from("recovery_tokens")
+    .update({
+      usage_count: currentUses + 1,
+      used_at: new Date().toISOString(),
+    })
+    .eq("id", recoveryRecord.id);
+
+  // 2. Fetch session and check quiz slug
+  const { data: session, error: sessionError } = await supabase
+    .from("quiz_sessions")
+    .select(
+      `
+      id,
+      quiz_version_id,
+      quiz_version,
+      scoring_version,
+      locale,
+      market,
+      status,
+      current_position,
+      expires_at,
+      quiz_versions(quiz_id, quizzes(slug, product_code))
+    `,
+    )
+    .eq("id", input.sessionId)
+    .single();
+
+  if (sessionError || !session) {
+    throw new SessionNotFoundError("Sessão não encontrada.");
+  }
+
+  type SessionVersions = { quiz_versions?: { quizzes?: { slug?: string } } };
+  const actualSlug =
+    (session as unknown as SessionVersions)?.quiz_versions?.quizzes?.slug ?? "brainrank";
+
+  if (actualSlug !== input.quizSlug) {
+    throw new SessionNotFoundError("O quiz desta sessão não corresponde à URL informada.");
+  }
+
+  // 3. If session is already completed, point to results
+  if (session.status === "COMPLETED") {
+    return {
+      status: "COMPLETED",
+      sessionId: session.id,
+      token: input.recoveryToken,
+      quizSlug: actualSlug,
+      resultRedirectUrl: `/${session.locale}/quizzes/${actualSlug}/result?session=${session.id}&token=${input.recoveryToken}`,
+    };
+  }
+
+  // 4. If session is active/in_progress, load answers
+  const { data: answersData } = await supabase
+    .from("answers")
+    .select("question_id, option_id, numeric_value, duration_ms")
+    .eq("session_id", session.id);
+
+  const answersMap: Record<
+    string,
+    { optionId?: string; numericValue?: number; durationMs?: number }
+  > = {};
+  for (const ans of answersData ?? []) {
+    answersMap[ans.question_id] = {
+      ...(ans.option_id ? { optionId: ans.option_id } : {}),
+      ...(ans.numeric_value !== null ? { numericValue: ans.numeric_value } : {}),
+      ...(ans.duration_ms !== null ? { durationMs: ans.duration_ms } : {}),
+    };
+  }
+
+  return {
+    status: "ACTIVE",
+    session: {
+      id: session.id,
+      quizVersionId: session.quiz_version_id,
+      quizSlug: actualSlug,
+      quizVersion: session.quiz_version,
+      scoringVersion: session.scoring_version,
+      locale: session.locale,
+      market: session.market,
+      status: session.status as "CREATED" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED",
+      currentPosition: session.current_position,
+      expiresAt: session.expires_at,
+      answers: answersMap,
+    },
+    token: input.recoveryToken,
   };
 }
 
@@ -284,7 +440,8 @@ export async function completeQuizSession(input: {
 
   const { data: session, error: sessionError } = await supabase
     .from("quiz_sessions")
-    .select(`
+    .select(
+      `
       id,
       quiz_version_id,
       quiz_version,
@@ -294,7 +451,8 @@ export async function completeQuizSession(input: {
       status,
       access_token_hash,
       quizzes:quiz_versions(quizzes(slug))
-    `)
+    `,
+    )
     .eq("id", input.sessionId)
     .single();
 
@@ -395,7 +553,10 @@ export async function completeQuizSession(input: {
       };
     });
 
-    calculatedScore = brainRankScoringV1.score(brainRankItems, scoringAnswers) as unknown as Record<string, unknown>;
+    calculatedScore = brainRankScoringV1.score(brainRankItems, scoringAnswers) as unknown as Record<
+      string,
+      unknown
+    >;
   } else if (quizSlug === "personality-map") {
     const personalityItems: PersonalityItem[] = rawQuestions.map((q) => {
       const scoringKey = q.scoring_key ?? {};
@@ -406,7 +567,10 @@ export async function completeQuizSession(input: {
       };
     });
 
-    calculatedScore = personalityMapScoringV1.score(personalityItems, scoringAnswers) as unknown as Record<string, unknown>;
+    calculatedScore = personalityMapScoringV1.score(
+      personalityItems,
+      scoringAnswers,
+    ) as unknown as Record<string, unknown>;
   } else if (quizSlug === "careerfit") {
     const careerItems: CareerFitItem[] = rawQuestions.map((q) => ({
       id: q.id,
@@ -417,7 +581,10 @@ export async function completeQuizSession(input: {
     for (const a of scoringAnswers) {
       if (a.value !== undefined) answersMap[a.questionId] = a.value;
     }
-    calculatedScore = careerFitScoringV1.score(careerItems, answersMap) as unknown as Record<string, unknown>;
+    calculatedScore = careerFitScoringV1.score(careerItems, answersMap) as unknown as Record<
+      string,
+      unknown
+    >;
   } else if (quizSlug === "moneydna") {
     const moneyItems: MoneyDnaItem[] = rawQuestions.map((q) => ({
       id: q.id,
@@ -428,7 +595,10 @@ export async function completeQuizSession(input: {
     for (const a of scoringAnswers) {
       if (a.value !== undefined) answersMap[a.questionId] = a.value;
     }
-    calculatedScore = moneyDnaScoringV1.score(moneyItems, answersMap) as unknown as Record<string, unknown>;
+    calculatedScore = moneyDnaScoringV1.score(moneyItems, answersMap) as unknown as Record<
+      string,
+      unknown
+    >;
   } else if (quizSlug === "focusstyle") {
     const focusItems: FocusStyleItem[] = rawQuestions.map((q) => ({
       id: q.id,
@@ -439,12 +609,19 @@ export async function completeQuizSession(input: {
     for (const a of scoringAnswers) {
       if (a.value !== undefined) answersMap[a.questionId] = a.value;
     }
-    calculatedScore = focusStyleScoringV1.score(focusItems, answersMap) as unknown as Record<string, unknown>;
+    calculatedScore = focusStyleScoringV1.score(focusItems, answersMap) as unknown as Record<
+      string,
+      unknown
+    >;
   } else if (quizSlug === "decisiondna") {
     const decisionItems: DecisionDnaItem[] = rawQuestions.map((q) => {
       const optionStyleMap: Record<string, DecisionStyleType> = {};
       for (const opt of q.options ?? []) {
-        if (opt.scoring_value && typeof opt.scoring_value === "object" && "style" in opt.scoring_value) {
+        if (
+          opt.scoring_value &&
+          typeof opt.scoring_value === "object" &&
+          "style" in opt.scoring_value
+        ) {
           optionStyleMap[opt.id] = (opt.scoring_value as { style: DecisionStyleType }).style;
         }
       }
@@ -458,7 +635,10 @@ export async function completeQuizSession(input: {
     for (const a of scoringAnswers) {
       if (a.optionId) answersMap[a.questionId] = a.optionId;
     }
-    calculatedScore = decisionDnaScoringV1.score(decisionItems, answersMap) as unknown as Record<string, unknown>;
+    calculatedScore = decisionDnaScoringV1.score(decisionItems, answersMap) as unknown as Record<
+      string,
+      unknown
+    >;
   } else if (quizSlug === "coupledna") {
     const coupleItems: CoupleDnaItem[] = rawQuestions.map((q) => ({
       id: q.id,
@@ -469,7 +649,10 @@ export async function completeQuizSession(input: {
     for (const a of scoringAnswers) {
       if (a.value !== undefined) answersMap[a.questionId] = a.value;
     }
-    calculatedScore = coupleDnaScoringV1.scoreIndividual(coupleItems, answersMap) as unknown as Record<string, unknown>;
+    calculatedScore = coupleDnaScoringV1.scoreIndividual(
+      coupleItems,
+      answersMap,
+    ) as unknown as Record<string, unknown>;
   } else {
     throw new Error(`Unsupported quiz for scoring: ${quizSlug}`);
   }
@@ -481,15 +664,13 @@ export async function completeQuizSession(input: {
   };
 
   // Insert result
-  const { error: resultError } = await supabase
-    .from("results")
-    .insert({
-      session_id: input.sessionId,
-      quiz_version: session.quiz_version,
-      scoring_version: session.scoring_version,
-      score: calculatedScore,
-      input_snapshot: inputSnapshot,
-    });
+  const { error: resultError } = await supabase.from("results").insert({
+    session_id: input.sessionId,
+    quiz_version: session.quiz_version,
+    scoring_version: session.scoring_version,
+    score: calculatedScore,
+    input_snapshot: inputSnapshot,
+  });
 
   if (resultError) {
     throw new Error(`Failed to store result: ${resultError.message}`);
@@ -613,9 +794,14 @@ function formatPartialResult(
       },
     };
 
-    const strongest = typeof score.strongestDimension === "string" ? score.strongestDimension : "PATTERN_RECOGNITION";
-    const localizedLabel = dimensionLabels[strongest]?.[locale] ?? dimensionLabels[strongest]?.pt ?? strongest;
-    const localizedDesc = dimensionDescriptions[strongest]?.[locale] ?? dimensionDescriptions[strongest]?.pt ?? "";
+    const strongest =
+      typeof score.strongestDimension === "string"
+        ? score.strongestDimension
+        : "PATTERN_RECOGNITION";
+    const localizedLabel =
+      dimensionLabels[strongest]?.[locale] ?? dimensionLabels[strongest]?.pt ?? strongest;
+    const localizedDesc =
+      dimensionDescriptions[strongest]?.[locale] ?? dimensionDescriptions[strongest]?.pt ?? "";
     const rawScore = typeof score.rawCorrect === "number" ? score.rawCorrect : undefined;
     const overallScore = typeof score.overallScore === "number" ? score.overallScore : undefined;
     const dimensionScores = (score.dimensionScores as Record<string, number>) ?? undefined;
@@ -636,12 +822,42 @@ function formatPartialResult(
 
   if (quizSlug === "careerfit") {
     const careerLabels: Record<string, Record<string, string>> = {
-      TECHNICAL: { pt: "Técnico / Especialista", en: "Technical Specialist", es: "Técnico Especialista", fr: "Expert Technique" },
-      MANAGERIAL: { pt: "Gestão e Liderança", en: "General Management", es: "Gestión y Liderazgo", fr: "Management et Leadership" },
-      CREATIVE: { pt: "Criatividade e Inovação", en: "Creativity & Innovation", es: "Creatividad e Innovación", fr: "Créativité et Innovation" },
-      AUTONOMOUS: { pt: "Autonomia e Empreendedorismo", en: "Autonomy & Venture", es: "Autonomía y Emprendimiento", fr: "Autonomie et Entrepreneuriat" },
-      SECURITY: { pt: "Segurança e Estabilidade", en: "Security & Stability", es: "Seguridad y Estabilidad", fr: "Sécurité et Stabilité" },
-      CAUSE: { pt: "Causa e Propósito Social", en: "Cause & Social Purpose", es: "Causa y Propósito", fr: "Cause et Utilité Sociale" },
+      TECHNICAL: {
+        pt: "Técnico / Especialista",
+        en: "Technical Specialist",
+        es: "Técnico Especialista",
+        fr: "Expert Technique",
+      },
+      MANAGERIAL: {
+        pt: "Gestão e Liderança",
+        en: "General Management",
+        es: "Gestión y Liderazgo",
+        fr: "Management et Leadership",
+      },
+      CREATIVE: {
+        pt: "Criatividade e Inovação",
+        en: "Creativity & Innovation",
+        es: "Creatividad e Innovación",
+        fr: "Créativité et Innovation",
+      },
+      AUTONOMOUS: {
+        pt: "Autonomia e Empreendedorismo",
+        en: "Autonomy & Venture",
+        es: "Autonomía y Emprendimiento",
+        fr: "Autonomie et Entrepreneuriat",
+      },
+      SECURITY: {
+        pt: "Segurança e Estabilidade",
+        en: "Security & Stability",
+        es: "Seguridad y Estabilidad",
+        fr: "Sécurité et Stabilité",
+      },
+      CAUSE: {
+        pt: "Causa e Propósito Social",
+        en: "Cause & Social Purpose",
+        es: "Causa y Propósito",
+        fr: "Cause et Utilité Sociale",
+      },
     };
     const primary = (score.primaryAnchor as string) ?? "TECHNICAL";
     const dimScores = (score.dimensionScores as Record<string, number>) ?? {};
@@ -651,18 +867,44 @@ function formatPartialResult(
       quizVersion,
       scoringVersion,
       strongestDimension: primary,
-      strongestDimensionLabel: careerLabels[primary]?.[locale] ?? careerLabels[primary]?.pt ?? primary,
+      strongestDimensionLabel:
+        careerLabels[primary]?.[locale] ?? careerLabels[primary]?.pt ?? primary,
       dimensionScores: dimScores,
     };
   }
 
   if (quizSlug === "moneydna") {
     const moneyLabels: Record<string, Record<string, string>> = {
-      BUILDER: { pt: "O Construtor Patrimonial", en: "The Asset Builder", es: "El Constructor Patrimonial", fr: "Le Bâtisseur de Patrimoine" },
-      GUARDIAN: { pt: "O Guardião Prudente", en: "The Prudent Guardian", es: "El Guardián Prudente", fr: "Le Gardien Prudent" },
-      STRATEGIST: { pt: "O Estrategista Analítico", en: "The Analytical Strategist", es: "El Estratega Analítico", fr: "Le Stratège Analytique" },
-      ADVENTURER: { pt: "O Aventureiro Arrojado", en: "The Bold Adventurer", es: "El Aventurero Audaz", fr: "L'Aventurier Audacieux" },
-      BALANCER: { pt: "O Equilibrador Consciente", en: "The Mindful Balancer", es: "El Equilibrador Consciente", fr: "L'Équilibreur Conscient" },
+      BUILDER: {
+        pt: "O Construtor Patrimonial",
+        en: "The Asset Builder",
+        es: "El Constructor Patrimonial",
+        fr: "Le Bâtisseur de Patrimoine",
+      },
+      GUARDIAN: {
+        pt: "O Guardião Prudente",
+        en: "The Prudent Guardian",
+        es: "El Guardián Prudente",
+        fr: "Le Gardien Prudent",
+      },
+      STRATEGIST: {
+        pt: "O Estrategista Analítico",
+        en: "The Analytical Strategist",
+        es: "El Estratega Analítico",
+        fr: "Le Stratège Analytique",
+      },
+      ADVENTURER: {
+        pt: "O Aventureiro Arrojado",
+        en: "The Bold Adventurer",
+        es: "El Aventurero Audaz",
+        fr: "L'Aventurier Audacieux",
+      },
+      BALANCER: {
+        pt: "O Equilibrador Consciente",
+        en: "The Mindful Balancer",
+        es: "El Equilibrador Consciente",
+        fr: "L'Équilibreur Conscient",
+      },
     };
     const dominant = (score.dominantArchetype as string) ?? "BUILDER";
     const archScores = (score.archetypeScores as Record<string, number>) ?? {};
@@ -672,17 +914,38 @@ function formatPartialResult(
       quizVersion,
       scoringVersion,
       strongestDimension: dominant,
-      strongestDimensionLabel: moneyLabels[dominant]?.[locale] ?? moneyLabels[dominant]?.pt ?? dominant,
+      strongestDimensionLabel:
+        moneyLabels[dominant]?.[locale] ?? moneyLabels[dominant]?.pt ?? dominant,
       dimensionScores: archScores,
     };
   }
 
   if (quizSlug === "focusstyle") {
     const focusLabels: Record<string, Record<string, string>> = {
-      IMMERSIVE_HYPERFOCUS: { pt: "Hiperfoco Imersivo", en: "Deep Immersive Flow", es: "Hiperenfoque Inmersivo", fr: "Flow Immersif Profond" },
-      MODULAR_SERIAL: { pt: "Foco Modular Estruturado", en: "Structured Modular Focus", es: "Enfoque Modular Estructurado", fr: "Focus Modulaire Structuré" },
-      COLLABORATIVE: { pt: "Foco Cocriativo Colaborativo", en: "Collaborative Focus", es: "Enfoque Colaborativo", fr: "Focus Collaboratif" },
-      REACTIVE_SPRINT: { pt: "Foco em Sprint Reativo", en: "Reactive Sprint Focus", es: "Enfoque de Sprint Reactivo", fr: "Focus Sprint Réactif" },
+      IMMERSIVE_HYPERFOCUS: {
+        pt: "Hiperfoco Imersivo",
+        en: "Deep Immersive Flow",
+        es: "Hiperenfoque Inmersivo",
+        fr: "Flow Immersif Profond",
+      },
+      MODULAR_SERIAL: {
+        pt: "Foco Modular Estruturado",
+        en: "Structured Modular Focus",
+        es: "Enfoque Modular Estructurado",
+        fr: "Focus Modulaire Structuré",
+      },
+      COLLABORATIVE: {
+        pt: "Foco Cocriativo Colaborativo",
+        en: "Collaborative Focus",
+        es: "Enfoque Colaborativo",
+        fr: "Focus Collaboratif",
+      },
+      REACTIVE_SPRINT: {
+        pt: "Foco em Sprint Reativo",
+        en: "Reactive Sprint Focus",
+        es: "Enfoque de Sprint Reactivo",
+        fr: "Focus Sprint Réactif",
+      },
     };
     const primary = (score.primaryStyle as string) ?? "IMMERSIVE_HYPERFOCUS";
     const styleScores = (score.styleScores as Record<string, number>) ?? {};
@@ -692,17 +955,38 @@ function formatPartialResult(
       quizVersion,
       scoringVersion,
       strongestDimension: primary,
-      strongestDimensionLabel: focusLabels[primary]?.[locale] ?? focusLabels[primary]?.pt ?? primary,
+      strongestDimensionLabel:
+        focusLabels[primary]?.[locale] ?? focusLabels[primary]?.pt ?? primary,
       dimensionScores: styleScores,
     };
   }
 
   if (quizSlug === "decisiondna") {
     const decisionLabels: Record<string, Record<string, string>> = {
-      ANALYTICAL: { pt: "Decisor Analítico", en: "Analytical Decision Maker", es: "Decisor Analítico", fr: "Décideur Analytique" },
-      INTUITIVE: { pt: "Decisor Intuitivo", en: "Intuitive Decision Maker", es: "Decisor Intuitivo", fr: "Décideur Intuitif" },
-      PRAGMATIC: { pt: "Decisor Pragmático", en: "Pragmatic Decision Maker", es: "Decisor Pragmático", fr: "Décideur Pragmatique" },
-      COLLABORATIVE: { pt: "Decisor Colaborativo", en: "Collaborative Decision Maker", es: "Decisor Colaborativo", fr: "Décideur Collaboratif" },
+      ANALYTICAL: {
+        pt: "Decisor Analítico",
+        en: "Analytical Decision Maker",
+        es: "Decisor Analítico",
+        fr: "Décideur Analytique",
+      },
+      INTUITIVE: {
+        pt: "Decisor Intuitivo",
+        en: "Intuitive Decision Maker",
+        es: "Decisor Intuitivo",
+        fr: "Décideur Intuitif",
+      },
+      PRAGMATIC: {
+        pt: "Decisor Pragmático",
+        en: "Pragmatic Decision Maker",
+        es: "Decisor Pragmático",
+        fr: "Décideur Pragmatique",
+      },
+      COLLABORATIVE: {
+        pt: "Decisor Colaborativo",
+        en: "Collaborative Decision Maker",
+        es: "Decisor Colaborativo",
+        fr: "Décideur Collaboratif",
+      },
     };
     const dominant = (score.dominantStyle as string) ?? "ANALYTICAL";
     const distribution = (score.styleDistribution as Record<string, number>) ?? {};
@@ -712,28 +996,56 @@ function formatPartialResult(
       quizVersion,
       scoringVersion,
       strongestDimension: dominant,
-      strongestDimensionLabel: decisionLabels[dominant]?.[locale] ?? decisionLabels[dominant]?.pt ?? dominant,
+      strongestDimensionLabel:
+        decisionLabels[dominant]?.[locale] ?? decisionLabels[dominant]?.pt ?? dominant,
       dimensionScores: distribution,
     };
   }
 
   if (quizSlug === "coupledna") {
     const coupleLabels: Record<string, Record<string, string>> = {
-      COMMUNICATION: { pt: "Comunicação e Escuta", en: "Communication & Listening", es: "Comunicación y Escucha", fr: "Communication et Écoute" },
-      LIFE_VALUES: { pt: "Valores e Filosofia de Vida", en: "Life Values & Principles", es: "Valores y Filosofía de Vida", fr: "Valeurs et Philosophie de Vie" },
-      CONFLICT_MANAGEMENT: { pt: "Gestão Consciente de Conflitos", en: "Mindful Conflict Resolution", es: "Gestión Consciente de Conflictos", fr: "Résolution Consciente des Conflits" },
-      FINANCES: { pt: "Harmonia Financeira", en: "Financial Harmony", es: "Armonía Financiera", fr: "Harmonie Financière" },
-      FUTURE_PLANS: { pt: "Planos e Visão de Futuro", en: "Future Vision & Plans", es: "Visión y Planes de Futuro", fr: "Vision et Projets d'Avenir" },
+      COMMUNICATION: {
+        pt: "Comunicação e Escuta",
+        en: "Communication & Listening",
+        es: "Comunicación y Escucha",
+        fr: "Communication et Écoute",
+      },
+      LIFE_VALUES: {
+        pt: "Valores e Filosofia de Vida",
+        en: "Life Values & Principles",
+        es: "Valores y Filosofía de Vida",
+        fr: "Valeurs et Philosophie de Vie",
+      },
+      CONFLICT_MANAGEMENT: {
+        pt: "Gestão Consciente de Conflitos",
+        en: "Mindful Conflict Resolution",
+        es: "Gestión Consciente de Conflictos",
+        fr: "Résolution Consciente des Conflits",
+      },
+      FINANCES: {
+        pt: "Harmonia Financeira",
+        en: "Financial Harmony",
+        es: "Armonía Financiera",
+        fr: "Harmonie Financière",
+      },
+      FUTURE_PLANS: {
+        pt: "Planos e Visão de Futuro",
+        en: "Future Vision & Plans",
+        es: "Visión y Planes de Futuro",
+        fr: "Vision et Projets d'Avenir",
+      },
     };
     const dimScores = (score.dimensionScores as Record<string, number>) ?? {};
-    const highestDim = Object.entries(dimScores).sort(([, a], [, b]) => b - a)[0]?.[0] ?? "COMMUNICATION";
+    const highestDim =
+      Object.entries(dimScores).sort(([, a], [, b]) => b - a)[0]?.[0] ?? "COMMUNICATION";
     return {
       sessionId,
       quizSlug,
       quizVersion,
       scoringVersion,
       strongestDimension: highestDim,
-      strongestDimensionLabel: coupleLabels[highestDim]?.[locale] ?? coupleLabels[highestDim]?.pt ?? highestDim,
+      strongestDimensionLabel:
+        coupleLabels[highestDim]?.[locale] ?? coupleLabels[highestDim]?.pt ?? highestDim,
       dimensionScores: dimScores,
     };
   }
@@ -741,17 +1053,26 @@ function formatPartialResult(
   // Personality Map fallback
   const personalityLabels: Record<string, Record<string, string>> = {
     OPENNESS: { pt: "Abertura a Experiências", en: "Openness", es: "Apertura", fr: "Ouverture" },
-    CONSCIENTIOUSNESS: { pt: "Conscienciosidade", en: "Conscientiousness", es: "Responsabilidad", fr: "Conscienciosité" },
+    CONSCIENTIOUSNESS: {
+      pt: "Conscienciosidade",
+      en: "Conscientiousness",
+      es: "Responsabilidad",
+      fr: "Conscienciosité",
+    },
     EXTRAVERSION: { pt: "Extroversão", en: "Extraversion", es: "Extraversión", fr: "Extraversion" },
     AGREEABLENESS: { pt: "Amabilidade", en: "Agreeableness", es: "Amabilidad", fr: "Agréabilité" },
-    EMOTIONAL_STABILITY: { pt: "Estabilidade Emocional", en: "Emotional Stability", es: "Estabilidad Emocional", fr: "Stabilité Émotionnelle" },
+    EMOTIONAL_STABILITY: {
+      pt: "Estabilidade Emocional",
+      en: "Emotional Stability",
+      es: "Estabilidad Emocional",
+      fr: "Stabilité Émotionnelle",
+    },
   };
 
   const dimScores = (score.dimensionScores as Record<string, number>) ?? {};
-  const highestDim = Object.entries(dimScores).sort(
-    ([, a], [, b]) => b - a,
-  )[0]?.[0] ?? "OPENNESS";
-  const qualityWarning = typeof score.uniformResponseWarning === "boolean" ? score.uniformResponseWarning : undefined;
+  const highestDim = Object.entries(dimScores).sort(([, a], [, b]) => b - a)[0]?.[0] ?? "OPENNESS";
+  const qualityWarning =
+    typeof score.uniformResponseWarning === "boolean" ? score.uniformResponseWarning : undefined;
 
   return {
     sessionId,
@@ -759,7 +1080,8 @@ function formatPartialResult(
     quizVersion,
     scoringVersion,
     strongestDimension: highestDim,
-    strongestDimensionLabel: personalityLabels[highestDim]?.[locale] ?? personalityLabels[highestDim]?.en ?? highestDim,
+    strongestDimensionLabel:
+      personalityLabels[highestDim]?.[locale] ?? personalityLabels[highestDim]?.en ?? highestDim,
     dimensionScores: dimScores,
     qualityWarning,
   };

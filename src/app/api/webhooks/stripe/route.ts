@@ -20,6 +20,11 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ received: true, ...result });
   } catch (err: unknown) {
     const message = err instanceof Error ? err.message : "Webhook error";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const isAuthFailure =
+      message.includes("signature") ||
+      message.includes("STRIPE_WEBHOOK_SECRET") ||
+      message.includes("tolerance");
+
+    return NextResponse.json({ error: message }, { status: isAuthFailure ? 401 : 400 });
   }
 }

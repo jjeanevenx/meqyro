@@ -6,6 +6,8 @@ import { Mail, ShieldCheck, Loader2, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import type { Locale } from "@/lib/i18n/config";
 
 type LeadCaptureCardProps = {
   sessionId: string;
@@ -27,73 +29,70 @@ export function LeadCaptureCard({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const safeLocale: Locale = locale === "en" || locale === "es" || locale === "fr" ? locale : "pt";
+  const dict = getDictionary(safeLocale);
+
   const localizedText = {
-    title: {
-      pt: "Salvar seu resultado",
-      en: "Save your result",
-      es: "Guardar tu resultado",
-      fr: "Enregistrer vos résultats",
-    }[locale] ?? "Salvar seu resultado",
-    subtitle: {
-      pt: "Informe seu e-mail para receber o link seguro de acesso e nunca perder sua pontuação.",
-      en: "Enter your email to receive a secure access link and preserve your score.",
-      es: "Introduce tu correo para recibir un enlace seguro y no perder tu puntuación.",
-      fr: "Saisissez votre e-mail pour recevoir un lien d'accès sécurisé.",
-    }[locale] ?? "Informe seu e-mail para receber o link seguro de acesso.",
-    emailPlaceholder: {
-      pt: "seu@email.com",
-      en: "your@email.com",
-      es: "tu@email.com",
-      fr: "votre@email.com",
-    }[locale] ?? "seu@email.com",
-    marketingLabel: {
-      pt: "Desejo receber conteúdos exclusivos, novos quizzes e atualizações da Meqyro (opcional).",
-      en: "I wish to receive exclusive content, new quizzes and updates from Meqyro (optional).",
-      es: "Deseo recibir contenido exclusivo, nuevos quizzes y actualizaciones de Meqyro (opcional).",
-      fr: "Je souhaite recevoir des contenus exclusifs et des mises à jour de Meqyro (facultatif).",
-    }[locale] ?? "Desejo receber conteúdos exclusivos da Meqyro.",
-    submitBtn: {
-      pt: "Salvar e ver resultado",
-      en: "Save and view results",
-      es: "Guardar y ver resultado",
-      fr: "Enregistrer et voir les résultats",
-    }[locale] ?? "Salvar e ver resultado",
+    title: dict.leadCapture.title,
+    subtitle: dict.leadCapture.subtitle,
+    emailPlaceholder: dict.leadCapture.emailPlaceholder,
+    marketingLabel: dict.leadCapture.promotionalConsent,
+    submitBtn: dict.leadCapture.submitButton,
+    submittingBtn: dict.leadCapture.submitting,
+    emailLabel: {
+      pt: "Seu melhor e-mail",
+      en: "Your best email address",
+      es: "Tu mejor correo electrónico",
+      fr: "Votre meilleure adresse e-mail",
+    }[safeLocale],
     skipBtn: {
       pt: "Ver resultado sem salvar",
       en: "View results without saving",
       es: "Ver resultado sin guardar",
       fr: "Voir les résultats sans enregistrer",
-    }[locale] ?? "Ver resultado sem salvar",
+    }[safeLocale],
+    invalidEmailError: {
+      pt: "Por favor, digite um endereço de e-mail válido.",
+      en: "Please enter a valid email address.",
+      es: "Por favor, introduce un correo electrónico válido.",
+      fr: "Veuillez saisir une adresse e-mail valide.",
+    }[safeLocale],
+    genericError: {
+      pt: "Ocorreu um erro ao salvar seu e-mail.",
+      en: "An error occurred while saving your email.",
+      es: "Ocurrió un error al guardar tu correo.",
+      fr: "Une erreur est survenue lors de l'enregistrement de votre e-mail.",
+    }[safeLocale],
     legalPrefix: {
       pt: "Ao continuar, você concorda com nossos ",
       en: "By continuing, you agree to our ",
       es: "Al continuar, aceptas nuestros ",
       fr: "En continuant, vous acceptez nos ",
-    }[locale] ?? "Ao continuar, você concorda com nossos ",
+    }[safeLocale],
     termsLink: {
       pt: "Termos de Uso",
       en: "Terms of Service",
       es: "Términos de Uso",
       fr: "Conditions d'utilisation",
-    }[locale] ?? "Termos de Uso",
+    }[safeLocale],
     andWord: {
       pt: " e ",
       en: " and ",
       es: " y ",
       fr: " et ",
-    }[locale] ?? " e ",
+    }[safeLocale],
     privacyLink: {
       pt: "Política de Privacidade",
       en: "Privacy Policy",
       es: "Política de Privacidad",
       fr: "Politique de confidentialité",
-    }[locale] ?? "Política de Privacidade",
+    }[safeLocale],
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email || !email.includes("@")) {
-      setError("Por favor, digite um e-mail válido.");
+      setError(localizedText.invalidEmailError);
       return;
     }
 
@@ -115,12 +114,12 @@ export function LeadCaptureCard({
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.error ?? "Erro ao salvar e-mail.");
+        throw new Error(errorData.error ?? localizedText.genericError);
       }
 
       onSuccess();
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Ocorreu um erro ao salvar seu e-mail.");
+      setError(err instanceof Error ? err.message : localizedText.genericError);
       setIsSubmitting(false);
     }
   };
@@ -145,7 +144,7 @@ export function LeadCaptureCard({
         <div className="form-group">
           <Input
             id="lead-email"
-            label="Seu melhor e-mail"
+            label={localizedText.emailLabel}
             type="email"
             required
             placeholder={localizedText.emailPlaceholder}
@@ -186,7 +185,7 @@ export function LeadCaptureCard({
             {isSubmitting ? (
               <>
                 <Loader2 className="animate-spin" size={18} />
-                <span>Salvando…</span>
+                <span>{localizedText.submittingBtn}</span>
               </>
             ) : (
               <>

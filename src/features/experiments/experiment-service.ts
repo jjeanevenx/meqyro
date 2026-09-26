@@ -1,13 +1,8 @@
 import { createHash } from "node:crypto";
-import type {
-  ExperimentDefinition,
-  ResolvedVariant,
-} from "./contracts";
+import type { ExperimentDefinition, ResolvedVariant } from "./contracts";
 
 export function getExperimentBucket(experimentKey: string, subjectId: string): number {
-  const hash = createHash("sha256")
-    .update(`${experimentKey}:${subjectId}`)
-    .digest("hex");
+  const hash = createHash("sha256").update(`${experimentKey}:${subjectId}`).digest("hex");
   // Take first 8 chars of hex, parse as integer, modulo 100
   const intVal = parseInt(hash.slice(0, 8), 16);
   return intVal % 100; // 0 - 99

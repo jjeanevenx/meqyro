@@ -4,11 +4,16 @@ import process from "node:process";
 const port = process.env.SMOKE_PORT ?? "3100";
 const baseUrl = process.env.SMOKE_BASE_URL ?? `http://127.0.0.1:${port}`;
 const nextBin = new URL("../node_modules/next/dist/bin/next", import.meta.url);
+const adminSecret = process.env.ADMIN_API_SECRET ?? "admin-super-secure-secret-token-meqyro-v1";
 const server = process.env.SMOKE_BASE_URL
   ? null
   : spawn(process.execPath, [nextBin.pathname.slice(1), "start", "-p", port], {
       cwd: new URL("..", import.meta.url),
       stdio: ["ignore", "pipe", "pipe"],
+      env: {
+        ...process.env,
+        ADMIN_API_SECRET: adminSecret,
+      },
     });
 
 async function waitUntilReady() {
@@ -24,8 +29,9 @@ async function waitUntilReady() {
   throw new Error(`Smoke server did not become ready at ${baseUrl}`);
 }
 
-async function verify(path, expected) {
-  const response = await fetch(`${baseUrl}${path}`, { redirect: "manual" });
+async function verify(path, expected, options = {}) {
+  const headers = options.headers ?? {};
+  const response = await fetch(`${baseUrl}${path}`, { redirect: "manual", headers });
   const body = await response.text();
   if (!response.ok || !body.includes(expected)) {
     throw new Error(`${path} failed: ${response.status}; expected ${JSON.stringify(expected)}`);
@@ -78,7 +84,19 @@ try {
 
   // Admin & SEO
   await verify("/pt/admin", "Painel de Operações");
-  await verify("/api/admin/metrics", '"metrics"');
+  await verify(`/pt/admin?token=${adminSecret}`, "Painel de Operações Meqyro");
+
+  // Verify unauthorized admin metrics is blocked (401)
+  const unauthRes = await fetch(`${baseUrl}/api/admin/metrics`);
+  if (unauthRes.status !== 401) {
+    throw new Error(`/api/admin/metrics unauth gate failed with status ${unauthRes.status}`);
+  }
+  console.log("PASS /api/admin/metrics (401 Unauthorized Gate)");
+
+  // Verify authenticated admin metrics succeeds (200)
+  await verify("/api/admin/metrics", '"metrics"', {
+    headers: { "x-admin-token": adminSecret },
+  });
   await verify("/sitemap.xml", "<urlset");
   await verify("/robots.txt", "Disallow");
 } finally {

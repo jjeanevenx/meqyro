@@ -4,13 +4,9 @@ import { randomBytes } from "node:crypto";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { matchesAnonymousSessionToken } from "@/lib/security/anonymous-session";
 import { logEvent } from "@/lib/observability/logger";
-import type {
-  CreateReferralInput,
-  SafeShareData,
-} from "./contracts";
+import type { CreateReferralInput, SafeShareData } from "./contracts";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
 
 function generateCode(): string {
   const rand = randomBytes(4).toString("hex").toUpperCase();
@@ -34,12 +30,7 @@ export async function createReferralLink(
     return null;
   }
 
-  if (
-    !matchesAnonymousSessionToken(
-      input.sessionToken,
-      session.access_token_hash,
-    )
-  ) {
+  if (!matchesAnonymousSessionToken(input.sessionToken, session.access_token_hash)) {
     return null;
   }
 
@@ -54,15 +45,12 @@ export async function createReferralLink(
   const code = existing?.code ?? generateCode();
 
   if (!existing) {
-    const { error: insertError } = await supabase
-      .schema("meqyro")
-      .from("referrals")
-      .insert({
-        code,
-        creator_session_id: input.sessionId,
-        quiz_slug: input.quizSlug,
-        locale: input.locale,
-      });
+    const { error: insertError } = await supabase.schema("meqyro").from("referrals").insert({
+      code,
+      creator_session_id: input.sessionId,
+      quiz_slug: input.quizSlug,
+      locale: input.locale,
+    });
 
     if (insertError) {
       logEvent("error", "referral_insert_failed", {

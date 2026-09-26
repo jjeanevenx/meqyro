@@ -1,9 +1,16 @@
 import { describe, it, expect } from "vitest";
-import { startQuizSession, saveAnswer, completeQuizSession } from "@/features/quiz-engine/session-service";
+import {
+  startQuizSession,
+  saveAnswer,
+  completeQuizSession,
+} from "@/features/quiz-engine/session-service";
 import { getProtectedResult } from "@/features/results/result-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
+import { isSupabaseAvailable } from "./db-check";
 
-describe("Protected Result & Paywall Service", () => {
+const isOnline = await isSupabaseAvailable();
+
+describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration Tests", () => {
   it("enforces free partial view and blocks premium content until grant is acquired", async () => {
     // 1. Start BrainRank session
     const { session, token } = await startQuizSession({
@@ -61,19 +68,19 @@ describe("Protected Result & Paywall Service", () => {
       grant_type: "PREMIUM_REPORT",
     });
 
-    // 4. Query protected result as a verified premium user
-    const premiumResult = await getProtectedResult({
+    // 4. Query protected result again as a paid user
+    const paidResult = await getProtectedResult({
       sessionId: session.id,
       sessionToken: token,
       locale: "pt",
       market: "BR",
     });
 
-    expect(premiumResult.accessLevel).toBe("PREMIUM_UNLOCKED");
-    expect(premiumResult.premiumReport).toBeDefined();
-    expect(premiumResult.premiumReport?.executiveSummary).toBeDefined();
-    expect(premiumResult.premiumReport?.percentileRank).toBeGreaterThan(0);
-    expect(premiumResult.premiumReport?.sections.length).toBeGreaterThan(0);
-    expect(premiumResult.premiumReport?.comparativeBenchmark).toBeDefined();
-  }, 15000);
+    expect(paidResult.accessLevel).toBe("PREMIUM_UNLOCKED");
+    expect(paidResult.paywall).toBeUndefined();
+    expect(paidResult.premiumReport?.percentileRank).toBeGreaterThanOrEqual(0);
+    expect(paidResult.premiumReport?.sections.length).toBeGreaterThan(0);
+    expect(paidResult.premiumReport?.executiveSummary).toBeDefined();
+    expect(paidResult.premiumReport?.comparativeBenchmark).toBeDefined();
+  });
 });

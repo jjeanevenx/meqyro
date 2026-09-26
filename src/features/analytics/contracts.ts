@@ -83,14 +83,9 @@ export function sanitizeAnalyticsProperties(
       continue;
     }
     // Only permit primitive values to prevent complex nested leaks (e.g. nested answer trees or PII objects)
-    if (
-      typeof value === "string" ||
-      typeof value === "number" ||
-      typeof value === "boolean"
-    ) {
+    if (typeof value === "string" || typeof value === "number" || typeof value === "boolean") {
       // String length clamp
-      sanitized[normalizedKey] =
-        typeof value === "string" ? value.slice(0, 128) : value;
+      sanitized[normalizedKey] = typeof value === "string" ? value.slice(0, 128) : value;
     }
   }
 

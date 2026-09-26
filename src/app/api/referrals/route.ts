@@ -8,10 +8,7 @@ export async function POST(request: Request) {
     const { sessionId, sessionToken, quizSlug, locale } = body ?? {};
 
     if (!sessionId || !sessionToken || !quizSlug || !isLocale(locale)) {
-      return NextResponse.json(
-        { error: "Invalid referral creation parameters" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Invalid referral creation parameters" }, { status: 400 });
     }
 
     const shareData = await createReferralLink({
@@ -30,9 +27,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json(shareData);
   } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
+    return NextResponse.json({ error: "Internal server error" }, { status: 500 });
   }
 }

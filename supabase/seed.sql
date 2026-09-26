@@ -3,13 +3,17 @@
 
 -- 1. Quizzes
 insert into meqyro.quizzes (slug, product_code, active)
-values ('brainrank', 'BRAINRANK', true), ('personality-map', 'PERSONALITY_MAP', true)
+values ('brainrank', 'BRAINRANK', true), ('personality-map', 'PERSONALITY_MAP', true), ('careerfit', 'CAREERFIT', true), ('moneydna', 'MONEYDNA', true), ('focusstyle', 'FOCUSSTYLE', true), ('decisiondna', 'DECISIONDNA', true), ('coupledna', 'COUPLEDNA', true)
 on conflict (slug) do update set active = true;
 
 -- 2. Quiz Versions
 insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
-select id, '1.0', '1.0', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes
+select id, '1.0', '1.0', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug in ('brainrank', 'personality-map')
 on conflict (quiz_id, version) do update set status = 'APPROVED', scoring_version = '1.0';
+
+insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
+select id, 'v1.0.0', 'v1', 'PUBLISHED'::meqyro.content_status, now() from meqyro.quizzes where slug in ('careerfit', 'moneydna', 'focusstyle', 'decisiondna', 'coupledna')
+on conflict (quiz_id, version) do update set status = 'PUBLISHED', scoring_version = 'v1';
 
 -- 3. Product Prices
 insert into meqyro.product_prices (quiz_id, market, currency, amount, active)
@@ -17,6 +21,13 @@ select q.id, price.market, price.currency, price.amount, true
 from meqyro.quizzes q
 cross join (values ('BR','BRL',1290),('US','USD',299),('EU','EUR',299),('GB','GBP',249)) as price(market,currency,amount)
 where q.slug in ('brainrank', 'personality-map')
+on conflict (quiz_id, market, currency) do update set active = true, amount = excluded.amount;
+
+insert into meqyro.product_prices (quiz_id, market, currency, amount, active)
+select q.id, price.market, price.currency, price.amount, true
+from meqyro.quizzes q
+cross join (values ('BR','BRL',1490),('US','USD',399),('EU','EUR',399),('GB','GBP',349)) as price(market,currency,amount)
+where q.slug in ('careerfit', 'moneydna', 'focusstyle', 'decisiondna', 'coupledna')
 on conflict (quiz_id, market, currency) do update set active = true, amount = excluded.amount;
 
 -- 4. BrainRank Questions and Options
@@ -2818,6 +2829,2004 @@ begin
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
   values (v_question_id, 'fr', 'Les critiques ou jugements négatifs ébranlent souvent ma confiance pendant des jours.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+end $$;
+
+-- 6. CareerFit Questions
+do $$
+declare
+  v_quiz_version_id uuid;
+  v_question_id uuid;
+begin
+  select qv.id into v_quiz_version_id
+  from meqyro.quiz_versions qv
+  join meqyro.quizzes q on q.id = qv.quiz_id
+  where q.slug = 'careerfit' and qv.version = 'v1.0.0';
+
+  -- Question 1: CF_TECH_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_TECH_01', 1, 'LIKERT', '{"dimension":"TECHNICAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro aprofundar minha especialidade técnica do que assumir funções de gestão geral.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer deepening my technical expertise over taking on general management roles.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero profundizar mi especialidad técnica que asumir funciones de gestión general.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère approfondir mon expertise technique plutôt que d''assumer des fonctions de gestion générale.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 2: CF_TECH_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_TECH_02', 2, 'LIKERT', '{"dimension":"TECHNICAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Sinto orgulho quando sou procurado como referência no assunto que domino.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I feel proud when colleagues seek me out as a subject-matter reference.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Me siento orgulloso cuando me buscan como referente en el tema que domino.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je suis fier d''être consulté comme référence dans le domaine que je maîtrise.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 3: CF_TECH_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_TECH_03', 3, 'LIKERT', '{"dimension":"TECHNICAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Resolver desafios complexos com rigor e qualidade é mais motivador do que política corporativa.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Solving complex challenges with rigor and craft is more motivating than corporate politics.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Resolver retos complejos con rigor y calidad es más motivador que la política corporativa.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Résoudre des défis complexes avec rigueur et qualité est plus motivant que la politique d''entreprise.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 4: CF_TECH_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_TECH_04', 4, 'LIKERT', '{"dimension":"TECHNICAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Mantenho-me constantemente atualizado sobre ferramentas e metodologias avançadas da minha área.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I constantly keep up to date with cutting-edge tools and methodologies in my field.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Me mantengo constantemente actualizado sobre herramientas y metodologías de vanguardia.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je me tiens constamment informé des outils et méthodologies de pointe de mon secteur.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 5: CF_MGT_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_MGT_01', 5, 'LIKERT', '{"dimension":"MANAGERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Gosto de coordenar pessoas, alinhar objetivos e acompanhar entregas de equipe.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I enjoy coordinating people, aligning goals, and tracking team deliverables.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Disfruto coordinando personas, alineando objetivos y supervisando entregas de equipo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''aime coordonner les personnes, aligner les objectifs et suivre les livrables d''équipe.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 6: CF_MGT_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_MGT_02', 6, 'LIKERT', '{"dimension":"MANAGERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Assumir a responsabilidade final pelo resultado global me energiza.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Taking ultimate responsibility for overall outcomes energizes me.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Asumir la responsabilidad final por los resultados globales me llena de energía.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Prendre la responsabilité finale des résultats globaux me stimule.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 7: CF_MGT_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_MGT_03', 7, 'LIKERT', '{"dimension":"MANAGERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Tenho facilidade para articular interesses distintos entre áreas e liderar mudanças.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I easily navigate diverse cross-functional interests and lead organizational change.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tengo facilidad para articular intereses diversos entre áreas y liderar el cambio.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''articule facilement des intérêts variés entre services et mène le changement.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 8: CF_MGT_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_MGT_04', 8, 'LIKERT', '{"dimension":"MANAGERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Desenvolver talentos e preparar sucessores é uma prioridade natural no meu trabalho.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Developing talent and mentoring future leaders is a natural priority in my work.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Desarrollar talento y preparar sucesores es una prioridad natural en mi trabajo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Développer les talents et préparer la relève est une priorité naturelle dans mon travail.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 9: CF_CREAT_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CREAT_01', 9, 'LIKERT', '{"dimension":"CREATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Sinto necessidade constante de criar produtos, formatos ou soluções inéditas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I feel a constant urge to create novel products, formats, or original solutions.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Siento una necesidad constante de crear productos, formatos o soluciones novedosas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''éprouve le besoin constant de créer des produits, formats ou solutions inédites.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 10: CF_CREAT_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CREAT_02', 10, 'LIKERT', '{"dimension":"CREATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Rotinas repetitivas esgotam rapidamente meu entusiasmo profissional.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Repetitive routines quickly drain my professional enthusiasm.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Las rutinas repetitivas agotan rápidamente mi entusiasmo profesional.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les routines répétitives épuisent rapidement mon enthousiasme professionnel.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 11: CF_CREAT_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CREAT_03', 11, 'LIKERT', '{"dimension":"CREATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro trabalhar em projetos onde tenho liberdade estética e conceitual.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer working on initiatives where I have artistic and conceptual freedom.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero trabajar en proyectos donde cuento con libertad estética y conceptual.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère travailler sur des projets où je dispose d''une liberté esthétique et conceptuelle.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 12: CF_CREAT_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CREAT_04', 12, 'LIKERT', '{"dimension":"CREATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Conectar ideias de áreas aparentemente desconexas é meu principal diferencial.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Connecting ideas from seemingly unrelated domains is my core strength.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Conectar ideas de áreas aparentemente inconexas es mi principal ventaja diferencial.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Faire des ponts entre des domaines apparemment sans lien est mon atout majeur.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 13: CF_AUTO_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_AUTO_01', 13, 'LIKERT', '{"dimension":"AUTONOMOUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Valorizo mais a autonomia de horários e método do que o prestígio de um cargo fixo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I value autonomy over schedule and methods more than the prestige of a rigid title.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Valoro más la autonomía de horarios y métodos que el prestigio de un puesto fijo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''accorde plus de valeur à l''autonomie d''horaires et de méthodes qu''au prestige d''un titre rigide.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 14: CF_AUTO_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_AUTO_02', 14, 'LIKERT', '{"dimension":"AUTONOMOUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro definir minhas próprias prioridades a seguir manuais operacionais estritos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer setting my own priorities over following strict operational playbooks.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero definir mis propias prioridades a seguir manuales operativos estrictos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère définir mes propres priorités plutôt que de suivre des manuels stricts.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 15: CF_AUTO_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_AUTO_03', 15, 'LIKERT', '{"dimension":"AUTONOMOUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Trabalhar como profissional independente ou empreendedor é uma aspiração forte.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Working independently or building an entrepreneurial venture is a strong aspiration.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Trabajar de forma independiente o emprender es una aspiración firme para mí.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Travailler de manière indépendante ou entreprendre est une forte aspiration.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 16: CF_AUTO_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_AUTO_04', 16, 'LIKERT', '{"dimension":"AUTONOMOUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Produzo meus melhores resultados quando ninguém microgerencia meu dia a dia.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I deliver my best results when nobody micromanages my daily flow.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Produzco mis mejores resultados cuando nadie microgestiona mi día a día.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je produis mes meilleurs résultats lorsque personne ne microgère mon quotidien.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 17: CF_SEC_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_SEC_01', 17, 'LIKERT', '{"dimension":"SECURITY"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Estabilidade contratual e previsibilidade de remuneração são essenciais para minha paz mental.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Contract stability and predictable compensation are essential for my peace of mind.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'La estabilidad contractual y la previsibilidad salarial son indispensables para mi tranquilidad.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'La stabilité contractuelle et la prévisibilité salariale sont indispensables à ma sérénité.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 18: CF_SEC_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_SEC_02', 18, 'LIKERT', '{"dimension":"SECURITY"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro organizações consolidadas a startups que operam em incerteza contínua.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer well-established organizations over early startups operating in constant uncertainty.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero empresas consolidadas a startups que operan en incertidumbre continua.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère les organisations établies aux startups fonctionnant dans une incertitude permanente.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 19: CF_SEC_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_SEC_03', 19, 'LIKERT', '{"dimension":"SECURITY"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Benefícios sólidos (plano de saúde, previdência) pesam muito na escolha de um trabalho.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Comprehensive benefits (healthcare, retirement) weigh heavily when choosing an opportunity.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Beneficios sólidos (salud, pensiones) tienen un gran peso al elegir una propuesta de trabajo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Des avantages solides (mutuelle, retraite) pèsent lourd dans mes choix professionnels.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 20: CF_SEC_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_SEC_04', 20, 'LIKERT', '{"dimension":"SECURITY"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Ter clareza sobre critérios de promoção e estabilidade me traz segurança produtiva.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Clear criteria for advancement and job security gives me productive confidence.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tener claridad sobre los criterios de ascenso y estabilidad me brinda seguridad para rendir.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une clarté sur les critères d''avancement et la pérennité me donne confiance au travail.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 21: CF_CAUSE_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CAUSE_01', 21, 'LIKERT', '{"dimension":"CAUSE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Preciso sentir que meu trabalho diário melhora concretamente a vida das pessoas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I need to feel that my daily work tangibly improves people''s lives.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Necesito sentir que mi trabajo diario mejora concretamente la vida de las personas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''ai besoin de sentir que mon travail quotidien améliore concrètement la vie d''autrui.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 22: CF_CAUSE_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CAUSE_02', 22, 'LIKERT', '{"dimension":"CAUSE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Abriria mão de remuneração maior para atuar em uma organização com forte impacto social.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I would trade higher pay to work for an organization with strong social impact.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Renunciaría a un mayor sueldo para trabajar en una organización con impacto social positivo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je renoncerais à un salaire supérieur pour œuvrer dans une structure à fort impact sociétal.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 23: CF_CAUSE_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CAUSE_03', 23, 'LIKERT', '{"dimension":"CAUSE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Não consigo me dedicar a produtos ou projetos que violem meus valores éticos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I cannot commit to products or missions that conflict with my core ethical values.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'No puedo involucrarme en proyectos que contradigan mis principios éticos esenciales.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je ne peux pas m''investir dans des projets qui heurtent mes valeurs éthiques.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 24: CF_CAUSE_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CF_CAUSE_04', 24, 'LIKERT', '{"dimension":"CAUSE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Deixar um legado positivo para a sociedade é minha principal métrica de realização.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Leaving a positive societal legacy is my chief measure of professional fulfillment.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Dejar un legado positivo para la sociedad es mi mayor medida de realización personal.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Laisser un impact positif dans la société est mon critère majeur d''accomplissement.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+end $$;
+
+-- 7. MoneyDNA Questions
+do $$
+declare
+  v_quiz_version_id uuid;
+  v_question_id uuid;
+begin
+  select qv.id into v_quiz_version_id
+  from meqyro.quiz_versions qv
+  join meqyro.quizzes q on q.id = qv.quiz_id
+  where q.slug = 'moneydna' and qv.version = 'v1.0.0';
+
+  -- Question 1: MD_BLD_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BLD_01', 1, 'LIKERT', '{"archetype":"BUILDER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Vejo o dinheiro principalmente como ferramenta para construir projetos e novos negócios.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I see money primarily as a tool to build ambitious projects and ventures.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Veo el dinero principalmente como una herramienta para construir proyectos e iniciativas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je conçois l''argent avant tout comme un levier pour bâtir des projets et entreprises.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 2: MD_BLD_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BLD_02', 2, 'LIKERT', '{"archetype":"BUILDER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro reinvestir a maior parte dos meus ganhos do que gastar em consumo supérfluo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer reinvesting most of my earnings into assets rather than spending on non-essentials.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero reinvertir la mayoría de mis ingresos antes que gastar en consumo superfluo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère réinvestir l''essentiel de mes gains plutôt que de consommer du superflu.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 3: MD_BLD_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BLD_03', 3, 'LIKERT', '{"archetype":"BUILDER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Tenho satisfação em ver meu patrimônio líquido crescer de forma consistente ao longo dos anos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I take deep satisfaction in watching my net worth grow steadily over the years.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Disfruto profundamente ver crecer mi patrimonio neto de manera constante con el tiempo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''éprouve une réelle satisfaction à voir mon patrimoine net croître au fil des années.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 4: MD_BLD_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BLD_04', 4, 'LIKERT', '{"archetype":"BUILDER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Estou sempre buscando novas fontes de renda ou maneiras de alavancar resultados.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I am always looking for new income streams and ways to compound my results.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Siempre busco nuevas fuentes de ingresos y formas de escalar mis resultados.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je recherche constamment de nouvelles sources de revenus et de leviers d''action.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 5: MD_GRD_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_GRD_01', 5, 'LIKERT', '{"archetype":"GUARDIAN"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Manter uma reserva de emergência confortável é prioritário antes de qualquer investimento arriscado.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Maintaining a solid emergency cushion takes priority over any speculative investment.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Mantener un colchón de emergencia amplio es prioritario antes de cualquier inversión de riesgo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Conserver une épargne de précaution confortable prime sur tout investissement à risque.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 6: MD_GRD_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_GRD_02', 6, 'LIKERT', '{"archetype":"GUARDIAN"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'A possibilidade de perder dinheiro investido me causa desconforto imediato.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'The prospect of losing invested capital causes me immediate unease.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'La posibilidad de perder capital invertido me causa una intranquilidad inmediata.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'L''éventualité de perdre un capital investi me crée un inconfort certain.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 7: MD_GRD_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_GRD_03', 7, 'LIKERT', '{"archetype":"GUARDIAN"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Pesquiso minuciosamente preços e condições antes de realizar qualquer compra relevante.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I thoroughly compare prices and terms before making any significant purchase.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Investigo minuciosamente precios y condiciones antes de efectuar compras importantes.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je compare minutieusement les prix et conditions avant chaque achat significatif.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 8: MD_GRD_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_GRD_04', 8, 'LIKERT', '{"archetype":"GUARDIAN"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Dívidas financeiras tiram meu sono, por isso priorizo quitá-las o mais rápido possível.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Debt keeps me awake at night, so I prioritize clearing balances as quickly as possible.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tener deudas me quita el sueño, así que priorizo liquidarlas de inmediato.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les dettes financières me pèsent, je m''efforce donc de les solder au plus vite.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 9: MD_STRAT_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_STRAT_01', 9, 'LIKERT', '{"archetype":"STRATEGIST"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Acompanho métricas de inflação, rentabilidade real e diversificação de carteira com rigor.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I closely track inflation metrics, real yields, and disciplined portfolio allocation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Sigo con rigor métricas de inflación, rendimiento real y diversificación de cartera.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je suis avec méthode l''inflation, les rendements réels et l''allocation de portefeuille.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 10: MD_STRAT_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_STRAT_02', 10, 'LIKERT', '{"archetype":"STRATEGIST"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Tomo decisões financeiras baseadas em dados e modelos racionais, nunca por impulso emocional.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I make financial decisions using data and rational models, never emotional impulses.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tomo decisiones financieras basadas en datos y lógica, jamás por impulsos de euforia.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je prends mes décisions financières d''après des données rationnelles, jamais par impulsion.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 11: MD_STRAT_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_STRAT_03', 11, 'LIKERT', '{"archetype":"STRATEGIST"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Tenho metas financeiras detalhadas para 3, 5 e 10 anos à frente.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I have well-defined financial roadmaps for 3, 5, and 10 years ahead.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Dispongo de metas financieras estructuradas para los próximos 3, 5 y 10 años.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''établis des plans financiers clairs à 3, 5 et 10 ans.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 12: MD_STRAT_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_STRAT_04', 12, 'LIKERT', '{"archetype":"STRATEGIST"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Gosto de entender a fundo a estrutura de custos, tributos e taxas de qualquer produto financeiro.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I make a point of understanding cost structures, taxes, and fees behind any instrument.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Comprendo a fondo las comisiones, impuestos y costes ocultos de cada producto.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je veille à comprendre les frais, fiscalités et mécanismes de chaque placement.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 13: MD_ADV_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_ADV_01', 13, 'LIKERT', '{"archetype":"ADVENTURER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Aceito volatilidade alta se houver chance real de retornos assimétricos expressivos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I embrace high volatility when there is genuine opportunity for asymmetric upside.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Acepto volatilidad elevada si existe una posibilidad real de retornos asimétricos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''accepte une forte volatilité s''il y a un vrai potentiel de gain asymétrique.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 14: MD_ADV_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_ADV_02', 14, 'LIKERT', '{"archetype":"ADVENTURER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Valorizo experiências memoráveis (viagens, eventos) mais do que acumular números na conta.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I value unforgettable experiences (travel, events) more than hoarding digits in an account.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Valoro las vivencias memorables (viajes, experiencias) más que acumular saldos bancarios.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je privilégie les expériences marquantes (voyages, découvertes) à l''accumulation passive.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 15: MD_ADV_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_ADV_03', 15, 'LIKERT', '{"archetype":"ADVENTURER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Frequentemente me empolgo com ideias arrojadas de novos investimentos e apostas de mercado.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I often get excited about bold new market plays and unconventional ventures.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Suelo entusiasmarme con apuestas atrevidas e innovadoras de inversión.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je m''enthousiasme facilement pour des paris d''investissement audacieux et novateurs.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 16: MD_ADV_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_ADV_04', 16, 'LIKERT', '{"archetype":"ADVENTURER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Para mim, o dinheiro existe para ser desfrutado no presente com intensidade e liberdade.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'To me, money exists to be enjoyed in the present with boldness and freedom.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Para mí, el dinero existe para disfrutarse en el presente con libertad y plenitud.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Pour moi, l''argent sert à profiter du présent avec intensité et liberté.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 17: MD_BAL_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BAL_01', 17, 'LIKERT', '{"archetype":"BALANCER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Busco equilíbrio sereno entre guardar para o futuro e desfrutar com moderação o presente.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I seek calm balance between saving for tomorrow and enjoying today with moderation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Busco un equilibrio sensato entre ahorrar para el futuro y disfrutar con mesura el hoy.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je recherche un juste équilibre entre prévoyance pour demain et plaisir mesuré au présent.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 18: MD_BAL_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BAL_02', 18, 'LIKERT', '{"archetype":"BALANCER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Não deixo o dinheiro se tornar fonte de obsessão nem de negligência na minha rotina.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I do not let finances become an obsession nor an area of chronic neglect.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'No permito que el dinero sea ni motivo de obsesión ni de descuido en mi vida.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je ne laisse pas l''argent devenir une obsession ni une source de négligence.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 19: MD_BAL_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BAL_03', 19, 'LIKERT', '{"archetype":"BALANCER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Minhas despesas cabem confortavelmente no meu padrão de vida sem apertos nem ostentação.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'My expenditures fit comfortably within my lifestyle without stress or ostentation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Mis gastos se ajustan con comodidad a mi estilo de vida, sin estrecheces ni ostentación.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Mes dépenses correspondent sereinement à mon mode de vie, sans privation ni apparat.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 20: MD_BAL_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'MD_BAL_04', 20, 'LIKERT', '{"archetype":"BALANCER"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Generosidade e compartilhar recursos com quem precisa são aspectos centrais da minha ética.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Generosity and sharing with those in need are central pillars of my financial ethics.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'La generosidad y compartir con quienes lo necesitan son pilares de mi ética financiera.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'La générosité et le partage solidaire sont au cœur de mon éthique financière.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+end $$;
+
+-- 8. FocusStyle Questions
+do $$
+declare
+  v_quiz_version_id uuid;
+  v_question_id uuid;
+begin
+  select qv.id into v_quiz_version_id
+  from meqyro.quiz_versions qv
+  join meqyro.quizzes q on q.id = qv.quiz_id
+  where q.slug = 'focusstyle' and qv.version = 'v1.0.0';
+
+  -- Question 1: FS_HYPER_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_HYPER_01', 1, 'LIKERT', '{"style":"IMMERSIVE_HYPERFOCUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Entro em estado de fluxo profundo e perco a noção do tempo quando mergulho em uma única tarefa complexa.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I enter deep flow and lose track of time when fully immersed in a single complex task.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Entro en un estado de flujo profundo y pierdo la noción del tiempo ante una tarea compleja.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''entre en état de flow profond et perds la notion du temps sur une tâche complexe.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 2: FS_HYPER_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_HYPER_02', 2, 'LIKERT', '{"style":"IMMERSIVE_HYPERFOCUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Interrupções constantes enquanto estou concentrado me custam muita energia para retomar o raciocínio.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Frequent interruptions while in the zone cost me significant cognitive energy to resume.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Las interrupciones cuando estoy concentrado me cuestan mucha energía para reanudar el hilo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les interruptions en pleine concentration me coûtent une énergie mentale considérable.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 3: FS_HYPER_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_HYPER_03', 3, 'LIKERT', '{"style":"IMMERSIVE_HYPERFOCUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro blocos contínuos de 3 a 4 horas de silêncio absoluto para trabalhar com qualidade.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I thrive best with 3 to 4 uninterrupted hours of quiet for high-depth output.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Rindo mucho mejor en bloques continuos de 3 a 4 horas de silencio para trabajar a fondo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je donne le meilleur de moi-même avec des plages continues de 3 à 4 heures de calme.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 4: FS_HYPER_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_HYPER_04', 4, 'LIKERT', '{"style":"IMMERSIVE_HYPERFOCUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quando resolvo um problema difícil, continuo pensando nele mesmo longe do computador.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'When tackling a hard problem, it stays running in the back of my mind even off-screen.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Al afrontar un problema difícil, sigo reflexionando en él incluso lejos del escritorio.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Face à un problème complexe, mon esprit continue d''y travailler même loin de l''écran.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 5: FS_HYPER_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_HYPER_05', 5, 'LIKERT', '{"style":"IMMERSIVE_HYPERFOCUS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Gosto de esgotar todas as nuances de um tópico antes de passar para o assunto seguinte.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer exhausting every nuance of a subject before moving on to the next topic.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Me gusta explorar todos los matices de un tema antes de pasar al siguiente asunto.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''aime épuiser chaque nuance d''un sujet avant de basculer vers un autre thème.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 6: FS_MOD_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_MOD_01', 6, 'LIKERT', '{"style":"MODULAR_SERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Divido meu dia em blocos estruturados e sinto satisfação em ticar tarefas concluídas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I structure my day into modular timeblocks and love checking off completed items.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Organizo mi jornada en bloques estructurados y disfruto tachando tareas terminadas.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''organise mes journées en blocs structurés et apprécie cocher les tâches accomplies.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 7: FS_MOD_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_MOD_02', 7, 'LIKERT', '{"style":"MODULAR_SERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Utilizo listas de pendências e técnicas de ritmo (como Pomodoro) com naturalidade.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I naturally use structured task backlogs and interval pacing (like Pomodoro).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Uso listas de pendientes y técnicas de intervalos estructurados con fluidez.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''utilise naturellement des listes ordonnées et des rythmes par intervalles (type Pomodoro).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 8: FS_MOD_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_MOD_03', 8, 'LIKERT', '{"style":"MODULAR_SERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro alternar entre 2 ou 3 tipos diferentes de atividades ao longo do dia para não cansar.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer rotating across 2 or 3 distinct task types throughout the day to stay fresh.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero alternar entre 2 o 3 tipos de actividad a lo largo del día para no saturarme.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''alterne volontiers entre 2 ou 3 types d''activités dans la journée pour garder ma fraîcheur.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 9: FS_MOD_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_MOD_04', 9, 'LIKERT', '{"style":"MODULAR_SERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Definir marcos claros e entregáveis parciais me mantém motivado e disciplinado.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Setting explicit milestones and incremental deliverables keeps me focused and on track.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Fijar hitos claros y entregables parciales me mantiene constante y motivado.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Fixer des jalons explicites et des livrables partiels préserve ma discipline.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 10: FS_MOD_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_MOD_05', 10, 'LIKERT', '{"style":"MODULAR_SERIAL"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Mantenho minha caixa de entrada, arquivos e ambiente de trabalho sempre organizados.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I maintain an organized inbox, disciplined filing system, and tidy work desk.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Mantengo mi bandeja de entrada, carpetas y mesa de trabajo ordenados metódicamente.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je garde ma boîte de réception, mes dossiers et mon espace de travail soigneusement ordonnés.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 11: FS_COL_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_COL_01', 11, 'LIKERT', '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Penso melhor em voz alta, discutindo ideias e hipóteses com colegas em tempo real.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I think best out loud, batting ideas and hypotheses around with peers in real time.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Pienso mejor en voz alta, debatiendo ideas e hipótesis con colegas en tiempo real.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je réfléchis mieux à voix haute, en échangeant des idées avec mes pairs en direct.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 12: FS_COL_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_COL_02', 12, 'LIKERT', '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Sessões de cocriação e brainstorming coletivo elevam muito meu ritmo de entrega.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Collaborative brainstorming and group workshops accelerate my productivity cadence.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Las sesiones de cocreación y lluvia de ideas multiplican mi ritmo de trabajo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les sessions de co-création et ateliers collectifs démultiplient ma dynamique.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 13: FS_COL_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_COL_03', 13, 'LIKERT', '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Trabalhar em isolamento total por muitos dias consecutivos me deixa desmotivado.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Working in total isolation for extended periods drains my motivation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Trabajar en aislamiento total durante varios días seguidos me desmotiva.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Travailler dans un isolement complet plusieurs jours de suite érode ma motivation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 14: FS_COL_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_COL_04', 14, 'LIKERT', '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Receber feedback frequente e rápido me ajuda a calibrar prioridades com assertividade.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Getting quick, iterative feedback helps me calibrate priorities effectively.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Recibir retroalimentación frecuente y ágil me ayuda a calibrar el rumbo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Recevoir des retours rapides et réguliers m''aide à bien ajuster mes priorités.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 15: FS_COL_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_COL_05', 15, 'LIKERT', '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Gosto de construir consensos e engajar o grupo em torno de uma direção comum.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I enjoy building alignment and galvanizing the team around a shared direction.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Me entusiasma generar consensos y movilizar al equipo hacia un objetivo común.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''aime fédérer les énergies et bâtir un consensus autour d''une vision partagée.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 16: FS_SPR_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_SPR_01', 16, 'LIKERT', '{"style":"REACTIVE_SPRINT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Produzo com intensidade máxima quando há prazos curtos e urgência real no ar.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I produce at peak intensity when deadlines are tight and real urgency is present.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Rindo al máximo nivel cuando hay plazos apretados y urgencia real en el ambiente.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je délivre une intensité maximale lorsque les échéances sont courtes et l''urgence palpable.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 17: FS_SPR_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_SPR_02', 17, 'LIKERT', '{"style":"REACTIVE_SPRINT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Situações imprevistas e crises que exigem respostas rápidas me energizam.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Unforeseen emergencies requiring swift, tactical responses bring out my best.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Los imprevistos y las crisis que exigen respuestas rápidas despiertan mi energía.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les imprévus et les crises exigeant une réaction rapide mobilisent toute mon énergie.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 18: FS_SPR_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_SPR_03', 18, 'LIKERT', '{"style":"REACTIVE_SPRINT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Prefiro semanas dinâmicas e imprevisíveis a rotinas perfeitamente planejadas com antecedência.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I prefer fast-moving, dynamic weeks over rigidly scripted routines.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Prefiero semanas dinámicas e impredecibles a calendarios monótonos hiperplanificados.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je préfère les semaines dynamiques et mouvantes aux plannings rigides et prévisibles.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 19: FS_SPR_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_SPR_04', 19, 'LIKERT', '{"style":"REACTIVE_SPRINT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Tenho facilidade para tomar decisões com informações incompletas sob pressão de tempo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I readily make sound judgment calls under time crunch with incomplete data.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Decido con agilidad incluso con información parcial y presión de reloj.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je tranche sans hésiter même avec des données partielles et sous pression du temps.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 20: FS_SPR_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'FS_SPR_05', 20, 'LIKERT', '{"style":"REACTIVE_SPRINT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Alterno períodos de esforço concentrado de alta carga com momentos de descompressão rápida.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I alternate high-octane crunch sprints with deliberate quick decompression periods.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Alterno picos de sprint de máxima exigencia con etapas de descompresión ágil.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''alterne des sprints à haute intensité avec des phases de récupération ciblée.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+end $$;
+
+-- 9. DecisionDNA Scenarios
+do $$
+declare
+  v_quiz_version_id uuid;
+  v_question_id uuid;
+  v_option_id uuid;
+begin
+  select qv.id into v_quiz_version_id
+  from meqyro.quiz_versions qv
+  join meqyro.quizzes q on q.id = qv.quiz_id
+  where q.slug = 'decisiondna' and qv.version = 'v1.0.0';
+
+  -- Scenario 1: DD_SCEN_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'DD_SCEN_01', 1, 'SINGLE_CHOICE', '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set kind = 'SINGLE_CHOICE'
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Você tem 24 horas para escolher entre duas propostas de fornecedor com custos e prazos diferentes. Como você decide?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'You have 24 hours to choose between two vendor proposals with varying costs and timelines. How do you decide?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tienes 24 horas para elegir entre dos propuestas de proveedores con costes y plazos distintos. ¿Cómo decides?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Vous avez 24 heures pour trancher entre deux offres de prestataires aux coûts et délais différents. Comment décidez-vous ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_01_A', 1, '{"style":"ANALYTICAL"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Monto uma planilha comparativa ponderando custo-benefício, SLAs e riscos de entrega.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'I build a comparison model weighting cost-benefit, SLAs, and delivery risks.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Construyo una matriz comparativa ponderando coste-beneficio, ANS y riesgos.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je construis une matrice comparant coûts-bénéfices, SLA et risques de livraison.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_01_B', 2, '{"style":"INTUITIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Confio no histórico de relacionamento e na impressão inicial de confiabilidade da equipe.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'I trust past track record and my gut reading on team trustworthiness.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Confío en mi intuición sobre la fiabilidad del equipo y antecedentes clave.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je me fie à mon ressenti sur la fiabilité de l''équipe et leur réputation.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_01_C', 3, '{"style":"PRAGMATIC"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Escolho a opção com menor risco operacional imediato para destrancar a entrega.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'I pick whichever has the lowest immediate operational friction to keep moving.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Elijo la opción con menor fricción operativa para desbloquear la entrega de inmediato.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je retiens l''option au risque opérationnel minimal pour avancer sans attendre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_01_D', 4, '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Reúno os líderes afetados para um alinhamento rápido e busco decisão consensual.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'I gather impacted team leads for a brief sync and aim for team consensus.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Reúno a los responsables afectados para consensuar la mejor alternativa conjunta.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je réunis les parties prenantes pour un alignement rapide et cherche le consensus.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Scenario 2: DD_SCEN_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'DD_SCEN_02', 2, 'SINGLE_CHOICE', '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set kind = 'SINGLE_CHOICE'
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um lançamento importante apresenta uma falha não-crítica a poucas horas do anúncio oficial. Qual sua postura?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A major launch exhibits a non-critical glitch hours before official announcement. What is your stance?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un lanzamiento clave muestra un fallo no crítico a pocas horas del anuncio oficial. ¿Qué postura adoptas?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un lancement majeur révèle un bug non bloquant quelques heures avant l''annonce officielle. Quelle est votre réaction ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_02_A', 1, '{"style":"PRAGMATIC"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Mantenho o lançamento, documento o contorno e programo a correção para o ciclo seguinte.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Proceed with the release, document workarounds, and patch in the next sprint.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Mantengo el lanzamiento, documento la solución temporal y programo el parche.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je maintiens la sortie, documente le contournement et planifie le correctif.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_02_B', 2, '{"style":"ANALYTICAL"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Avalio estatisticamente o impacto potencial nos usuários antes de tomar qualquer decisão.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Run statistical impact analysis on affected user cohorts before deciding.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Evalúo con datos el porcentaje de usuarios afectados antes de mover un dedo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'J''analyse méthodiquement la proportion d''utilisateurs touchés avant d''agir.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_02_C', 3, '{"style":"INTUITIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Se meu sexto sentido indicar que a reputação pode ser ferida, pauso sem hesitar.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'If my instincts signal brand perception risk, I hit pause without hesitation.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Si mi instinto me dice que la reputación puede verse dañada, pauso el evento.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Si mon intuition me souffle un risque d''image, je suspends sans hésiter.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_02_D', 4, '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Consulto suporte, produto e marketing para deliberar o caminho com menor dano geral.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Consult support, product, and comms leads to jointly weigh trade-offs.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Consulto a soporte, producto y comunicación para decidir juntos la mejor salida.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je consulte le support, le produit et la communication pour arbitrer ensemble.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Scenario 3: DD_SCEN_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'DD_SCEN_03', 3, 'SINGLE_CHOICE', '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set kind = 'SINGLE_CHOICE'
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Você recebe um orçamento extra inesperado para o trimestre. Onde você investe?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'You receive an unexpected surplus budget for the quarter. Where do you allocate it?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Recibes un presupuesto extra inesperado este trimestre. ¿Cómo decides asignarlo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Vous bénéficiez d''un budget excédentaire imprévu ce trimestre. Comment l''allouez-vous ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_03_A', 1, '{"style":"ANALYTICAL"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Simulo o ROI projetado em diferentes frentes e direciono para a de maior retorno esperado.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Model expected ROI across competing initiatives and fund the highest-yield option.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Modelo el retorno de inversión proyectado y financio la opción con mayor rendimiento.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je modélise le ROI prévisionnel et alloue les fonds au levier le plus rentable.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_03_B', 2, '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Abro espaço para a equipe sugerir melhorias estruturais e decidimos por votação deliberativa.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Solicit proposals from the broader team and decide through structured consultation.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Pido propuestas al equipo y decidimos mediante una votación consultiva compartida.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je recueille les propositions de l''équipe et nous arbitrons collectivement.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_03_C', 3, '{"style":"PRAGMATIC"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Elimino dívidas técnicas ou gargalos imediatos que estão travando a velocidade diária.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Direct funds toward eliminating technical debt or acute bottlenecks slowing delivery.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Elimino cuellos de botella técnicos inmediatos que frenan el ritmo diario de trabajo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'J''élimine en priorité la dette technique et les goulots d''étranglement quotidiens.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_03_D', 4, '{"style":"INTUITIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Aposto em uma inovação ousada que vejo como oportunidade de salto à frente da concorrência.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Bet on a bold bet that I intuitively recognize as a leapfrogging opportunity.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Apuesto por una idea vanguardista que percibo como un gran salto competitivo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je parie sur une innovation audacieuse que je pressens comme un avantage clé.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Scenario 4: DD_SCEN_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'DD_SCEN_04', 4, 'SINGLE_CHOICE', '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set kind = 'SINGLE_CHOICE'
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Ao contratar para uma posição-chave, você encontra um candidato brilhante tecnicamente, mas com dúvidas de alinhamento cultural. O que faz?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Hiring for a key role, you find a candidate technically stellar but with cultural fit questions. What do you do?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Al contratar un puesto clave, encuentras un candidato técnicamente brillante pero con dudas culturales. ¿Qué haces?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'En recrutant pour un rôle clé, un profil est techniquement brillant mais pose question sur la culture d''équipe. Que faites-vous ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_04_A', 1, '{"style":"COLLABORATIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Coloco o candidato em dinâmica real com os futuros pares e respeito o veredito da equipe.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Have candidate shadow future peers in a collaborative session and respect team verdict.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Pongo al candidato a trabajar con sus futuros pares y sigo el consenso del equipo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Je le fais échanger avec ses futurs pairs et m''en remets au retour d''équipe.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_04_B', 2, '{"style":"PRAGMATIC"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Contrato com período de experiência objetivo focado em entregáveis concretos e combinados.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Hire on a milestone-based trial period strictly tied to deliverables and team norms.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Contrato con un periodo de prueba claro supeditado a entregables y pautas fijadas.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'J''engage une période d''essai cadrée sur des objectifs et livrables précis.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_04_C', 3, '{"style":"ANALYTICAL"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Aplico testes estruturados de competências e checo múltiplas referências detalhadas.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Run structured competencies scoring and conduct rigorous 360-degree reference checks.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Aplico evaluaciones estructuradas y realizo una verificación exhaustiva de referencias.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'J''utilise des grilles de compétences formelles et vérifie scrupuleusement les références.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value)
+  values (v_question_id, 'DD_04_D', 4, '{"style":"INTUITIVE"}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Se a conversa informal me causou desconforto sutil, não contrato, pois confio na sintonia.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'If informal dialogue triggered intuitive red flags, I pass; chemistry matters most.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Si en la charla informal sentí señales de fricción, rechazo; la sintonía no se fuerza.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Si l''échange informel m''a laissé un doute subtil, je refuse ; l''harmonie est capitale.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+end $$;
+
+-- 10. CoupleDNA Questions
+do $$
+declare
+  v_quiz_version_id uuid;
+  v_question_id uuid;
+begin
+  select qv.id into v_quiz_version_id
+  from meqyro.quiz_versions qv
+  join meqyro.quizzes q on q.id = qv.quiz_id
+  where q.slug = 'coupledna' and qv.version = 'v1.0.0';
+
+  -- Question 1: CD_COMM_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_COMM_01', 1, 'LIKERT', '{"dimension":"COMMUNICATION"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Consigo expressar minhas vulnerabilidades e medos com meu parceiro(a) com total segurança emocional.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I can share my deepest vulnerabilities and fears with my partner with complete emotional safety.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Puedo expresar mis vulnerabilidades e inseguridades a mi pareja con total seguridad emocional.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je peux exprimer mes vulnérabilités et doutes à mon partenaire en toute sécurité émotionnelle.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 2: CD_COMM_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_COMM_02', 2, 'LIKERT', '{"dimension":"COMMUNICATION"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Conversamos abertamente sobre nossos sentimentos sem medo de julgamentos ou retaliações.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We talk candidly about our feelings without fearing judgment or unspoken retaliation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Hablamos con honestidad de lo que sentimos sin temor a juicios ni reproches guardados.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous parlons librement de nos ressentis sans craindre de jugement ni de ressentiment.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 3: CD_COMM_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_COMM_03', 3, 'LIKERT', '{"dimension":"COMMUNICATION"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Sinto que sou verdadeiramente ouvido(a) e compreendido(a) quando divido um incômodo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I feel truly heard and understood whenever I voice a personal frustration.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Me siento genuinamente escuchado(a) y comprendido(a) cuando comparto una inquietud.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Je me sens véritablement écouté(e) et compris(e) lorsque j''exprime une préoccupation.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 4: CD_COMM_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_COMM_04', 4, 'LIKERT', '{"dimension":"COMMUNICATION"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Temos o hábito de checar um ao outro sobre nosso estado de espírito ao longo da semana.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We regularly check in on each other''s emotional well-being throughout the week.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tenemos el hábito de interesarnos mutuamente por nuestro estado de ánimo durante la semana.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous prenons régulièrement des nouvelles de notre état émotionnel au cours de la semaine.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 5: CD_VAL_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_VAL_01', 5, 'LIKERT', '{"dimension":"LIFE_VALUES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Compartilhamos princípios éticos e morais fundamentais que guiam nossas escolhas de vida.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We share fundamental ethical and moral values that guide our major life choices.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Compartimos principios éticos y morales esenciales que guían nuestras decisiones de vida.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous partageons des principes éthiques et moraux essentiels qui guident nos choix de vie.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 6: CD_VAL_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_VAL_02', 6, 'LIKERT', '{"dimension":"LIFE_VALUES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Temos visões harmoniosas sobre o papel da família, amigos e convivência social.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We hold aligned views regarding family presence, friendships, and social life.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Mantenemos posturas afines sobre el lugar de la familia, amistades y vida social.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nos visions s''accordent sur la place de la famille, des amis et de la vie sociale.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 7: CD_VAL_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_VAL_03', 7, 'LIKERT', '{"dimension":"LIFE_VALUES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Respeitamos a espiritualidade, crenças e filosofia de vida um do outro.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We genuinely respect each other''s spiritual beliefs, philosophies, and worldviews.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Respetamos sinceramente las creencias, espiritualidad y filosofía de vida del otro.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous respectons profondément la spiritualité et la philosophie de vie de chacun.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 8: CD_VAL_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_VAL_04', 8, 'LIKERT', '{"dimension":"LIFE_VALUES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'O que consideramos sucesso e realização pessoal aponta para a mesma direção geral.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Our definitions of personal success and meaningful living point in a shared direction.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Lo que consideramos éxito y realización personal camina en una dirección similar.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Notre conception du bonheur et de la réussite personnelle converge vers un cap commun.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 9: CD_CONF_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_CONF_01', 9, 'LIKERT', '{"dimension":"CONFLICT_MANAGEMENT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quando divergimos, conseguimos debater sem recorrer a agressividade, ironia ou silêncio punitivo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'When we disagree, we navigate friction without hostility, stonewalling, or contempt.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Ante desacuerdos, debatimos sin caer en agresividad, ironías ni silencios castigadores.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Lors des désaccords, nous échangeons sans agressivité, sarcasme ni silence punitif.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 10: CD_CONF_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_CONF_02', 10, 'LIKERT', '{"dimension":"CONFLICT_MANAGEMENT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Temos capacidade mútua de pedir desculpas e perdoar de coração após uma discussão.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We both have the humility to apologize and forgive sincerely after a disagreement.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tenemos la capacidad mutua de pedir perdón y perdonar de corazón tras una discusión.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous savons tous deux présenter des excuses sincères et pardonner après un différend.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 11: CD_CONF_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_CONF_03', 11, 'LIKERT', '{"dimension":"CONFLICT_MANAGEMENT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Buscamos soluções em que ambos se sintam contemplados em vez de vencer a disputa.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We aim for collaborative solutions where both win, rather than scoring points in an argument.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Buscamos acuerdos donde ambos se sientan respetados en vez de competir por tener la razón.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous recherchons des compromis bienveillants plutôt que de vouloir avoir raison.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 12: CD_CONF_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_CONF_04', 12, 'LIKERT', '{"dimension":"CONFLICT_MANAGEMENT"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Sabemos dar uma pausa para respirar quando a conversa esquenta antes de dizer algo prejudicial.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We know how to pause and cool down when tempers flare before saying hurtful things.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Sabemos hacer una pausa para serenarnos cuando la charla se tensa antes de herir al otro.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous savons marquer une pause pour apaiser les tensions avant de blesser l''autre.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 13: CD_FIN_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FIN_01', 13, 'LIKERT', '{"dimension":"FINANCES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Temos transparência total sobre rendas, gastos, dívidas e investimentos individuais e conjuntos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We practice transparent honesty regarding earnings, spending, debts, and investments.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Existe transparencia plena sobre ingresos, gastos, deudas y ahorros compartidos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous cultivons une transparence complète sur les revenus, dépenses, dettes et épargne.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 14: CD_FIN_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FIN_02', 14, 'LIKERT', '{"dimension":"FINANCES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Nossos hábitos de consumo e equilíbrio entre poupar e gastar são compatíveis.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Our spending habits and rhythm between saving and enjoying are mutually compatible.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Nuestros hábitos de gasto y la disciplina entre ahorrar y disfrutar son afines.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nos habitudes financières et notre équilibre entre épargne et plaisir sont compatibles.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 15: CD_FIN_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FIN_03', 15, 'LIKERT', '{"dimension":"FINANCES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Planejamos compras de maior porte juntos e respeitamos os combinados orçamentários.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We plan significant purchases jointly and respect agreed financial boundaries.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Planificamos juntos las compras importantes y respetamos los acuerdos de presupuesto.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous concertons les achats majeurs et respectons les accords budgétaires conclus.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 16: CD_FIN_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FIN_04', 16, 'LIKERT', '{"dimension":"FINANCES"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Assuntos de dinheiro no relacionamento são tratados como trabalho em equipe, não cobrança.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Money matters in our relationship are approached as teamwork rather than blame.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Los temas económicos se abordan como una labor en equipo y no como reproche.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les questions financières sont abordées comme une équipe, sans reproches unilatéraux.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 17: CD_FUT_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FUT_01', 17, 'LIKERT', '{"dimension":"FUTURE_PLANS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Temos clareza e convergência sobre onde desejamos morar e nosso estilo de vida nos próximos anos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We share alignment on our preferred living environment and lifestyle for the years ahead.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tenemos sintonía sobre dónde deseamos residir y qué estilo de vida proyectamos juntos.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous partageons une vision claire sur notre lieu de vie et nos choix des prochaines années.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 18: CD_FUT_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FUT_02', 18, 'LIKERT', '{"dimension":"FUTURE_PLANS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Estamos alinhados em relação a ter ou não ter filhos (e como criá-los).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We are aligned on our intentions regarding children (and how to raise them).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Estamos alineados sobre la decisión de tener hijos (y las pautas de crianza).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous sommes en harmonie concernant le projet d''enfants (et leur éducation).')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 19: CD_FUT_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FUT_03', 19, 'LIKERT', '{"dimension":"FUTURE_PLANS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Apoiamos mutuamente os sonhos e ambições profissionais de cada um no longo prazo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'We actively champion each other''s individual long-term professional dreams.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Apoyamos con entusiasmo los sueños y proyectos profesionales del otro a largo plazo.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Nous soutenons activement les ambitions professionnelles à long terme de chacun.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  -- Question 20: CD_FUT_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+  values (v_quiz_version_id, 'CD_FUT_04', 20, 'LIKERT', '{"dimension":"FUTURE_PLANS"}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Visualizo nosso futuro conjunto com entusiasmo, companheirismo e propósito duradouro.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'I look forward to our shared future with deep excitement, trust, and lasting partnership.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Visualizo nuestro futuro compartido con entusiasmo, complicidad y propósito sólido.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'J''envisage notre avenir commun avec confiance, complicité et enthousiasme durable.')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
 end $$;

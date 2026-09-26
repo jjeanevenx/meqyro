@@ -1,18 +1,71 @@
 "use client";
 
 import { Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useParams } from "next/navigation";
 import Link from "next/link";
-import { XCircle, RefreshCw, Loader2 } from "lucide-react";
+import { XCircle, RefreshCw, Loader2, ArrowLeft } from "lucide-react";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+
+const failedTranslations: Record<
+  Locale,
+  {
+    title: string;
+    description: string;
+    orderReferenceLabel: string;
+    tryAgainButton: string;
+    backToHomeButton: string;
+    loadingText: string;
+  }
+> = {
+  pt: {
+    title: "Pagamento não Concluído",
+    description:
+      "A transação não pôde ser processada ou foi cancelada pela instituição financeira. Nenhuma cobrança foi efetuada no seu cartão ou conta.",
+    orderReferenceLabel: "Referência do Pedido:",
+    tryAgainButton: "Tentar Novamente",
+    backToHomeButton: "Voltar ao Início",
+    loadingText: "Carregando status…",
+  },
+  en: {
+    title: "Payment Not Completed",
+    description:
+      "The transaction could not be processed or was cancelled by the card issuer. No charges have been made to your account.",
+    orderReferenceLabel: "Order Reference:",
+    tryAgainButton: "Try Again",
+    backToHomeButton: "Return to Home",
+    loadingText: "Loading status…",
+  },
+  es: {
+    title: "Pago no Completado",
+    description:
+      "La transacción no pudo completarse o fue cancelada por la entidad emisora. No se ha aplicado ningún cargo en tu cuenta.",
+    orderReferenceLabel: "Referencia del Pedido:",
+    tryAgainButton: "Reintentar Pago",
+    backToHomeButton: "Volver al Inicio",
+    loadingText: "Cargando estado…",
+  },
+  fr: {
+    title: "Paiement Non Abouti",
+    description:
+      "La transaction n'a pas pu aboutir ou a été interrompue. Aucun montant n'a été prélevé sur votre compte bancaire.",
+    orderReferenceLabel: "Référence de Commande :",
+    tryAgainButton: "Réessayer le Paiement",
+    backToHomeButton: "Retour à l'Accueil",
+    loadingText: "Chargement du statut…",
+  },
+};
 
 function FailedContent() {
   const searchParams = useSearchParams();
+  const rawParams = useParams();
+  const rawLocale = Array.isArray(rawParams?.locale) ? rawParams.locale[0] : rawParams?.locale;
+  const locale: Locale = typeof rawLocale === "string" && isLocale(rawLocale) ? rawLocale : "pt";
+  const t = failedTranslations[locale];
+
   const sessionId = searchParams.get("session");
   const orderNumber = searchParams.get("order");
 
-  const retryUrl = sessionId
-    ? `/pt/checkout?session=${sessionId}`
-    : "/pt";
+  const retryUrl = sessionId ? `/${locale}/checkout?session=${sessionId}` : `/${locale}`;
 
   return (
     <div className="checkout-return-card">
@@ -20,14 +73,12 @@ function FailedContent() {
         <XCircle size={48} className="text-rose-600" />
       </div>
 
-      <h1>Pagamento não Concluído</h1>
-      <p className="return-description">
-        A transação não pôde ser processada ou foi cancelada pela instituição financeira. Nenhuma cobrança foi efetuada no seu cartão ou conta.
-      </p>
+      <h1>{t.title}</h1>
+      <p className="return-description">{t.description}</p>
 
       {orderNumber ? (
         <div className="order-reference-box">
-          <small>Referência do Pedido:</small>
+          <small>{t.orderReferenceLabel}</small>
           <strong>{orderNumber}</strong>
         </div>
       ) : null}
@@ -35,11 +86,12 @@ function FailedContent() {
       <div className="return-actions flex flex-col gap-3">
         <Link href={retryUrl} className="button button--primary return-cta-btn">
           <RefreshCw size={18} />
-          <span>Tentar Novamente</span>
+          <span>{t.tryAgainButton}</span>
         </Link>
 
-        <Link href="/" className="button button--secondary">
-          <span>Voltar ao Início</span>
+        <Link href={`/${locale}`} className="button button--secondary">
+          <ArrowLeft size={18} />
+          <span>{t.backToHomeButton}</span>
         </Link>
       </div>
     </div>
@@ -53,7 +105,7 @@ export default function CheckoutFailedPage() {
         fallback={
           <div className="checkout-return-card text-center py-12">
             <Loader2 size={36} className="animate-spin text-forest mx-auto mb-4" />
-            <p>Carregando status…</p>
+            <p>Loading status…</p>
           </div>
         }
       >

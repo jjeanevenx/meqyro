@@ -6,10 +6,7 @@ export async function POST(request: Request) {
   try {
     const body = (await request.json()) as AnalyticsEventInput;
     if (!body || !body.eventName) {
-      return NextResponse.json(
-        { error: "Event name is required" },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Event name is required" }, { status: 400 });
     }
 
     const recorded = await recordFunnelEvent({
@@ -22,17 +19,11 @@ export async function POST(request: Request) {
     });
 
     if (!recorded) {
-      return NextResponse.json(
-        { error: "Failed to record event" },
-        { status: 422 },
-      );
+      return NextResponse.json({ error: "Failed to record event" }, { status: 422 });
     }
 
     return NextResponse.json({ success: true, eventId: recorded.id });
   } catch {
-    return NextResponse.json(
-      { error: "Invalid analytics event payload" },
-      { status: 400 },
-    );
+    return NextResponse.json({ error: "Invalid analytics event payload" }, { status: 400 });
   }
 }

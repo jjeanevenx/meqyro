@@ -37,9 +37,7 @@ function median(values: readonly number[]) {
   if (values.length === 0) return Number.POSITIVE_INFINITY;
   const sorted = [...values].sort((a, b) => a - b);
   const middle = Math.floor(sorted.length / 2);
-  return sorted.length % 2 === 0
-    ? (sorted[middle - 1] + sorted[middle]) / 2
-    : sorted[middle];
+  return sorted.length % 2 === 0 ? (sorted[middle - 1] + sorted[middle]) / 2 : sorted[middle];
 }
 
 function scoreBrainRank(

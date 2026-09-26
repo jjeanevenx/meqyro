@@ -27,7 +27,10 @@ export const BUNDLE_ITEMS: Record<string, string[]> = {
 };
 
 export function normalizeBundleCode(code: string): string {
-  const upper = code.toUpperCase().replace(/^PROD_/, "").replace(/-/g, "_");
+  const upper = code
+    .toUpperCase()
+    .replace(/^PROD_/, "")
+    .replace(/-/g, "_");
   if (upper === "BUNDLE_ALL_REPORTS" || upper === "PREMIUM_BUNDLE" || upper === "BUNDLE_ALL") {
     return "BUNDLE_ALL_ACCESS";
   }

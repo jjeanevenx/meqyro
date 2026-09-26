@@ -4,6 +4,57 @@ import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicQuiz, PublicQuestion, PublicOption, QuestionKind } from "./contracts";
 import { brainRankQuestions } from "@/content/quizzes/brainrank";
+
+/**
+ * Detects encoding corruption in text content.
+ * Common patterns: "n??mero" (replacement), "nÃºmero" (mojibake from UTF-8 read as Latin-1)
+ */
+function hasEncodingCorruption(text: string | null | undefined): boolean {
+  if (!text || typeof text !== "string") return false;
+  
+  // Check for common corruption patterns
+  // "??" appearing where accented characters should be (replacement character)
+  if (text.includes("??") && /[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]/.test(text)) {
+    return true;
+  }
+  
+  // Mojibake patterns: UTF-8 bytes interpreted as Latin-1
+  // Examples: Ã¡, Ã , Ã©, Ã, ãƒ
+  if (/[Ã][àáâãèéêìíòóõùúçÃ]/u.test(text)) {
+    return true;
+  }
+  
+  // Unicode replacement character
+  if (text.includes("\uFFFD")) {
+    return true;
+  }
+  
+  return false;
+}
+
+/**
+ * Validates quiz content for encoding corruption.
+ * Returns true if data is valid, false if corrupted.
+ */
+function validateQuizContent(quiz: PublicQuiz): boolean {
+  for (const question of quiz.questions) {
+    if (hasEncodingCorruption(question.prompt)) {
+      console.warn(`[encoding] Corrupted prompt in question ${question.stableKey}: ${question.prompt}`);
+      return false;
+    }
+    if (hasEncodingCorruption(question.clue)) {
+      console.warn(`[encoding] Corrupted clue in question ${question.stableKey}: ${question.clue}`);
+      return false;
+    }
+    for (const option of question.options) {
+      if (hasEncodingCorruption(option.label)) {
+        console.warn(`[encoding] Corrupted label in option ${option.stableKey}: ${option.label}`);
+        return false;
+      }
+    }
+  }
+  return true;
+}
 import { personalityMapQuestions } from "@/content/quizzes/personality-map";
 import { careerFitQuestions } from "@/content/quizzes/careerfit";
 import { moneyDnaQuestions } from "@/content/quizzes/moneydna";
@@ -16,7 +67,9 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
 
   const { data: quiz, error: quizError } = await supabase
     .from("quizzes")
-    .select("id, slug, product_code, active, quiz_versions!inner(id, version, scoring_version, status)")
+    .select(
+      "id, slug, product_code, active, quiz_versions!inner(id, version, scoring_version, status)",
+    )
     .eq("slug", slug)
     .eq("active", true)
     .single();
@@ -27,14 +80,17 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
   }
 
   const activeVersion = Array.isArray(quiz.quiz_versions)
-    ? quiz.quiz_versions.find((v: { status: string }) => v.status === "APPROVED" || v.status === "PUBLISHED") ?? quiz.quiz_versions[0]
+    ? (quiz.quiz_versions.find(
+        (v: { status: string }) => v.status === "APPROVED" || v.status === "PUBLISHED",
+      ) ?? quiz.quiz_versions[0])
     : quiz.quiz_versions;
 
   if (!activeVersion) return null;
 
   const { data: questions, error: questionsError } = await supabase
     .from("questions")
-    .select(`
+    .select(
+      `
       id,
       stable_key,
       position,
@@ -47,7 +103,8 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
         position,
         option_translations!inner(locale, label, image_alt)
       )
-    `)
+    `,
+    )
     .eq("quiz_version_id", activeVersion.id)
     .eq("question_translations.locale", locale)
     .order("position", { ascending: true });
@@ -56,41 +113,42 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
     return getFallbackPublicQuiz(slug, locale);
   }
 
-type DbTranslation = {
-  locale: string;
-  prompt?: string;
-  label?: string;
-  accessibility_text?: string | null;
-  image_alt?: string | null;
-};
+  type DbTranslation = {
+    locale: string;
+    prompt?: string;
+    label?: string;
+    accessibility_text?: string | null;
+    image_alt?: string | null;
+  };
 
-type DbOption = {
-  id: string;
-  stable_key: string;
-  position: number;
-  option_translations?: DbTranslation[] | DbTranslation;
-};
+  type DbOption = {
+    id: string;
+    stable_key: string;
+    position: number;
+    option_translations?: DbTranslation[] | DbTranslation;
+  };
 
-type DbQuestion = {
-  id: string;
-  stable_key: string;
-  position: number;
-  kind: string;
-  metadata?: Record<string, unknown> | null;
-  question_translations?: DbTranslation[] | DbTranslation;
-  options?: DbOption[];
-};
+  type DbQuestion = {
+    id: string;
+    stable_key: string;
+    position: number;
+    kind: string;
+    metadata?: Record<string, unknown> | null;
+    question_translations?: DbTranslation[] | DbTranslation;
+    options?: DbOption[];
+  };
 
   const rawQuestions = questions as unknown as DbQuestion[];
 
   const publicQuestions: PublicQuestion[] = rawQuestions.map((q) => {
     const translation = Array.isArray(q.question_translations)
-      ? q.question_translations.find((t) => t.locale === locale) ?? q.question_translations[0]
+      ? (q.question_translations.find((t) => t.locale === locale) ?? q.question_translations[0])
       : q.question_translations;
 
-    const clue = q.metadata && typeof q.metadata === "object" && "clue" in q.metadata
-      ? (q.metadata.clue as Record<string, string>)[locale] ?? null
-      : null;
+    const clue =
+      q.metadata && typeof q.metadata === "object" && "clue" in q.metadata
+        ? ((q.metadata.clue as Record<string, string>)[locale] ?? null)
+        : null;
 
     const rawOptions = Array.isArray(q.options) ? q.options : [];
     const publicOptions: PublicOption[] = rawOptions
@@ -98,7 +156,7 @@ type DbQuestion = {
       .sort((a, b) => a.position - b.position)
       .map((opt) => {
         const optTrans = Array.isArray(opt.option_translations)
-          ? opt.option_translations.find((t) => t.locale === locale) ?? opt.option_translations[0]
+          ? (opt.option_translations.find((t) => t.locale === locale) ?? opt.option_translations[0])
           : opt.option_translations;
 
         return {
@@ -122,7 +180,7 @@ type DbQuestion = {
     };
   });
 
-  return {
+  const quizContent: PublicQuiz = {
     id: activeVersion.id,
     slug: quiz.slug,
     productCode: quiz.product_code,
@@ -131,6 +189,14 @@ type DbQuestion = {
     totalQuestions: publicQuestions.length,
     questions: publicQuestions,
   };
+
+  // Validate encoding - if corrupted, fallback to in-memory content
+  if (!validateQuizContent(quizContent)) {
+    console.warn(`[encoding] Detected corruption in DB quiz "${slug}" for locale "${locale}". Using fallback.`);
+    return getFallbackPublicQuiz(slug, locale);
+  }
+
+  return quizContent;
 }
 
 export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz | null {
@@ -142,7 +208,7 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       kind: "SINGLE_CHOICE",
       prompt: q.prompt[locale] ?? q.prompt.pt,
       accessibilityText: null,
-      clue: q.clue ? q.clue[locale] ?? q.clue.pt : null,
+      clue: q.clue ? (q.clue[locale] ?? q.clue.pt) : null,
       options: q.options.map((opt) => ({
         id: `opt-${q.position}-${opt.stableKey}`,
         stableKey: opt.stableKey,

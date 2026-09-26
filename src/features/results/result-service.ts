@@ -23,14 +23,16 @@ export async function getProtectedResult(input: {
   // 1. Load session & quiz metadata
   const { data: session, error: sessionError } = await supabase
     .from("quiz_sessions")
-    .select(`
+    .select(
+      `
       id,
       access_token_hash,
       status,
       quiz_version,
       scoring_version,
       quiz_versions(quiz_id, quizzes(id, slug, product_code))
-    `)
+    `,
+    )
     .eq("id", input.sessionId)
     .single();
 
@@ -69,7 +71,7 @@ export async function getProtectedResult(input: {
   const productCode = sessionRecord.quiz_versions?.quizzes?.product_code ?? "BRAINRANK";
   const score = (resultRecord.score as Record<string, unknown>) ?? {};
 
-  // 3. Format partial summary
+  // 3. Format partial summary (safe for free tier)
   const summary: PartialResultSummary = {
     sessionId: input.sessionId,
     quizSlug,
@@ -77,11 +79,27 @@ export async function getProtectedResult(input: {
     scoringVersion: session.scoring_version,
     rawScore: typeof score.rawCorrect === "number" ? score.rawCorrect : undefined,
     overallScore: typeof score.overallScore === "number" ? score.overallScore : undefined,
-    strongestDimension: typeof score.strongestDimension === "string" ? score.strongestDimension : "PATTERN_RECOGNITION",
-    dimensionScores: (score.dimensionScores as Record<string, number>) ?? undefined,
+    strongestDimension:
+      typeof score.strongestDimension === "string"
+        ? score.strongestDimension
+        : typeof score.primaryAnchor === "string"
+          ? score.primaryAnchor
+          : typeof score.dominantArchetype === "string"
+            ? score.dominantArchetype
+            : typeof score.primaryStyle === "string"
+              ? score.primaryStyle
+              : typeof score.dominantStyle === "string"
+                ? score.dominantStyle
+                : "PATTERN_RECOGNITION",
+    dimensionScores:
+      (score.dimensionScores as Record<string, number>) ??
+      (score.archetypeScores as Record<string, number>) ??
+      (score.styleScores as Record<string, number>) ??
+      (score.styleDistribution as Record<string, number>) ??
+      undefined,
   };
 
-  // 4. Check for premium access grant
+  // 4. Check for premium access grant in result_access_grants
   const { data: grants } = await supabase
     .from("result_access_grants")
     .select("id, grant_type")
@@ -91,7 +109,7 @@ export async function getProtectedResult(input: {
   const hasPremiumGrant = Boolean(grants && grants.length > 0);
   const accessLevel: AccessLevel = hasPremiumGrant ? "PREMIUM_UNLOCKED" : "FREE_PARTIAL";
 
-  // 5. If premium granted, generate full report payload
+  // 5. If premium granted, return report with zero leakage prior to grant
   if (hasPremiumGrant) {
     const premiumReport = buildComprehensiveReport(quizSlug, score, input.locale);
     return {
@@ -136,105 +154,113 @@ export async function getProtectedResult(input: {
 }
 
 function getPaywallHeadline(quizSlug: string, locale: string): string {
-  if (quizSlug === "brainrank") {
-    const titles: Record<string, string> = {
+  const titles: Record<string, Record<string, string>> = {
+    brainrank: {
       pt: "Desbloqueie seu Relatório Cognitivo Completo",
       en: "Unlock your Full Cognitive Report",
       es: "Desbloquea tu Informe Cognitivo Completo",
       fr: "Débloquez votre Rapport Cognitif Complet",
-    };
-    return titles[locale] ?? titles.pt;
-  }
-  const titles: Record<string, string> = {
-    pt: "Desbloqueie seu Mapeamento de Personalidade Profundo",
-    en: "Unlock your In-depth Personality Report",
-    es: "Desbloquea tu Informe de Personalidad Detallado",
-    fr: "Débloquez votre Rapport de Personnalité Approfondi",
+    },
+    "personality-map": {
+      pt: "Desbloqueie seu Mapeamento de Personalidade Profundo",
+      en: "Unlock your In-depth Personality Report",
+      es: "Desbloquea tu Informe de Personalidad Detallado",
+      fr: "Débloquez votre Rapport de Personnalité Approfondi",
+    },
+    careerfit: {
+      pt: "Desbloqueie seu Guia de Âncoras Profissionais",
+      en: "Unlock your Professional Anchors Guide",
+      es: "Desbloquea tu Guía de Anclas Profesionales",
+      fr: "Débloquez votre Guide des Ancres Professionnelles",
+    },
+    moneydna: {
+      pt: "Desbloqueie seu Diagnóstico de Arquétipo Financeiro",
+      en: "Unlock your Financial Archetype Breakdown",
+      es: "Desbloquea tu Diagnóstico de Arquetipo Financiero",
+      fr: "Débloquez votre Diagnostic d'Archétype Financier",
+    },
+    focusstyle: {
+      pt: "Desbloqueie seu Manual de Estilo de Foco & Produtividade",
+      en: "Unlock your Focus & Productivity Style Manual",
+      es: "Desbloquea tu Manual de Estilo de Enfoque y Productividad",
+      fr: "Débloquez votre Manuel de Style de Focus & Productivité",
+    },
+    decisiondna: {
+      pt: "Desbloqueie sua Matriz Estratégica de Decisão",
+      en: "Unlock your Strategic Decision-Making Matrix",
+      es: "Desbloquea tu Matriz Estratégica de Decisión",
+      fr: "Débloquez votre Matrice Stratégique de Décision",
+    },
+    coupledna: {
+      pt: "Desbloqueie o Relatório Comparativo de Harmonia de Casal",
+      en: "Unlock your Couple Harmony Comparative Report",
+      es: "Desbloquea el Informe Comparativo de Armonía de Pareja",
+      fr: "Débloquez le Rapport Comparatif d'Harmonie de Couple",
+    },
   };
-  return titles[locale] ?? titles.pt;
+
+  const selected = titles[quizSlug] ?? titles.brainrank;
+  return selected[locale] ?? selected.pt;
 }
 
 function getPaywallFeatures(quizSlug: string, locale: string): string[] {
-  if (quizSlug === "brainrank") {
-    const items: Record<string, string[]> = {
-      pt: [
-        "Análise aprofundada das 6 dimensões cognitivas",
-        "Detecção de pontos cegos sob pressão de tempo",
-        "Plano de evolução cognitiva com estratégias práticas",
-        "Comparativo com a média demográfica da sua faixa",
-        "Acesso vitalício ao relatório e certificado digital",
-      ],
-      en: [
-        "In-depth breakdown of all 6 cognitive dimensions",
-        "Identification of blind spots under time pressure",
-        "Actionable cognitive evolution & mental training plan",
-        "Benchmark comparison against demographic cohorts",
-        "Lifetime report access and digital certificate",
-      ],
-      es: [
-        "Análisis detallado de las 6 dimensiones cognitivas",
-        "Detección de puntos ciegos bajo presión de tiempo",
-        "Plan de evolución cognitiva con estrategias prácticas",
-        "Comparativa con la media demográfica de tu grupo",
-        "Acceso de por vida al informe y certificado digital",
-      ],
-      fr: [
-        "Analyse approfondie des 6 dimensions cognitives",
-        "Détection des angles morts sous pression de temps",
-        "Plan d'évolution cognitive et stratégies concrètes",
-        "Comparatif avec la moyenne démographique de votre tranche",
-        "Accès à vie au rapport et certificat numérique",
-      ],
-    };
-    return items[locale] ?? items.pt;
-  }
-
-  const items: Record<string, string[]> = {
+  const genericFeatures: Record<string, string[]> = {
     pt: [
-      "Perfil detalhado nas 5 grandes dimensões (Big Five)",
-      "Dinâmica interpessoal e estilo de tomada de decisão",
-      "Gatilhos de estresse e orientações de carreira",
-      "Comparativo de traços com benchmarks populacionais",
-      "Guia personalizado de desenvolvimento pessoal",
+      "Análise aprofundada de todas as dimensões avaliadas",
+      "Mapeamento de forças predominantes e pontos cegos operacionais",
+      "Recomendações práticas e estratégias de desenvolvimento",
+      "Guia de aplicação no dia a dia e tomadas de decisão",
+      "Acesso vitalício e opção de exportação em PDF",
     ],
     en: [
-      "In-depth breakdown across Big Five dimensions",
-      "Interpersonal dynamics and decision-making style",
-      "Stress triggers and career alignment insights",
-      "Trait benchmarks against general population",
-      "Personalized development and self-growth guide",
+      "In-depth analysis across all evaluated dimensions",
+      "Mapping of core strengths and operational blind spots",
+      "Actionable recommendations and self-growth strategies",
+      "Practical daily application and decision frameworks",
+      "Lifetime access with downloadable summary",
     ],
     es: [
-      "Perfil detallado en las 5 grandes dimensiones (Big Five)",
-      "Dinámica interpersonal y estilo de toma de decisiones",
-      "Detonantes de estrés y orientación profesional",
-      "Comparativa con benchmarks de la población general",
-      "Guía personalizada de desarrollo personal",
+      "Análisis en profundidad de todas las dimensiones evaluadas",
+      "Mapa de fortalezas clave y áreas de fricción",
+      "Recomendaciones prácticas y planes de acción",
+      "Marcos de aplicación en el día a día",
+      "Acceso de por vida y resumen descargable",
     ],
     fr: [
-      "Profil détaillé selon les 5 grandes dimensions (Big Five)",
-      "Dynamiques relationnelles et prise de décision",
-      "Facteurs de stress et pistes d'orientation",
-      "Comparatif de traits avec les repères de population",
-      "Guide personnalisé de développement personnel",
+      "Analyse approfondie de toutes les dimensions évaluées",
+      "Cartographie des forces clés et zones de friction",
+      "Recommandations concrètes et axes d'amélioration",
+      "Guide pratique d'application au quotidien",
+      "Accès à vie et synthèse téléchargeable",
     ],
   };
-  return items[locale] ?? items.pt;
+
+  return genericFeatures[locale] ?? genericFeatures.pt;
 }
 
-function buildComprehensiveReport(
+export function buildComprehensiveReport(
   quizSlug: string,
   score: Record<string, unknown>,
   locale: string,
 ): ComprehensiveReport {
   const overall = typeof score.overallScore === "number" ? score.overallScore : 750;
 
+  // Localized non-clinical disclaimers
+  const disclaimers: Record<string, string> = {
+    pt: "Este relatório destina-se exclusivamente ao autoconhecimento e reflexão pessoal, não constituindo avaliação psicológica, diagnóstica, clínica ou aconselhamento financeiro.",
+    en: "This report is intended solely for personal reflection and self-discovery. It does not constitute clinical, diagnostic, psychological or financial advice.",
+    es: "Este informe está destinado exclusivamente al autoconocimiento y la reflexión personal, sin constituir una evaluación clínica, psicológica o financiera.",
+    fr: "Ce rapport est destiné exclusivement à l'autoréflexion et au développement personnel. Il ne constitue aucunement un avis clinique, psychologique ou financier.",
+  };
+
+  const disclaimer = disclaimers[locale] ?? disclaimers.pt;
+
   if (quizSlug === "brainrank") {
     const executiveSummaries: Record<string, string> = {
-      pt: `Seu desempenho geral atingiu o índice ${overall}/1000. Sua arquitetura de raciocínio destaca-se pela alta agilidade analítica e consistência lógica, mantendo excelente precisão mesmo em contextos de ambiguidade e restrição de tempo.`,
-      en: `Your overall performance reached ${overall}/1000. Your cognitive profile excels in analytical agility and logical consistency, sustaining high precision even under time pressure.`,
-      es: `Tu desempeño general alcanzó el índice ${overall}/1000. Tu arquitectura de razonamiento destaca por una gran agilidad analítica y coherencia lógica.`,
-      fr: `Votre performance globale a atteint ${overall}/1000. Votre profil cognitif se distingue par son agilité analytique et sa rigueur logique.`,
+      pt: `Seu índice geral atingiu ${overall}/1000. Sua arquitetura de raciocínio destaca-se pela alta agilidade analítica e consistência dedutiva, mantendo excelente precisão mesmo em contextos de desafio e restrição de tempo.`,
+      en: `Your overall index reached ${overall}/1000. Your reasoning architecture is characterized by strong analytical agility and deductive consistency.`,
+      es: `Tu índice general alcanzó ${overall}/1000. Tu arquitectura de razonamiento destaca por una gran agilidad analítica y coherencia lógica.`,
+      fr: `Votre indice global a atteint ${overall}/1000. Votre profil se caractérise par une forte agilité analytique et une rigueur déductive.`,
     };
 
     return {
@@ -253,9 +279,6 @@ function buildComprehensiveReport(
             locale === "en"
               ? "You demonstrate swift pattern abstraction, identifying transformation rules across multi-element sequences without getting distracted by surface noise."
               : "Você demonstra rápida abstração de padrões, identificando regras de transformação em sequências complexas sem se dispersar com ruídos visuais superficiais.",
-            locale === "en"
-              ? "Your hypothesis testing during ambiguous challenges is disciplined and systematic."
-              : "Sua formulação e teste de hipóteses diante de cenários ambíguos ocorre de forma disciplinada e metódica.",
           ],
           keyTakeaways: [
             locale === "en" ? "High deductive accuracy" : "Elevada precisão dedutiva",
@@ -267,77 +290,99 @@ function buildComprehensiveReport(
               : "Aplique sua dedução estrutural em tarefas de planejamento estratégico e resolução de problemas complexos.",
           ],
         },
-        {
-          id: "blind-spots",
-          title: locale === "en" ? "Cognitive Blind Spots & Friction" : "Pontos Cegos e Fricções Cognitivas",
-          summary:
-            locale === "en"
-              ? "Over-verification under time pressure can subtly decrease processing speed."
-              : "Tendência a super-verificação sob pressão de tempo pode impactar a cadência de processamento.",
-          paragraphs: [
-            locale === "en"
-              ? "When confronted with deceptive distractors, you may spend disproportionate effort validating already confirmed conclusions."
-              : "Ao lidar com opções aparentemente dúbias, você tende a despender esforço adicional confirmando conclusões já seguras.",
-          ],
-          keyTakeaways: [
-            locale === "en" ? "Potential over-deliberation" : "Possível excesso de deliberação",
-          ],
-          actionItems: [
-            locale === "en"
-              ? "Practice timed intuition checks on medium-complexity scenarios."
-              : "Pratique tomadas de decisão rápidas estipulando limites rígidos de tempo.",
-          ],
-        },
       ],
       comparativeBenchmark: {
-        cohort: locale === "en" ? "Global benchmark cohort (N=14,200)" : "Base populacional de referência (N=14.200)",
-        percentile: Math.min(Math.round((overall / 1000) * 100), 99),
-        description:
+        cohort:
           locale === "en"
-            ? "Your performance ranks among the top performers across comparable demographics."
-            : "Seu resultado situa-se nos percentis superiores em comparação à população de referência.",
+            ? "Qualitative Developmental Scale"
+            : "Escala de Desenvolvimento Qualitativo",
+        percentile: Math.min(Math.round((overall / 1000) * 100), 99),
+        description: disclaimer,
       },
     };
   }
 
-  // Personality Map Comprehensive Report
+  if (quizSlug === "coupledna") {
+    return {
+      executiveSummary:
+        locale === "en"
+          ? "Your bilateral couple profile highlights complementary communication channels and shared fundamental life values."
+          : "O perfil bilateral conjugal destaca canais complementares de comunicação e alinhamento de valores fundamentais de vida.",
+      percentileRank: 90,
+      bandLabel: locale === "en" ? "High Alignment" : "Alta Sinergia",
+      sections: [
+        {
+          id: "bilateral-communication",
+          title:
+            locale === "en"
+              ? "Communication & Conflict Navigation"
+              : "Comunicação e Navegação de Conflitos",
+          summary:
+            locale === "en"
+              ? "Open dialogues coupled with mutual respect during divergent viewpoints."
+              : "Diálogos abertos associados a respeito mútuo em momentos de divergência de perspectivas.",
+          paragraphs: [
+            locale === "en"
+              ? "Both partners demonstrate willingness to explore common ground while maintaining individual identity and personal boundaries."
+              : "Ambos os parceiros demonstram disposição para construir consensos produtivos preservando sua autonomia e limites individuais.",
+          ],
+          keyTakeaways: [
+            locale === "en" ? "Constructive active listening" : "Escuta ativa e construtiva",
+          ],
+          actionItems: [
+            locale === "en"
+              ? "Maintain scheduled weekly check-ins for transparent long-term planning."
+              : "Reserve momentos periódicos de alinhamento transparente sobre metas e expectativas de longo prazo.",
+          ],
+        },
+      ],
+      comparativeBenchmark: {
+        cohort:
+          locale === "en" ? "Relational Growth Matrix" : "Matriz de Desenvolvimento Relacional",
+        percentile: 90,
+        description: disclaimer,
+      },
+    };
+  }
+
+  // Default report for personality-map, careerfit, moneydna, focusstyle, decisiondna
   return {
     executiveSummary:
       locale === "en"
-        ? "Your Big Five personality profile shows a distinct balance between curiosity, structured execution, and thoughtful interpersonal collaboration."
-        : "Seu mapeamento Big Five demonstra um equilíbrio marcado entre curiosidade intelectual, execução estruturada e cooperação ponderada.",
-    percentileRank: 84,
-    bandLabel: locale === "en" ? "Distinct Profile" : "Perfil Distinto",
+        ? `Your comprehensive ${quizSlug.toUpperCase()} profile provides strategic insights into behavioral tendencies, core motivators, and situational decision patterns.`
+        : `Seu relatório analítico de ${quizSlug.toUpperCase()} oferece insights estratégicos sobre suas tendências comportamentais, motivadores centrais e padrões situacionais de decisão.`,
+    percentileRank: 85,
+    bandLabel: locale === "en" ? "Distinct Profile" : "Perfil Estruturado",
     sections: [
       {
-        id: "work-style",
-        title: locale === "en" ? "Work & Collaboration Style" : "Estilo de Trabalho e Colaboração",
+        id: "core-profile",
+        title: locale === "en" ? "Core Patterns & Tendencies" : "Padrões Centrais e Tendências",
         summary:
           locale === "en"
-            ? "Thrives in autonomous environments with high clarity of objectives."
-            : "Opera com excelência em ambientes autônomos com objetivos claros.",
+            ? "Strong alignment between self-awareness and practical execution."
+            : "Elevado alinhamento entre clareza de preferências e consistência de execução.",
         paragraphs: [
           locale === "en"
-            ? "Your high openness and conscientiousness make you reliable in executing complex initiatives while exploring innovative methodologies."
-            : "Sua combinação de abertura e conscienciosidade confere rigor e confiabilidade nas entregas, sem abrir mão da inovação metodológica.",
+            ? "Your assessment reveals marked consistency across primary indicators, guiding optimal operating environments and relationship dynamics."
+            : "Sua avaliação revela consistência nos indicadores primários, permitindo identificar os ambientes ideais de atuação e sinergia interpessoal.",
         ],
         keyTakeaways: [
-          locale === "en" ? "Structured problem solver" : "Resolução estruturada de desafios",
+          locale === "en" ? "High consistency in decisions" : "Consistência e foco de atuação",
         ],
         actionItems: [
           locale === "en"
-            ? "Establish clear feedback channels to avoid assumption mismatches."
-            : "Estabeleça canais claros de alinhamento periódico para evitar desalinhamento de expectativas.",
+            ? "Leverage your primary profile tendencies in collaborative projects."
+            : "Aproveite suas tendências dominantes em iniciativas de alta complexidade e colaboração.",
         ],
       },
     ],
     comparativeBenchmark: {
-      cohort: locale === "en" ? "General population normative sample (N=22,500)" : "Amostra normativa da população geral (N=22.500)",
-      percentile: 84,
-      description:
+      cohort:
         locale === "en"
-          ? "Demonstrates higher diligence and exploration traits than 84% of respondents."
-          : "Demonstra índices superiores de diligência e abertura em relação a 84% dos respondentes.",
+          ? "Behavioral Taxonomy & Frameworks"
+          : "Taxonomia Comportamental e Metodologias",
+      percentile: 85,
+      description: disclaimer,
     },
   };
 }

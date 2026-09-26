@@ -14,7 +14,8 @@ export async function GET(request: Request, { params }: RouteProps) {
     const sessionId = searchParams.get("sessionId");
 
     const cookieStore = await cookies();
-    const sessionToken = searchParams.get("token") ?? cookieStore.get(anonymousSessionCookie)?.value;
+    const sessionToken =
+      searchParams.get("token") ?? cookieStore.get(anonymousSessionCookie)?.value;
 
     if (!sessionId || !sessionToken || !code) {
       return NextResponse.json(

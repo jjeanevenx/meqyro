@@ -1,7 +1,20 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Clock3, BarChart3, Lock, ArrowRight, Binary, Sparkles, Briefcase, Wallet, Target, Scale, Heart } from "lucide-react";
+import {
+  ArrowLeft,
+  Clock3,
+  BarChart3,
+  Lock,
+  ArrowRight,
+  Binary,
+  Sparkles,
+  Briefcase,
+  Wallet,
+  Target,
+  Scale,
+  Heart,
+} from "lucide-react";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
@@ -69,7 +82,12 @@ const QUIZ_CATALOG_META: Record<
     },
     duration: "7–10 min",
     itemsCount: { pt: "24 desafios", en: "24 challenges", es: "24 retos", fr: "24 défis" },
-    badge: { pt: "Desafio Cognitivo", en: "Cognitive Challenge", es: "Reto Cognitivo", fr: "Défi Cognitif" },
+    badge: {
+      pt: "Desafio Cognitivo",
+      en: "Cognitive Challenge",
+      es: "Reto Cognitivo",
+      fr: "Défi Cognitif",
+    },
     dimensions: {
       pt: ["Padrões", "Lógica", "Números", "Atenção", "Problemas", "Velocidade"],
       en: ["Patterns", "Logic", "Numbers", "Attention", "Problems", "Speed"],
@@ -97,7 +115,12 @@ const QUIZ_CATALOG_META: Record<
       fr: "Découvrez votre profil comportemental selon le modèle scientifique des Big Five.",
     },
     duration: "8–12 min",
-    itemsCount: { pt: "40 afirmações", en: "40 statements", es: "40 afirmaciones", fr: "40 affirmations" },
+    itemsCount: {
+      pt: "40 afirmações",
+      en: "40 statements",
+      es: "40 afirmaciones",
+      fr: "40 affirmations",
+    },
     badge: { pt: "Personalidade", en: "Personality", es: "Personalidad", fr: "Personnalité" },
     dimensions: {
       pt: ["Abertura", "Conscienciosidade", "Extroversão", "Amabilidade", "Estabilidade"],
@@ -126,10 +149,27 @@ const QUIZ_CATALOG_META: Record<
       fr: "Cartographie de vos ancres professionnelles : expertise, leadership, autonomie, sécurité, créativité et mission.",
     },
     duration: "6–8 min",
-    itemsCount: { pt: "24 afirmações", en: "24 statements", es: "24 afirmaciones", fr: "24 affirmations" },
-    badge: { pt: "Carreira & Propósito", en: "Career & Purpose", es: "Carrera y Propósito", fr: "Carrière & Mission" },
+    itemsCount: {
+      pt: "24 afirmações",
+      en: "24 statements",
+      es: "24 afirmaciones",
+      fr: "24 affirmations",
+    },
+    badge: {
+      pt: "Carreira & Propósito",
+      en: "Career & Purpose",
+      es: "Carrera y Propósito",
+      fr: "Carrière & Mission",
+    },
     dimensions: {
-      pt: ["Técnico/Especialista", "Gestão/Liderança", "Criatividade", "Autonomia", "Segurança", "Causa"],
+      pt: [
+        "Técnico/Especialista",
+        "Gestão/Liderança",
+        "Criatividade",
+        "Autonomia",
+        "Segurança",
+        "Causa",
+      ],
       en: ["Technical", "Managerial", "Creativity", "Autonomy", "Security", "Purpose"],
       es: ["Técnico", "Liderazgo", "Creatividad", "Autonomía", "Seguridad", "Propósito"],
       fr: ["Technique", "Management", "Créativité", "Autonomie", "Sécurité", "Mission"],
@@ -155,8 +195,18 @@ const QUIZ_CATALOG_META: Record<
       fr: "Identifiez votre archétype financier dominant : Bâtisseur, Gardien, Stratège, Aventurier ou Équilibreur.",
     },
     duration: "5–7 min",
-    itemsCount: { pt: "20 afirmações", en: "20 statements", es: "20 afirmaciones", fr: "20 affirmations" },
-    badge: { pt: "Psicologia Financeira", en: "Financial Psychology", es: "Conducta Financiera", fr: "Rapport à l'Argent" },
+    itemsCount: {
+      pt: "20 afirmações",
+      en: "20 statements",
+      es: "20 afirmaciones",
+      fr: "20 affirmations",
+    },
+    badge: {
+      pt: "Psicologia Financeira",
+      en: "Financial Psychology",
+      es: "Conducta Financiera",
+      fr: "Rapport à l'Argent",
+    },
     dimensions: {
       pt: ["Construtor", "Guardião", "Estrategista", "Aventureiro", "Equilibrador"],
       en: ["Builder", "Guardian", "Strategist", "Adventurer", "Balancer"],
@@ -184,8 +234,18 @@ const QUIZ_CATALOG_META: Record<
       fr: "Découvrez votre profil : Flow Immersif, Modulaire Structuré, Collaboratif ou Sprint Réactif.",
     },
     duration: "5–7 min",
-    itemsCount: { pt: "20 afirmações", en: "20 statements", es: "20 afirmaciones", fr: "20 affirmations" },
-    badge: { pt: "Foco & Ritmo", en: "Focus & Productivity", es: "Enfoque y Ritmo", fr: "Focus & Rythme" },
+    itemsCount: {
+      pt: "20 afirmações",
+      en: "20 statements",
+      es: "20 afirmaciones",
+      fr: "20 affirmations",
+    },
+    badge: {
+      pt: "Foco & Ritmo",
+      en: "Focus & Productivity",
+      es: "Enfoque y Ritmo",
+      fr: "Focus & Rythme",
+    },
     dimensions: {
       pt: ["Hiperfoco Imersivo", "Foco Modular", "Cocriação Colaborativa", "Sprint Reativo"],
       en: ["Deep Flow", "Structured Modular", "Collaborative", "Reactive Sprint"],
@@ -213,8 +273,18 @@ const QUIZ_CATALOG_META: Record<
       fr: "Évaluation par scénarios : styles Analytique, Intuitif, Pragmatique et Collaboratif.",
     },
     duration: "5–8 min",
-    itemsCount: { pt: "4 cenários práticos", en: "4 practical scenarios", es: "4 escenarios prácticos", fr: "4 scénarios pratiques" },
-    badge: { pt: "Cenários Decisórios", en: "Decision Scenarios", es: "Escenarios Decisorios", fr: "Scénarios Décisionnels" },
+    itemsCount: {
+      pt: "4 cenários práticos",
+      en: "4 practical scenarios",
+      es: "4 escenarios prácticos",
+      fr: "4 scénarios pratiques",
+    },
+    badge: {
+      pt: "Cenários Decisórios",
+      en: "Decision Scenarios",
+      es: "Escenarios Decisorios",
+      fr: "Scénarios Décisionnels",
+    },
     dimensions: {
       pt: ["Analítico", "Intuitivo", "Pragmático", "Colaborativo"],
       en: ["Analytical", "Intuitive", "Pragmatic", "Collaborative"],
@@ -242,8 +312,18 @@ const QUIZ_CATALOG_META: Record<
       fr: "Évaluation de couple à double consentement : communication, valeurs, gestion des conflits, finances et avenir.",
     },
     duration: "6–9 min",
-    itemsCount: { pt: "20 afirmações", en: "20 statements", es: "20 afirmaciones", fr: "20 affirmations" },
-    badge: { pt: "Harmonia a Dois", en: "Couple Harmony", es: "Armonía de Pareja", fr: "Harmonie de Couple" },
+    itemsCount: {
+      pt: "20 afirmações",
+      en: "20 statements",
+      es: "20 afirmaciones",
+      fr: "20 affirmations",
+    },
+    badge: {
+      pt: "Harmonia a Dois",
+      en: "Couple Harmony",
+      es: "Armonía de Pareja",
+      fr: "Harmonie de Couple",
+    },
     dimensions: {
       pt: ["Comunicação", "Valores de Vida", "Conflitos", "Finanças", "Planos Futuros"],
       en: ["Communication", "Life Values", "Conflict Resolution", "Finances", "Future Vision"],
@@ -280,7 +360,20 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
   if (!quiz) notFound();
 
   const meta = QUIZ_CATALOG_META[slug];
-  const title = slug === "brainrank" ? "BrainRank" : slug === "personality-map" ? "Personality Map" : slug === "careerfit" ? "CareerFit" : slug === "moneydna" ? "MoneyDNA" : slug === "focusstyle" ? "FocusStyle" : slug === "decisiondna" ? "DecisionDNA" : "CoupleDNA";
+  const title =
+    slug === "brainrank"
+      ? "BrainRank"
+      : slug === "personality-map"
+        ? "Personality Map"
+        : slug === "careerfit"
+          ? "CareerFit"
+          : slug === "moneydna"
+            ? "MoneyDNA"
+            : slug === "focusstyle"
+              ? "FocusStyle"
+              : slug === "decisiondna"
+                ? "DecisionDNA"
+                : "CoupleDNA";
   const subtitle = meta.subtitles[locale as Locale];
   const duration = meta.duration;
   const itemsCount = meta.itemsCount[locale as Locale];
@@ -299,6 +392,20 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
     en: "No sign-up required. Not a clinical assessment or professional counseling.",
     es: "Sin registro obligatorio. No sustituye una evaluación clínica o asesoramiento profesional.",
     fr: "Sans inscription obligatoire. Ne remplace pas une évaluation clinique ou un conseil professionnel.",
+  }[locale as Locale];
+
+  const freeResultText = {
+    pt: "Resultado gratuito incluído",
+    en: "Free baseline result included",
+    es: "Resultado gratuito incluido",
+    fr: "Résultat gratuit inclus",
+  }[locale as Locale];
+
+  const dimensionsHeading = {
+    pt: "Dimensões avaliadas",
+    en: "Assessed dimensions",
+    es: "Dimensiones evaluadas",
+    fr: "Dimensions évaluées",
   }[locale as Locale];
 
   const jsonLd = generateQuizJsonLd({
@@ -334,7 +441,11 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <header className="quiz-landing-header">
-        <Link href={`/${locale}`} className="quiz-landing-back" aria-label="Voltar para a página inicial">
+        <Link
+          href={`/${locale}`}
+          className="quiz-landing-back"
+          aria-label="Voltar para a página inicial"
+        >
           <ArrowLeft size={18} />
           <span>MEQYRO</span>
         </Link>
@@ -352,16 +463,18 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
         <div className="quiz-landing-facts">
           <div className="quiz-landing-fact">
             <Clock3 size={18} className="text-blue" />
-            <span>{duration} · {itemsCount}</span>
+            <span>
+              {duration} · {itemsCount}
+            </span>
           </div>
           <div className="quiz-landing-fact">
             <BarChart3 size={18} className="text-blue" />
-            <span>Resultado gratuito incluído</span>
+            <span>{freeResultText}</span>
           </div>
         </div>
 
         <section className="quiz-landing-dimensions">
-          <h2>Dimensões avaliadas</h2>
+          <h2>{dimensionsHeading}</h2>
           <div className="quiz-dimension-pills">
             {dimensions.map((dim) => (
               <span key={dim} className="quiz-dimension-pill">
@@ -372,7 +485,10 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
         </section>
 
         <div className="quiz-landing-action">
-          <Link href={`/${locale}/quizzes/${slug}/play`} className="button button--primary quiz-start-btn">
+          <Link
+            href={`/${locale}/quizzes/${slug}/play`}
+            className="button button--primary quiz-start-btn"
+          >
             <span>{ctaText}</span>
             <ArrowRight size={18} />
           </Link>

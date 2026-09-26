@@ -7,8 +7,11 @@ import {
   getConsentsForLead,
 } from "@/features/privacy/consent-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
+import { isSupabaseAvailable } from "./db-check";
 
-describe("Privacy & Consent Lifecycle — Integration Tests", () => {
+const isOnline = await isSupabaseAvailable();
+
+describe.skipIf(!isOnline)("Privacy & Consent Lifecycle — Integration Tests", () => {
   it("records lead, separate transactional and promotional consents, and handles unsubscribe", async () => {
     // 1. Create anonymous session
     const { session, token } = await startQuizSession({

@@ -1,8 +1,5 @@
 export type FocusStyleType =
-  | "IMMERSIVE_HYPERFOCUS"
-  | "MODULAR_SERIAL"
-  | "COLLABORATIVE"
-  | "REACTIVE_SPRINT";
+  "IMMERSIVE_HYPERFOCUS" | "MODULAR_SERIAL" | "COLLABORATIVE" | "REACTIVE_SPRINT";
 
 export interface FocusStyleItem {
   id: string;

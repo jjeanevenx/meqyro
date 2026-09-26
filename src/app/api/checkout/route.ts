@@ -35,10 +35,7 @@ export async function POST(req: NextRequest) {
     const sessionToken = body.sessionToken ?? cookieStore.get(anonymousSessionCookie)?.value;
 
     if (!sessionToken) {
-      return NextResponse.json(
-        { error: "Sessão anônima não autenticada." },
-        { status: 401 },
-      );
+      return NextResponse.json({ error: "Sessão anônima não autenticada." }, { status: 401 });
     }
 
     const safeMarket = (market ?? "BR") as Market;

@@ -6,8 +6,11 @@ import {
   getCoupleComparison,
 } from "@/features/couple/couple-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
+import { isSupabaseAvailable } from "./db-check";
 
-describe("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () => {
+const isOnline = await isSupabaseAvailable();
+
+describe.skipIf(!isOnline)("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () => {
   it("enforces bilateral consent and blocks unilateral results leak", async () => {
     const supabase = createSupabaseSecretClient();
 
@@ -24,11 +27,7 @@ describe("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () =>
     expect(inviteData?.inviteCode).toMatch(/^CP-[A-F0-9]{8}$/);
 
     // 3. Before partner accepts or completes, comparison is locked
-    const comparisonBefore = await getCoupleComparison(
-      inviteData!.inviteCode,
-      sessionA.id,
-      tokenA,
-    );
+    const comparisonBefore = await getCoupleComparison(inviteData!.inviteCode, sessionA.id, tokenA);
     expect(comparisonBefore).not.toBeNull();
     expect(comparisonBefore?.bilateralUnlocked).toBe(false);
 
@@ -40,11 +39,7 @@ describe("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () =>
     });
 
     // 5. Person B accepts invite
-    const acceptResult = await acceptCoupleInvite(
-      inviteData!.inviteCode,
-      sessionB.id,
-      tokenB,
-    );
+    const acceptResult = await acceptCoupleInvite(inviteData!.inviteCode, sessionB.id, tokenB);
     expect(acceptResult?.success).toBe(true);
 
     // 6. Complete results for both in results table
@@ -93,8 +88,8 @@ describe("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () =>
     expect(comparisonUnlocked).not.toBeNull();
     expect(comparisonUnlocked?.bilateralUnlocked).toBe(true);
     expect(comparisonUnlocked?.overallAlignmentPercentage).toBeGreaterThan(80);
-    expect(comparisonUnlocked?.dimensionAlignments.COMMUNICATION).toBe(95); // 100 - abs(85-80) = 95
-    expect(comparisonUnlocked?.dimensionAlignments.LIFE_VALUES).toBe(95); // 100 - abs(90-85) = 95
+    expect(comparisonUnlocked?.dimensionAlignments.COMMUNICATION).toBe(95);
+    expect(comparisonUnlocked?.dimensionAlignments.LIFE_VALUES).toBe(95);
     expect(comparisonUnlocked?.dimensionAlignments.FUTURE_PLANS).toBe(95);
 
     // 8. Third-party session cannot access the couple's comparison

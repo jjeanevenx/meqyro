@@ -28,7 +28,8 @@ export async function generateMetadata({
     locale,
     path: "/cookies",
     title: titles[locale as Locale],
-    description: "Saiba como a Meqyro utiliza apenas cookies essenciais para garantir o funcionamento seguro dos testes.",
+    description:
+      "Saiba como a Meqyro utiliza apenas cookies essenciais para garantir o funcionamento seguro dos testes.",
   });
 }
 
@@ -62,12 +63,18 @@ export default async function CookiePage({ params }: CookiePageProps) {
         <section className="bg-white border border-stone-200 rounded-xl p-6 shadow-sm space-y-4 text-xs text-stone-700 leading-relaxed">
           <h2 className="text-sm font-semibold text-stone-900">1. Princípio de Minimização</h2>
           <p>
-            A Meqyro adota uma política estrita de privacidade por design (Privacy by Design). Não utilizamos cookies de terceiros intrusivos, rastreadores comportamentais entre sites ou redes de publicidade direcionada.
+            A Meqyro adota uma política estrita de privacidade por design (Privacy by Design). Não
+            utilizamos cookies de terceiros intrusivos, rastreadores comportamentais entre sites ou
+            redes de publicidade direcionada.
           </p>
 
-          <h2 className="text-sm font-semibold text-stone-900 pt-2">2. Cookies Estritamente Necessários</h2>
+          <h2 className="text-sm font-semibold text-stone-900 pt-2">
+            2. Cookies Estritamente Necessários
+          </h2>
           <p>
-            Para que você consiga responder aos quizzes, salvar seu progresso sem necessidade de criar conta com senha e acessar seus resultados de forma segura, utilizamos exclusivamente os seguintes cookies:
+            Para que você consiga responder aos quizzes, salvar seu progresso sem necessidade de
+            criar conta com senha e acessar seus resultados de forma segura, utilizamos
+            exclusivamente os seguintes cookies:
           </p>
 
           <div className="border border-stone-200 rounded-lg overflow-hidden my-3">
@@ -82,17 +89,25 @@ export default async function CookiePage({ params }: CookiePageProps) {
               <tbody className="divide-y divide-stone-200">
                 <tr>
                   <td className="p-2.5 font-mono text-[11px]">meqyro_session</td>
-                  <td className="p-2.5">Identificador de sessão anônima criptografado (HttpOnly, Secure) para cálculo e persistência das respostas.</td>
+                  <td className="p-2.5">
+                    Identificador de sessão anônima criptografado (HttpOnly, Secure) para cálculo e
+                    persistência das respostas.
+                  </td>
                   <td className="p-2.5">30 dias</td>
                 </tr>
                 <tr>
                   <td className="p-2.5 font-mono text-[11px]">meqyro_locale</td>
-                  <td className="p-2.5">Armazena sua preferência manual de idioma (PT, EN, ES, FR).</td>
+                  <td className="p-2.5">
+                    Armazena sua preferência manual de idioma (PT, EN, ES, FR).
+                  </td>
                   <td className="p-2.5">1 ano</td>
                 </tr>
                 <tr>
                   <td className="p-2.5 font-mono text-[11px]">meqyro_market</td>
-                  <td className="p-2.5">Armazena sua preferência manual de moeda e mercado de pagamento (BR, US, EU, GB).</td>
+                  <td className="p-2.5">
+                    Armazena sua preferência manual de moeda e mercado de pagamento (BR, US, EU,
+                    GB).
+                  </td>
                   <td className="p-2.5">1 ano</td>
                 </tr>
               </tbody>
@@ -101,12 +116,20 @@ export default async function CookiePage({ params }: CookiePageProps) {
 
           <h2 className="text-sm font-semibold text-stone-900 pt-2">3. Como gerenciar cookies</h2>
           <p>
-            Você pode desativar ou apagar cookies a qualquer momento nas configurações do seu navegador de internet. Note que, ao desativar o cookie essencial <code className="bg-stone-100 px-1 py-0.5 rounded">meqyro_session</code>, não será possível manter seu progresso entre as perguntas do desafio.
+            Você pode desativar ou apagar cookies a qualquer momento nas configurações do seu
+            navegador de internet. Note que, ao desativar o cookie essencial{" "}
+            <code className="bg-stone-100 px-1 py-0.5 rounded">meqyro_session</code>, não será
+            possível manter seu progresso entre as perguntas do desafio.
           </p>
 
           <h2 className="text-sm font-semibold text-stone-900 pt-2">4. Dúvidas</h2>
           <p>
-            Para quaisquer questões relacionadas ao tratamento de dados e cookies, entre em contato com nosso Encarregado através do e-mail <a href="mailto:privacy@meqyro.com" className="underline font-medium text-stone-900">privacy@meqyro.com</a>.
+            Para quaisquer questões relacionadas ao tratamento de dados e cookies, entre em contato
+            com nosso Encarregado através do e-mail{" "}
+            <a href="mailto:privacy@meqyro.com" className="underline font-medium text-stone-900">
+              privacy@meqyro.com
+            </a>
+            .
           </p>
         </section>
       </div>

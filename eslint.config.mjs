@@ -8,6 +8,7 @@ export default defineConfig([
   globalIgnores([
     "node_modules/**",
     ".next/**",
+    ".git/**",
     ".pnpm-store/**",
     "prototype/**",
     "coverage/**",

@@ -132,16 +132,14 @@ export default async function ArticleDetailPage({ params }: ArticleDetailPagePro
             <Sparkles size={14} /> Experimente na Prática
           </div>
           <h2 className="text-lg font-serif font-bold text-stone-900">
-            Descubra seu perfil no desafio oficial {article.relatedQuizSlug.replace(/-/g, " ").toUpperCase()}
+            Descubra seu perfil no desafio oficial{" "}
+            {article.relatedQuizSlug.replace(/-/g, " ").toUpperCase()}
           </h2>
           <p className="text-xs text-stone-600 max-w-md mx-auto">
             Avaliação rápida, confidencial e com resultado gratuito instantâneo.
           </p>
           <div className="pt-2">
-            <ButtonLink
-              href={`/${locale}/quizzes/${article.relatedQuizSlug}`}
-              variant="primary"
-            >
+            <ButtonLink href={`/${locale}/quizzes/${article.relatedQuizSlug}`} variant="primary">
               Começar teste agora
             </ButtonLink>
           </div>

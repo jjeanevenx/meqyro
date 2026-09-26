@@ -8,11 +8,11 @@
 
 ## 1. Classificação de Severidade
 
-| Nível | Definição | Exemplo | SLA de Resposta |
-| :--- | :--- | :--- | :--- |
-| **SEV-1 (Crítico)** | Indisponibilidade de pagamento, falha geral de cálculo de scoring ou vazamento de dados. | Webhooks rejeitando pagamentos; checkout inacessível; relatórios premium bloqueados para 100% dos clientes. | < 15 minutos |
-| **SEV-2 (Alto)** | Degradação de canal não impeditiva de compra, lentidão relevante em entrega de e-mails. | Atraso no disparo de confirmação transacional; falha em 1 gateway com fallback disponível. | < 1 hora |
-| **SEV-3 (Médio)** | Falha pontual em páginas informativas, erro de tradução ou solicitação manual de suporte. | Inconsistência de copy em landing secundária; falha cosmética de CSS em viewport exótico. | < 8 horas |
+| Nível               | Definição                                                                                 | Exemplo                                                                                                     | SLA de Resposta |
+| :------------------ | :---------------------------------------------------------------------------------------- | :---------------------------------------------------------------------------------------------------------- | :-------------- |
+| **SEV-1 (Crítico)** | Indisponibilidade de pagamento, falha geral de cálculo de scoring ou vazamento de dados.  | Webhooks rejeitando pagamentos; checkout inacessível; relatórios premium bloqueados para 100% dos clientes. | < 15 minutos    |
+| **SEV-2 (Alto)**    | Degradação de canal não impeditiva de compra, lentidão relevante em entrega de e-mails.   | Atraso no disparo de confirmação transacional; falha em 1 gateway com fallback disponível.                  | < 1 hora        |
+| **SEV-3 (Médio)**   | Falha pontual em páginas informativas, erro de tradução ou solicitação manual de suporte. | Inconsistência de copy em landing secundária; falha cosmética de CSS em viewport exótico.                   | < 8 horas       |
 
 ---
 
@@ -43,6 +43,7 @@
 ## 3. Rotação de Credenciais e Secrets
 
 Se houver suspeita de comprometimento de chaves:
+
 1. **Stripe:** Gerar novo Webhook Secret no Dashboard Stripe (`whsec_...`) e atualizar `STRIPE_WEBHOOK_SECRET` na plataforma de hospedagem.
 2. **InfinitePay:** Atualizar segredo compartilhado de webhook e chave de API.
 3. **Supabase `service_role`:** Gerar novo Secret no dashboard Supabase e reiniciar aplicação Next.js.

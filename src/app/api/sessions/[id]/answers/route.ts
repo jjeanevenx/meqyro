@@ -13,10 +13,7 @@ const saveAnswerSchema = z.object({
   nextPosition: z.number().int().positive().optional(),
 });
 
-export async function POST(
-  request: NextRequest,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function POST(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const requestId = request.headers.get("x-request-id") ?? createRequestId();
   const { id: sessionId } = await params;
   const token = request.cookies.get(anonymousSessionCookie)?.value;

@@ -5,18 +5,18 @@
 
 ## Entregas
 
-| Item                             | Estado    | Evidência                                                                                                |
-| -------------------------------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| F3-01 Modelo de dados privacidade| Concluído | Migration `20260926020000_leads_privacy_results.sql` com `leads`, `consents`, `unsubscribe_tokens`, `recovery_tokens`, `data_requests`, `result_access_grants` |
-| F3-02 Segregação de consentimento| Concluído | Consentimento transacional (`TRANSACTIONAL_RESULTS`) separado de promocional (`MARKETING_PROMOTIONAL`, desmarcado por padrão) |
-| F3-03 Trilha auditável append-only| Concluído | Tabela `consents` grava `policy_version`, hash de IP salgado, user-agent e revogação sem sobrescrever histórico |
-| F3-04 Resultado protegido        | Concluído | `/api/sessions/[id]/result` retorna `FREE_PARTIAL` com oferta de paywall editorial e omite estritamente `premiumReport` |
-| F3-05 Desbloqueio por grant      | Concluído | `result_access_grants` valida grants (`PREMIUM_REPORT`, `PREMIUM_BUNDLE`) no servidor e gera relatório analítico completo |
-| F3-06 Tokens de recuperação/opt-out| Concluído| Tokens aleatórios de 256 bits (`recovery_tokens` e `unsubscribe_tokens`), persistência exclusiva de hash SHA-256 e comparação em tempo constante |
-| F3-07 E-mails transacionais      | Concluído | `email-service.ts` com templates nos 4 idiomas (PT, EN, ES, FR), mascaramento de e-mails em logs e suporte a Resend |
-| F3-08 Exercício de direitos LGPD | Concluído | Rota `/api/privacy/data-request` e página `/[locale]/privacy/data-request` com proteção contra enumeração |
-| F3-09 Unsubscribe em 1 clique    | Concluído | Rota `/api/privacy/unsubscribe` e página `/[locale]/unsubscribe` revoga consentimento de marketing imediatamente |
-| F3-10 Políticas versionadas      | Concluído | `/[locale]/legal/privacy` e `/[locale]/legal/terms` com versão `2026-09-v1`, tabela de retenção e aviso não-clínico |
+| Item                                | Estado    | Evidência                                                                                                                                                      |
+| ----------------------------------- | --------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F3-01 Modelo de dados privacidade   | Concluído | Migration `20260926020000_leads_privacy_results.sql` com `leads`, `consents`, `unsubscribe_tokens`, `recovery_tokens`, `data_requests`, `result_access_grants` |
+| F3-02 Segregação de consentimento   | Concluído | Consentimento transacional (`TRANSACTIONAL_RESULTS`) separado de promocional (`MARKETING_PROMOTIONAL`, desmarcado por padrão)                                  |
+| F3-03 Trilha auditável append-only  | Concluído | Tabela `consents` grava `policy_version`, hash de IP salgado, user-agent e revogação sem sobrescrever histórico                                                |
+| F3-04 Resultado protegido           | Concluído | `/api/sessions/[id]/result` retorna `FREE_PARTIAL` com oferta de paywall editorial e omite estritamente `premiumReport`                                        |
+| F3-05 Desbloqueio por grant         | Concluído | `result_access_grants` valida grants (`PREMIUM_REPORT`, `PREMIUM_BUNDLE`) no servidor e gera relatório analítico completo                                      |
+| F3-06 Tokens de recuperação/opt-out | Concluído | Tokens aleatórios de 256 bits (`recovery_tokens` e `unsubscribe_tokens`), persistência exclusiva de hash SHA-256 e comparação em tempo constante               |
+| F3-07 E-mails transacionais         | Concluído | `email-service.ts` com templates nos 4 idiomas (PT, EN, ES, FR), mascaramento de e-mails em logs e suporte a Resend                                            |
+| F3-08 Exercício de direitos LGPD    | Concluído | Rota `/api/privacy/data-request` e página `/[locale]/privacy/data-request` com proteção contra enumeração                                                      |
+| F3-09 Unsubscribe em 1 clique       | Concluído | Rota `/api/privacy/unsubscribe` e página `/[locale]/unsubscribe` revoga consentimento de marketing imediatamente                                               |
+| F3-10 Políticas versionadas         | Concluído | `/[locale]/legal/privacy` e `/[locale]/legal/terms` com versão `2026-09-v1`, tabela de retenção e aviso não-clínico                                            |
 
 ## Validação executada
 
@@ -47,5 +47,5 @@
 
 ## Critérios de Aceite da Fase 3 (PLANO_DE_IMPLEMENTACAO_MEQYRO_V1.md)
 
-1. *Resultado básico tem valor real:* **Aprovado.** Usuário visualiza pontuação global (BrainRank índice 0-1000), dimensão de maior destaque com descrição aprofundada e visão percentual de todas as dimensões cognitivas ou traços Big Five.
-2. *Marketing só é habilitado por consentimento explícito auditável:* **Aprovado.** Checkbox de consentimento promocional é desmarcado por padrão, separado dos termos de serviço, e gera registro auditável append-only com versão da política e hash de token para cancelamento instantâneo.
+1. _Resultado básico tem valor real:_ **Aprovado.** Usuário visualiza pontuação global (BrainRank índice 0-1000), dimensão de maior destaque com descrição aprofundada e visão percentual de todas as dimensões cognitivas ou traços Big Five.
+2. _Marketing só é habilitado por consentimento explícito auditável:_ **Aprovado.** Checkbox de consentimento promocional é desmarcado por padrão, separado dos termos de serviço, e gera registro auditável append-only com versão da política e hash de token para cancelamento instantâneo.

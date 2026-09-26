@@ -76,7 +76,9 @@ export type ActiveSession = Readonly<{
   status: "CREATED" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED";
   currentPosition: number;
   expiresAt: string;
-  answers: Readonly<Record<string, { optionId?: string; numericValue?: number; durationMs?: number }>>;
+  answers: Readonly<
+    Record<string, { optionId?: string; numericValue?: number; durationMs?: number }>
+  >;
 }>;
 
 export type PartialResultSummary = Readonly<{
@@ -92,4 +94,3 @@ export type PartialResultSummary = Readonly<{
   dimensionScores?: Readonly<Record<string, number>>;
   qualityWarning?: boolean;
 }>;
-

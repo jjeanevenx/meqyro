@@ -5,18 +5,18 @@
 
 ## Entregas
 
-| Item                             | Estado    | Evidência                                                                                                |
-| -------------------------------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| F5-01 Modelo de dados analytics/growth| Concluído | Migration `20260926040000_growth_seo_analytics.sql` com `analytics_events`, `referrals`, `experiments`, colunas de atribuição em `quiz_sessions` e `orders` |
-| F5-02 Eventos do funil sanitizados| Concluído | `src/features/analytics/` com allowlist estrita (`ALLOWED_ANALYTICS_PROPERTY_KEYS`) descartando e-mails, senhas, tokens e respostas brutas |
-| F5-03 Ingestão de beacons        | Concluído | `POST /api/analytics/events` e persistência em `meqyro.analytics_events` com RLS ativado                |
-| F5-04 Metadados e hreflang       | Concluído | `metadata-builder.ts` gerando canonical, hreflangs para `pt`, `en`, `es`, `fr`, `x-default` e Open Graph completo |
-| F5-05 Schemas estruturados JSON-LD| Concluído| `json-ld.ts` gerando schemas Schema.org `Quiz` e `Organization` sem alegações médicas ou deterministas |
-| F5-06 Sitemap e Robots dinâmicos | Concluído | `sitemap.ts` cobrindo todas as rotas públicas nos 4 idiomas; `robots.txt` bloqueando play, checkout, unsubscribe e API |
-| F5-07 Referrals e compartilhamento seguro| Concluído| `referral-service.ts` e `POST /api/referrals` gerando códigos únicos (`MQ...`) e rastreando cliques/conversões sem vazar dados |
-| F5-08 Pós-compra, cross-sell e bundles| Concluído| `checkout/success` com recomendação editorial de próximo quiz; `fulfillment-service.ts` expande bundles para concessão múltipla de grants |
-| F5-09 Experimentos A/B determinísticos| Concluído| `experiment-service.ts` com hash SHA-256 distribuindo buckets estáveis (0–99) sem flickering            |
-| F5-10 Feature flags com contexto | Concluído | `feature-flags.ts` com suporte a overrides de variáveis de ambiente e contexto de mercado/país          |
+| Item                                      | Estado    | Evidência                                                                                                                                                   |
+| ----------------------------------------- | --------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| F5-01 Modelo de dados analytics/growth    | Concluído | Migration `20260926040000_growth_seo_analytics.sql` com `analytics_events`, `referrals`, `experiments`, colunas de atribuição em `quiz_sessions` e `orders` |
+| F5-02 Eventos do funil sanitizados        | Concluído | `src/features/analytics/` com allowlist estrita (`ALLOWED_ANALYTICS_PROPERTY_KEYS`) descartando e-mails, senhas, tokens e respostas brutas                  |
+| F5-03 Ingestão de beacons                 | Concluído | `POST /api/analytics/events` e persistência em `meqyro.analytics_events` com RLS ativado                                                                    |
+| F5-04 Metadados e hreflang                | Concluído | `metadata-builder.ts` gerando canonical, hreflangs para `pt`, `en`, `es`, `fr`, `x-default` e Open Graph completo                                           |
+| F5-05 Schemas estruturados JSON-LD        | Concluído | `json-ld.ts` gerando schemas Schema.org `Quiz` e `Organization` sem alegações médicas ou deterministas                                                      |
+| F5-06 Sitemap e Robots dinâmicos          | Concluído | `sitemap.ts` cobrindo todas as rotas públicas nos 4 idiomas; `robots.txt` bloqueando play, checkout, unsubscribe e API                                      |
+| F5-07 Referrals e compartilhamento seguro | Concluído | `referral-service.ts` e `POST /api/referrals` gerando códigos únicos (`MQ...`) e rastreando cliques/conversões sem vazar dados                              |
+| F5-08 Pós-compra, cross-sell e bundles    | Concluído | `checkout/success` com recomendação editorial de próximo quiz; `fulfillment-service.ts` expande bundles para concessão múltipla de grants                   |
+| F5-09 Experimentos A/B determinísticos    | Concluído | `experiment-service.ts` com hash SHA-256 distribuindo buckets estáveis (0–99) sem flickering                                                                |
+| F5-10 Feature flags com contexto          | Concluído | `feature-flags.ts` com suporte a overrides de variáveis de ambiente e contexto de mercado/país                                                              |
 
 ## Validação executada
 
@@ -50,5 +50,5 @@
 
 ## Critérios de Aceite da Fase 5 (PLANO_DE_IMPLEMENTACAO_MEQYRO_V1.md)
 
-1. *Cada etapa do funil é mensurável:* **Aprovado.** Eventos `landing_viewed`, `quiz_started`, `question_answered`, `quiz_completed`, `checkout_initiated`, `checkout_completed` são registrados com schema estrito sem PII.
-2. *Cada landing publicada passa no checklist SEO/localização:* **Aprovado.** Título, descrição, canonical, 4 tags hreflang recíprocas com x-default, JSON-LD Quiz Schema.org e Open Graph configurados e testados.
+1. _Cada etapa do funil é mensurável:_ **Aprovado.** Eventos `landing_viewed`, `quiz_started`, `question_answered`, `quiz_completed`, `checkout_initiated`, `checkout_completed` são registrados com schema estrito sem PII.
+2. _Cada landing publicada passa no checklist SEO/localização:_ **Aprovado.** Título, descrição, canonical, 4 tags hreflang recíprocas com x-default, JSON-LD Quiz Schema.org e Open Graph configurados e testados.

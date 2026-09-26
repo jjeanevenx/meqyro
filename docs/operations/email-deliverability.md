@@ -10,16 +10,19 @@
 Para assegurar 99%+ de taxa de entrega na caixa de entrada principal e prevenir rotulação como spam ou phishing, o domínio `meqyro.com` deve manter os seguintes registros no Cloudflare / DNS:
 
 ### 1.1 SPF (Sender Policy Framework)
+
 - **Tipo:** `TXT`
 - **Nome:** `@`
 - **Conteúdo:** `v=spf1 include:resend.com ~all`
 
 ### 1.2 DKIM (DomainKeys Identified Mail)
+
 - **Tipo:** `CNAME`
 - **Nome:** `resend._domainkey.meqyro.com`
 - **Conteúdo:** Fornecido pelo Resend Dashboard (chave RSA 2048-bit)
 
 ### 1.3 DMARC (Domain-based Message Authentication)
+
 - **Tipo:** `TXT`
 - **Nome:** `_dmarc.meqyro.com`
 - **Conteúdo:** `v=DMARC1; p=quarantine; pct=100; rua=mailto:dmarc-reports@meqyro.com`

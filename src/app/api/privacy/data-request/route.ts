@@ -31,10 +31,7 @@ export async function POST(req: NextRequest) {
 
     const validTypes: DataRequestType[] = ["EXPORT", "RECTIFICATION", "DELETION"];
     if (!validTypes.includes(requestType)) {
-      return NextResponse.json(
-        { error: "Tipo de solicitação inválido." },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Tipo de solicitação inválido." }, { status: 400 });
     }
 
     const result = await submitDataRequest({

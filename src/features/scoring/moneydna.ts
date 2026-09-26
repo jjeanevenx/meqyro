@@ -1,9 +1,4 @@
-export type MoneyArchetype =
-  | "BUILDER"
-  | "GUARDIAN"
-  | "STRATEGIST"
-  | "ADVENTURER"
-  | "BALANCER";
+export type MoneyArchetype = "BUILDER" | "GUARDIAN" | "STRATEGIST" | "ADVENTURER" | "BALANCER";
 
 export interface MoneyDnaItem {
   id: string;

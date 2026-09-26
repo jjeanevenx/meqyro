@@ -1,14 +1,12 @@
 import type { Metadata } from "next";
 import { notFound, redirect } from "next/navigation";
 import Link from "next/link";
-import { createHash } from "node:crypto";
-import { isLocale } from "@/lib/i18n/config";
+import { isLocale, type Locale } from "@/lib/i18n/config";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
+import { hashToken } from "@/features/privacy/consent-service";
 
-function hashToken(token: string): string {
-  return createHash("sha256").update(token, "utf8").digest("hex");
-}
+export const dynamic = "force-dynamic";
 
 type TokenResultPageProps = {
   params: Promise<{ locale: string; token: string }>;
@@ -42,11 +40,19 @@ export default async function TokenResultPage({ params }: TokenResultPageProps) 
   // 1. Check recovery_tokens
   const { data: recoveryRecord } = await supabase
     .from("recovery_tokens")
-    .select("session_id, expires_at")
+    .select("session_id, expires_at, revoked_at")
     .eq("token_hash", tokenHash)
     .single();
 
-  let sessionId = recoveryRecord?.session_id;
+  let sessionId: string | undefined;
+
+  if (
+    recoveryRecord &&
+    !recoveryRecord.revoked_at &&
+    new Date(recoveryRecord.expires_at) >= new Date()
+  ) {
+    sessionId = recoveryRecord.session_id;
+  }
 
   // 2. Fallback: check if token directly matches access_token_hash in quiz_sessions
   if (!sessionId) {
@@ -62,20 +68,41 @@ export default async function TokenResultPage({ params }: TokenResultPageProps) 
   }
 
   if (!sessionId) {
+    const safeLocale: Locale = isLocale(locale) ? (locale as Locale) : "pt";
+    const errorMap: Record<Locale, { title: string; body: string; back: string }> = {
+      pt: {
+        title: "Link de resultado inválido ou expirado",
+        body: "O link de recuperação informado não foi encontrado ou expirou. Por favor, solicite um novo envio de e-mail ou inicie um novo teste.",
+        back: "Voltar para a página inicial",
+      },
+      en: {
+        title: "Invalid or expired result link",
+        body: "The recovery link provided was not found or has expired. Please request a new link or start a new challenge.",
+        back: "Back to Home",
+      },
+      es: {
+        title: "Enlace de resultado no válido o caducado",
+        body: "El enlace de recuperación no se encontró o ha caducado. Solicita un nuevo correo o inicia un nuevo test.",
+        back: "Volver a la página principal",
+      },
+      fr: {
+        title: "Lien de résultat invalide ou expiré",
+        body: "Le lien de récupération est introuvable ou a expiré. Veuillez demander un nouvel e-mail ou démarrer un nouveau test.",
+        back: "Retour à l'accueil",
+      },
+    };
+    const errorMessages = errorMap[safeLocale];
+
     return (
       <main className="min-h-screen bg-stone-50 py-16 px-4">
         <div className="max-w-md mx-auto text-center space-y-6">
-          <h1 className="text-2xl font-serif font-bold text-stone-900">
-            Link de resultado inválido ou expirado
-          </h1>
-          <p className="text-stone-600 text-sm">
-            O link de recuperação informado não foi encontrado ou expirou. Por favor, solicite um novo envio de e-mail ou inicie um novo teste.
-          </p>
+          <h1 className="text-2xl font-serif font-bold text-stone-900">{errorMessages.title}</h1>
+          <p className="text-stone-600 text-sm">{errorMessages.body}</p>
           <Link
             href={`/${locale}`}
             className="inline-block py-2.5 px-6 rounded-lg bg-stone-900 text-white text-sm font-medium hover:bg-stone-800 transition-colors"
           >
-            Voltar para a página inicial
+            {errorMessages.back}
           </Link>
         </div>
       </main>

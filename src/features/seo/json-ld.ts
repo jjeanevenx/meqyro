@@ -1,7 +1,6 @@
 import type { Locale } from "@/lib/i18n/config";
 
-const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
 
 export function generateOrganizationJsonLd() {
   return {

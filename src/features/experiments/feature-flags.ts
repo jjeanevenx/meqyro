@@ -19,10 +19,7 @@ const DEFAULT_FLAGS: Record<FeatureFlagKey, boolean> = {
   enable_stripe_international: true,
 };
 
-export function isFeatureEnabled(
-  flag: FeatureFlagKey,
-  context?: FlagEvaluationContext,
-): boolean {
+export function isFeatureEnabled(flag: FeatureFlagKey, context?: FlagEvaluationContext): boolean {
   // Environmental override check (e.g. NEXT_PUBLIC_FLAG_ENABLE_REFERRALS)
   const envKey = `NEXT_PUBLIC_FLAG_${flag.toUpperCase()}`;
   if (process.env[envKey] === "false" || process.env[envKey] === "0") {

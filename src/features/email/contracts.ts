@@ -7,6 +7,14 @@ export type ResultDeliveryEmailInput = {
   unsubscribeToken?: string;
 };
 
+export type SessionRecoveryEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  quizSlug: string;
+  sessionId: string;
+  recoveryToken: string;
+};
+
 export type DataRequestEmailInput = {
   recipientEmail: string;
   locale: string;
@@ -14,7 +22,40 @@ export type DataRequestEmailInput = {
   verificationToken: string;
 };
 
+export type PurchaseConfirmationEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  orderNumber: string;
+  amount: number;
+  currency: string;
+  sessionId: string;
+  resultToken?: string;
+};
+
+export type RefundEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  orderNumber: string;
+  amount: number;
+  currency: string;
+};
+
+export type CoupleInviteEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  partnerName?: string;
+  inviteCode: string;
+};
+
+export type CoupleUnlockedEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  inviteCode: string;
+  comparisonUrl: string;
+};
+
 export type EmailResult = {
   success: boolean;
   messageId?: string;
+  error?: string;
 };

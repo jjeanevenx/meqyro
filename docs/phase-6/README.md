@@ -5,27 +5,27 @@
 
 ## Catálogo dos 7 Quizzes Implementados
 
-| # | Quiz             | Slug              | Tipo de Questão  | Dimensões / Arquétipos Principais                                           |
-| - | ---------------- | ----------------- | ---------------- | --------------------------------------------------------------------------- |
-| 1 | BrainRank        | `brainrank`       | Escolha Única    | Padrões, Lógica, Números, Atenção, Problemas, Velocidade                    |
-| 2 | Personality Map  | `personality-map` | Escala Likert    | Big Five: Abertura, Conscienciosidade, Extroversão, Amabilidade, Estabilidade|
-| 3 | CareerFit        | `careerfit`       | Escala Likert    | Âncoras: Técnico/Especialista, Gestão, Criatividade, Autonomia, Segurança, Causa |
-| 4 | MoneyDNA         | `moneydna`        | Escala Likert    | Arquétipos: Construtor, Guardião, Estrategista, Aventureiro, Equilibrador   |
-| 5 | FocusStyle       | `focusstyle`      | Escala Likert    | Estilos: Hiperfoco Imersivo, Modular Estruturado, Colaborativo, Sprint Reativo|
-| 6 | DecisionDNA      | `decisiondna`     | Cenários Práticos| Estilos Decisórios: Analítico, Intuitivo, Pragmático, Colaborativo          |
-| 7 | CoupleDNA        | `coupledna`       | Escala Likert    | Comunicação, Valores de Vida, Gestão de Conflitos, Finanças, Planos Futuros |
+| #   | Quiz            | Slug              | Tipo de Questão   | Dimensões / Arquétipos Principais                                                |
+| --- | --------------- | ----------------- | ----------------- | -------------------------------------------------------------------------------- |
+| 1   | BrainRank       | `brainrank`       | Escolha Única     | Padrões, Lógica, Números, Atenção, Problemas, Velocidade                         |
+| 2   | Personality Map | `personality-map` | Escala Likert     | Big Five: Abertura, Conscienciosidade, Extroversão, Amabilidade, Estabilidade    |
+| 3   | CareerFit       | `careerfit`       | Escala Likert     | Âncoras: Técnico/Especialista, Gestão, Criatividade, Autonomia, Segurança, Causa |
+| 4   | MoneyDNA        | `moneydna`        | Escala Likert     | Arquétipos: Construtor, Guardião, Estrategista, Aventureiro, Equilibrador        |
+| 5   | FocusStyle      | `focusstyle`      | Escala Likert     | Estilos: Hiperfoco Imersivo, Modular Estruturado, Colaborativo, Sprint Reativo   |
+| 6   | DecisionDNA     | `decisiondna`     | Cenários Práticos | Estilos Decisórios: Analítico, Intuitivo, Pragmático, Colaborativo               |
+| 7   | CoupleDNA       | `coupledna`       | Escala Likert     | Comunicação, Valores de Vida, Gestão de Conflitos, Finanças, Planos Futuros      |
 
 ## Entregas de Engenharia
 
-| Item                             | Estado    | Evidência                                                                                                |
-| -------------------------------- | --------- | -------------------------------------------------------------------------------------------------------- |
-| F6-01 Expansão do catálogo SQL   | Concluído | Migration `20260926050000_coupledna_bilateral.sql` com tabelas `couple_invites`, `couple_consents`, produtos e preços regionais |
-| F6-02 Plugins de Scoring         | Concluído | `src/features/scoring/` com `careerfit.ts`, `moneydna.ts`, `focusstyle.ts`, `decisiondna.ts`, `coupledna.ts` |
-| F6-03 Datasets Multilíngues      | Concluído | `src/content/quizzes/` com 100% de cobertura nos 4 idiomas (`pt`, `en`, `es`, `fr`)                     |
-| F6-04 CoupleDNA Bilateral        | Concluído | `couple-service.ts`, `POST /api/couple/invite` e `GET /api/couple/status/[code]` com trava estrita de privacidade |
-| F6-05 Trava Anti-Vazamento Couple| Concluído | Comparação retorna `bilateralUnlocked: false` até que ambos os participantes concluam e consintam       |
-| F6-06 Suporte no Engine          | Concluído | `session-service.ts` calcula score no servidor para todos os 7 slugs e gera relatórios parciais          |
-| F6-07 SSG & Rotas Estáticas      | Concluído | 28 landings (7 quizzes × 4 idiomas) geradas via SSG com metadados únicos e JSON-LD Schema.org            |
+| Item                              | Estado    | Evidência                                                                                                                       |
+| --------------------------------- | --------- | ------------------------------------------------------------------------------------------------------------------------------- |
+| F6-01 Expansão do catálogo SQL    | Concluído | Migration `20260926050000_coupledna_bilateral.sql` com tabelas `couple_invites`, `couple_consents`, produtos e preços regionais |
+| F6-02 Plugins de Scoring          | Concluído | `src/features/scoring/` com `careerfit.ts`, `moneydna.ts`, `focusstyle.ts`, `decisiondna.ts`, `coupledna.ts`                    |
+| F6-03 Datasets Multilíngues       | Concluído | `src/content/quizzes/` com 100% de cobertura nos 4 idiomas (`pt`, `en`, `es`, `fr`)                                             |
+| F6-04 CoupleDNA Bilateral         | Concluído | `couple-service.ts`, `POST /api/couple/invite` e `GET /api/couple/status/[code]` com trava estrita de privacidade               |
+| F6-05 Trava Anti-Vazamento Couple | Concluído | Comparação retorna `bilateralUnlocked: false` até que ambos os participantes concluam e consintam                               |
+| F6-06 Suporte no Engine           | Concluído | `session-service.ts` calcula score no servidor para todos os 7 slugs e gera relatórios parciais                                 |
+| F6-07 SSG & Rotas Estáticas       | Concluído | 28 landings (7 quizzes × 4 idiomas) geradas via SSG com metadados únicos e JSON-LD Schema.org                                   |
 
 ## Validação executada
 
@@ -60,5 +60,5 @@
 
 ## Critérios de Aceite da Fase 6 (PLANO_DE_IMPLEMENTACAO_MEQYRO_V1.md)
 
-1. *Checklist Definition of Done completo por quiz/locale:* **Aprovado.** Todos os 7 quizzes possuem conteúdo nos 4 idiomas, scoring versionado server-side, amostras de dimensões e metadados SEO específicos.
-2. *CoupleDNA e consentimento bilateral:* **Aprovado.** A comparação conjugal é criptograficamente associada ao código de convite e exige o consentimento explícito e individual de ambos os parceiros na tabela `meqyro.couple_consents` antes de liberar as pontuações e métricas comparativas.
+1. _Checklist Definition of Done completo por quiz/locale:_ **Aprovado.** Todos os 7 quizzes possuem conteúdo nos 4 idiomas, scoring versionado server-side, amostras de dimensões e metadados SEO específicos.
+2. _CoupleDNA e consentimento bilateral:_ **Aprovado.** A comparação conjugal é criptograficamente associada ao código de convite e exige o consentimento explícito e individual de ambos os parceiros na tabela `meqyro.couple_consents` antes de liberar as pontuações e métricas comparativas.

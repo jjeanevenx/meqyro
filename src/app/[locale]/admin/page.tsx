@@ -1,57 +1,156 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
+import { cookies } from "next/headers";
 import Link from "next/link";
 import {
   ShieldAlert,
-  Activity,
   Layers,
-  DollarSign,
   CheckCircle2,
-  ExternalLink,
-  Package,
-  Globe2,
+  Lock,
+  ArrowRight,
+  Database,
+  DollarSign,
+  AlertTriangle,
 } from "lucide-react";
-import { isLocale, locales } from "@/lib/i18n/config";
-import { buildPageMetadata } from "@/features/seo/metadata-builder";
-import { BUNDLE_PRICES } from "@/lib/market/prices";
+import { isLocale } from "@/lib/i18n/config";
+import { getAdminApiSecret } from "@/lib/config/env";
+import { timingSafeEqual } from "node:crypto";
+import { createSupabaseSecretClient } from "@/lib/supabase/server";
 
-export function generateStaticParams() {
-  return locales.map((locale) => ({ locale }));
-}
+export const dynamic = "force-dynamic";
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>;
-}): Promise<Metadata> {
-  const { locale } = await params;
-  if (!isLocale(locale)) return {};
-
-  return buildPageMetadata({
-    locale,
-    path: "/admin",
+export async function generateMetadata(): Promise<Metadata> {
+  return {
     title: "Operations & Catalog Inspection | Meqyro",
-    description: "Internal operations overview and minimal metrics inspection.",
-  });
+    description: "Internal operations overview and metrics inspection.",
+    robots: {
+      index: false,
+      follow: false,
+    },
+  };
 }
 
-const ALL_QUIZZES = [
-  { slug: "brainrank", code: "BRAINRANK", name: "BrainRank", category: "Cognitivo", active: true, items: 20 },
-  { slug: "personality-map", code: "PERSONALITY_MAP", name: "Personality Map", category: "Personalidade", active: true, items: 25 },
-  { slug: "careerfit", code: "CAREERFIT", name: "CareerFit", category: "Carreira", active: true, items: 18 },
-  { slug: "moneydna", code: "MONEYDNA", name: "MoneyDNA", category: "Finanças", active: true, items: 16 },
-  { slug: "focusstyle", code: "FOCUSSTYLE", name: "FocusStyle", category: "Produtividade", active: true, items: 15 },
-  { slug: "decisiondna", code: "DECISIONDNA", name: "DecisionDNA", category: "Decisão", active: true, items: 16 },
-  { slug: "coupledna", code: "COUPLEDNA", name: "CoupleDNA", category: "Relacionamentos", active: true, items: 20 },
-];
-
-export default async function AdminPage({
-  params,
-}: {
+type AdminPageProps = {
   params: Promise<{ locale: string }>;
-}) {
+  searchParams?: Promise<{ token?: string }>;
+};
+
+export default async function AdminPage({ params, searchParams }: AdminPageProps) {
   const { locale } = await params;
   if (!isLocale(locale)) notFound();
+
+  const query = searchParams ? await searchParams : {};
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get("meqyro_admin_session")?.value;
+
+  const candidateToken = query.token || sessionCookie;
+
+  let adminSecret: string | undefined;
+  try {
+    adminSecret = getAdminApiSecret();
+  } catch {
+    adminSecret = undefined;
+  }
+
+  const isConfigured = Boolean(adminSecret && adminSecret.length >= 16);
+  let isAuthorized = false;
+
+  if (isConfigured && candidateToken && adminSecret) {
+    const candBuf = Buffer.from(candidateToken);
+    const secBuf = Buffer.from(adminSecret);
+    if (candBuf.length === secBuf.length && timingSafeEqual(candBuf, secBuf)) {
+      isAuthorized = true;
+    }
+  }
+
+  // If not authorized, render login gate
+  if (!isAuthorized) {
+    return (
+      <main className="min-h-screen bg-slate-950 text-slate-100 flex items-center justify-center p-6">
+        <div className="max-w-md w-full bg-slate-900 border border-slate-800 rounded-2xl p-8 space-y-6 shadow-xl">
+          <div className="text-center space-y-2">
+            <div className="w-12 h-12 rounded-full bg-indigo-500/10 border border-indigo-500/20 text-indigo-400 flex items-center justify-center mx-auto">
+              <Lock className="w-6 h-6" />
+            </div>
+            <h1 className="text-2xl font-bold text-white tracking-tight">Painel de Operações</h1>
+            <p className="text-xs text-slate-400">
+              Acesso restrito à equipe técnica e administrativa do Meqyro.
+            </p>
+          </div>
+
+          {!isConfigured ? (
+            <div className="p-4 rounded-xl bg-amber-500/10 border border-amber-500/30 text-amber-300 text-xs flex items-start gap-2.5">
+              <AlertTriangle className="w-4 h-4 shrink-0 mt-0.5" />
+              <span>
+                ADMIN_API_SECRET não está configurado nas variáveis de ambiente do servidor.
+              </span>
+            </div>
+          ) : (
+            <form method="GET" action={`/${locale}/admin`} className="space-y-4">
+              <div>
+                <label
+                  htmlFor="token"
+                  className="block text-xs font-semibold uppercase tracking-wider text-slate-400 mb-1.5"
+                >
+                  Token de Acesso Administrativo
+                </label>
+                <input
+                  id="token"
+                  name="token"
+                  type="password"
+                  required
+                  placeholder="Insira o token de autorização..."
+                  className="w-full px-4 py-2.5 rounded-xl bg-slate-950 border border-slate-800 text-slate-100 text-sm focus:outline-none focus:border-indigo-500"
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-2.5 px-4 rounded-xl bg-indigo-600 text-white text-sm font-semibold hover:bg-indigo-500 transition shadow"
+              >
+                Autenticar e Entrar
+              </button>
+            </form>
+          )}
+
+          <div className="text-center pt-2">
+            <Link
+              href={`/${locale}`}
+              className="text-xs text-slate-500 hover:text-slate-300 transition"
+            >
+              Voltar ao site público
+            </Link>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  // Fetch real operational metrics from Supabase
+  const supabase = createSupabaseSecretClient();
+
+  const { data: quizzes } = await supabase
+    .from("quizzes")
+    .select("id, slug, product_code, active, created_at")
+    .order("created_at", { ascending: true })
+    .limit(20);
+
+  const { count: sessionCount } = await supabase
+    .from("quiz_sessions")
+    .select("id", { count: "exact", head: true });
+
+  const { count: leadCount } = await supabase
+    .from("leads")
+    .select("id", { count: "exact", head: true });
+
+  const { count: orderCount } = await supabase
+    .from("orders")
+    .select("id", { count: "exact", head: true });
+
+  const { data: recentOrders } = await supabase
+    .from("orders")
+    .select("id, order_number, amount, currency, status, payment_provider, created_at")
+    .order("created_at", { ascending: false })
+    .limit(10);
 
   return (
     <div className="min-h-screen bg-slate-950 text-slate-100 p-6 md:p-12">
@@ -61,114 +160,99 @@ export default async function AdminPage({
           <div>
             <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/10 border border-indigo-500/30 text-indigo-400 text-xs font-semibold uppercase tracking-wider mb-2">
               <ShieldAlert className="w-3.5 h-3.5" />
-              Operações & Governança — Seção 55
+              Operações & Governança — Autenticado
             </div>
             <h1 className="text-3xl font-extrabold text-white tracking-tight">
               Painel de Operações Meqyro
             </h1>
             <p className="text-sm text-slate-400 mt-1">
-              Inspeção de catálogo, precificação regional, bundles e conformidade de arquitetura.
+              Catálogo, integridade de transações, contabilidade e governança de privacidade.
             </p>
           </div>
           <div className="flex items-center gap-3">
             <Link
-              href={`/api/admin/metrics`}
-              target="_blank"
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-slate-200 hover:bg-slate-800 transition"
+              href={`/${locale}`}
+              className="px-4 py-2 rounded-xl bg-slate-900 border border-slate-700 text-xs font-medium text-slate-200 hover:bg-slate-800 transition"
             >
-              <span>API JSON Metrics</span>
-              <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
+              Ir para o Site
             </Link>
           </div>
         </div>
 
-        {/* Quick KPI Overview */}
+        {/* Real KPI Metrics */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-2">
-              <span>Testes Ativos</span>
+              <span>Quizzes no Catálogo</span>
               <Layers className="w-4 h-4 text-indigo-400" />
             </div>
-            <div className="text-2xl font-bold text-white">7 / 7</div>
-            <p className="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-              <CheckCircle2 className="w-3 h-3" /> 100% disponíveis
-            </p>
+            <div className="text-2xl font-bold text-white">{quizzes?.length ?? 0} produtos</div>
+            <p className="text-xs text-slate-400 mt-1">Registrados no banco</p>
           </div>
 
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-2">
-              <span>Mercados Regionais</span>
-              <Globe2 className="w-4 h-4 text-emerald-400" />
+              <span>Sessões Registradas</span>
+              <Database className="w-4 h-4 text-emerald-400" />
             </div>
-            <div className="text-2xl font-bold text-white">4 Mercados</div>
-            <p className="text-xs text-slate-400 mt-1">BR (BRL), US (USD), EU (EUR), GB (GBP)</p>
+            <div className="text-2xl font-bold text-white">{sessionCount ?? 0}</div>
+            <p className="text-xs text-slate-400 mt-1">Total de sessões</p>
           </div>
 
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-2">
-              <span>Gateways Ativos</span>
-              <DollarSign className="w-4 h-4 text-amber-400" />
+              <span>Leads Capturados</span>
+              <CheckCircle2 className="w-4 h-4 text-amber-400" />
             </div>
-            <div className="text-2xl font-bold text-white">InfinitePay + Stripe</div>
-            <p className="text-xs text-slate-400 mt-1">Roteamento por moeda e país</p>
+            <div className="text-2xl font-bold text-white">{leadCount ?? 0}</div>
+            <p className="text-xs text-slate-400 mt-1">Com consentimento auditado</p>
           </div>
 
           <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-5">
             <div className="flex items-center justify-between text-slate-400 text-xs font-medium mb-2">
-              <span>Privacidade & RLS</span>
-              <Activity className="w-4 h-4 text-sky-400" />
+              <span>Pedidos Totais</span>
+              <DollarSign className="w-4 h-4 text-blue-400" />
             </div>
-            <div className="text-2xl font-bold text-emerald-400">Ativa</div>
-            <p className="text-xs text-slate-400 mt-1">Zero vazamento de PII / Paywall blindado</p>
+            <div className="text-2xl font-bold text-white">{orderCount ?? 0}</div>
+            <p className="text-xs text-slate-400 mt-1">Transações registradas</p>
           </div>
         </div>
 
         {/* Quizzes Table */}
-        <div className="bg-slate-900/40 border border-slate-800 rounded-2xl overflow-hidden">
-          <div className="px-6 py-4 border-b border-slate-800 flex items-center justify-between">
-            <div>
-              <h2 className="text-lg font-bold text-white">Catálogo de Testes (7 Quizzes)</h2>
-              <p className="text-xs text-slate-400">Status operacional dos testes disponíveis para o público</p>
-            </div>
-            <Link
-              href={`/${locale}/discover`}
-              className="text-xs text-indigo-400 hover:text-indigo-300 font-medium inline-flex items-center gap-1"
-            >
-              Ver no Catálogo Público <ExternalLink className="w-3 h-3" />
-            </Link>
-          </div>
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h2 className="text-base font-semibold text-white">Catálogo de Quizzes</h2>
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-slate-300">
-              <thead className="bg-slate-950/80 text-xs uppercase text-slate-400 font-semibold border-b border-slate-800">
+              <thead className="text-xs uppercase bg-slate-950/60 text-slate-400">
                 <tr>
-                  <th className="px-6 py-3">Nome</th>
-                  <th className="px-6 py-3">Slug</th>
-                  <th className="px-6 py-3">Código Produto</th>
-                  <th className="px-6 py-3">Categoria</th>
-                  <th className="px-6 py-3">Itens</th>
-                  <th className="px-6 py-3">Status</th>
-                  <th className="px-6 py-3 text-right">Ação</th>
+                  <th className="px-4 py-3">Slug</th>
+                  <th className="px-4 py-3">Código</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Link</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-slate-800/60 font-mono text-xs">
-                {ALL_QUIZZES.map((q) => (
-                  <tr key={q.slug} className="hover:bg-slate-800/30 transition">
-                    <td className="px-6 py-4 font-sans font-semibold text-white">{q.name}</td>
-                    <td className="px-6 py-4 text-slate-400">{q.slug}</td>
-                    <td className="px-6 py-4 text-indigo-300">{q.code}</td>
-                    <td className="px-6 py-4 font-sans text-slate-300">{q.category}</td>
-                    <td className="px-6 py-4 text-slate-400">{q.items} itens</td>
-                    <td className="px-6 py-4">
-                      <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/30">
-                        Ativo
+              <tbody className="divide-y divide-slate-800">
+                {(quizzes ?? []).map((q) => (
+                  <tr key={q.id} className="hover:bg-slate-800/40">
+                    <td className="px-4 py-3 font-medium text-white">{q.slug}</td>
+                    <td className="px-4 py-3 text-slate-400">{q.product_code}</td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                          q.active
+                            ? "bg-emerald-500/10 text-emerald-400"
+                            : "bg-slate-800 text-slate-400"
+                        }`}
+                      >
+                        {q.active ? "Ativo" : "Inativo"}
                       </span>
                     </td>
-                    <td className="px-6 py-4 text-right">
+                    <td className="px-4 py-3">
                       <Link
-                        href={`/${locale}/quizzes/${q.slug}/play`}
-                        className="font-sans text-xs text-indigo-400 hover:text-indigo-300 font-medium"
+                        href={`/${locale}/quizzes/${q.slug}`}
+                        className="text-xs text-indigo-400 hover:text-indigo-300 inline-flex items-center gap-1"
                       >
-                        Jogar →
+                        Landing <ArrowRight className="w-3 h-3" />
                       </Link>
                     </td>
                   </tr>
@@ -178,90 +262,48 @@ export default async function AdminPage({
           </div>
         </div>
 
-        {/* Bundles Matrix */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 text-indigo-400 font-semibold text-sm">
-              <Package className="w-4 h-4" />
-              <span>Discover Pack (3 Testes)</span>
-            </div>
-            <p className="text-xs text-slate-400">
-              BrainRank + Personality Map + DecisionDNA
-            </p>
-            <div className="space-y-1 pt-2 border-t border-slate-800/60 text-xs">
-              <div className="flex justify-between text-slate-300">
-                <span>Brasil (BR):</span>
-                <span className="font-semibold text-white">R$ {(BUNDLE_PRICES.BUNDLE_DISCOVER.BR / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>EUA (US):</span>
-                <span className="font-semibold text-white">${(BUNDLE_PRICES.BUNDLE_DISCOVER.US / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Europa (EU):</span>
-                <span className="font-semibold text-white">€{(BUNDLE_PRICES.BUNDLE_DISCOVER.EU / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Reino Unido (GB):</span>
-                <span className="font-semibold text-white">£{(BUNDLE_PRICES.BUNDLE_DISCOVER.GB / 100).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 text-emerald-400 font-semibold text-sm">
-              <Package className="w-4 h-4" />
-              <span>Life Pack (3 Testes)</span>
-            </div>
-            <p className="text-xs text-slate-400">
-              CareerFit + MoneyDNA + FocusStyle
-            </p>
-            <div className="space-y-1 pt-2 border-t border-slate-800/60 text-xs">
-              <div className="flex justify-between text-slate-300">
-                <span>Brasil (BR):</span>
-                <span className="font-semibold text-white">R$ {(BUNDLE_PRICES.BUNDLE_LIFE.BR / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>EUA (US):</span>
-                <span className="font-semibold text-white">${(BUNDLE_PRICES.BUNDLE_LIFE.US / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Europa (EU):</span>
-                <span className="font-semibold text-white">€{(BUNDLE_PRICES.BUNDLE_LIFE.EU / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Reino Unido (GB):</span>
-                <span className="font-semibold text-white">£{(BUNDLE_PRICES.BUNDLE_LIFE.GB / 100).toFixed(2)}</span>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-slate-900/40 border border-slate-800 rounded-2xl p-6 space-y-4">
-            <div className="flex items-center gap-2 text-amber-400 font-semibold text-sm">
-              <Package className="w-4 h-4" />
-              <span>All Access (Todos os 7)</span>
-            </div>
-            <p className="text-xs text-slate-400">
-              Acesso irrestrito aos 7 relatórios completos
-            </p>
-            <div className="space-y-1 pt-2 border-t border-slate-800/60 text-xs">
-              <div className="flex justify-between text-slate-300">
-                <span>Brasil (BR):</span>
-                <span className="font-semibold text-white">R$ {(BUNDLE_PRICES.BUNDLE_ALL_ACCESS.BR / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>EUA (US):</span>
-                <span className="font-semibold text-white">${(BUNDLE_PRICES.BUNDLE_ALL_ACCESS.US / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Europa (EU):</span>
-                <span className="font-semibold text-white">€{(BUNDLE_PRICES.BUNDLE_ALL_ACCESS.EU / 100).toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-slate-300">
-                <span>Reino Unido (GB):</span>
-                <span className="font-semibold text-white">£{(BUNDLE_PRICES.BUNDLE_ALL_ACCESS.GB / 100).toFixed(2)}</span>
-              </div>
-            </div>
+        {/* Recent Orders (no emails leaked) */}
+        <div className="bg-slate-900/60 border border-slate-800 rounded-2xl p-6 space-y-4">
+          <h2 className="text-base font-semibold text-white">Últimos Pedidos</h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-sm text-slate-300">
+              <thead className="text-xs uppercase bg-slate-950/60 text-slate-400">
+                <tr>
+                  <th className="px-4 py-3">Número</th>
+                  <th className="px-4 py-3">Valor</th>
+                  <th className="px-4 py-3">Status</th>
+                  <th className="px-4 py-3">Provedor</th>
+                  <th className="px-4 py-3">Data</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-slate-800">
+                {(recentOrders ?? []).map((o) => (
+                  <tr key={o.id} className="hover:bg-slate-800/40">
+                    <td className="px-4 py-3 font-mono text-white text-xs">{o.order_number}</td>
+                    <td className="px-4 py-3">
+                      {(o.amount / 100).toFixed(2)} {o.currency}
+                    </td>
+                    <td className="px-4 py-3">
+                      <span
+                        className={`inline-flex items-center px-2 py-0.5 rounded text-xs font-medium ${
+                          o.status === "FULFILLED" || o.status === "PAID"
+                            ? "bg-emerald-500/10 text-emerald-400"
+                            : o.status === "REFUNDED"
+                              ? "bg-amber-500/10 text-amber-400"
+                              : "bg-slate-800 text-slate-400"
+                        }`}
+                      >
+                        {o.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3 text-slate-400 text-xs">{o.payment_provider}</td>
+                    <td className="px-4 py-3 text-slate-500 text-xs">
+                      {new Date(o.created_at).toLocaleString(locale)}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

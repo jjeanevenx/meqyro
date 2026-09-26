@@ -2,11 +2,7 @@ import "server-only";
 
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { logEvent } from "@/lib/observability/logger";
-import {
-  type AnalyticsEventInput,
-  sanitizeAnalyticsProperties,
-  FUNNEL_EVENTS,
-} from "./contracts";
+import { type AnalyticsEventInput, sanitizeAnalyticsProperties, FUNNEL_EVENTS } from "./contracts";
 
 export async function recordFunnelEvent(
   input: AnalyticsEventInput,

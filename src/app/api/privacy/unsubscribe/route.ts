@@ -7,10 +7,7 @@ export async function POST(req: NextRequest) {
     const { token } = body;
 
     if (!token || typeof token !== "string") {
-      return NextResponse.json(
-        { error: "Token de cancelamento inválido." },
-        { status: 400 },
-      );
+      return NextResponse.json({ error: "Token de cancelamento inválido." }, { status: 400 });
     }
 
     const result = await unsubscribeByToken(token);
