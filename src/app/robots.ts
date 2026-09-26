@@ -1,0 +1,37 @@
+import type { MetadataRoute } from "next";
+
+export default function robots(): MetadataRoute.Robots {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "http://localhost:3000";
+
+  return {
+    rules: [
+      {
+        userAgent: "*",
+        allow: [
+          "/pt",
+          "/en",
+          "/es",
+          "/fr",
+          "/pt/quizzes/",
+          "/en/quizzes/",
+          "/es/quizzes/",
+          "/fr/quizzes/",
+          "/pt/legal/",
+          "/en/legal/",
+          "/es/legal/",
+          "/fr/legal/",
+        ],
+        disallow: [
+          "/*/quizzes/*/play",
+          "/*/checkout",
+          "/*/checkout/",
+          "/*/unsubscribe",
+          "/*/privacy/data-request",
+          "/api/",
+        ],
+      },
+    ],
+    sitemap: `${baseUrl}/sitemap.xml`,
+  };
+}

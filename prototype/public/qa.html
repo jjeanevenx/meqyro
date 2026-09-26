@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Meqyro — comparação de design</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        background: #e9edf4;
+        color: #071431;
+        font:
+          14px system-ui,
+          sans-serif;
+      }
+      main {
+        display: grid;
+        grid-template-columns: 426px 620px;
+        gap: 36px;
+        justify-content: center;
+        align-items: start;
+        padding: 28px;
+      }
+      section {
+        display: grid;
+        gap: 10px;
+      }
+      h1 {
+        margin: 0;
+        font-size: 14px;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+      img {
+        display: block;
+        width: 426px;
+        height: 928px;
+        object-fit: contain;
+        object-position: top;
+        background: white;
+      }
+      iframe {
+        width: 620px;
+        height: 980px;
+        border: 0;
+        background: white;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <section>
+        <h1>Referência selecionada</h1>
+        <img
+          src="/assets/meqyro/brainrank-option-2-reference.png"
+          alt="Referência visual Campo Cognitivo"
+        />
+      </section>
+      <section>
+        <h1>Implementação renderizada</h1>
+        <iframe src="/" title="Protótipo BrainRank"></iframe>
+      </section>
+    </main>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+node_modules/
+.next/
+out/
+coverage/
+.env
+.env.local
+.env.*.local
+!.env.example
+prototype/node_modules/
+prototype/dist/
+supabase/.temp/
+*.log
+*.tsbuildinfo
+.pnpm-store/
