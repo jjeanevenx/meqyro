@@ -2,10 +2,29 @@ import type { Locale } from "@/lib/i18n/config";
 import type { Market } from "@/lib/market/market-context";
 
 export const FUNNEL_EVENTS = [
-  "landing_viewed",
+  // Section 31 Mandatory Events
+  "page_view",
+  "quiz_viewed",
   "quiz_started",
   "question_answered",
+  "quiz_abandoned",
   "quiz_completed",
+  "lead_submitted",
+  "marketing_consent",
+  "result_previewed",
+  "paywall_viewed",
+  "checkout_started",
+  "checkout_redirected",
+  "payment_completed",
+  "payment_failed",
+  "result_unlocked",
+  "share_clicked",
+  "share_completed",
+  "cross_sell_viewed",
+  "cross_sell_clicked",
+
+  // Aliases / Funnel variations
+  "landing_viewed",
   "lead_captured",
   "checkout_initiated",
   "checkout_completed",
@@ -31,6 +50,11 @@ export const ALLOWED_ANALYTICS_PROPERTY_KEYS = new Set([
   "experiment_key",
   "variant_id",
   "referral_code",
+  "product_code",
+  "channel",
+  "target_quiz",
+  "cross_sell_slug",
+  "reason",
   "utm_source",
   "utm_medium",
   "utm_campaign",

@@ -13,6 +13,9 @@ import type {
 } from "./contracts";
 import { assertTransition, orderTransitions } from "@/lib/domain/states";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
+import { isBundleProduct, getBundlePrice } from "@/lib/market/prices";
+import { resolveMarketContext, type Market } from "@/lib/market/market-context";
+import type { Locale } from "@/lib/i18n/config";
 
 export function getPaymentProvider(name: PaymentProviderName): PaymentProvider {
   if (name === "infinitepay") {
@@ -80,20 +83,35 @@ export async function createOrder(
   }
 
   // 2. Resolve approved editorial price on server (reject client price injection)
-  const { data: priceRecord, error: priceError } = await supabase
-    .from("product_prices")
-    .select("amount, currency")
-    .eq("quiz_id", quizId)
-    .eq("market", input.market)
-    .eq("active", true)
-    .single();
+  let amount: number;
+  let currency: string;
 
-  if (priceError || !priceRecord) {
-    throw new Error(`Preço não configurado para o mercado ${input.market}.`);
+  if (isBundleProduct(input.productCode)) {
+    const bundlePrice = getBundlePrice(input.productCode, input.market as Market);
+    if (!bundlePrice) {
+      throw new Error(`Preço de bundle não configurado para o mercado ${input.market}.`);
+    }
+    const safeLocale: Locale = input.locale === "en" || input.locale === "es" || input.locale === "fr" ? input.locale : "pt";
+    const marketCtx = resolveMarketContext({ locale: safeLocale, market: input.market });
+    amount = bundlePrice;
+    currency = marketCtx.currency;
+  } else {
+    const { data: priceRecord, error: priceError } = await supabase
+      .from("product_prices")
+      .select("amount, currency")
+      .eq("quiz_id", quizId)
+      .eq("market", input.market)
+      .eq("active", true)
+      .single();
+
+    if (priceError || !priceRecord) {
+      throw new Error(`Preço não configurado para o mercado ${input.market}.`);
+    }
+
+    amount = priceRecord.amount;
+    currency = priceRecord.currency;
   }
 
-  const amount = priceRecord.amount;
-  const currency = priceRecord.currency;
   const providerName: PaymentProviderName =
     input.market === "BR" || currency === "BRL" ? "infinitepay" : "stripe";
 

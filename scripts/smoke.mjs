@@ -40,6 +40,9 @@ try {
   await verify("/en", "Discover more about you");
   await verify("/es", "Descubre más sobre ti");
   await verify("/fr", "Découvrez-en davantage sur vous");
+
+  // Catalog and Landing
+  await verify("/pt/discover", "Catálogo");
   await verify("/pt/quizzes/brainrank", "BrainRank");
   await verify("/en/quizzes/personality-map", "Personality Map");
   await verify("/pt/quizzes/careerfit", "CareerFit");
@@ -47,14 +50,35 @@ try {
   await verify("/pt/quizzes/focusstyle", "FocusStyle");
   await verify("/es/quizzes/decisiondna", "DecisionDNA");
   await verify("/pt/quizzes/coupledna", "CoupleDNA");
+
+  // Play Runners (Render interactive QuizRunner shell)
+  await verify("/pt/quizzes/brainrank/play", "quiz-runner");
+  await verify("/pt/quizzes/personality-map/play", "quiz-runner");
+  await verify("/pt/quizzes/careerfit/play", "quiz-runner");
+  await verify("/pt/quizzes/moneydna/play", "quiz-runner");
+  await verify("/pt/quizzes/focusstyle/play", "quiz-runner");
+  await verify("/pt/quizzes/decisiondna/play", "quiz-runner");
+  await verify("/pt/quizzes/coupledna/play", "quiz-runner");
+
+  // Editorial & Institutional
+  await verify("/pt/articles", "Artigos");
+  await verify("/pt/articles/how-logical-reasoning-works", "Como funciona o raciocínio");
+  await verify("/pt/contact", "support@meqyro.com");
+  await verify("/pt/cookies", "Cookies");
   await verify("/pt/legal/privacy", "Política de Privacidade");
   await verify("/pt/legal/terms", "Termos de Uso");
+
+  // Privacy & Commerce
   await verify("/pt/privacy/data-request", "Exercício de Direitos");
   await verify("/pt/unsubscribe", "unsubscribe-card");
   await verify("/pt/checkout", "checkout-shell");
   await verify("/pt/checkout/success", "checkout-return-card");
   await verify("/pt/checkout/pending", "checkout-return-card");
   await verify("/pt/checkout/failed", "checkout-return-card");
+
+  // Admin & SEO
+  await verify("/pt/admin", "Painel de Operações");
+  await verify("/api/admin/metrics", '"metrics"');
   await verify("/sitemap.xml", "<urlset");
   await verify("/robots.txt", "Disallow");
 } finally {

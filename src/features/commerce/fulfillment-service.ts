@@ -5,6 +5,7 @@ import { logEvent } from "@/lib/observability/logger";
 import { assertTransition, orderTransitions, type OrderState } from "@/lib/domain/states";
 import { recordReferralConversion } from "@/features/referrals/referral-service";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
+import { expandProductCodes } from "@/lib/market/prices";
 
 export async function fulfillOrder(
   orderId: string,
@@ -37,14 +38,7 @@ export async function fulfillOrder(
   const rawProductCodes = items?.map((i) => i.product_code) ?? ["BRAINRANK"];
 
   // Expand bundle if present
-  const expandedProductCodes: string[] = [];
-  for (const code of rawProductCodes) {
-    if (code === "PREMIUM_BUNDLE" || code === "bundle-all-reports") {
-      expandedProductCodes.push("BRAINRANK", "PERSONALITY_MAP");
-    } else {
-      expandedProductCodes.push(code);
-    }
-  }
+  const expandedProductCodes = expandProductCodes(rawProductCodes);
 
   // 3. Grant premium access in result_access_grants
   for (const productCode of expandedProductCodes) {

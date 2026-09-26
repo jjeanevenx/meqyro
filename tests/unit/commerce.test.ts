@@ -190,4 +190,41 @@ describe("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
 
     expect(grantsPostRefund).toHaveLength(0);
   });
+
+  it("creates and fulfills bundle order with automatic multi-product grant expansion", async () => {
+    const { session, token } = await startQuizSession({
+      quizSlug: "brainrank",
+      locale: "pt",
+      market: "BR",
+    });
+
+    // 1. Create BUNDLE_DISCOVER order (R$ 19,90)
+    const { order } = await createOrder({
+      sessionId: session.id,
+      sessionToken: token,
+      productCode: "BUNDLE_DISCOVER",
+      customerEmail: "bundle-buyer@example.com",
+      market: "BR",
+      locale: "pt",
+    });
+
+    expect(order.amount).toBe(1990); // R$ 19,90
+    expect(order.currency).toBe("BRL");
+
+    // 2. Fulfill BUNDLE_DISCOVER order
+    const fulfillment = await fulfillOrder(order.id, "evt_bundle_test");
+    expect(fulfillment.success).toBe(true);
+
+    // Verify all 3 quizzes granted in result_access_grants
+    const supabase = createSupabaseSecretClient();
+    const { data: grants } = await supabase
+      .from("result_access_grants")
+      .select("product_code, grant_type")
+      .eq("session_id", session.id)
+      .eq("grant_type", "PREMIUM_REPORT");
+
+    const grantedCodes = grants?.map((g) => g.product_code).sort();
+    expect(grantedCodes).toEqual(["BRAINRANK", "DECISIONDNA", "PERSONALITY_MAP"]);
+  });
 });
+

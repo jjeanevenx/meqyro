@@ -19,6 +19,8 @@ type QuizRunnerProps = {
   initialSession?: ActiveSession | null;
   locale: string;
   market: string;
+  initialInviteCode?: string;
+  initialReferralCode?: string;
 };
 
 export function QuizRunner({
@@ -26,6 +28,8 @@ export function QuizRunner({
   initialSession = null,
   locale,
   market,
+  initialInviteCode,
+  initialReferralCode,
 }: QuizRunnerProps) {
   const [session, setSession] = useState<ActiveSession | null>(initialSession);
   const [currentIndex, setCurrentIndex] = useState(() => {
@@ -66,6 +70,8 @@ export function QuizRunner({
             quizSlug: quiz.slug,
             locale,
             market,
+            referralCode: initialReferralCode,
+            inviteCode: initialInviteCode,
           }),
         });
 
@@ -97,7 +103,7 @@ export function QuizRunner({
     return () => {
       isMounted = false;
     };
-  }, [quiz.slug, quiz.questions.length, locale, market, session]);
+  }, [quiz.slug, quiz.questions.length, locale, market, session, initialReferralCode, initialInviteCode]);
 
   // Reset timer on question change
   useEffect(() => {
