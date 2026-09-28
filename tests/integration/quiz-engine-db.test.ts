@@ -37,7 +37,7 @@ describe.skipIf(!isOnline)(
       );
 
       // Fetch quiz to get question and option IDs
-      const quiz = await getPublicQuiz("brainrank", "pt");
+      const quiz = await getPublicQuiz("brainrank", "pt", session.id);
       const firstQ = quiz!.questions[0];
       const firstOpt = firstQ.options[0];
 
@@ -62,7 +62,7 @@ describe.skipIf(!isOnline)(
         market: "BR",
       });
 
-      const quiz = await getPublicQuiz("brainrank", "pt");
+      const quiz = await getPublicQuiz("brainrank", "pt", session.id);
       expect(quiz?.questions).toHaveLength(24);
 
       for (let i = 0; i < quiz!.questions.length; i++) {

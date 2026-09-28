@@ -185,6 +185,7 @@ export default async function DiscoverPage({ params }: { params: Promise<{ local
         languageLabel={dictionary.nav.language}
         discoverLabel={dictionary.nav.discover}
         howLabel={dictionary.nav.about}
+        current="discover"
       />
       <header className="discover__hero">
         <span className="discover__eyebrow">Meqyro Experiences</span>

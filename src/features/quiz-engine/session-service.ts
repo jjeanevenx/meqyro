@@ -23,6 +23,11 @@ import {
 import { coupleDnaScoringV1, type CoupleDnaItem } from "@/features/scoring/coupledna";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
 import { recordReferralClick } from "@/features/referrals/referral-service";
+import type { Locale } from "@/lib/i18n/config";
+import type { PublicQuestion, PublicOption, QuestionKind } from "./contracts";
+import { isVisualScene, isVisualStimulus } from "./visual-question-schema";
+import { selectQuestionsForAttempt, type CandidateQuestion } from "./selection-engine";
+import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
 
 export class SessionNotFoundError extends Error {
   constructor(message = "Session not found or expired") {
@@ -45,13 +50,32 @@ export class IncompleteQuizSubmissionError extends Error {
   }
 }
 
-export async function startQuizSession(input: {
+export type StartQuizSessionInput = {
   quizSlug: string;
   locale: string;
   market: string;
   referralCode?: string;
-}): Promise<{ session: ActiveSession; token: string }> {
+  inviteCode?: string;
+  existingToken?: string;
+  seed?: string;
+};
+
+export async function startQuizSession(
+  input: StartQuizSessionInput,
+): Promise<{ session: ActiveSession; token: string }> {
   const supabase = createSupabaseSecretClient();
+
+  // If client provided an existing token, try to resume active attempt for this quiz
+  if (input.existingToken) {
+    try {
+      const existing = await getActiveSessionByToken(input.existingToken, input.quizSlug);
+      if (existing) {
+        return { session: existing, token: input.existingToken };
+      }
+    } catch {
+      // Continue to fresh session if token is invalid
+    }
+  }
 
   const { data: quiz, error: quizError } = await supabase
     .from("quizzes")
@@ -108,6 +132,100 @@ export async function startQuizSession(input: {
     throw new Error(`Failed to create quiz session: ${sessionError?.message}`);
   }
 
+  // --- Dynamic Question Selection & Persistence ---
+  let selectedSaved = false;
+
+  if (input.inviteCode) {
+    // Bilateral CoupleDNA session: partner mirrors initiator's exact question set & positions
+    const formattedInvite = input.inviteCode.trim().toUpperCase();
+    const { data: invite } = await supabase
+      .from("couple_invites")
+      .select("id, initiator_session_id")
+      .eq("invite_code", formattedInvite)
+      .maybeSingle();
+
+    if (invite?.initiator_session_id) {
+      const { data: initiatorQuestions } = await supabase
+        .from("quiz_session_questions")
+        .select("question_id, position")
+        .eq("session_id", invite.initiator_session_id)
+        .order("position", { ascending: true });
+
+      if (initiatorQuestions && initiatorQuestions.length > 0) {
+        const partnerRows = initiatorQuestions.map((iq) => ({
+          session_id: session.id,
+          question_id: iq.question_id,
+          position: iq.position,
+        }));
+        await supabase.from("quiz_session_questions").insert(partnerRows);
+
+        // Update invite and record partner consent
+        await supabase
+          .from("couple_invites")
+          .update({
+            partner_session_id: session.id,
+            status: "ACCEPTED",
+            updated_at: new Date().toISOString(),
+          })
+          .eq("id", invite.id);
+
+        await supabase.from("couple_consents").upsert(
+          {
+            invite_id: invite.id,
+            session_id: session.id,
+            can_share_comparison: true,
+          },
+          { onConflict: "invite_id,session_id" },
+        );
+
+        selectedSaved = true;
+      }
+    }
+  }
+
+  if (!selectedSaved) {
+    const { data: candidates } = await supabase
+      .from("questions")
+      .select("id, stable_key, position, kind, scoring_key, metadata, active, options(id, stable_key, position)")
+      .eq("quiz_version_id", activeVersion.id)
+      .eq("active", true)
+      .order("position", { ascending: true });
+
+    if (candidates && candidates.length > 0) {
+      const config = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
+      const candidateList: CandidateQuestion[] = candidates.map((c) => ({
+        id: c.id,
+        stableKey: c.stable_key,
+        kind: c.kind,
+        scoringKey: (c.scoring_key as Record<string, unknown>) ?? {},
+        metadata: c.metadata as Record<string, unknown> | null,
+        active: c.active,
+        options: Array.isArray(c.options)
+          ? c.options.map((opt) => ({
+              id: opt.id,
+              stableKey: opt.stable_key,
+              position: opt.position,
+            }))
+          : [],
+      }));
+
+      const selected = config
+        ? selectQuestionsForAttempt(candidateList, config, input.seed ?? session.id)
+        : candidateList.slice(0, 24);
+
+      const rowsToInsert = selected.map((q, idx) => ({
+        session_id: session.id,
+        question_id: "questionId" in q ? q.questionId : (q as { id: string }).id,
+        position: idx + 1,
+      }));
+
+      const { error: insErr } = await supabase.from("quiz_session_questions").insert(rowsToInsert);
+      if (insErr) {
+        throw new Error(`Failed to insert session questions: ${insErr.message}`);
+      }
+    }
+  }
+
   if (input.referralCode) {
     await recordReferralClick(input.referralCode).catch(() => {});
   }
@@ -138,6 +256,171 @@ export async function startQuizSession(input: {
       answers: {},
     },
     token,
+  };
+}
+
+export async function getSessionQuestions(
+  sessionId: string,
+  locale: Locale,
+): Promise<PublicQuestion[]> {
+  const supabase = createSupabaseSecretClient();
+
+  const { data: sessionQuestions, error: sqError } = await supabase
+    .from("quiz_session_questions")
+    .select("question_id, position")
+    .eq("session_id", sessionId)
+    .order("position", { ascending: true });
+
+  if (sqError || !sessionQuestions || sessionQuestions.length === 0) {
+    return [];
+  }
+
+  const questionIds = sessionQuestions.map((sq) => sq.question_id);
+
+  const { data: questionsData, error: qError } = await supabase
+    .from("questions")
+    .select(`
+      id,
+      stable_key,
+      position,
+      kind,
+      metadata,
+      question_translations(locale, prompt, accessibility_text),
+      options(
+        id,
+        stable_key,
+        position,
+        metadata,
+        option_translations(locale, label, image_alt)
+      )
+    `)
+    .in("id", questionIds);
+
+  if (qError || !questionsData) {
+    return [];
+  }
+
+  const questionsMap = new Map(questionsData.map((q) => [q.id, q]));
+
+  return sessionQuestions
+    .map((sq) => {
+      const q = questionsMap.get(sq.question_id);
+      if (!q) return null;
+
+      const transList = Array.isArray(q.question_translations) ? q.question_translations : [];
+      const translation = transList.find((t) => t.locale === locale) ?? transList[0];
+
+      const clue =
+        q.metadata && typeof q.metadata === "object" && "clue" in q.metadata
+          ? ((q.metadata.clue as Record<string, string>)[locale] ?? null)
+          : null;
+
+      const rawOptions = Array.isArray(q.options) ? q.options : [];
+      const publicOptions: PublicOption[] = rawOptions
+        .slice()
+        .sort((a, b) => a.position - b.position)
+        .map((opt) => {
+          const optTransList = Array.isArray(opt.option_translations) ? opt.option_translations : [];
+          const optTrans = optTransList.find((t) => t.locale === locale) ?? optTransList[0];
+
+          return {
+            id: opt.id,
+            stableKey: opt.stable_key,
+            position: opt.position,
+            label: optTrans?.label ?? opt.stable_key,
+            imageAlt: optTrans?.image_alt ?? null,
+            visual: isVisualScene(opt.metadata?.visual) ? opt.metadata.visual : null,
+          };
+        });
+
+      const publicQuestion: PublicQuestion = {
+        id: q.id,
+        stableKey: q.stable_key,
+        position: sq.position,
+        kind: q.kind as QuestionKind,
+        prompt: translation?.prompt ?? q.stable_key,
+        accessibilityText: translation?.accessibility_text ?? null,
+        clue,
+        visualType:
+          typeof q.metadata?.visualType === "string"
+            ? (q.metadata.visualType as PublicQuestion["visualType"])
+            : null,
+        stimulus: isVisualStimulus(q.metadata?.stimulus) ? q.metadata.stimulus : null,
+        options: publicOptions,
+      };
+      return publicQuestion;
+    })
+    .filter((q): q is PublicQuestion => q !== null);
+}
+
+export async function getActiveSessionByToken(
+  token: string,
+  quizSlug?: string,
+): Promise<ActiveSession | null> {
+  const supabase = createSupabaseSecretClient();
+  const tokenHash = hashAnonymousSessionToken(token);
+
+  const { data: sessions, error } = await supabase
+    .from("quiz_sessions")
+    .select(`
+      id,
+      quiz_version_id,
+      quiz_version,
+      scoring_version,
+      locale,
+      market,
+      status,
+      access_token_hash,
+      current_position,
+      expires_at,
+      quizzes:quiz_versions(quizzes(slug))
+    `)
+    .eq("access_token_hash", tokenHash)
+    .neq("status", "COMPLETED")
+    .neq("status", "EXPIRED")
+    .gt("expires_at", new Date().toISOString())
+    .order("started_at", { ascending: false })
+    .limit(1);
+
+  if (error || !sessions || sessions.length === 0) return null;
+
+  const session = sessions[0]!;
+  const sessionRecord = session as unknown as { quizzes?: { quizzes?: { slug?: string } } };
+  const foundSlug = sessionRecord?.quizzes?.quizzes?.slug ?? "brainrank";
+
+  if (quizSlug && foundSlug !== quizSlug) {
+    return null;
+  }
+
+  const { data: answersData } = await supabase
+    .from("answers")
+    .select("question_id, option_id, numeric_value, duration_ms")
+    .eq("session_id", session.id);
+
+  const answersMap: Record<
+    string,
+    { optionId?: string; numericValue?: number; durationMs?: number }
+  > = {};
+  for (const ans of answersData ?? []) {
+    answersMap[ans.question_id] = {
+      ...(ans.option_id ? { optionId: ans.option_id } : {}),
+      ...(ans.numeric_value !== null ? { numericValue: ans.numeric_value } : {}),
+      ...(ans.duration_ms !== null ? { durationMs: ans.duration_ms } : {}),
+    };
+  }
+
+  return {
+    id: session.id,
+    quizVersionId: session.quiz_version_id,
+    quizSlug: foundSlug,
+    quizVersion: session.quiz_version,
+    scoringVersion: session.scoring_version,
+    locale: session.locale,
+    market: session.market,
+    status: session.status,
+    currentPosition: session.current_position,
+    expiresAt: session.expires_at,
+    answers: answersMap,
   };
 }
 
@@ -391,6 +674,25 @@ export async function saveAnswer(input: {
     throw new Error("Session has expired");
   }
 
+  // Validate that question belongs to this attempt
+  const { data: sqRow } = await supabase
+    .from("quiz_session_questions")
+    .select("question_id")
+    .eq("session_id", input.sessionId)
+    .eq("question_id", input.questionId)
+    .maybeSingle();
+
+  if (!sqRow) {
+    const { count } = await supabase
+      .from("quiz_session_questions")
+      .select("question_id", { count: "exact", head: true })
+      .eq("session_id", input.sessionId);
+
+    if (count && count > 0) {
+      throw new Error("Question does not belong to this attempt");
+    }
+  }
+
   // Upsert answer
   const answerPayload: {
     session_id: string;
@@ -487,40 +789,6 @@ export async function completeQuizSession(input: {
     }
   }
 
-  // Fetch all questions for this quiz version
-  const { data: questions, error: qError } = await supabase
-    .from("questions")
-    .select("id, stable_key, position, scoring_key, options(id, stable_key, scoring_value)")
-    .eq("quiz_version_id", session.quiz_version_id)
-    .order("position", { ascending: true });
-
-  if (qError || !questions || questions.length === 0) {
-    throw new Error("Failed to load questions for scoring");
-  }
-
-  // Fetch all submitted answers
-  const { data: answers, error: aError } = await supabase
-    .from("answers")
-    .select("question_id, option_id, numeric_value, duration_ms")
-    .eq("session_id", input.sessionId);
-
-  if (aError || !answers) {
-    throw new Error("Failed to load answers for scoring");
-  }
-
-  if (answers.length < questions.length) {
-    throw new IncompleteQuizSubmissionError(
-      `Answered ${answers.length} of ${questions.length} questions required`,
-    );
-  }
-
-  const scoringAnswers: ScoringAnswer[] = answers.map((a) => ({
-    questionId: a.question_id,
-    optionId: a.option_id ?? undefined,
-    value: a.numeric_value ?? undefined,
-    durationMs: a.duration_ms ?? undefined,
-  }));
-
   type OptionData = {
     id: string;
     stable_key: string;
@@ -535,7 +803,80 @@ export async function completeQuizSession(input: {
     options?: OptionData[];
   };
 
-  const rawQuestions = questions as unknown as QuestionData[];
+  // Fetch attempt questions from quiz_session_questions
+  const { data: sessionQuestions } = await supabase
+    .from("quiz_session_questions")
+    .select("question_id, position")
+    .eq("session_id", input.sessionId)
+    .order("position", { ascending: true });
+
+  let rawQuestions: QuestionData[];
+
+  if (sessionQuestions && sessionQuestions.length > 0) {
+    const questionIds = sessionQuestions.map((sq) => sq.question_id);
+    const { data: questionsData, error: qError } = await supabase
+      .from("questions")
+      .select("id, stable_key, scoring_key, options(id, stable_key, scoring_value)")
+      .in("id", questionIds);
+
+    if (qError || !questionsData) {
+      throw new Error("Failed to load questions for scoring");
+    }
+
+    const questionsMap = new Map(questionsData.map((q) => [q.id, q]));
+    const mappedQuestions: QuestionData[] = [];
+    for (const sq of sessionQuestions) {
+      const q = questionsMap.get(sq.question_id);
+      if (q) {
+        mappedQuestions.push({
+          id: q.id,
+          stable_key: q.stable_key,
+          position: sq.position,
+          scoring_key: (q.scoring_key as Record<string, string> | null) ?? null,
+          options: (q.options as OptionData[]) ?? [],
+        });
+      }
+    }
+    rawQuestions = mappedQuestions;
+  } else {
+    // Fallback for legacy attempts without quiz_session_questions rows
+    const { data: dbQuestions, error: qError } = await supabase
+      .from("questions")
+      .select("id, stable_key, position, scoring_key, options(id, stable_key, scoring_value)")
+      .eq("quiz_version_id", session.quiz_version_id)
+      .order("position", { ascending: true });
+
+    if (qError || !dbQuestions || dbQuestions.length === 0) {
+      throw new Error("Failed to load questions for scoring");
+    }
+    rawQuestions = dbQuestions as unknown as QuestionData[];
+  }
+
+  const activeQuestionIds = rawQuestions.map((q) => q.id);
+
+  // Fetch all submitted answers for active questions
+  const { data: answers, error: aError } = await supabase
+    .from("answers")
+    .select("question_id, option_id, numeric_value, duration_ms")
+    .eq("session_id", input.sessionId)
+    .in("question_id", activeQuestionIds);
+
+  if (aError || !answers) {
+    throw new Error("Failed to load answers for scoring");
+  }
+
+  if (answers.length < rawQuestions.length) {
+    throw new IncompleteQuizSubmissionError(
+      `Answered ${answers.length} of ${rawQuestions.length} questions required`,
+    );
+  }
+
+  const scoringAnswers: ScoringAnswer[] = answers.map((a) => ({
+    questionId: a.question_id,
+    optionId: a.option_id ?? undefined,
+    value: a.numeric_value ?? undefined,
+    durationMs: a.duration_ms ?? undefined,
+  }));
 
   let calculatedScore: Record<string, unknown>;
 
@@ -693,7 +1034,7 @@ export async function completeQuizSession(input: {
     locale: session.locale as "pt" | "en" | "es" | "fr",
     market: session.market as "BR" | "US" | "EU" | "GB",
     properties: {
-      total_questions: questions.length,
+      total_questions: rawQuestions.length,
     },
   }).catch(() => {});
 

@@ -4,6 +4,7 @@ import {
   saveAnswer,
   completeQuizSession,
 } from "@/features/quiz-engine/session-service";
+import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { getProtectedResult } from "@/features/results/result-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { isSupabaseAvailable } from "./db-check";
@@ -20,15 +21,12 @@ describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration T
     });
 
     const supabase = createSupabaseSecretClient();
-    const { data: questions } = await supabase
-      .from("questions")
-      .select("id, options(id)")
-      .eq("quiz_version_id", session.quizVersionId);
+    const quiz = await getPublicQuiz("brainrank", "pt", session.id);
 
     // Answer all questions
-    for (let i = 0; i < (questions?.length ?? 0); i++) {
-      const q = questions![i]!;
-      const optId = (q.options as Array<{ id: string }>)[0]?.id;
+    for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
+      const q = quiz!.questions[i]!;
+      const optId = q.options[0]?.id;
       await saveAnswer({
         sessionId: session.id,
         token,

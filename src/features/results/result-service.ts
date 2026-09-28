@@ -142,6 +142,7 @@ export async function getProtectedResult(input: {
     formattedPrice,
     headline: getPaywallHeadline(quizSlug, input.locale),
     features: getPaywallFeatures(quizSlug, input.locale),
+    market: input.market,
   };
 
   return {
@@ -207,31 +208,35 @@ function getPaywallFeatures(quizSlug: string, locale: string): string[] {
   const genericFeatures: Record<string, string[]> = {
     pt: [
       "Análise aprofundada de todas as dimensões avaliadas",
-      "Mapeamento de forças predominantes e pontos cegos operacionais",
-      "Recomendações práticas e estratégias de desenvolvimento",
-      "Guia de aplicação no dia a dia e tomadas de decisão",
-      "Acesso vitalício e opção de exportação em PDF",
+      "Forças predominantes e potenciais pontos cegos",
+      "Recomendações personalizadas",
+      "Plano de ação prático",
+      "Síntese para download",
+      "Acesso vitalício",
     ],
     en: [
-      "In-depth analysis across all evaluated dimensions",
-      "Mapping of core strengths and operational blind spots",
-      "Actionable recommendations and self-growth strategies",
-      "Practical daily application and decision frameworks",
-      "Lifetime access with downloadable summary",
+      "In-depth analysis of every evaluated dimension",
+      "Strengths and potential blind spots",
+      "Personalized recommendations",
+      "Practical action plan",
+      "Downloadable summary",
+      "Lifetime access",
     ],
     es: [
-      "Análisis en profundidad de todas las dimensiones evaluadas",
-      "Mapa de fortalezas clave y áreas de fricción",
-      "Recomendaciones prácticas y planes de acción",
-      "Marcos de aplicación en el día a día",
-      "Acceso de por vida y resumen descargable",
+      "Análisis en profundidad de cada dimensión evaluada",
+      "Fortalezas clave y puntos ciegos potenciales",
+      "Recomendaciones personalizadas",
+      "Plan de acción práctico",
+      "Resumen descargable",
+      "Acceso de por vida",
     ],
     fr: [
-      "Analyse approfondie de toutes les dimensions évaluées",
-      "Cartographie des forces clés et zones de friction",
-      "Recommandations concrètes et axes d'amélioration",
-      "Guide pratique d'application au quotidien",
-      "Accès à vie et synthèse téléchargeable",
+      "Analyse approfondie de chaque dimension évaluée",
+      "Points forts et angles morts potentiels",
+      "Recommandations personnalisées",
+      "Plan d'action pratique",
+      "Synthèse téléchargeable",
+      "Accès à vie",
     ],
   };
 

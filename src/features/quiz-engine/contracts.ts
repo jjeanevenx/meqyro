@@ -42,7 +42,45 @@ export type PublicOption = Readonly<{
   position: number;
   label: string;
   imageAlt?: string | null;
+  visual?: VisualScene | null;
 }>;
+
+export const visualShapeKinds = [
+  "circle",
+  "triangle",
+  "square",
+  "diamond",
+  "pentagon",
+  "hexagon",
+  "octagon",
+  "arrow",
+  "dot",
+  "ring",
+] as const;
+
+export type VisualShapeKind = (typeof visualShapeKinds)[number];
+
+export type VisualElement = Readonly<{
+  shape: VisualShapeKind;
+  x?: number;
+  y?: number;
+  size?: number;
+  rotation?: number;
+  flipX?: boolean;
+  flipY?: boolean;
+  filled?: boolean;
+  opacity?: number;
+  marker?: "top" | "bottom" | "left" | "right";
+}>;
+
+export type VisualScene = Readonly<{
+  elements: readonly VisualElement[];
+}>;
+
+export type VisualStimulus =
+  | Readonly<{ kind: "sequence"; items: readonly (VisualScene | null)[] }>
+  | Readonly<{ kind: "matrix"; rows: readonly (readonly (VisualScene | null)[])[] }>
+  | Readonly<{ kind: "group"; scene: VisualScene }>;
 
 export type PublicQuestion = Readonly<{
   id: string;
@@ -52,6 +90,8 @@ export type PublicQuestion = Readonly<{
   prompt: string;
   accessibilityText?: string | null;
   clue?: string | null;
+  visualType?: "VISUAL_PATTERN" | "VISUAL_SEQUENCE" | "SPATIAL" | "ROTATION" | "REFLECTION" | "SYMMETRY" | "MATRIX" | "COUNTING" | "DIRECTION" | "MIXED" | null;
+  stimulus?: VisualStimulus | null;
   options: readonly PublicOption[];
 }>;
 

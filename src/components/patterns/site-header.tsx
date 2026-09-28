@@ -7,11 +7,13 @@ export function SiteHeader({
   languageLabel,
   discoverLabel,
   howLabel,
+  current,
 }: {
   locale: Locale;
   languageLabel: string;
   discoverLabel: string;
   howLabel?: string;
+  current?: "home" | "discover";
 }) {
   return (
     <header className="site-header">
@@ -19,7 +21,12 @@ export function SiteHeader({
         MEQ<span>Y</span>RO
       </Link>
       <nav aria-label="Primary">
-        <Link href={`/${locale}/discover`}>{discoverLabel}</Link>
+        <Link
+          href={`/${locale}/discover`}
+          aria-current={current === "discover" ? "page" : undefined}
+        >
+          {discoverLabel}
+        </Link>
         {howLabel ? <Link href={`/${locale}#how-it-works`}>{howLabel}</Link> : null}
       </nav>
       <LocaleMarketSelector locale={locale} languageLabel={languageLabel} />

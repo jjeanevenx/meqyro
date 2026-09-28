@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import type {
   PublicQuiz,
+  PublicQuestion,
   ActiveSession,
   PartialResultSummary,
 } from "@/features/quiz-engine/contracts";
@@ -39,6 +40,7 @@ export function QuizRunner({
   const dict = getDictionary(safeLocale);
 
   const [session, setSession] = useState<ActiveSession | null>(initialSession);
+  const [questions, setQuestions] = useState<readonly PublicQuestion[]>(quiz.questions);
   const [currentIndex, setCurrentIndex] = useState(() => {
     if (initialSession && initialSession.currentPosition > 1) {
       return Math.min(initialSession.currentPosition - 1, quiz.questions.length - 1);
@@ -63,6 +65,7 @@ export function QuizRunner({
 
   // Double-click lock & timing refs
   const saveLockRef = useRef<boolean>(false);
+  const sessionInitPromiseRef = useRef<Promise<{ session: ActiveSession; questions?: PublicQuestion[] }> | null>(null);
   const questionStartTimeRef = useRef<number>(0);
   const cardRef = useRef<HTMLElement>(null);
 
@@ -76,7 +79,7 @@ export function QuizRunner({
 
     async function initSession() {
       try {
-        const response = await fetch("/api/sessions", {
+        sessionInitPromiseRef.current ??= fetch("/api/sessions", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
@@ -86,24 +89,33 @@ export function QuizRunner({
             referralCode: initialReferralCode,
             inviteCode: initialInviteCode,
           }),
+        }).then(async (response) => {
+          if (!response.ok) {
+            throw new Error(dict.quizRunner.initError);
+          }
+
+          const data = (await response.json()) as { session: ActiveSession; questions?: PublicQuestion[] };
+          return data;
         });
 
-        if (!response.ok) {
-          throw new Error(dict.quizRunner.initError);
-        }
-
-        const data = await response.json();
+        const data = await sessionInitPromiseRef.current;
+        const activeSession = data.session;
         if (isMounted) {
-          setSession(data.session);
-          if (data.session.currentPosition > 1) {
-            setCurrentIndex(Math.min(data.session.currentPosition - 1, quiz.questions.length - 1));
+          setSession(activeSession);
+          const currentQs = data.questions && data.questions.length > 0 ? data.questions : questions;
+          if (data.questions && data.questions.length > 0) {
+            setQuestions(data.questions);
           }
-          if (data.session.answers) {
-            setAnswers(data.session.answers);
+          if (activeSession.currentPosition > 1) {
+            setCurrentIndex(Math.min(activeSession.currentPosition - 1, currentQs.length - 1));
+          }
+          if (activeSession.answers) {
+            setAnswers(activeSession.answers);
           }
           setIsInitializing(false);
         }
       } catch (err: unknown) {
+        sessionInitPromiseRef.current = null;
         if (isMounted) {
           setSystemError(err instanceof Error ? err.message : dict.quizRunner.initError);
           setIsInitializing(false);
@@ -118,10 +130,10 @@ export function QuizRunner({
     };
   }, [
     quiz.slug,
-    quiz.questions.length,
     locale,
     market,
     session,
+    questions,
     initialReferralCode,
     initialInviteCode,
     dict.quizRunner.initError,
@@ -132,13 +144,13 @@ export function QuizRunner({
     questionStartTimeRef.current = Date.now();
   }, [currentIndex]);
 
-  const currentQuestion = quiz.questions[currentIndex];
+  const currentQuestion = questions[currentIndex];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
   const hasSelectedAnswer =
     Boolean(currentAnswer?.optionId) ||
     (typeof currentAnswer?.numericValue === "number" && currentAnswer.numericValue > 0);
 
-  const totalQuestions = quiz.questions.length;
+  const totalQuestions = questions.length;
   const answeredCount = Object.values(answers).filter(
     (a) => Boolean(a?.optionId) || (typeof a?.numericValue === "number" && a.numericValue > 0),
   ).length;
@@ -225,7 +237,8 @@ export function QuizRunner({
 
         // Smooth scroll to top of card on question advance
         if (typeof window !== "undefined") {
-          cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+          const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+          cardRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
         }
         return;
       }
@@ -276,7 +289,8 @@ export function QuizRunner({
       setSystemError(null);
 
       if (typeof window !== "undefined") {
-        cardRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+        const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        cardRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
       }
     }
   };
@@ -353,7 +367,7 @@ export function QuizRunner({
 
       {/* Question Content */}
       {currentQuestion ? (
-        <section className="quiz-question-card" aria-labelledby="quiz-question-heading">
+        <section className={`quiz-question-card ${currentQuestion.kind === "VISUAL_CHOICE" ? "quiz-question-card--visual" : ""}`} aria-labelledby="quiz-question-heading">
           <div className="quiz-question-meta">
             <span className="quiz-question-kicker">{questionKicker}</span>
             {currentQuestion.clue ? (
@@ -392,7 +406,7 @@ export function QuizRunner({
           <footer className="quiz-runner__footer">
             <Button
               type="button"
-              disabled={isSaving || isCompleting}
+              disabled={!hasSelectedAnswer || isSaving || isCompleting}
               onClick={handleContinue}
               className="quiz-runner__submit-btn"
               aria-busy={isSaving || isCompleting}

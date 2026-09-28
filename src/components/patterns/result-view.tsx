@@ -1,7 +1,17 @@
 "use client";
 
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
-import { CheckCircle2, Lock, Sparkles, ArrowRight, ShieldCheck, Info } from "lucide-react";
+import { useRouter } from "next/navigation";
+import {
+  CheckCircle2,
+  Lock,
+  Sparkles,
+  ArrowRight,
+  ShieldCheck,
+  Info,
+  Loader2,
+} from "lucide-react";
 import type { PartialResultSummary } from "@/features/quiz-engine/contracts";
 import type { PaywallOffer, ComprehensiveReport, AccessLevel } from "@/features/results/contracts";
 import { getDictionary } from "@/lib/i18n/dictionaries";
@@ -13,6 +23,7 @@ type ResultViewProps = {
   paywall?: PaywallOffer;
   premiumReport?: ComprehensiveReport;
   locale: string;
+  ctaVariant?: "unlock_report" | "complete_analysis";
 };
 
 export function ResultView({
@@ -21,10 +32,90 @@ export function ResultView({
   paywall,
   premiumReport,
   locale,
+  ctaVariant = "unlock_report",
 }: ResultViewProps) {
   const isPremium = accessLevel === "PREMIUM_UNLOCKED";
   const safeLocale: Locale = locale === "en" || locale === "es" || locale === "fr" ? locale : "pt";
   const dict = getDictionary(safeLocale);
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+  const offerViewedRef = useRef(false);
+
+  useEffect(() => {
+    if (!isPremium && paywall && !offerViewedRef.current) {
+      offerViewedRef.current = true;
+      fetch("/api/analytics/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventName: "premium_offer_viewed",
+          sessionId: summary.sessionId,
+          quizSlug: summary.quizSlug,
+          locale: safeLocale,
+          market: paywall.market,
+          properties: {
+            assessment_id: summary.sessionId,
+            product_id: paywall.productCode,
+            currency: paywall.currency,
+            market: paywall.market,
+          },
+        }),
+      }).catch(() => {});
+    }
+  }, [isPremium, paywall, summary.sessionId, summary.quizSlug, safeLocale]);
+
+  const handleCheckoutClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+    if (isLoading || isPremium || !paywall) return;
+
+    setIsLoading(true);
+    const checkoutUrl = `/${safeLocale}/checkout?session=${summary.sessionId}&product=${paywall.productCode}`;
+
+    try {
+      await Promise.allSettled([
+        fetch("/api/analytics/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventName: "premium_cta_clicked",
+            sessionId: summary.sessionId,
+            quizSlug: summary.quizSlug,
+            locale: safeLocale,
+            market: paywall.market,
+            properties: {
+              assessment_id: summary.sessionId,
+              product_id: paywall.productCode,
+              currency: paywall.currency,
+              market: paywall.market,
+            },
+          }),
+          keepalive: true,
+        }),
+        fetch("/api/analytics/events", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            eventName: "checkout_started",
+            sessionId: summary.sessionId,
+            quizSlug: summary.quizSlug,
+            locale: safeLocale,
+            market: paywall.market,
+            properties: {
+              assessment_id: summary.sessionId,
+              product_id: paywall.productCode,
+              currency: paywall.currency,
+              market: paywall.market,
+            },
+          }),
+          keepalive: true,
+        }),
+      ]);
+    } catch {
+      // Non-blocking navigation
+    }
+
+    router.push(checkoutUrl);
+  };
 
   const quizInfo = dict.quizzes[summary.quizSlug] ?? dict.quizzes.brainrank;
 
@@ -51,24 +142,21 @@ export function ResultView({
       fr: "Recommandations Pratiques :",
     }[safeLocale],
     protectedNotice: {
-      pt: "Conteúdo Aprofundado Protegido",
-      en: "In-depth Content Protected",
-      es: "Contenido Detallado Protegido",
-      fr: "Contenu Approfondi Protégé",
+      pt: "Relatório Analítico Completo",
+      en: "Comprehensive Analytical Report",
+      es: "Informe Analítico Completo",
+      fr: "Rapport Analytique Complet",
     }[safeLocale],
-    oneTimePayment: {
-      pt: "pagamento único",
-      en: "one-time payment",
-      es: "pago único",
-      fr: "paiement unique",
-    }[safeLocale],
-    guaranteeText: {
-      pt: "Acesso vitalício imediato · Garantia incondicional de 7 dias",
-      en: "Instant lifetime access · 7-day money-back guarantee",
-      es: "Acceso inmediato de por vida · Garantía de 7 días",
-      fr: "Accès instantané à vie · Garantie satisfait ou remboursé 7 jours",
-    }[safeLocale],
-    unlockCta: dict.resultView.unlockPremium,
+    oneTimePayment: dict.resultView.oneTimePayment,
+    instantAccess: dict.resultView.instantAccess,
+    moneyBackGuarantee: dict.resultView.moneyBackGuarantee,
+    securePayment: dict.resultView.securePayment,
+    unlockCta:
+      ctaVariant === "complete_analysis"
+        ? dict.resultView.unlockCompleteAnalysis
+        : dict.resultView.unlockPremium,
+    viewUnlockedReport: dict.resultView.viewUnlockedReport,
+    preparingCheckout: dict.resultView.preparingCheckout,
     backHome: dict.common.back,
     disclaimer: dict.resultView.disclaimer,
   };
@@ -119,7 +207,20 @@ export function ResultView({
         </div>
       ) : null}
 
-      {/* 4. Dimension Breakdown */}
+      {/* 4. Quick Jump for Already-Unlocked Premium Users */}
+      {isPremium ? (
+        <div className="pt-2">
+          <a
+            href="#premium-report"
+            className="paywall-cta-btn"
+          >
+            <span>{labels.viewUnlockedReport}</span>
+            <ArrowRight size={20} aria-hidden="true" />
+          </a>
+        </div>
+      ) : null}
+
+      {/* 5. Dimension Breakdown */}
       {summary.dimensionScores && Object.keys(summary.dimensionScores).length > 0 ? (
         <div className="dimension-breakdown space-y-3">
           <h3 className="text-base font-semibold text-stone-900">{labels.dimensionsTitle}</h3>
@@ -141,9 +242,9 @@ export function ResultView({
         </div>
       ) : null}
 
-      {/* 5. Premium Unlocked Content */}
+      {/* 6. Premium Unlocked Content (When user already purchased) */}
       {isPremium && premiumReport ? (
-        <section className="premium-report-content space-y-6 pt-4 border-t border-stone-200">
+        <section id="premium-report" className="premium-report-content space-y-6 pt-4 border-t border-stone-200">
           <div className="premium-summary-card bg-amber-50/50 border border-amber-200/60 p-5 rounded-2xl space-y-2">
             <h3 className="text-lg font-bold text-amber-950">{labels.executiveSummary}</h3>
             <p className="text-sm text-amber-900 leading-relaxed">
@@ -189,61 +290,91 @@ export function ResultView({
         </section>
       ) : null}
 
-      {/* 6. Paywall Offer (When not premium) */}
+      {/* 7. Paywall Offer (When not premium): Dominant, High-Trust, Clear Conversion Block */}
       {!isPremium && paywall ? (
-        <section className="paywall-card bg-gradient-to-br from-stone-900 to-stone-950 text-white p-6 rounded-2xl space-y-4 shadow-lg">
-          <div className="paywall-lock-banner flex items-center gap-2 text-amber-400 text-xs font-semibold uppercase tracking-wider">
-            <Lock size={16} />
+        <section className="paywall-card" aria-label="Premium Report Offer">
+          {/* Kicker Badge */}
+          <div className="paywall-lock-banner">
+            <Lock size={14} aria-hidden="true" />
             <span>{labels.protectedNotice}</span>
           </div>
 
-          <h3 className="paywall-title text-xl font-bold tracking-tight text-white">
+          {/* Offer Title */}
+          <h2 className="paywall-title">
             {paywall.headline}
-          </h3>
+          </h2>
 
-          <ul className="paywall-features space-y-2 text-sm text-stone-300">
+          {/* 6 Concrete Benefits */}
+          <ul className="paywall-features">
             {paywall.features.map((feature, i) => (
-              <li key={i} className="paywall-feature-item flex items-start gap-2">
-                <CheckCircle2 size={16} className="text-emerald-400 shrink-0 mt-0.5" />
+              <li key={i} className="paywall-feature-item">
+                <CheckCircle2 size={18} className="paywall-feature-icon" aria-hidden="true" />
                 <span>{feature}</span>
               </li>
             ))}
           </ul>
 
-          <div className="paywall-price-box border-t border-stone-800 pt-4 space-y-1">
-            <div className="paywall-price-display flex items-baseline gap-2">
-              <span className="paywall-price-value text-3xl font-extrabold text-white">
-                {paywall.formattedPrice}
+          {/* Unified Decision Box: Price + Trust Points + Dominant CTA */}
+          <div className="paywall-decision-box">
+            {/* Price Header */}
+            <div className="paywall-price-header">
+              <div className="paywall-price-row">
+                <span className="paywall-price-val">{paywall.formattedPrice}</span>
+                <span className="paywall-price-tag">{labels.oneTimePayment}</span>
+              </div>
+            </div>
+
+            {/* Decision Trust Indicators */}
+            <div className="paywall-trust-pills">
+              <span className="paywall-trust-pill">
+                <CheckCircle2 size={15} aria-hidden="true" />
+                {labels.instantAccess}
               </span>
-              <span className="paywall-price-period text-xs text-stone-400">
-                {labels.oneTimePayment}
+              <span className="paywall-trust-pill">
+                <ShieldCheck size={16} aria-hidden="true" />
+                {labels.moneyBackGuarantee}
               </span>
             </div>
-            <p className="paywall-guarantee text-xs text-stone-400 flex items-center gap-1">
-              <ShieldCheck size={14} className="text-emerald-400" />
-              <span>{labels.guaranteeText}</span>
-            </p>
-          </div>
 
-          <div className="paywall-actions pt-2">
-            <Link
-              href={`/${locale}/checkout?session=${summary.sessionId}&product=${paywall.productCode}`}
-              className="w-full flex items-center justify-center gap-2 py-3 px-6 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-stone-950 font-bold text-sm transition shadow-md"
+            {/* Dominant Primary CTA */}
+            <button
+              type="button"
+              onClick={handleCheckoutClick}
+              disabled={isLoading}
+              aria-busy={isLoading}
+              className="paywall-cta-btn"
             >
-              <span>{labels.unlockCta}</span>
-              <ArrowRight size={18} />
-            </Link>
+              {isLoading ? (
+                <>
+                  <Loader2 size={20} className="animate-spin" aria-hidden="true" />
+                  <span>{labels.preparingCheckout}</span>
+                </>
+              ) : (
+                <>
+                  <span>{labels.unlockCta}</span>
+                  <ArrowRight size={20} aria-hidden="true" />
+                </>
+              )}
+            </button>
+
+            {/* Security Footnote */}
+            <div className="paywall-security-footer">
+              <Lock size={13} aria-hidden="true" />
+              <span>{labels.securePayment}</span>
+            </div>
           </div>
         </section>
       ) : null}
 
-      {/* 7. Non-clinical Disclaimer */}
-      <div className="result-disclaimer bg-stone-50 border border-stone-200/60 p-4 rounded-xl flex items-start gap-2.5 text-xs text-stone-500">
-        <Info size={16} className="shrink-0 text-stone-400 mt-0.5" />
-        <span>{labels.disclaimer}</span>
+      {/* 8. Non-clinical Disclaimer (Clean visual separation: 32px spacing, full legibility) */}
+      <div className="result-disclaimer-wrapper">
+        <div className="result-disclaimer">
+          <Info size={18} className="shrink-0 text-stone-400 mt-0.5" aria-hidden="true" />
+          <span>{labels.disclaimer}</span>
+        </div>
       </div>
 
-      {/* 8. Footer Link */}
+      {/* 9. Footer Back Link */}
       <div className="result-actions text-center pt-2">
         <Link
           href={`/${locale}`}

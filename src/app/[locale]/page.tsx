@@ -184,6 +184,7 @@ export default async function LocalizedHome({ params }: PageProps) {
         languageLabel={dictionary.nav.language}
         discoverLabel={dictionary.nav.discover}
         howLabel={dictionary.nav.about}
+        current="home"
       />
       <section className="intro" id="about">
         <div className="intro__content">

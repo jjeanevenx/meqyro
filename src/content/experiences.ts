@@ -79,8 +79,8 @@ export const experiences: readonly Experience[] = [
       es: "Identifica entornos de trabajo y preferencias profesionales alineados con tu perfil.",
       fr: "Identifiez les environnements et préférences professionnelles adaptés à votre profil.",
     },
-    duration: "7–10 min",
-    items: { pt: "30 perguntas", en: "30 questions", es: "30 preguntas", fr: "30 questions" },
+    duration: "6–9 min",
+    items: { pt: "24 perguntas", en: "24 questions", es: "24 preguntas", fr: "24 questions" },
   },
   {
     slug: "moneydna",
@@ -99,7 +99,7 @@ export const experiences: readonly Experience[] = [
       fr: "Comprenez vos réflexes de planification, d’impulsivité et de tolérance au risque.",
     },
     duration: "5–8 min",
-    items: { pt: "25 perguntas", en: "25 questions", es: "25 preguntas", fr: "25 questions" },
+    items: { pt: "20 perguntas", en: "20 questions", es: "20 preguntas", fr: "20 questions" },
   },
   {
     slug: "coupledna",
@@ -118,7 +118,7 @@ export const experiences: readonly Experience[] = [
       fr: "Comparez communication et valeurs dans une analyse privée et mutuellement consentie.",
     },
     duration: "6–8 min",
-    items: { pt: "25 perguntas", en: "25 questions", es: "25 preguntas", fr: "25 questions" },
+    items: { pt: "20 perguntas", en: "20 questions", es: "20 preguntas", fr: "20 questions" },
   },
   {
     slug: "decisiondna",
@@ -137,7 +137,7 @@ export const experiences: readonly Experience[] = [
       fr: "Analysez vos arbitrages entre intuition, délibération, risque et cohérence.",
     },
     duration: "6–9 min",
-    items: { pt: "24 cenários", en: "24 scenarios", es: "24 escenarios", fr: "24 scénarios" },
+    items: { pt: "4 cenários", en: "4 scenarios", es: "4 escenarios", fr: "4 scénarios" },
   },
   {
     slug: "focusstyle",
@@ -156,7 +156,7 @@ export const experiences: readonly Experience[] = [
       fr: "Diagnostic de votre mode de concentration : sprint, immersion profonde ou agilité.",
     },
     duration: "6–8 min",
-    items: { pt: "25 perguntas", en: "25 questions", es: "25 preguntas", fr: "25 questions" },
+    items: { pt: "20 perguntas", en: "20 questions", es: "20 preguntas", fr: "20 questions" },
   },
 ] as const;
 

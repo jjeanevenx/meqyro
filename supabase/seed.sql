@@ -45,7 +45,7 @@ begin
   -- Question 1: BR_PAT_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_PAT_01', 1, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"2 · 6 · 12 · 20 · ?","en":"2 · 6 · 12 · 20 · ?","es":"2 · 6 · 12 · 20 · ?","fr":"2 · 6 · 12 · 20 · ?"}}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -61,9 +61,9 @@ begin
   values (v_question_id, 'fr', 'Quel nombre complète la suite logique ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '26')
@@ -77,9 +77,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '26')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '28')
@@ -93,9 +93,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '28')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '30')
@@ -109,9 +109,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '30')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '32')
@@ -128,260 +128,260 @@ begin
 
   -- Question 2: BR_PAT_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
-  values (v_quiz_version_id, 'BR_PAT_02', 2, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"45° horário · 90° anti-horário · 135° horário · ?","en":"45° clockwise · 90° counter-clockwise · 135° clockwise · ?","es":"45° horario · 90° antihorario · 135° horario · ?","fr":"45° horaire · 90° anti-horaire · 135° horaire · ?"}}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  values (v_quiz_version_id, 'BR_PAT_02', 2, 'VISUAL_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"visualType":"ROTATION","stimulus":{"kind":"sequence","items":[{"elements":[{"shape":"arrow","rotation":0}]},{"elements":[{"shape":"arrow","rotation":45}]},{"elements":[{"shape":"arrow","rotation":-45}]},{"elements":[{"shape":"arrow","rotation":90}]},null]}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'pt', 'Observe a rotação dos ponteiros e indique o próximo passo:')
+  values (v_question_id, 'pt', 'Qual figura vem a seguir?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'en', 'Observe the rotation pattern and indicate the next step:')
+  values (v_question_id, 'en', 'Which figure comes next?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'es', 'Observe la rotación de las manecillas e indique el siguiente paso:')
+  values (v_question_id, 'es', '¿Qué figura viene a continuación?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'fr', 'Observez le motif de rotation et indiquez l''étape suivante :')
+  values (v_question_id, 'fr', 'Quelle figure vient ensuite ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"arrow","rotation":180}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '180° horário')
+  values (v_option_id, 'pt', 'Opção A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '180° clockwise')
+  values (v_option_id, 'en', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '180° horario')
+  values (v_option_id, 'es', 'Opción A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '180° horaire')
+  values (v_option_id, 'fr', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{"visual":{"elements":[{"shape":"arrow","rotation":-90}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '180° anti-horário')
+  values (v_option_id, 'pt', 'Opção B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '180° counter-clockwise')
+  values (v_option_id, 'en', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '180° antihorario')
+  values (v_option_id, 'es', 'Opción B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '180° anti-horaire')
+  values (v_option_id, 'fr', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"arrow","rotation":135}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '225° horário')
+  values (v_option_id, 'pt', 'Opção C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '225° clockwise')
+  values (v_option_id, 'en', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '225° horario')
+  values (v_option_id, 'es', 'Opción C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '225° horaire')
+  values (v_option_id, 'fr', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"arrow","rotation":90}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '90° horário')
+  values (v_option_id, 'pt', 'Opção D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '90° clockwise')
+  values (v_option_id, 'en', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '90° horario')
+  values (v_option_id, 'es', 'Opción D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '90° horaire')
+  values (v_option_id, 'fr', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
 
   -- Question 3: BR_PAT_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
-  values (v_quiz_version_id, 'BR_PAT_03', 3, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"Linha 1: ▲ ▲ ● | Linha 2: ● ▲ ▲ | Linha 3: ▲ ● ?","en":"Row 1: ▲ ▲ ● | Row 2: ● ▲ ▲ | Row 3: ▲ ● ?","es":"Fila 1: ▲ ▲ ● | Fila 2: ● ▲ ▲ | Fila 3: ▲ ● ?","fr":"Ligne 1 : ▲ ▲ ● | Ligne 2 : ● ▲ ▲ | Ligne 3 : ▲ ● ?"}}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  values (v_quiz_version_id, 'BR_PAT_03', 3, 'VISUAL_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"visualType":"MATRIX","stimulus":{"kind":"matrix","rows":[[{"elements":[{"shape":"triangle","filled":true}]},{"elements":[{"shape":"triangle","filled":true}]},{"elements":[{"shape":"circle","filled":true}]}],[{"elements":[{"shape":"circle","filled":true}]},{"elements":[{"shape":"triangle","filled":true}]},{"elements":[{"shape":"triangle","filled":true}]}],[{"elements":[{"shape":"triangle","filled":true}]},{"elements":[{"shape":"circle","filled":true}]},null]]}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'pt', 'Qual matriz de símbolos mantém a paridade de linhas e colunas?')
+  values (v_question_id, 'pt', 'Qual opção completa o espaço vazio?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'en', 'Which symbol matrix maintains row and column parity?')
+  values (v_question_id, 'en', 'Which option completes the missing space?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'es', '¿Qué matriz de símbolos mantiene la paridad de filas y columnas?')
+  values (v_question_id, 'es', '¿Qué opción completa el espacio vacío?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'fr', 'Quelle matrice de symboles maintient la parité des lignes et colonnes ?')
+  values (v_question_id, 'fr', 'Quelle option complète l''espace vide ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{"visual":{"elements":[{"shape":"triangle","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '▲')
+  values (v_option_id, 'pt', 'Opção A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '▲')
+  values (v_option_id, 'en', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '▲')
+  values (v_option_id, 'es', 'Opción A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '▲')
+  values (v_option_id, 'fr', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"circle","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '●')
+  values (v_option_id, 'pt', 'Opção B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '●')
+  values (v_option_id, 'en', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '●')
+  values (v_option_id, 'es', 'Opción B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '●')
+  values (v_option_id, 'fr', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"square","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '■')
+  values (v_option_id, 'pt', 'Opção C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '■')
+  values (v_option_id, 'en', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '■')
+  values (v_option_id, 'es', 'Opción C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '■')
+  values (v_option_id, 'fr', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"diamond","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '◆')
+  values (v_option_id, 'pt', 'Opção D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '◆')
+  values (v_option_id, 'en', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '◆')
+  values (v_option_id, 'es', 'Opción D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '◆')
+  values (v_option_id, 'fr', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
 
   -- Question 4: BR_PAT_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
-  values (v_quiz_version_id, 'BR_PAT_04', 4, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"HARD"}'::jsonb, '{"clue":{"pt":"Inversão vertical com incremento de vértices: 3→4, 4→5, 5→?","en":"Vertical flip with vertex increment: 3→4, 4→5, 5→?","es":"Inversión vertical con incremento de vértices: 3→4, 4→5, 5→?","fr":"Inversion verticale avec incrément de sommets : 3→4, 4→5, 5→?"}}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  values (v_quiz_version_id, 'BR_PAT_04', 4, 'VISUAL_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"HARD"}'::jsonb, '{"visualType":"MIXED","stimulus":{"kind":"sequence","items":[{"elements":[{"shape":"triangle","marker":"top"}]},{"elements":[{"shape":"square","marker":"bottom"}]},{"elements":[{"shape":"pentagon","marker":"top"}]},null]}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'pt', 'Qual elemento preserva a transformação bidimensional combinada?')
+  values (v_question_id, 'pt', 'Qual figura vem a seguir?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'en', 'Which element preserves the combined two-dimensional transformation?')
+  values (v_question_id, 'en', 'Which figure comes next?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'es', '¿Qué elemento conserva la transformación bidimensional combinada?')
+  values (v_question_id, 'es', '¿Qué figura viene a continuación?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'fr', 'Quel élément préserve la transformation bidimensionnelle combinée ?')
+  values (v_question_id, 'fr', 'Quelle figure vient ensuite ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"pentagon","marker":"bottom"}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', 'Pentágono invertido')
+  values (v_option_id, 'pt', 'Opção A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', 'Inverted pentagon')
+  values (v_option_id, 'en', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', 'Pentágono invertido')
+  values (v_option_id, 'es', 'Opción A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', 'Pentagone inversé')
+  values (v_option_id, 'fr', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{"visual":{"elements":[{"shape":"hexagon","marker":"bottom"}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', 'Hexágono invertido')
+  values (v_option_id, 'pt', 'Opção B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', 'Inverted hexagon')
+  values (v_option_id, 'en', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', 'Hexágono invertido')
+  values (v_option_id, 'es', 'Opción B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', 'Hexagone inversé')
+  values (v_option_id, 'fr', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"hexagon","marker":"top"}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', 'Heptágono direto')
+  values (v_option_id, 'pt', 'Opção C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', 'Direct heptagon')
+  values (v_option_id, 'en', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', 'Heptágono directo')
+  values (v_option_id, 'es', 'Opción C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', 'Heptagone direct')
+  values (v_option_id, 'fr', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"octagon","marker":"bottom"}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', 'Octógono duplo')
+  values (v_option_id, 'pt', 'Opção D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', 'Double octagon')
+  values (v_option_id, 'en', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', 'Octágono doble')
+  values (v_option_id, 'es', 'Opción D')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', 'Octogone double')
+  values (v_option_id, 'fr', 'Option D')
   on conflict (option_id, locale) do update set label = excluded.label;
 
   -- Question 5: BR_LOG_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_LOG_01', 5, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -397,9 +397,9 @@ begin
   values (v_question_id, 'fr', 'Si tout Nilo est Vero et aucun Vero n''est Mero, quelle conclusion est strictement nécessaire ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Algum Nilo é Mero')
@@ -413,9 +413,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Certains Nilos sont Meros')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Nenhum Nilo é Mero')
@@ -429,9 +429,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Aucun Nilo n''est Mero')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Todo Mero é Nilo')
@@ -445,9 +445,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Tout Mero est Nilo')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Algum Vero não é Nilo')
@@ -465,7 +465,7 @@ begin
   -- Question 6: BR_LOG_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_LOG_02', 6, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -481,9 +481,9 @@ begin
   values (v_question_id, 'fr', 'S''il pleut, la piste est mouillée. La piste n''est pas mouillée. Que peut-on déduire ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Não choveu')
@@ -497,9 +497,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Il n''a pas plu')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Vai chover em breve')
@@ -513,9 +513,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Il va bientôt pleuvoir')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'A pista secou rapidamente')
@@ -529,9 +529,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'La piste a séché vite')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'A chuva foi fraca')
@@ -549,7 +549,7 @@ begin
   -- Question 7: BR_LOG_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_LOG_03', 7, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -565,9 +565,9 @@ begin
   values (v_question_id, 'fr', 'Quatre boîtes étiquetées : une seule dit la vérité. Boîte 1 : ''L''or est ici''. Boîte 2 : ''L''or n''est pas ici''. Boîte 3 : ''L''or est dans la boîte 2''. Où est l''or si 1 et 3 mentent ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Na Caixa 1')
@@ -581,9 +581,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Dans la Boîte 1')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Na Caixa 2')
@@ -597,9 +597,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Dans la Boîte 2')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Na Caixa 4')
@@ -613,9 +613,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Dans la Boîte 4')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Impossível saber')
@@ -633,7 +633,7 @@ begin
   -- Question 8: BR_LOG_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_LOG_04', 8, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -649,9 +649,9 @@ begin
   values (v_question_id, 'fr', 'La négation logique stricte de ''Toutes les matinées sont froides ou ensoleillées'' est :')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Nenhuma manhã é fria e ensolarada')
@@ -665,9 +665,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Aucune matinée n''est froide et ensoleillée')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Existe ao menos uma manhã que não é fria nem ensolarada')
@@ -681,9 +681,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Il existe au moins une matinée qui n''est ni froide ni ensoleillée')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Todas as manhãs são quentes e chuvosas')
@@ -697,9 +697,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Toutes les matinées sont chaudes et pluvieuses')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Algumas manhãs são frias e ensolaradas')
@@ -717,7 +717,7 @@ begin
   -- Question 9: BR_NUM_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_NUM_01', 9, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -733,9 +733,9 @@ begin
   values (v_question_id, 'fr', 'Quelle valeur remplace le point d''interrogation ? 3 × 4 = 21, 4 × 5 = 31, 5 × 6 = ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '36')
@@ -749,9 +749,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '36')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '41')
@@ -765,9 +765,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '41')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '45')
@@ -781,9 +781,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '45')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '51')
@@ -801,7 +801,7 @@ begin
   -- Question 10: BR_NUM_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_NUM_02', 10, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -817,9 +817,9 @@ begin
   values (v_question_id, 'fr', 'Un prix a augmenté de 20 % puis a bénéficié d''une remise de 20 %. Par rapport au prix initial, le prix final :')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'É igual ao original')
@@ -833,9 +833,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Est égal à l''original')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'É 4% menor')
@@ -849,9 +849,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Est 4 % inférieur')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'É 2% maior')
@@ -865,9 +865,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Est 2 % supérieur')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'É 4% maior')
@@ -885,7 +885,7 @@ begin
   -- Question 11: BR_NUM_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_NUM_03', 11, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"Observe a soma dos quadrados: x² + y²","en":"Observe sum of squares: x² + y²","es":"Observe la suma de cuadrados: x² + y²","fr":"Observez la somme des carrés : x² + y²"}}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -901,9 +901,9 @@ begin
   values (v_question_id, 'fr', 'Quel nombre complète la matrice ? [2, 3 -> 13] | [4, 1 -> 17] | [3, 4 -> ?]')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '21')
@@ -917,9 +917,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '21')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '25')
@@ -933,9 +933,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '25')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '27')
@@ -949,9 +949,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '27')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '29')
@@ -969,7 +969,7 @@ begin
   -- Question 12: BR_NUM_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_NUM_04', 12, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -985,9 +985,9 @@ begin
   values (v_question_id, 'fr', 'Dans une progression harmonique de termes positifs, si x1 = 1/2 et x2 = 1/5, quelle est x4 ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '1/8')
@@ -1001,9 +1001,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '1/8')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '1/11')
@@ -1017,9 +1017,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '1/11')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '1/14')
@@ -1033,9 +1033,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '1/14')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '1/17')
@@ -1053,7 +1053,7 @@ begin
   -- Question 13: BR_ATT_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_ATT_01', 13, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1069,9 +1069,9 @@ begin
   values (v_question_id, 'fr', 'Quel mot n''appartient pas au groupe sémantique ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Círculo')
@@ -1085,9 +1085,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Cercle')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Quadrado')
@@ -1101,9 +1101,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Carré')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Azul')
@@ -1117,9 +1117,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Bleu')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Triângulo')
@@ -1137,7 +1137,7 @@ begin
   -- Question 14: BR_ATT_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_ATT_02', 14, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1153,9 +1153,9 @@ begin
   values (v_question_id, 'fr', 'Combien de fois la lettre ''R'' apparaît-elle dans : ''RACIOCINAR COM RIGOR REQUER RECONHECER REGRAS'' ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '6')
@@ -1169,9 +1169,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '6')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '7')
@@ -1185,25 +1185,25 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '7')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '8')
+  values (v_option_id, 'pt', '12')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '8')
+  values (v_option_id, 'en', '12')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '8')
+  values (v_option_id, 'es', '12')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '8')
+  values (v_option_id, 'fr', '12')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '9')
@@ -1221,7 +1221,7 @@ begin
   -- Question 15: BR_ATT_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_ATT_03', 15, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1237,9 +1237,9 @@ begin
   values (v_question_id, 'fr', 'Identifiez la paire qui N''EST PAS exactement identique :')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'KX-94817 / KX-94817')
@@ -1253,9 +1253,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'KX-94817 / KX-94817')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'MW-38291 / MW-38219')
@@ -1269,9 +1269,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'MW-38291 / MW-38219')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'PL-77340 / PL-77340')
@@ -1285,9 +1285,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'PL-77340 / PL-77340')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'QR-10526 / QR-10526')
@@ -1305,7 +1305,7 @@ begin
   -- Question 16: BR_ATT_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_ATT_04', 16, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1321,9 +1321,9 @@ begin
   values (v_question_id, 'fr', 'Quelle séquence présente une rupture dans l''alternance majuscule/minuscule ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'a B c D e F g')
@@ -1337,9 +1337,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'a B c D e F g')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Z y X w V u T')
@@ -1353,9 +1353,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Z y X w V u T')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'M n P q R S t')
@@ -1369,9 +1369,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'M n P q R S t')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'j K l M n O p')
@@ -1389,7 +1389,7 @@ begin
   -- Question 17: BR_PRB_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_PRB_01', 17, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1405,9 +1405,9 @@ begin
   values (v_question_id, 'fr', 'Trois lampes sont contrôlées par 3 interrupteurs extérieurs. Vous ne pouvez entrer dans la pièce qu''une fois. Comment identifier chaque interrupteur ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Ligar um por 10 min, desligar e ligar o segundo (calor e luz)')
@@ -1421,9 +1421,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'En allumer un 10 min, l''éteindre et allumer le second (chaleur et lumière)')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Ligar os três ao mesmo tempo')
@@ -1437,9 +1437,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Allumer les trois en même temps')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Alternar rapidamente dois interruptores')
@@ -1453,9 +1453,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Basculer rapidement deux interrupteurs')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'É matematicamente impossível')
@@ -1473,7 +1473,7 @@ begin
   -- Question 18: BR_PRB_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_PRB_02', 18, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1489,9 +1489,9 @@ begin
   values (v_question_id, 'fr', 'Vous avez deux seaux non gradués : 5L et 3L. Comment mesurer exactement 4 litres avec un robinet ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Encher o de 5L, despejar 3L no balde menor, esvaziar o menor, transferir os 2L restantes e encher 5L novamente até completar o menor')
@@ -1505,9 +1505,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Remplir 5L, verser dans 3L, vider 3L, transférer 2L restants, remplir 5L et compléter 3L')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Encher o de 3L até a metade duas vezes')
@@ -1521,9 +1521,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Remplir 3L à moitié deux fois')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Encher 5L e despejar aproximadamente 1L fora')
@@ -1537,9 +1537,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'Remplir 5L et vider environ 1L')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'Não é possível obter 4 litros exatos')
@@ -1557,7 +1557,7 @@ begin
   -- Question 19: BR_PRB_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_PRB_03', 19, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1573,9 +1573,9 @@ begin
   values (v_question_id, 'fr', 'Trois personnes traversent un pont de nuit avec une torche (max 2). Temps : 1 min, 2 min, 5 min. Rythme du plus lent. Temps minimal :')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '7 minutos')
@@ -1589,9 +1589,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '7 minutes')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '8 minutos')
@@ -1605,9 +1605,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '8 minutes')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '9 minutos')
@@ -1621,9 +1621,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '9 minutes')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '10 minutos')
@@ -1641,7 +1641,7 @@ begin
   -- Question 20: BR_PRB_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_PRB_04', 20, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1657,9 +1657,9 @@ begin
   values (v_question_id, 'fr', 'Vous avez 9 pièces identiques en apparence, l''une est plus lourde. Avec une balance à plateaux, quel est le nombre MINIMUM de pesées garanties ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '1 pesagem')
@@ -1673,9 +1673,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '1 pesée')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '2 pesagens')
@@ -1689,9 +1689,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '2 pesées')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '3 pesagens')
@@ -1705,9 +1705,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '3 pesées')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '4 pesagens')
@@ -1724,92 +1724,92 @@ begin
 
   -- Question 21: BR_SPD_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
-  values (v_quiz_version_id, 'BR_SPD_01', 21, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  values (v_quiz_version_id, 'BR_SPD_01', 21, 'VISUAL_CHOICE', '{"dimension":"SPEED","difficulty":"EASY"}'::jsonb, '{"visualType":"COUNTING","stimulus":{"kind":"group","scene":{"elements":[{"shape":"diamond","x":8,"y":50,"size":8,"filled":true},{"shape":"triangle","x":18.5,"y":50,"size":8,"filled":true},{"shape":"circle","x":29,"y":50,"size":8,"filled":true},{"shape":"diamond","x":39.5,"y":50,"size":8,"filled":true},{"shape":"diamond","x":50,"y":50,"size":8,"filled":true},{"shape":"circle","x":60.5,"y":50,"size":8,"filled":true},{"shape":"triangle","x":71,"y":50,"size":8,"filled":true},{"shape":"diamond","x":81.5,"y":50,"size":8,"filled":true},{"shape":"circle","x":92,"y":50,"size":8,"filled":true}]}}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'pt', 'Qual símbolo aparece com MENOR frequência na linha: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?')
+  values (v_question_id, 'pt', 'Qual figura aparece menos vezes?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'en', 'Which symbol appears with LOWEST frequency: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?')
+  values (v_question_id, 'en', 'Which figure appears the fewest times?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'es', '¿Qué símbolo aparece con MENOR frecuencia: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?')
+  values (v_question_id, 'es', '¿Qué figura aparece menos veces?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'fr', 'Quel symbole apparaît avec la PLUS FAIBLE fréquence : ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?')
+  values (v_question_id, 'fr', 'Quelle figure apparaît le moins souvent ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"diamond","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '◆ (losango)')
+  values (v_option_id, 'pt', 'Opção A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '◆ (diamond)')
+  values (v_option_id, 'en', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '◆ (rombo)')
+  values (v_option_id, 'es', 'Opción A')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '◆ (losange)')
+  values (v_option_id, 'fr', 'Option A')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{"visual":{"elements":[{"shape":"triangle","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '▲ (triângulo)')
+  values (v_option_id, 'pt', 'Opção B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '▲ (triangle)')
+  values (v_option_id, 'en', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '▲ (triángulo)')
+  values (v_option_id, 'es', 'Opción B')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '▲ (triangle)')
+  values (v_option_id, 'fr', 'Option B')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"circle","filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '● (círculo)')
+  values (v_option_id, 'pt', 'Opção C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '● (circle)')
+  values (v_option_id, 'en', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '● (círculo)')
+  values (v_option_id, 'es', 'Opción C')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '● (cercle)')
+  values (v_option_id, 'fr', 'Option C')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{"visual":{"elements":[{"shape":"diamond","x":25,"y":50,"size":18,"filled":true},{"shape":"triangle","x":50,"y":50,"size":18,"filled":true},{"shape":"circle","x":75,"y":50,"size":18,"filled":true}]}}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', 'Todos aparecem igual')
+  values (v_option_id, 'pt', 'Todos iguais')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', 'All appear equal')
+  values (v_option_id, 'en', 'All equal')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', 'Todos aparecen igual')
+  values (v_option_id, 'es', 'Todos iguales')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', 'Tous apparaissent également')
+  values (v_option_id, 'fr', 'Tous égaux')
   on conflict (option_id, locale) do update set label = excluded.label;
 
   -- Question 22: BR_SPD_02
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_SPD_02', 22, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1825,9 +1825,9 @@ begin
   values (v_question_id, 'fr', 'Résolvez mentalement le plus vite possible : (15 × 4) - (12 × 3) + 7 = ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '29')
@@ -1841,9 +1841,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '29')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '31')
@@ -1857,9 +1857,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '31')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '33')
@@ -1873,9 +1873,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '33')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '35')
@@ -1893,7 +1893,7 @@ begin
   -- Question 23: BR_SPD_03
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_SPD_03', 23, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1909,9 +1909,9 @@ begin
   values (v_question_id, 'fr', 'Quel mot est un anagramme exact de ''AMOR'' ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'AMOR')
@@ -1925,9 +1925,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'RAMO')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'MORA')
@@ -1941,9 +1941,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'MORA')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'AROMA')
@@ -1957,9 +1957,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', 'AROME')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', 'RAMAL')
@@ -1977,7 +1977,7 @@ begin
   -- Question 24: BR_SPD_04
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
   values (v_quiz_version_id, 'BR_SPD_04', 24, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
-  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
@@ -1993,9 +1993,9 @@ begin
   values (v_question_id, 'fr', 'Identifiez rapidement la seule combinaison dont les chiffres forment une somme première :')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '4 + 5 + 6 = 15')
@@ -2009,9 +2009,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '4 + 5 + 6 = 15')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '3 + 7 + 8 = 18')
@@ -2025,9 +2025,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '3 + 7 + 8 = 18')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '2 + 6 + 9 = 17')
@@ -2041,9 +2041,9 @@ begin
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '2 + 6 + 9 = 17')
   on conflict (option_id, locale) do update set label = excluded.label;
-  insert into meqyro.options (question_id, stable_key, position, scoring_value)
-  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb)
-  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'pt', '5 + 7 + 9 = 21')
@@ -2056,6 +2056,3030 @@ begin
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
   values (v_option_id, 'fr', '5 + 7 + 9 = 21')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 25: BR_PAT_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_05', 25, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"3 · 7 · 11 · 15 · ?","en":"3 · 7 · 11 · 15 · ?","es":"3 · 7 · 11 · 15 · ?","fr":"3 · 7 · 11 · 15 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número completa a sequência lógica?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number completes the logical sequence?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número completa la secuencia lógica?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre complète la suite logique ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '19')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '19')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '19')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '19')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 26: BR_PAT_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_06', 26, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"1 · 4 · 9 · 16 · ?","en":"1 · 4 · 9 · 16 · ?","es":"1 · 4 · 9 · 16 · ?","fr":"1 · 4 · 9 · 16 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Identifique o próximo elemento da série quadrada:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Identify the next element in the square series:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Identifique el siguiente elemento de la serie cuadrada:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Identifiez l''élément suivant de la série des carrés :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '27')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '27')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '27')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '27')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 27: BR_PAT_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_07', 27, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"3 · 6 · 11 · 18 · 27 · ?","en":"3 · 6 · 11 · 18 · 27 · ?","es":"3 · 6 · 11 · 18 · 27 · ?","fr":"3 · 6 · 11 · 18 · 27 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número preenche a interrogação?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number replaces the question mark?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número reemplaza el signo de interrogación?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre remplace le point d''interrogation ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '38')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '38')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '38')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '38')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '39')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '39')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '39')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '39')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 28: BR_PAT_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_08', 28, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"5 · 10 · 20 · 40 · ?","en":"5 · 10 · 20 · 40 · ?","es":"5 · 10 · 20 · 40 · ?","fr":"5 · 10 · 20 · 40 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Complete a progressão geométrica:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Complete the geometric progression:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Complete la progresión geométrica:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Complétez la progression géométrique :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 29: BR_PAT_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_09', 29, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"HARD"}'::jsonb, '{"clue":{"pt":"8 · 27 · 64 · 125 · ?","en":"8 · 27 · 64 · 125 · ?","es":"8 · 27 · 64 · 125 · ?","fr":"8 · 27 · 64 · 125 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual valor completa a sequência cúbica?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which value completes the cubic sequence?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué valor completa la secuencia cúbica?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle valeur complète la suite cubique ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '243')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '243')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '243')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '243')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '256')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '256')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '256')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '256')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '343')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '343')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '343')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '343')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 30: BR_PAT_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PAT_10', 30, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"HARD"}'::jsonb, '{"clue":{"pt":"2 · 3 · 7 · 16 · 32 · ?","en":"2 · 3 · 7 · 16 · 32 · ?","es":"2 · 3 · 7 · 16 · 32 · ?","fr":"2 · 3 · 7 · 16 · 32 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número completa a sequência com diferenças quadradas crescentes?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number completes the sequence with growing square differences?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número completa la secuencia con diferencias cuadradas crecientes?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre complète la suite aux différences de carrés croissants ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '52')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '52')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '52')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '52')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '55')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '55')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '55')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '55')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '57')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '57')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '57')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '57')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '64')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '64')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '64')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '64')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 31: BR_LOG_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_05', 31, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se todos os gatos são mamíferos e Mia é um gato, o que se conclui necessariamente?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If all cats are mammals and Mia is a cat, what must necessarily be true?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si todos los gatos son mamíferos y Mía es un gato, ¿qué se concluye necesariamente?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Si tous les chats sont des mammifères et que Mia est un chat, que conclut-on nécessairement ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Mia é um mamífero')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Mia is a mammal')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Mía es un mamífero')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Mia est un mammifère')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Mia tem quatro patas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Mia has four legs')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Mía tiene cuatro patas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Mia a quatre pattes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todos os mamíferos são gatos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'All mammals are cats')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todos los mamíferos son gatos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Tous les mammifères sont des chats')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Mia é um felino selvagem')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Mia is a wild feline')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Mía es un felino salvaje')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Mia est un félin sauvage')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 32: BR_LOG_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_06', 32, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se chover, o trânsito atrasa. Choveu. Logo:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If it rains, traffic is delayed. It rained. Therefore:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si llueve, el tráfico se retrasa. Llovió. Por lo tanto:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'S''il pleut, la circulation est ralentie. Il a plu. Donc :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Não houve atraso')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'There was no delay')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'No hubo retraso')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Il n''y a pas eu de retard')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'O trânsito atrasou')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Traffic was delayed')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'El tráfico se retrasó')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La circulation a été ralentie')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'O trânsito fluiu melhor')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Traffic flowed faster')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'El tráfico fluyó mejor')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La circulation s''est améliorée')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'A chuva parou rápido')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'The rain stopped quickly')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La lluvia paró rápido')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La pluie s''est arrêtée vite')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 33: BR_LOG_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_07', 33, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Lucas é mais velho que Pedro, e Pedro é mais velho que Mateus. Logo:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Lucas is older than Pedro, and Pedro is older than Mateo. Therefore:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Lucas es mayor que Pedro, y Pedro es mayor que Mateo. Por lo tanto:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Lucas est plus âgé que Pierre, et Pierre est plus âgé que Mathieu. Donc :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Mateus é o mais velho')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Mateo is the oldest')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Mateo es el mayor')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Mathieu est le plus âgé')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Lucas é mais novo que Mateus')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Lucas is younger than Mateo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Lucas es menor que Mateo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Lucas est plus jeune que Mathieu')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Lucas é mais velho que Mateus')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Lucas is older than Mateo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Lucas es mayor que Mateo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Lucas est plus âgé que Mathieu')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Pedro é o mais velho')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Pedro is the oldest')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Pedro es el mayor')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Pierre est le plus âgé')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 34: BR_LOG_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_08', 34, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Em um grupo de 40 pessoas, 25 gostam de café e 20 de chá. Todos gostam de pelo menos um. Quantos gostam de ambos?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'In a group of 40 people, 25 like coffee and 20 like tea. Everyone likes at least one. How many like both?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'En un grupo de 40 personas, 25 gustan del café y 20 del té. A todos les gusta al menos uno. ¿Cuántos gustan de ambos?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Dans un groupe de 40 personnes, 25 aiment le café et 20 le thé. Tous aiment au moins l''un des deux. Combien aiment les deux ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 35: BR_LOG_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_09', 35, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Nenhum réptil tem pelos. Todos os jacarés são répteis. Alguns animais de zoológico têm pelos. Logo:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'No reptile has fur. All alligators are reptiles. Some zoo animals have fur. Therefore:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Ningún reptil tiene pelo. Todos los caimanes son reptiles. Algunos animales del zoológico tienen pelo. Por lo tanto:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Aucun reptile n''a de poils. Tous les alligators sont des reptiles. Certains animaux de zoo ont des poils. Donc :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Alguns jacarés têm pelos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Some alligators have fur')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Algunos caimanes tienen pelo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Certains alligators ont des poils')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Nenhum jacaré tem pelos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'No alligator has fur')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ningún caimán tiene pelo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Aucun alligator n''a de poils')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todos os animais do zoológico são répteis')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'All zoo animals are reptiles')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todos los animales del zoológico son reptiles')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Tous les animaux du zoo sont des reptiles')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Nenhum réptil está no zoológico')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'No reptiles are in the zoo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ningún reptil está en el zoológico')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Aucun reptile n''est dans le zoo')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 36: BR_LOG_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_LOG_10', 36, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se a afirmação ''Nem todo pássaro voa'' é verdadeira, o que é logicamente equivalente?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If the statement ''Not every bird flies'' is true, which is logically equivalent?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si la afirmación ''No todo pájaro vuela'' es verdadera, ¿qué es lógicamente equivalente?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Si l''affirmation ''Tous les oiseaux ne volent pas'' est vraie, laquelle est logiquement équivalente ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Nenhum pássaro voa')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'No birds fly')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ningún pájaro vuela')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Aucun oiseau ne vole')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Existe pelo menos um pássaro que não voa')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'There is at least one bird that does not fly')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Existe al menos un pájaro que no vuela')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Il existe au moins un oiseau qui ne vole pas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todos os pássaros voam')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'All birds fly')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todos los pájaros vuelan')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Tous les oiseaux volent')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'A maioria dos pássaros voa')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Most birds fly')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La mayoría de los pájaros vuela')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La plupart des oiseaux volent')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 37: BR_NUM_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_05', 37, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se 4 maçãs custam R$ 12,00, quanto custam 7 maçãs?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If 4 apples cost $12.00, how much do 7 apples cost?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si 4 manzanas cuestan 12,00 €, ¿cuánto cuestan 7 manzanas?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Si 4 pommes coûtent 12,00 €, combien coûtent 7 pommes ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 18,00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$18.00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 21,00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$21.00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '21,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '21,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 24,00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$24.00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '24,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '24,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 28,00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$28.00')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '28,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '28,00 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 38: BR_NUM_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_06', 38, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual é o valor de 25% de 240?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is 25% of 240?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuánto es el 25% de 240?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Combien font 25 % de 240 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 39: BR_NUM_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_07', 39, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um carro percorre 180 km a 60 km/h e volta a 90 km/h. Qual a velocidade média de todo o percurso?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A car drives 180 km at 60 km/h and returns at 90 km/h. What is the average speed of the round trip?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un automóvil recorre 180 km a 60 km/h y regresa a 90 km/h. ¿Cuál es la velocidad promedio de todo el recorrido?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une voiture parcourt 180 km à 60 km/h et revient à 90 km/h. Quelle est la vitesse moyenne sur l''aller-retour ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '72 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '72 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '72 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '72 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '75 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '75 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '75 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '75 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '78 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '78 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '78 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '78 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '80 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '80 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '80 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '80 km/h')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 40: BR_NUM_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_08', 40, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um produto de R$ 200 teve aumento de 20% e depois desconto de 20%. Qual seu preço final?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A $200 item increased by 20% and then was discounted by 20%. What is its final price?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un artículo de 200 € aumentó un 20% y luego tuvo un descuento del 20%. ¿Cuál es su precio final?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un article à 200 € augmente de 20 % puis bénéficie d''une réduction de 20 %. Quel est son prix final ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '200 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '200 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 192')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$192')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '192 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '192 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 190')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$190')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '190 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '190 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 188')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$188')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '188 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '188 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 41: BR_NUM_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_09', 41, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'A soma de dois números é 70 e sua diferença é 14. Qual é o produto desses dois números?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'The sum of two numbers is 70 and their difference is 14. What is their product?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'La suma de dos números es 70 y su diferencia es 14. ¿Cuál es su producto?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'La somme de deux nombres est 70 et leur différence est 14. Quel est leur produit ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1126')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1126')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1126')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1126')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1176')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1176')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1176')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1176')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1244')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1244')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1244')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1244')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 42: BR_NUM_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_NUM_10', 42, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Uma torneira enche um reservatório em 3 horas e outra em 6 horas. Juntas, em quantas horas encherão o tanque?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'One tap fills a tank in 3 hours and another in 6 hours. Together, how many hours will they take to fill the tank?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un grifo llena un depósito en 3 horas y otro en 6 horas. Juntos, ¿en cuántas horas llenarán el tanque?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un robinet remplit un réservoir en 3 heures et un autre en 6 heures. Ensemble, en combien d''heures rempliront-ils le réservoir ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1,5 hora')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1.5 hours')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1,5 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1,5 heure')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '2,0 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '2.0 hours')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '2,0 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '2,0 heures')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '2,5 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '2.5 hours')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '2,5 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '2,5 heures')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4,5 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4.5 hours')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4,5 horas')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4,5 heures')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 43: BR_ATT_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_05', 43, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quantas letras ''T'' aparecem na sequência: T L T F T E T L T ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'How many letters ''T'' appear in the sequence: T L T F T E T L T ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuántas letras ''T'' aparecen en la secuencia: T L T F T E T L T ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Combien de lettres ''T'' apparaissent dans la suite : T L T F T E T L T ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 44: BR_ATT_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_06', 44, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual das opções é perfeitamente idêntica à palavra de referência: ELEFANTÍASE')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which option is perfectly identical to the reference word: ELEPHANTIASIS')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuál de las opciones es perfectamente idéntica a la palabra de referencia: ELEFANTIASIS')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle option est parfaitement identique au mot de référence : ÉLÉPHANTIASIS')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'ELEFANTIASE')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'ELEPHANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'ELEFANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'ELEPHANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'ELEFANTÍASE')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'ELEPHANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'ELEFANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'ÉLÉPHANTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'ELEFANTÍASI')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'ELEPHANTIASS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'ELEFANTIASS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'ÉLÉPHANTIASS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'ELEFONTÍASE')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'ELEPHONTASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'ELEFONTÍASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'ÉLÉPHONTIASIS')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 45: BR_ATT_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_07', 45, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Identifique o único par de códigos que NÃO é idêntico:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Identify the only pair of codes that is NOT identical:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Identifique el único par de códigos que NO es idéntico:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Identifiez la seule paire de codes qui n''est PAS identique :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '9834-X7B / 9834-X7B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '9834-X7B / 9834-X7B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '9834-X7B / 9834-X7B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '9834-X7B / 9834-X7B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4521-M9Q / 4521-M9Q')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4521-M9Q / 4521-M9Q')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4521-M9Q / 4521-M9Q')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4521-M9Q / 4521-M9Q')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '7319-K2W / 7319-K2V')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '7319-K2W / 7319-K2V')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '7319-K2W / 7319-K2V')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '7319-K2W / 7319-K2V')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '6108-P4Z / 6108-P4Z')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '6108-P4Z / 6108-P4Z')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '6108-P4Z / 6108-P4Z')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '6108-P4Z / 6108-P4Z')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 46: BR_ATT_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_08', 46, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quantos números pares existem na lista: 13, 22, 37, 48, 55, 64, 71, 86, 99?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'How many even numbers exist in the list: 13, 22, 37, 48, 55, 64, 71, 86, 99?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuántos números pares existen en la lista: 13, 22, 37, 48, 55, 64, 71, 86, 99?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Combien de nombres pairs se trouvent dans la liste : 13, 22, 37, 48, 55, 64, 71, 86, 99 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 47: BR_ATT_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_09', 47, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual linha contém exatamente 4 ocorrências do símbolo ''#'':')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which line contains exactly 4 occurrences of the symbol ''#'':')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué línea contiene exactamente 4 ocurrencias del símbolo ''#'':')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle ligne contient exactement 4 occurrences du symbole ''#'' :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '##--#--#--')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '##--#--#--')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '##--#--#--')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '##--#--#--')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '#-#-#-#-#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '#-#-#-#-#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '#-#-#-#-#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '#-#-#-#-#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '#--#--#--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '#--#--#--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '#--#--#--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '#--#--#--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '##--##--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '##--##--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '##--##--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '##--##--#')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 48: BR_ATT_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_ATT_10', 48, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Encontre o par de palavras com grafia perfeitamente invertida (palíndromo mútuo):')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Find the pair of words with perfectly mirrored spelling (mutual palindrome):')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Encuentre el par de palabras con grafía perfectamente invertida:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Trouvez la paire de mots à l''orthographe exactement inversée (palindrome mutuel) :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'ROMA / AMOR')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'ROMA / AMOR')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'ROMA / AMOR')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'ROMA / AMOR')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'LIVRO / ORVIL')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'BOOK / KOOB')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'LIBRO / ORBIL')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'LIVRE / ERVIL')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'CASA / ASAC')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'HOME / EMOH')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'CASA / ASAC')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'MAISON / NOSIAM')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'MESA / ASEM')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'TABLE / ELBAT')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'MESA / ASEM')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'TABLE / ELBAT')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 49: BR_PRB_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_05', 49, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Três amigos dividiram uma conta de R$ 150 em partes iguais. Um deles pagou com uma nota de R$ 100. Quanto deve receber de troco?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Three friends split a $150 bill equally. One pays with a $100 bill. How much change should they receive?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Tres amigos dividieron una cuenta de 150 € a partes iguales. Uno pagó con un billete de 100 €. ¿Cuánto cambio debe recibir?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Trois amis partagent une facture de 150 € en parts égales. L''un paie avec un billet de 100 €. Combien de monnaie doit-il recevoir ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '40 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '40 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$50')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '50 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '50 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$60')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '60 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '60 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R$ 70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '$70')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '70 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '70 €')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 50: BR_PRB_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_06', 50, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um elevador suporta até 600 kg. Se 5 pessoas pesam juntas 420 kg, quanto peso adicional ainda é permitido?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'An elevator holds up to 600 kg. If 5 people together weigh 420 kg, how much additional weight is allowed?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un ascensor soporta hasta 600 kg. Si 5 personas pesan juntas 420 kg, ¿cuánto peso adicional se permite?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un ascenseur supporte jusqu''à 600 kg. Si 5 personnes pèsent ensemble 420 kg, quelle charge supplémentaire est encore autorisée ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '160 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '160 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '160 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '160 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '180 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '180 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '180 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '180 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '200 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '200 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '200 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '200 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '220 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '220 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '220 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '220 kg')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 51: BR_PRB_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_07', 51, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Você precisa transportar 100 caixas em vans com capacidade máxima de 18 caixas cada. Qual o número mínimo de vans necessárias?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'You need to transport 100 boxes in vans with a maximum capacity of 18 boxes each. What is the minimum number of vans needed?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Necesita transportar 100 cajas en furgonetas con capacidad máxima de 18 cajas cada una. ¿Cuál es el número mínimo de furgonetas necesarias?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Vous devez transporter 100 cartons dans des camionnettes d''une capacité maximale de 18 cartons chacune. Quel est le nombre minimum de camionnettes requises ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 52: BR_PRB_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_08', 52, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Em um teste com 20 perguntas, cada acerto soma 5 pontos e cada erro retira 2 pontos. Se um candidato obteve 72 pontos respondendo a todas, quantas acertou?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'In a 20-question test, each correct answer adds 5 points and each error subtracts 2 points. If an applicant scored 72 points answering all, how many were correct?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'En un examen de 20 preguntas, cada acierto suma 5 puntos y cada error resta 2 puntos. Si un candidato obtuvo 72 puntos respondiendo todas, ¿cuántas acertó?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Lors d''un test de 20 questions, chaque bonne réponse rapporte 5 points et chaque erreur retire 2 points. Si un candidat a obtenu 72 points en répondant à tout, combien de bonnes réponses a-t-il eues ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 53: BR_PRB_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_09', 53, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Cinco pessoas estão em uma reunião e todas apertam as mãos entre si exatamente uma vez. Quantos apertos de mão ocorreram?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Five people meet and everyone shakes hands with everyone else exactly once. How many handshakes occurred?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Cinco personas están en una reunión y todas se dan la mano exactamente una vez. ¿Cuántos apretones de manos ocurrieron?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Cinq personnes participent à une réunion et se serrent toutes la main exactement une fois. Combien de poignées de main ont eu lieu ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 54: BR_PRB_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_PRB_10', 54, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um relógio adianta 2 minutos a cada 3 horas. Quantos minutos ele terá adiantado ao final de 24 horas?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A watch gains 2 minutes every 3 hours. How many minutes will it have gained after 24 hours?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un reloj se adelanta 2 minutos cada 3 horas. ¿Cuántos minutos se habrá adelantado al cabo de 24 horas?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une montre avance de 2 minutes toutes les 3 heures. De combien de minutes aura-t-elle avancé au bout de 24 heures ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '12 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '12 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '12 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '12 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '16 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '16 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '16 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '16 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '18 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '18 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20 minutos')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20 minutes')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 55: BR_SPD_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_05', 55, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual é o resultado rápido de: 15 × 6?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is the rapid calculation of: 15 × 6?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuál es el resultado rápido de: 15 × 6?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel est le résultat rapide de : 15 × 6 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '80')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '85')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '85')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '85')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '85')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '90')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 56: BR_SPD_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_06', 56, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número é o dobro de 47?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number is double of 47?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número es el doble de 47?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre est le double de 47 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '84')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '84')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '84')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '84')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '92')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '92')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '92')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '92')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '94')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '94')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '94')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '94')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 57: BR_SPD_07
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_07', 57, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Resolva rapidamente: 250 - 87 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Solve quickly: 250 - 87 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Resuelva rápidamente: 250 - 87 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Résolvez rapidement : 250 - 87 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '153')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '153')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '153')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '153')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '163')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '163')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '163')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '163')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '173')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '173')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '173')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '173')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '183')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '183')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '183')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '183')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 58: BR_SPD_08
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_08', 58, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Identifique rapidamente qual fração é maior que 1/2:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Identify quickly which fraction is greater than 1/2:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Identifique rápidamente qué fracción es mayor que 1/2:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Identifiez rapidement quelle fraction est supérieure à 1/2 :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3/7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3/7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3/7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3/7')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5/9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5/11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5/11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5/11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5/11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 59: BR_SPD_09
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_09', 59, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Calcule com velocidade: 18 × 12 - 16 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Calculate swiftly: 18 × 12 - 16 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Calcule con rapidez: 18 × 12 - 16 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Calculez avec rapidité : 18 × 12 - 16 = ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '196')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '196')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '196')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '196')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '200')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '204')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '204')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '204')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '204')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '216')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 60: BR_SPD_10
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_SPD_10', 60, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Identifique rapidamente qual dos números abaixo é divisível por 7 e por 9 simultaneamente:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Quickly identify which number below is divisible by both 7 and 9 simultaneously:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Identifique rápidamente qué número es divisible por 7 y por 9 simultáneamente:')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Identifiez rapidement quel nombre ci-dessous est divisible par 7 et par 9 simultanément :')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '567')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '567')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '567')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '567')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '630')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '630')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '630')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '630')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '693')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '693')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '693')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '693')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '720')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '720')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '720')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '720')
   on conflict (option_id, locale) do update set label = excluded.label;
 
 end $$;

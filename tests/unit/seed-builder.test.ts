@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brainRankQuestions } from "@/content/quizzes/brainrank";
+import { brainRankPool, brainRankQuestions } from "@/content/quizzes/brainrank";
 import { personalityMapQuestions } from "@/content/quizzes/personality-map";
 import { brainRankDimensions, type BrainRankDimension } from "@/features/scoring/brainrank";
 import {
@@ -8,14 +8,15 @@ import {
 } from "@/features/scoring/personality-map";
 
 describe("Content definitions integrity", () => {
-  it("BrainRank contains exactly 24 valid items, 4 per dimension", () => {
+  it("BrainRank contains exactly 60 valid candidate items in pool (10 per dimension) and 24 canonical questions", () => {
+    expect(brainRankPool).toHaveLength(60);
     expect(brainRankQuestions).toHaveLength(24);
 
     const byDimension: Record<BrainRankDimension, number> = Object.fromEntries(
       brainRankDimensions.map((d) => [d, 0]),
     ) as Record<BrainRankDimension, number>;
 
-    for (const [index, q] of brainRankQuestions.entries()) {
+    for (const [index, q] of brainRankPool.entries()) {
       expect(q.position).toBe(index + 1);
       expect(q.options).toHaveLength(4);
       expect(q.options.filter((o) => o.isCorrect)).toHaveLength(1);
@@ -23,7 +24,7 @@ describe("Content definitions integrity", () => {
     }
 
     for (const dim of brainRankDimensions) {
-      expect(byDimension[dim]).toBe(4);
+      expect(byDimension[dim]).toBe(10);
     }
   });
 
@@ -60,6 +61,9 @@ describe("Content definitions integrity", () => {
     expect(sql).toContain("FS_HYPER_01");
     expect(sql).toContain("DD_SCEN_01");
     expect(sql).toContain("CD_COMM_01");
+    expect(sql).toContain(
+      "do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true",
+    );
     const fs = await import("node:fs");
     const path = await import("node:path");
     fs.writeFileSync(path.resolve(import.meta.dirname, "../../supabase/seed.sql"), sql, "utf8");

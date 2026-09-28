@@ -258,6 +258,7 @@ export async function unsubscribeByToken(
     granted: false,
     policy_version: CURRENT_POLICY_VERSION,
     source: "unsubscribe_link",
+    created_at: new Date(Date.now() + 50).toISOString(),
   });
 
   return { success: true, leadId: tokenRecord.lead_id };

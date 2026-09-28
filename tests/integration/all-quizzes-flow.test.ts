@@ -35,7 +35,7 @@ describe.skipIf(!isOnline)(
         expect(session.status).toBe("CREATED");
 
         // 2. Fetch public questions
-        const quiz = await getPublicQuiz(slug, "pt");
+        const quiz = await getPublicQuiz(slug, "pt", session.id);
         expect(quiz).not.toBeNull();
         expect(quiz!.questions.length).toBeGreaterThan(0);
 

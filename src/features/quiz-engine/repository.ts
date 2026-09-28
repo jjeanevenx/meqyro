@@ -4,6 +4,7 @@ import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicQuiz, PublicQuestion, PublicOption, QuestionKind } from "./contracts";
 import { brainRankQuestions } from "@/content/quizzes/brainrank";
+import { assertVisualQuestion, isVisualScene, isVisualStimulus } from "./visual-question-schema";
 
 /**
  * Detects encoding corruption in text content.
@@ -61,8 +62,14 @@ import { moneyDnaQuestions } from "@/content/quizzes/moneydna";
 import { focusStyleQuestions } from "@/content/quizzes/focusstyle";
 import { decisionDnaScenarios } from "@/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "@/content/quizzes/coupledna";
+import { getSessionQuestions } from "./session-service";
+import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
 
-export async function getPublicQuiz(slug: string, locale: Locale): Promise<PublicQuiz | null> {
+export async function getPublicQuiz(
+  slug: string,
+  locale: Locale,
+  sessionId?: string,
+): Promise<PublicQuiz | null> {
   const supabase = createSupabaseSecretClient();
 
   const { data: quiz, error: quizError } = await supabase
@@ -87,6 +94,21 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
 
   if (!activeVersion) return null;
 
+  if (sessionId) {
+    const sessionQs = await getSessionQuestions(sessionId, locale);
+    if (sessionQs.length > 0) {
+      return {
+        id: activeVersion.id,
+        slug: quiz.slug,
+        productCode: quiz.product_code,
+        version: activeVersion.version,
+        scoringVersion: activeVersion.scoring_version,
+        totalQuestions: sessionQs.length,
+        questions: sessionQs,
+      };
+    }
+  }
+
   const { data: questions, error: questionsError } = await supabase
     .from("questions")
     .select(
@@ -101,11 +123,13 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
         id,
         stable_key,
         position,
+        metadata,
         option_translations!inner(locale, label, image_alt)
       )
     `,
     )
     .eq("quiz_version_id", activeVersion.id)
+    .eq("active", true)
     .eq("question_translations.locale", locale)
     .order("position", { ascending: true });
 
@@ -125,6 +149,7 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
     id: string;
     stable_key: string;
     position: number;
+    metadata?: Record<string, unknown> | null;
     option_translations?: DbTranslation[] | DbTranslation;
   };
 
@@ -165,10 +190,11 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
           position: opt.position,
           label: optTrans?.label ?? opt.stable_key,
           imageAlt: optTrans?.image_alt ?? null,
+          visual: isVisualScene(opt.metadata?.visual) ? opt.metadata.visual : null,
         };
       });
 
-    return {
+    const publicQuestion: PublicQuestion = {
       id: q.id,
       stableKey: q.stable_key,
       position: q.position,
@@ -176,9 +202,19 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
       prompt: translation?.prompt ?? q.stable_key,
       accessibilityText: translation?.accessibility_text ?? null,
       clue,
+      visualType:
+        typeof q.metadata?.visualType === "string"
+          ? (q.metadata.visualType as PublicQuestion["visualType"])
+          : null,
+      stimulus: isVisualStimulus(q.metadata?.stimulus) ? q.metadata.stimulus : null,
       options: publicOptions,
     };
+    assertVisualQuestion(publicQuestion);
+    return publicQuestion;
   });
+
+  const maxQuestions = ASSESSMENT_SELECTION_CONFIGS[slug]?.totalQuestions ?? 24;
+  const slicedQuestions = publicQuestions.slice(0, maxQuestions);
 
   const quizContent: PublicQuiz = {
     id: activeVersion.id,
@@ -186,8 +222,8 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
     productCode: quiz.product_code,
     version: activeVersion.version,
     scoringVersion: activeVersion.scoring_version,
-    totalQuestions: publicQuestions.length,
-    questions: publicQuestions,
+    totalQuestions: slicedQuestions.length,
+    questions: slicedQuestions,
   };
 
   // Validate encoding - if corrupted, fallback to in-memory content
@@ -201,22 +237,29 @@ export async function getPublicQuiz(slug: string, locale: Locale): Promise<Publi
 
 export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz | null {
   if (slug === "brainrank") {
-    const questions: PublicQuestion[] = brainRankQuestions.map((q) => ({
-      id: `brainrank-${q.position}`,
-      stableKey: q.stableKey,
-      position: q.position,
-      kind: "SINGLE_CHOICE",
-      prompt: q.prompt[locale] ?? q.prompt.pt,
-      accessibilityText: null,
-      clue: q.clue ? (q.clue[locale] ?? q.clue.pt) : null,
-      options: q.options.map((opt) => ({
-        id: `opt-${q.position}-${opt.stableKey}`,
-        stableKey: opt.stableKey,
-        position: opt.position,
-        label: opt.label[locale] ?? opt.label.pt,
-        imageAlt: null,
-      })),
-    }));
+    const questions: PublicQuestion[] = brainRankQuestions.map((q) => {
+      const question: PublicQuestion = {
+        id: `brainrank-${q.position}`,
+        stableKey: q.stableKey,
+        position: q.position,
+        kind: q.kind ?? "SINGLE_CHOICE",
+        prompt: q.prompt[locale] ?? q.prompt.pt,
+        accessibilityText: null,
+        clue: q.clue ? (q.clue[locale] ?? q.clue.pt) : null,
+        visualType: q.visualType ?? null,
+        stimulus: q.stimulus ?? null,
+        options: q.options.map((opt) => ({
+          id: `opt-${q.position}-${opt.stableKey}`,
+          stableKey: opt.stableKey,
+          position: opt.position,
+          label: opt.label[locale] ?? opt.label.pt,
+          imageAlt: null,
+          visual: opt.visual ?? null,
+        })),
+      };
+      assertVisualQuestion(question);
+      return question;
+    });
 
     return {
       id: "fallback-brainrank-id",

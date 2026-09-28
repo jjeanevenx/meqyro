@@ -1,10 +1,14 @@
 import type { BrainRankDimension, BrainRankDifficulty } from "@/features/scoring/brainrank";
+import type { QuestionKind, VisualScene, VisualStimulus } from "@/features/quiz-engine/contracts";
 
 export type BrainRankQuestionDef = {
   stableKey: string;
   position: number;
   dimension: BrainRankDimension;
   difficulty: BrainRankDifficulty;
+  kind?: QuestionKind;
+  visualType?: "VISUAL_PATTERN" | "VISUAL_SEQUENCE" | "SPATIAL" | "ROTATION" | "REFLECTION" | "SYMMETRY" | "MATRIX" | "COUNTING" | "DIRECTION" | "MIXED";
+  stimulus?: VisualStimulus;
   clue?: {
     pt: string;
     en: string;
@@ -27,10 +31,11 @@ export type BrainRankQuestionDef = {
       es: string;
       fr: string;
     };
+    visual?: VisualScene;
   }[];
 };
 
-export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
+export const brainRankPool: readonly BrainRankQuestionDef[] = [
   // --- 1. PATTERN RECOGNITION (4 items) ---
   {
     stableKey: "BR_PAT_01",
@@ -81,47 +86,52 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
     position: 2,
     dimension: "PATTERN_RECOGNITION",
     difficulty: "MEDIUM",
+    kind: "VISUAL_CHOICE",
+    visualType: "ROTATION",
     prompt: {
-      pt: "Observe a rotação dos ponteiros e indique o próximo passo:",
-      en: "Observe the rotation pattern and indicate the next step:",
-      es: "Observe la rotación de las manecillas e indique el siguiente paso:",
-      fr: "Observez le motif de rotation et indiquez l'étape suivante :",
+      pt: "Qual figura vem a seguir?",
+      en: "Which figure comes next?",
+      es: "¿Qué figura viene a continuación?",
+      fr: "Quelle figure vient ensuite ?",
     },
-    clue: {
-      pt: "45° horário · 90° anti-horário · 135° horário · ?",
-      en: "45° clockwise · 90° counter-clockwise · 135° clockwise · ?",
-      es: "45° horario · 90° antihorario · 135° horario · ?",
-      fr: "45° horaire · 90° anti-horaire · 135° horaire · ?",
+    stimulus: {
+      kind: "sequence",
+      items: [
+        { elements: [{ shape: "arrow", rotation: 0 }] },
+        { elements: [{ shape: "arrow", rotation: 45 }] },
+        { elements: [{ shape: "arrow", rotation: -45 }] },
+        { elements: [{ shape: "arrow", rotation: 90 }] },
+        null,
+      ],
     },
     options: [
       {
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: { pt: "180° horário", en: "180° clockwise", es: "180° horario", fr: "180° horaire" },
+        label: { pt: "Opção A", en: "Option A", es: "Opción A", fr: "Option A" },
+        visual: { elements: [{ shape: "arrow", rotation: 180 }] },
       },
       {
         stableKey: "B",
         position: 2,
         isCorrect: true,
-        label: {
-          pt: "180° anti-horário",
-          en: "180° counter-clockwise",
-          es: "180° antihorario",
-          fr: "180° anti-horaire",
-        },
+        label: { pt: "Opção B", en: "Option B", es: "Opción B", fr: "Option B" },
+        visual: { elements: [{ shape: "arrow", rotation: -90 }] },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "225° horário", en: "225° clockwise", es: "225° horario", fr: "225° horaire" },
+        label: { pt: "Opção C", en: "Option C", es: "Opción C", fr: "Option C" },
+        visual: { elements: [{ shape: "arrow", rotation: 135 }] },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: { pt: "90° horário", en: "90° clockwise", es: "90° horario", fr: "90° horaire" },
+        label: { pt: "Opção D", en: "Option D", es: "Opción D", fr: "Option D" },
+        visual: { elements: [{ shape: "arrow", rotation: 90 }] },
       },
     ],
   },
@@ -130,42 +140,62 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
     position: 3,
     dimension: "PATTERN_RECOGNITION",
     difficulty: "MEDIUM",
+    kind: "VISUAL_CHOICE",
+    visualType: "MATRIX",
     prompt: {
-      pt: "Qual matriz de símbolos mantém a paridade de linhas e colunas?",
-      en: "Which symbol matrix maintains row and column parity?",
-      es: "¿Qué matriz de símbolos mantiene la paridad de filas y columnas?",
-      fr: "Quelle matrice de symboles maintient la parité des lignes et colonnes ?",
+      pt: "Qual opção completa o espaço vazio?",
+      en: "Which option completes the missing space?",
+      es: "¿Qué opción completa el espacio vacío?",
+      fr: "Quelle option complète l'espace vide ?",
     },
-    clue: {
-      pt: "Linha 1: ▲ ▲ ● | Linha 2: ● ▲ ▲ | Linha 3: ▲ ● ?",
-      en: "Row 1: ▲ ▲ ● | Row 2: ● ▲ ▲ | Row 3: ▲ ● ?",
-      es: "Fila 1: ▲ ▲ ● | Fila 2: ● ▲ ▲ | Fila 3: ▲ ● ?",
-      fr: "Ligne 1 : ▲ ▲ ● | Ligne 2 : ● ▲ ▲ | Ligne 3 : ▲ ● ?",
+    stimulus: {
+      kind: "matrix",
+      rows: [
+        [
+          { elements: [{ shape: "triangle", filled: true }] },
+          { elements: [{ shape: "triangle", filled: true }] },
+          { elements: [{ shape: "circle", filled: true }] },
+        ],
+        [
+          { elements: [{ shape: "circle", filled: true }] },
+          { elements: [{ shape: "triangle", filled: true }] },
+          { elements: [{ shape: "triangle", filled: true }] },
+        ],
+        [
+          { elements: [{ shape: "triangle", filled: true }] },
+          { elements: [{ shape: "circle", filled: true }] },
+          null,
+        ],
+      ],
     },
     options: [
       {
         stableKey: "A",
         position: 1,
         isCorrect: true,
-        label: { pt: "▲", en: "▲", es: "▲", fr: "▲" },
+        label: { pt: "Opção A", en: "Option A", es: "Opción A", fr: "Option A" },
+        visual: { elements: [{ shape: "triangle", filled: true }] },
       },
       {
         stableKey: "B",
         position: 2,
         isCorrect: false,
-        label: { pt: "●", en: "●", es: "●", fr: "●" },
+        label: { pt: "Opção B", en: "Option B", es: "Opción B", fr: "Option B" },
+        visual: { elements: [{ shape: "circle", filled: true }] },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "■", en: "■", es: "■", fr: "■" },
+        label: { pt: "Opção C", en: "Option C", es: "Opción C", fr: "Option C" },
+        visual: { elements: [{ shape: "square", filled: true }] },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: { pt: "◆", en: "◆", es: "◆", fr: "◆" },
+        label: { pt: "Opção D", en: "Option D", es: "Opción D", fr: "Option D" },
+        visual: { elements: [{ shape: "diamond", filled: true }] },
       },
     ],
   },
@@ -174,62 +204,51 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
     position: 4,
     dimension: "PATTERN_RECOGNITION",
     difficulty: "HARD",
+    kind: "VISUAL_CHOICE",
+    visualType: "MIXED",
     prompt: {
-      pt: "Qual elemento preserva a transformação bidimensional combinada?",
-      en: "Which element preserves the combined two-dimensional transformation?",
-      es: "¿Qué elemento conserva la transformación bidimensional combinada?",
-      fr: "Quel élément préserve la transformation bidimensionnelle combinée ?",
+      pt: "Qual figura vem a seguir?",
+      en: "Which figure comes next?",
+      es: "¿Qué figura viene a continuación?",
+      fr: "Quelle figure vient ensuite ?",
     },
-    clue: {
-      pt: "Inversão vertical com incremento de vértices: 3→4, 4→5, 5→?",
-      en: "Vertical flip with vertex increment: 3→4, 4→5, 5→?",
-      es: "Inversión vertical con incremento de vértices: 3→4, 4→5, 5→?",
-      fr: "Inversion verticale avec incrément de sommets : 3→4, 4→5, 5→?",
+    stimulus: {
+      kind: "sequence",
+      items: [
+        { elements: [{ shape: "triangle", marker: "top" }] },
+        { elements: [{ shape: "square", marker: "bottom" }] },
+        { elements: [{ shape: "pentagon", marker: "top" }] },
+        null,
+      ],
     },
     options: [
       {
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: {
-          pt: "Pentágono invertido",
-          en: "Inverted pentagon",
-          es: "Pentágono invertido",
-          fr: "Pentagone inversé",
-        },
+        label: { pt: "Opção A", en: "Option A", es: "Opción A", fr: "Option A" },
+        visual: { elements: [{ shape: "pentagon", marker: "bottom" }] },
       },
       {
         stableKey: "B",
         position: 2,
         isCorrect: true,
-        label: {
-          pt: "Hexágono invertido",
-          en: "Inverted hexagon",
-          es: "Hexágono invertido",
-          fr: "Hexagone inversé",
-        },
+        label: { pt: "Opção B", en: "Option B", es: "Opción B", fr: "Option B" },
+        visual: { elements: [{ shape: "hexagon", marker: "bottom" }] },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: {
-          pt: "Heptágono direto",
-          en: "Direct heptagon",
-          es: "Heptágono directo",
-          fr: "Heptagone direct",
-        },
+        label: { pt: "Opção C", en: "Option C", es: "Opción C", fr: "Option C" },
+        visual: { elements: [{ shape: "hexagon", marker: "top" }] },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: {
-          pt: "Octógono duplo",
-          en: "Double octagon",
-          es: "Octágono doble",
-          fr: "Octogone double",
-        },
+        label: { pt: "Opção D", en: "Option D", es: "Opción D", fr: "Option D" },
+        visual: { elements: [{ shape: "octagon", marker: "bottom" }] },
       },
     ],
   },
@@ -680,7 +699,7 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
         stableKey: "C",
         position: 3,
         isCorrect: true,
-        label: { pt: "8", en: "8", es: "8", fr: "8" },
+        label: { pt: "12", en: "12", es: "12", fr: "12" },
       },
       {
         stableKey: "D",
@@ -1007,40 +1026,63 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
     position: 21,
     dimension: "SPEED",
     difficulty: "EASY",
+    kind: "VISUAL_CHOICE",
+    visualType: "COUNTING",
     prompt: {
-      pt: "Qual símbolo aparece com MENOR frequência na linha: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?",
-      en: "Which symbol appears with LOWEST frequency: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?",
-      es: "¿Qué símbolo aparece con MENOR frecuencia: ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?",
-      fr: "Quel symbole apparaît avec la PLUS FAIBLE fréquence : ◆ ▲ ● ◆ ▲ ◆ ● ▲ ◆ ● ?",
+      pt: "Qual figura aparece menos vezes?",
+      en: "Which figure appears the fewest times?",
+      es: "¿Qué figura aparece menos veces?",
+      fr: "Quelle figure apparaît le moins souvent ?",
+    },
+    stimulus: {
+      kind: "group",
+      scene: {
+        elements: [
+          { shape: "diamond", x: 8, y: 50, size: 8, filled: true },
+          { shape: "triangle", x: 18.5, y: 50, size: 8, filled: true },
+          { shape: "circle", x: 29, y: 50, size: 8, filled: true },
+          { shape: "diamond", x: 39.5, y: 50, size: 8, filled: true },
+          { shape: "diamond", x: 50, y: 50, size: 8, filled: true },
+          { shape: "circle", x: 60.5, y: 50, size: 8, filled: true },
+          { shape: "triangle", x: 71, y: 50, size: 8, filled: true },
+          { shape: "diamond", x: 81.5, y: 50, size: 8, filled: true },
+          { shape: "circle", x: 92, y: 50, size: 8, filled: true },
+        ],
+      },
     },
     options: [
       {
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: { pt: "◆ (losango)", en: "◆ (diamond)", es: "◆ (rombo)", fr: "◆ (losange)" },
+        label: { pt: "Opção A", en: "Option A", es: "Opción A", fr: "Option A" },
+        visual: { elements: [{ shape: "diamond", filled: true }] },
       },
       {
         stableKey: "B",
         position: 2,
         isCorrect: true,
-        label: { pt: "▲ (triângulo)", en: "▲ (triangle)", es: "▲ (triángulo)", fr: "▲ (triangle)" },
+        label: { pt: "Opção B", en: "Option B", es: "Opción B", fr: "Option B" },
+        visual: { elements: [{ shape: "triangle", filled: true }] },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "● (círculo)", en: "● (circle)", es: "● (círculo)", fr: "● (cercle)" },
+        label: { pt: "Opção C", en: "Option C", es: "Opción C", fr: "Option C" },
+        visual: { elements: [{ shape: "circle", filled: true }] },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: {
-          pt: "Todos aparecem igual",
-          en: "All appear equal",
-          es: "Todos aparecen igual",
-          fr: "Tous apparaissent également",
+        label: { pt: "Todos iguais", en: "All equal", es: "Todos iguales", fr: "Tous égaux" },
+        visual: {
+          elements: [
+            { shape: "diamond", x: 25, y: 50, size: 18, filled: true },
+            { shape: "triangle", x: 50, y: 50, size: 18, filled: true },
+            { shape: "circle", x: 75, y: 50, size: 18, filled: true },
+          ],
         },
       },
     ],
@@ -1179,4 +1221,702 @@ export const brainRankQuestions: readonly BrainRankQuestionDef[] = [
       },
     ],
   },
+
+  // --- PATTERN RECOGNITION (Items 5 - 10) ---
+  {
+    stableKey: "BR_PAT_05",
+    position: 25,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Qual número completa a sequência lógica?",
+      en: "Which number completes the logical sequence?",
+      es: "¿Qué número completa la secuencia lógica?",
+      fr: "Quel nombre complète la suite logique ?",
+    },
+    clue: {
+      pt: "3 · 7 · 11 · 15 · ?",
+      en: "3 · 7 · 11 · 15 · ?",
+      es: "3 · 7 · 11 · 15 · ?",
+      fr: "3 · 7 · 11 · 15 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "17", en: "17", es: "17", fr: "17" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "18", en: "18", es: "18", fr: "18" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "19", en: "19", es: "19", fr: "19" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
+    ],
+  },
+  {
+    stableKey: "BR_PAT_06",
+    position: 26,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Identifique o próximo elemento da série quadrada:",
+      en: "Identify the next element in the square series:",
+      es: "Identifique el siguiente elemento de la serie cuadrada:",
+      fr: "Identifiez l'élément suivant de la série des carrés :",
+    },
+    clue: {
+      pt: "1 · 4 · 9 · 16 · ?",
+      en: "1 · 4 · 9 · 16 · ?",
+      es: "1 · 4 · 9 · 16 · ?",
+      fr: "1 · 4 · 9 · 16 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "25", en: "25", es: "25", fr: "25" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "27", en: "27", es: "27", fr: "27" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "30", en: "30", es: "30", fr: "30" } },
+    ],
+  },
+  {
+    stableKey: "BR_PAT_07",
+    position: 27,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Qual número preenche a interrogação?",
+      en: "Which number replaces the question mark?",
+      es: "¿Qué número reemplaza el signo de interrogación?",
+      fr: "Quel nombre remplace le point d'interrogation ?",
+    },
+    clue: {
+      pt: "3 · 6 · 11 · 18 · 27 · ?",
+      en: "3 · 6 · 11 · 18 · 27 · ?",
+      es: "3 · 6 · 11 · 18 · 27 · ?",
+      fr: "3 · 6 · 11 · 18 · 27 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "36", en: "36", es: "36", fr: "36" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "38", en: "38", es: "38", fr: "38" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "39", en: "39", es: "39", fr: "39" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "42", en: "42", es: "42", fr: "42" } },
+    ],
+  },
+  {
+    stableKey: "BR_PAT_08",
+    position: 28,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Complete a progressão geométrica:",
+      en: "Complete the geometric progression:",
+      es: "Complete la progresión geométrica:",
+      fr: "Complétez la progression géométrique :",
+    },
+    clue: {
+      pt: "5 · 10 · 20 · 40 · ?",
+      en: "5 · 10 · 20 · 40 · ?",
+      es: "5 · 10 · 20 · 40 · ?",
+      fr: "5 · 10 · 20 · 40 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "60", en: "60", es: "60", fr: "60" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "70", en: "70", es: "70", fr: "70" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "80", en: "80", es: "80", fr: "80" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "90", en: "90", es: "90", fr: "90" } },
+    ],
+  },
+  {
+    stableKey: "BR_PAT_09",
+    position: 29,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Qual valor completa a sequência cúbica?",
+      en: "Which value completes the cubic sequence?",
+      es: "¿Qué valor completa la secuencia cúbica?",
+      fr: "Quelle valeur complète la suite cubique ?",
+    },
+    clue: {
+      pt: "8 · 27 · 64 · 125 · ?",
+      en: "8 · 27 · 64 · 125 · ?",
+      es: "8 · 27 · 64 · 125 · ?",
+      fr: "8 · 27 · 64 · 125 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "216", en: "216", es: "216", fr: "216" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "243", en: "243", es: "243", fr: "243" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "256", en: "256", es: "256", fr: "256" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "343", en: "343", es: "343", fr: "343" } },
+    ],
+  },
+  {
+    stableKey: "BR_PAT_10",
+    position: 30,
+    dimension: "PATTERN_RECOGNITION",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Qual número completa a sequência com diferenças quadradas crescentes?",
+      en: "Which number completes the sequence with growing square differences?",
+      es: "¿Qué número completa la secuencia con diferencias cuadradas crecientes?",
+      fr: "Quel nombre complète la suite aux différences de carrés croissants ?",
+    },
+    clue: {
+      pt: "2 · 3 · 7 · 16 · 32 · ?",
+      en: "2 · 3 · 7 · 16 · 32 · ?",
+      es: "2 · 3 · 7 · 16 · 32 · ?",
+      fr: "2 · 3 · 7 · 16 · 32 · ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "52", en: "52", es: "52", fr: "52" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "55", en: "55", es: "55", fr: "55" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "57", en: "57", es: "57", fr: "57" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "64", en: "64", es: "64", fr: "64" } },
+    ],
+  },
+
+  // --- LOGICAL REASONING (Items 5 - 10) ---
+  {
+    stableKey: "BR_LOG_05",
+    position: 31,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Se todos os gatos são mamíferos e Mia é um gato, o que se conclui necessariamente?",
+      en: "If all cats are mammals and Mia is a cat, what must necessarily be true?",
+      es: "Si todos los gatos son mamíferos y Mía es un gato, ¿qué se concluye necesariamente?",
+      fr: "Si tous les chats sont des mammifères et que Mia est un chat, que conclut-on nécessairement ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "Mia é um mamífero", en: "Mia is a mammal", es: "Mía es un mamífero", fr: "Mia est un mammifère" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "Mia tem quatro patas", en: "Mia has four legs", es: "Mía tiene cuatro patas", fr: "Mia a quatre pattes" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os mamíferos são gatos", en: "All mammals are cats", es: "Todos los mamíferos son gatos", fr: "Tous les mammifères sont des chats" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Mia é um felino selvagem", en: "Mia is a wild feline", es: "Mía es un felino salvaje", fr: "Mia est un félin sauvage" } },
+    ],
+  },
+  {
+    stableKey: "BR_LOG_06",
+    position: 32,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Se chover, o trânsito atrasa. Choveu. Logo:",
+      en: "If it rains, traffic is delayed. It rained. Therefore:",
+      es: "Si llueve, el tráfico se retrasa. Llovió. Por lo tanto:",
+      fr: "S'il pleut, la circulation est ralentie. Il a plu. Donc :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Não houve atraso", en: "There was no delay", es: "No hubo retraso", fr: "Il n'y a pas eu de retard" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "O trânsito atrasou", en: "Traffic was delayed", es: "El tráfico se retrasó", fr: "La circulation a été ralentie" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "O trânsito fluiu melhor", en: "Traffic flowed faster", es: "El tráfico fluyó mejor", fr: "La circulation s'est améliorée" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "A chuva parou rápido", en: "The rain stopped quickly", es: "La lluvia paró rápido", fr: "La pluie s'est arrêtée vite" } },
+    ],
+  },
+  {
+    stableKey: "BR_LOG_07",
+    position: 33,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Lucas é mais velho que Pedro, e Pedro é mais velho que Mateus. Logo:",
+      en: "Lucas is older than Pedro, and Pedro is older than Mateo. Therefore:",
+      es: "Lucas es mayor que Pedro, y Pedro es mayor que Mateo. Por lo tanto:",
+      fr: "Lucas est plus âgé que Pierre, et Pierre est plus âgé que Mathieu. Donc :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Mateus é o mais velho", en: "Mateo is the oldest", es: "Mateo es el mayor", fr: "Mathieu est le plus âgé" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "Lucas é mais novo que Mateus", en: "Lucas is younger than Mateo", es: "Lucas es menor que Mateo", fr: "Lucas est plus jeune que Mathieu" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "Lucas é mais velho que Mateus", en: "Lucas is older than Mateo", es: "Lucas es mayor que Mateo", fr: "Lucas est plus âgé que Mathieu" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Pedro é o mais velho", en: "Pedro is the oldest", es: "Pedro es el mayor", fr: "Pierre est le plus âgé" } },
+    ],
+  },
+  {
+    stableKey: "BR_LOG_08",
+    position: 34,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Em um grupo de 40 pessoas, 25 gostam de café e 20 de chá. Todos gostam de pelo menos um. Quantos gostam de ambos?",
+      en: "In a group of 40 people, 25 like coffee and 20 like tea. Everyone likes at least one. How many like both?",
+      es: "En un grupo de 40 personas, 25 gustan del café y 20 del té. A todos les gusta al menos uno. ¿Cuántos gustan de ambos?",
+      fr: "Dans un groupe de 40 personnes, 25 aiment le café et 20 le thé. Tous aiment au moins l'un des deux. Combien aiment les deux ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3", en: "3", es: "3", fr: "3" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "5", en: "5", es: "5", fr: "5" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "10", en: "10", es: "10", fr: "10" } },
+    ],
+  },
+  {
+    stableKey: "BR_LOG_09",
+    position: 35,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Nenhum réptil tem pelos. Todos os jacarés são répteis. Alguns animais de zoológico têm pelos. Logo:",
+      en: "No reptile has fur. All alligators are reptiles. Some zoo animals have fur. Therefore:",
+      es: "Ningún reptil tiene pelo. Todos los caimanes son reptiles. Algunos animales del zoológico tienen pelo. Por lo tanto:",
+      fr: "Aucun reptile n'a de poils. Tous les alligators sont des reptiles. Certains animaux de zoo ont des poils. Donc :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Alguns jacarés têm pelos", en: "Some alligators have fur", es: "Algunos caimanes tienen pelo", fr: "Certains alligators ont des poils" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "Nenhum jacaré tem pelos", en: "No alligator has fur", es: "Ningún caimán tiene pelo", fr: "Aucun alligator n'a de poils" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os animais do zoológico são répteis", en: "All zoo animals are reptiles", es: "Todos los animales del zoológico son reptiles", fr: "Tous les animaux du zoo sont des reptiles" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Nenhum réptil está no zoológico", en: "No reptiles are in the zoo", es: "Ningún reptil está en el zoológico", fr: "Aucun reptile n'est dans le zoo" } },
+    ],
+  },
+  {
+    stableKey: "BR_LOG_10",
+    position: 36,
+    dimension: "LOGICAL_REASONING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Se a afirmação 'Nem todo pássaro voa' é verdadeira, o que é logicamente equivalente?",
+      en: "If the statement 'Not every bird flies' is true, which is logically equivalent?",
+      es: "Si la afirmación 'No todo pájaro vuela' es verdadera, ¿qué es lógicamente equivalente?",
+      fr: "Si l'affirmation 'Tous les oiseaux ne volent pas' est vraie, laquelle est logiquement équivalente ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Nenhum pássaro voa", en: "No birds fly", es: "Ningún pájaro vuela", fr: "Aucun oiseau ne vole" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "Existe pelo menos um pássaro que não voa", en: "There is at least one bird that does not fly", es: "Existe al menos un pájaro que no vuela", fr: "Il existe au moins un oiseau qui ne vole pas" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os pássaros voam", en: "All birds fly", es: "Todos los pájaros vuelan", fr: "Tous les oiseaux volent" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "A maioria dos pássaros voa", en: "Most birds fly", es: "La mayoría de los pájaros vuela", fr: "La plupart des oiseaux volent" } },
+    ],
+  },
+
+  // --- NUMERICAL REASONING (Items 5 - 10) ---
+  {
+    stableKey: "BR_NUM_05",
+    position: 37,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Se 4 maçãs custam R$ 12,00, quanto custam 7 maçãs?",
+      en: "If 4 apples cost $12.00, how much do 7 apples cost?",
+      es: "Si 4 manzanas cuestan 12,00 €, ¿cuánto cuestan 7 manzanas?",
+      fr: "Si 4 pommes coûtent 12,00 €, combien coûtent 7 pommes ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 18,00", en: "$18.00", es: "18,00 €", fr: "18,00 €" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 21,00", en: "$21.00", es: "21,00 €", fr: "21,00 €" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 24,00", en: "$24.00", es: "24,00 €", fr: "24,00 €" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 28,00", en: "$28.00", es: "28,00 €", fr: "28,00 €" } },
+    ],
+  },
+  {
+    stableKey: "BR_NUM_06",
+    position: 38,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Qual é o valor de 25% de 240?",
+      en: "What is 25% of 240?",
+      es: "¿Cuánto es el 25% de 240?",
+      fr: "Combien font 25 % de 240 ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "50", en: "50", es: "50", fr: "50" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "60", en: "60", es: "60", fr: "60" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "70", en: "70", es: "70", fr: "70" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "80", en: "80", es: "80", fr: "80" } },
+    ],
+  },
+  {
+    stableKey: "BR_NUM_07",
+    position: 39,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Um carro percorre 180 km a 60 km/h e volta a 90 km/h. Qual a velocidade média de todo o percurso?",
+      en: "A car drives 180 km at 60 km/h and returns at 90 km/h. What is the average speed of the round trip?",
+      es: "Un automóvil recorre 180 km a 60 km/h y regresa a 90 km/h. ¿Cuál es la velocidad promedio de todo el recorrido?",
+      fr: "Une voiture parcourt 180 km à 60 km/h et revient à 90 km/h. Quelle est la vitesse moyenne sur l'aller-retour ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "72 km/h", en: "72 km/h", es: "72 km/h", fr: "72 km/h" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "75 km/h", en: "75 km/h", es: "75 km/h", fr: "75 km/h" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "78 km/h", en: "78 km/h", es: "78 km/h", fr: "78 km/h" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "80 km/h", en: "80 km/h", es: "80 km/h", fr: "80 km/h" } },
+    ],
+  },
+  {
+    stableKey: "BR_NUM_08",
+    position: 40,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Um produto de R$ 200 teve aumento de 20% e depois desconto de 20%. Qual seu preço final?",
+      en: "A $200 item increased by 20% and then was discounted by 20%. What is its final price?",
+      es: "Un artículo de 200 € aumentó un 20% y luego tuvo un descuento del 20%. ¿Cuál es su precio final?",
+      fr: "Un article à 200 € augmente de 20 % puis bénéficie d'une réduction de 20 %. Quel est son prix final ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 200", en: "$200", es: "200 €", fr: "200 €" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 192", en: "$192", es: "192 €", fr: "192 €" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 190", en: "$190", es: "190 €", fr: "190 €" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 188", en: "$188", es: "188 €", fr: "188 €" } },
+    ],
+  },
+  {
+    stableKey: "BR_NUM_09",
+    position: 41,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "A soma de dois números é 70 e sua diferença é 14. Qual é o produto desses dois números?",
+      en: "The sum of two numbers is 70 and their difference is 14. What is their product?",
+      es: "La suma de dos números es 70 y su diferencia es 14. ¿Cuál es su producto?",
+      fr: "La somme de deux nombres est 70 et leur différence est 14. Quel est leur produit ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "1126", en: "1126", es: "1126", fr: "1126" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "1176", en: "1176", es: "1176", fr: "1176" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "1200", en: "1200", es: "1200", fr: "1200" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "1244", en: "1244", es: "1244", fr: "1244" } },
+    ],
+  },
+  {
+    stableKey: "BR_NUM_10",
+    position: 42,
+    dimension: "NUMERICAL_REASONING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Uma torneira enche um reservatório em 3 horas e outra em 6 horas. Juntas, em quantas horas encherão o tanque?",
+      en: "One tap fills a tank in 3 hours and another in 6 hours. Together, how many hours will they take to fill the tank?",
+      es: "Un grifo llena un depósito en 3 horas y otro en 6 horas. Juntos, ¿en cuántas horas llenarán el tanque?",
+      fr: "Un robinet remplit un réservoir en 3 heures et un autre en 6 heures. Ensemble, en combien d'heures rempliront-ils le réservoir ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "1,5 hora", en: "1.5 hours", es: "1,5 horas", fr: "1,5 heure" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "2,0 horas", en: "2.0 hours", es: "2,0 horas", fr: "2,0 heures" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "2,5 horas", en: "2.5 hours", es: "2,5 horas", fr: "2,5 heures" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "4,5 horas", en: "4.5 hours", es: "4,5 horas", fr: "4,5 heures" } },
+    ],
+  },
+
+  // --- ATTENTION (Items 5 - 10) ---
+  {
+    stableKey: "BR_ATT_05",
+    position: 43,
+    dimension: "ATTENTION",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Quantas letras 'T' aparecem na sequência: T L T F T E T L T ?",
+      en: "How many letters 'T' appear in the sequence: T L T F T E T L T ?",
+      es: "¿Cuántas letras 'T' aparecen en la secuencia: T L T F T E T L T ?",
+      fr: "Combien de lettres 'T' apparaissent dans la suite : T L T F T E T L T ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "4", en: "4", es: "4", fr: "4" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "5", en: "5", es: "5", fr: "5" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "6", en: "6", es: "6", fr: "6" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
+    ],
+  },
+  {
+    stableKey: "BR_ATT_06",
+    position: 44,
+    dimension: "ATTENTION",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Qual das opções é perfeitamente idêntica à palavra de referência: ELEFANTÍASE",
+      en: "Which option is perfectly identical to the reference word: ELEPHANTIASIS",
+      es: "¿Cuál de las opciones es perfectamente idéntica a la palabra de referencia: ELEFANTIASIS",
+      fr: "Quelle option est parfaitement identique au mot de référence : ÉLÉPHANTIASIS",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "ELEFANTIASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ELEPHANTIASIS" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "ELEFANTÍASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ÉLÉPHANTIASIS" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "ELEFANTÍASI", en: "ELEPHANTIASS", es: "ELEFANTIASS", fr: "ÉLÉPHANTIASS" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "ELEFONTÍASE", en: "ELEPHONTASIS", es: "ELEFONTÍASIS", fr: "ÉLÉPHONTIASIS" } },
+    ],
+  },
+  {
+    stableKey: "BR_ATT_07",
+    position: 45,
+    dimension: "ATTENTION",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Identifique o único par de códigos que NÃO é idêntico:",
+      en: "Identify the only pair of codes that is NOT identical:",
+      es: "Identifique el único par de códigos que NO es idéntico:",
+      fr: "Identifiez la seule paire de codes qui n'est PAS identique :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "9834-X7B / 9834-X7B", en: "9834-X7B / 9834-X7B", es: "9834-X7B / 9834-X7B", fr: "9834-X7B / 9834-X7B" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "4521-M9Q / 4521-M9Q", en: "4521-M9Q / 4521-M9Q", es: "4521-M9Q / 4521-M9Q", fr: "4521-M9Q / 4521-M9Q" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "7319-K2W / 7319-K2V", en: "7319-K2W / 7319-K2V", es: "7319-K2W / 7319-K2V", fr: "7319-K2W / 7319-K2V" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "6108-P4Z / 6108-P4Z", en: "6108-P4Z / 6108-P4Z", es: "6108-P4Z / 6108-P4Z", fr: "6108-P4Z / 6108-P4Z" } },
+    ],
+  },
+  {
+    stableKey: "BR_ATT_08",
+    position: 46,
+    dimension: "ATTENTION",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Quantos números pares existem na lista: 13, 22, 37, 48, 55, 64, 71, 86, 99?",
+      en: "How many even numbers exist in the list: 13, 22, 37, 48, 55, 64, 71, 86, 99?",
+      es: "¿Cuántos números pares existen en la lista: 13, 22, 37, 48, 55, 64, 71, 86, 99?",
+      fr: "Combien de nombres pairs se trouvent dans la liste : 13, 22, 37, 48, 55, 64, 71, 86, 99 ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3", en: "3", es: "3", fr: "3" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "4", en: "4", es: "4", fr: "4" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "5", en: "5", es: "5", fr: "5" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "6", en: "6", es: "6", fr: "6" } },
+    ],
+  },
+  {
+    stableKey: "BR_ATT_09",
+    position: 47,
+    dimension: "ATTENTION",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Qual linha contém exatamente 4 ocorrências do símbolo '#':",
+      en: "Which line contains exactly 4 occurrences of the symbol '#':",
+      es: "¿Qué línea contiene exactamente 4 ocurrencias del símbolo '#':",
+      fr: "Quelle ligne contient exactement 4 occurrences du symbole '#' :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "##--#--#--", en: "##--#--#--", es: "##--#--#--", fr: "##--#--#--" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "#-#-#-#-#", en: "#-#-#-#-#", es: "#-#-#-#-#", fr: "#-#-#-#-#" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "#--#--#--#", en: "#--#--#--#", es: "#--#--#--#", fr: "#--#--#--#" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "##--##--#", en: "##--##--#", es: "##--##--#", fr: "##--##--#" } },
+    ],
+  },
+  {
+    stableKey: "BR_ATT_10",
+    position: 48,
+    dimension: "ATTENTION",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Encontre o par de palavras com grafia perfeitamente invertida (palíndromo mútuo):",
+      en: "Find the pair of words with perfectly mirrored spelling (mutual palindrome):",
+      es: "Encuentre el par de palabras con grafía perfectamente invertida:",
+      fr: "Trouvez la paire de mots à l'orthographe exactement inversée (palindrome mutuel) :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "ROMA / AMOR", en: "ROMA / AMOR", es: "ROMA / AMOR", fr: "ROMA / AMOR" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "LIVRO / ORVIL", en: "BOOK / KOOB", es: "LIBRO / ORBIL", fr: "LIVRE / ERVIL" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "CASA / ASAC", en: "HOME / EMOH", es: "CASA / ASAC", fr: "MAISON / NOSIAM" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "MESA / ASEM", en: "TABLE / ELBAT", es: "MESA / ASEM", fr: "TABLE / ELBAT" } },
+    ],
+  },
+
+  // --- PROBLEM SOLVING (Items 5 - 10) ---
+  {
+    stableKey: "BR_PRB_05",
+    position: 49,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Três amigos dividiram uma conta de R$ 150 em partes iguais. Um deles pagou com uma nota de R$ 100. Quanto deve receber de troco?",
+      en: "Three friends split a $150 bill equally. One pays with a $100 bill. How much change should they receive?",
+      es: "Tres amigos dividieron una cuenta de 150 € a partes iguales. Uno pagó con un billete de 100 €. ¿Cuánto cambio debe recibir?",
+      fr: "Trois amis partagent une facture de 150 € en parts égales. L'un paie avec un billet de 100 €. Combien de monnaie doit-il recevoir ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 40", en: "$40", es: "40 €", fr: "40 €" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 50", en: "$50", es: "50 €", fr: "50 €" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 60", en: "$60", es: "60 €", fr: "60 €" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 70", en: "$70", es: "70 €", fr: "70 €" } },
+    ],
+  },
+  {
+    stableKey: "BR_PRB_06",
+    position: 50,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Um elevador suporta até 600 kg. Se 5 pessoas pesam juntas 420 kg, quanto peso adicional ainda é permitido?",
+      en: "An elevator holds up to 600 kg. If 5 people together weigh 420 kg, how much additional weight is allowed?",
+      es: "Un ascensor soporta hasta 600 kg. Si 5 personas pesan juntas 420 kg, ¿cuánto peso adicional se permite?",
+      fr: "Un ascenseur supporte jusqu'à 600 kg. Si 5 personnes pèsent ensemble 420 kg, quelle charge supplémentaire est encore autorisée ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "160 kg", en: "160 kg", es: "160 kg", fr: "160 kg" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "180 kg", en: "180 kg", es: "180 kg", fr: "180 kg" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "200 kg", en: "200 kg", es: "200 kg", fr: "200 kg" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "220 kg", en: "220 kg", es: "220 kg", fr: "220 kg" } },
+    ],
+  },
+  {
+    stableKey: "BR_PRB_07",
+    position: 51,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Você precisa transportar 100 caixas em vans com capacidade máxima de 18 caixas cada. Qual o número mínimo de vans necessárias?",
+      en: "You need to transport 100 boxes in vans with a maximum capacity of 18 boxes each. What is the minimum number of vans needed?",
+      es: "Necesita transportar 100 cajas en furgonetas con capacidad máxima de 18 cajas cada una. ¿Cuál es el número mínimo de furgonetas necesarias?",
+      fr: "Vous devez transporter 100 cartons dans des camionnettes d'une capacité maximale de 18 cartons chacune. Quel est le nombre minimum de camionnettes requises ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "5", en: "5", es: "5", fr: "5" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "6", en: "6", es: "6", fr: "6" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "8", en: "8", es: "8", fr: "8" } },
+    ],
+  },
+  {
+    stableKey: "BR_PRB_08",
+    position: 52,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Em um teste com 20 perguntas, cada acerto soma 5 pontos e cada erro retira 2 pontos. Se um candidato obteve 72 pontos respondendo a todas, quantas acertou?",
+      en: "In a 20-question test, each correct answer adds 5 points and each error subtracts 2 points. If an applicant scored 72 points answering all, how many were correct?",
+      es: "En un examen de 20 preguntas, cada acierto suma 5 puntos y cada error resta 2 puntos. Si un candidato obtuvo 72 puntos respondiendo todas, ¿cuántas acertó?",
+      fr: "Lors d'un test de 20 questions, chaque bonne réponse rapporte 5 points et chaque erreur retire 2 points. Si un candidat a obtenu 72 points en répondant à tout, combien de bonnes réponses a-t-il eues ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "14", en: "14", es: "14", fr: "14" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "16", en: "16", es: "16", fr: "16" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "17", en: "17", es: "17", fr: "17" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "18", en: "18", es: "18", fr: "18" } },
+    ],
+  },
+  {
+    stableKey: "BR_PRB_09",
+    position: 53,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Cinco pessoas estão em uma reunião e todas apertam as mãos entre si exatamente uma vez. Quantos apertos de mão ocorreram?",
+      en: "Five people meet and everyone shakes hands with everyone else exactly once. How many handshakes occurred?",
+      es: "Cinco personas están en una reunión y todas se dan la mano exactamente una vez. ¿Cuántos apretones de manos ocurrieron?",
+      fr: "Cinq personnes participent à une réunion et se serrent toutes la main exactement une fois. Combien de poignées de main ont eu lieu ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "8", en: "8", es: "8", fr: "8" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "10", en: "10", es: "10", fr: "10" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "15", en: "15", es: "15", fr: "15" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
+    ],
+  },
+  {
+    stableKey: "BR_PRB_10",
+    position: 54,
+    dimension: "PROBLEM_SOLVING",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Um relógio adianta 2 minutos a cada 3 horas. Quantos minutos ele terá adiantado ao final de 24 horas?",
+      en: "A watch gains 2 minutes every 3 hours. How many minutes will it have gained after 24 hours?",
+      es: "Un reloj se adelanta 2 minutos cada 3 horas. ¿Cuántos minutos se habrá adelantado al cabo de 24 horas?",
+      fr: "Une montre avance de 2 minutes toutes les 3 heures. De combien de minutes aura-t-elle avancé au bout de 24 heures ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "12 minutos", en: "12 minutes", es: "12 minutos", fr: "12 minutes" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "16 minutos", en: "16 minutes", es: "16 minutos", fr: "16 minutes" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "18 minutos", en: "18 minutes", es: "18 minutes", fr: "18 minutes" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20 minutos", en: "20 minutes", es: "20 minutes", fr: "20 minutes" } },
+    ],
+  },
+
+  // --- SPEED (Items 5 - 10) ---
+  {
+    stableKey: "BR_SPD_05",
+    position: 55,
+    dimension: "SPEED",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Qual é o resultado rápido de: 15 × 6?",
+      en: "What is the rapid calculation of: 15 × 6?",
+      es: "¿Cuál es el resultado rápido de: 15 × 6?",
+      fr: "Quel est le résultat rapide de : 15 × 6 ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "80", en: "80", es: "80", fr: "80" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "85", en: "85", es: "85", fr: "85" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "90", en: "90", es: "90", fr: "90" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "95", en: "95", es: "95", fr: "95" } },
+    ],
+  },
+  {
+    stableKey: "BR_SPD_06",
+    position: 56,
+    dimension: "SPEED",
+    difficulty: "EASY",
+    prompt: {
+      pt: "Qual número é o dobro de 47?",
+      en: "Which number is double of 47?",
+      es: "¿Qué número es el doble de 47?",
+      fr: "Quel nombre est le double de 47 ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "84", en: "84", es: "84", fr: "84" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "92", en: "92", es: "92", fr: "92" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "94", en: "94", es: "94", fr: "94" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "96", en: "96", es: "96", fr: "96" } },
+    ],
+  },
+  {
+    stableKey: "BR_SPD_07",
+    position: 57,
+    dimension: "SPEED",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Resolva rapidamente: 250 - 87 = ?",
+      en: "Solve quickly: 250 - 87 = ?",
+      es: "Resuelva rápidamente: 250 - 87 = ?",
+      fr: "Résolvez rapidement : 250 - 87 = ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "153", en: "153", es: "153", fr: "153" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "163", en: "163", es: "163", fr: "163" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "173", en: "173", es: "173", fr: "173" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "183", en: "183", es: "183", fr: "183" } },
+    ],
+  },
+  {
+    stableKey: "BR_SPD_08",
+    position: 58,
+    dimension: "SPEED",
+    difficulty: "MEDIUM",
+    prompt: {
+      pt: "Identifique rapidamente qual fração é maior que 1/2:",
+      en: "Identify quickly which fraction is greater than 1/2:",
+      es: "Identifique rápidamente qué fracción es mayor que 1/2:",
+      fr: "Identifiez rapidement quelle fraction est supérieure à 1/2 :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3/7", en: "3/7", es: "3/7", fr: "3/7" } },
+      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "4/9", en: "4/9", es: "4/9", fr: "4/9" } },
+      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "5/9", en: "5/9", es: "5/9", fr: "5/9" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "5/11", en: "5/11", es: "5/11", fr: "5/11" } },
+    ],
+  },
+  {
+    stableKey: "BR_SPD_09",
+    position: 59,
+    dimension: "SPEED",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Calcule com velocidade: 18 × 12 - 16 = ?",
+      en: "Calculate swiftly: 18 × 12 - 16 = ?",
+      es: "Calcule con rapidez: 18 × 12 - 16 = ?",
+      fr: "Calculez avec rapidité : 18 × 12 - 16 = ?",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "196", en: "196", es: "196", fr: "196" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "200", en: "200", es: "200", fr: "200" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "204", en: "204", es: "204", fr: "204" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "216", en: "216", es: "216", fr: "216" } },
+    ],
+  },
+  {
+    stableKey: "BR_SPD_10",
+    position: 60,
+    dimension: "SPEED",
+    difficulty: "HARD",
+    prompt: {
+      pt: "Identifique rapidamente qual dos números abaixo é divisível por 7 e por 9 simultaneamente:",
+      en: "Quickly identify which number below is divisible by both 7 and 9 simultaneously:",
+      es: "Identifique rápidamente qué número es divisible por 7 y por 9 simultáneamente:",
+      fr: "Identifiez rapidement quel nombre ci-dessous est divisible par 7 et par 9 simultanément :",
+    },
+    options: [
+      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "567", en: "567", es: "567", fr: "567" } },
+      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "630", en: "630", es: "630", fr: "630" } },
+      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "693", en: "693", es: "693", fr: "693" } },
+      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "720", en: "720", es: "720", fr: "720" } },
+    ],
+  },
 ];
+
+export const brainRankQuestions: readonly BrainRankQuestionDef[] = brainRankPool.slice(0, 24);

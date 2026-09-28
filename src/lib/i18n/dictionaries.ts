@@ -58,6 +58,13 @@ export type Dictionary = {
     strongestDimension: string;
     allDimensions: string;
     unlockPremium: string;
+    unlockCompleteAnalysis: string;
+    viewUnlockedReport: string;
+    preparingCheckout: string;
+    oneTimePayment: string;
+    instantAccess: string;
+    moneyBackGuarantee: string;
+    securePayment: string;
     premiumUnlocked: string;
     disclaimer: string;
     shareTitle: string;
@@ -174,7 +181,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Pontuação Geral",
       strongestDimension: "Dimensão em Destaque",
       allDimensions: "Mapeamento das Dimensões",
-      unlockPremium: "Desbloquear Relatório Completo",
+      unlockPremium: "Desbloquear meu relatório completo",
+      unlockCompleteAnalysis: "Obter minha análise completa",
+      viewUnlockedReport: "Ver meu relatório completo",
+      preparingCheckout: "Preparando checkout seguro...",
+      oneTimePayment: "pagamento único",
+      instantAccess: "Acesso imediato",
+      moneyBackGuarantee: "Garantia incondicional de 7 dias",
+      securePayment: "Ambiente de pagamento seguro e criptografado",
       premiumUnlocked: "Acesso Premium Desbloqueado",
       disclaimer:
         "Este teste destina-se ao autoconhecimento e reflexão pessoal, sem caráter diagnóstico, clínico ou financeiro.",
@@ -327,7 +341,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Overall Score",
       strongestDimension: "Highlighted Dimension",
       allDimensions: "Dimension Overview",
-      unlockPremium: "Unlock Full Report",
+      unlockPremium: "Unlock My Full Report",
+      unlockCompleteAnalysis: "Get My Complete Analysis",
+      viewUnlockedReport: "View My Full Report",
+      preparingCheckout: "Preparing secure checkout...",
+      oneTimePayment: "one-time payment",
+      instantAccess: "Instant access",
+      moneyBackGuarantee: "7-day money-back guarantee",
+      securePayment: "Encrypted and secure checkout",
       premiumUnlocked: "Premium Access Unlocked",
       disclaimer:
         "This assessment is intended solely for personal reflection and self-discovery. It does not constitute clinical, diagnostic or financial advice.",
@@ -469,7 +490,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Introduce tu correo para recibir el enlace seguro a tu informe y no perder tu progreso.",
       emailPlaceholder: "tu.correo@ejemplo.com",
       transactionalConsent:
-        "Acepto los Térmos de Uso y Política de Privacidad y autorizo el envío de mis resultados por correo.",
+        "Acepto los Términos de Uso y Política de Privacidad y autorizo el envío de mis resultados por correo.",
       promotionalConsent:
         "Deseo recibir novedades, nuevos tests y reflexiones exclusivas por correo (opcional).",
       submitButton: "Ver Mi Resultado",
@@ -480,7 +501,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Puntuación General",
       strongestDimension: "Dimensión Destacada",
       allDimensions: "Mapeo de Dimensiones",
-      unlockPremium: "Desbloquear Informe Completo",
+      unlockPremium: "Desbloquear mi informe completo",
+      unlockCompleteAnalysis: "Obtener mi análisis completo",
+      viewUnlockedReport: "Ver mi informe completo",
+      preparingCheckout: "Preparando pago seguro...",
+      oneTimePayment: "pago único",
+      instantAccess: "Acceso inmediato",
+      moneyBackGuarantee: "Garantía de reembolso de 7 días",
+      securePayment: "Proceso de pago cifrado y seguro",
       premiumUnlocked: "Acceso Premium Desbloqueado",
       disclaimer:
         "Esta evaluación está destinada exclusivamente al autoconocimiento y reflexión personal, sin carácter clínico o financiero.",
@@ -633,7 +661,14 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Score Global",
       strongestDimension: "Dimension Principale",
       allDimensions: "Aperçu des Dimensions",
-      unlockPremium: "Débloquer le Rapport Complet",
+      unlockPremium: "Débloquer mon rapport complet",
+      unlockCompleteAnalysis: "Obtenir mon analyse complète",
+      viewUnlockedReport: "Voir mon rapport complet",
+      preparingCheckout: "Préparation du paiement sécurisé...",
+      oneTimePayment: "paiement unique",
+      instantAccess: "Accès instantané",
+      moneyBackGuarantee: "Garantie satisfait ou remboursé 7 jours",
+      securePayment: "Paiement chiffré et sécurisé",
       premiumUnlocked: "Accès Premium Débloqué",
       disclaimer:
         "Ce test est destiné uniquement à la réflexion personnelle et au développement personnel. Il ne constitue aucunement un avis clinique ou financier.",

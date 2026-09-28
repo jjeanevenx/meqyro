@@ -50,7 +50,13 @@ export async function generateMetadata({
 
 type ResultPageProps = {
   params: Promise<{ locale: string; slug: string }>;
-  searchParams?: Promise<{ session?: string; token?: string; ref?: string }>;
+  searchParams?: Promise<{
+    session?: string;
+    token?: string;
+    ref?: string;
+    cta?: string;
+    variant?: string;
+  }>;
 };
 
 export default async function QuizResultPage({ params, searchParams }: ResultPageProps) {
@@ -127,6 +133,11 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
     );
   }
 
+  const ctaVariant =
+    query.cta === "complete_analysis" || query.variant === "complete_analysis"
+      ? "complete_analysis"
+      : "unlock_report";
+
   const siteUrl = getSiteUrl();
   const shareText = {
     pt: `Fiz o desafio ${quizInfo.name} no Meqyro! Descubra também seus pontos fortes:`,
@@ -158,6 +169,7 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
           paywall={resultData.paywall}
           premiumReport={resultData.premiumReport}
           locale={locale}
+          ctaVariant={ctaVariant}
         />
 
         {/* Social Share & Referral Bar */}

@@ -10,6 +10,7 @@ export type PaywallOffer = {
   formattedPrice: string;
   headline: string;
   features: string[];
+  market?: string;
 };
 
 export type PremiumSection = {

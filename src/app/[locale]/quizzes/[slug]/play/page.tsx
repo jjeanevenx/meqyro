@@ -4,8 +4,12 @@ import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { resolveMarketContext } from "@/lib/market/market-context";
 import { QuizRunner } from "@/components/patterns/quiz-runner";
-import type { ActiveSession } from "@/features/quiz-engine/contracts";
-import { validateAndRecoverSession } from "@/features/quiz-engine/session-service";
+import type { ActiveSession, PublicQuiz } from "@/features/quiz-engine/contracts";
+import {
+  validateAndRecoverSession,
+  getActiveSessionByToken,
+  getSessionQuestions,
+} from "@/features/quiz-engine/session-service";
 import {
   anonymousSessionCookie,
   anonymousSessionTtlSeconds,
@@ -64,7 +68,7 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
 
   let initialSession: ActiveSession | null = null;
 
-  // Real session recovery flow
+  // 1. Real session recovery flow from URL tokens
   if (query.session && query.recover) {
     try {
       const recovered = await validateAndRecoverSession({
@@ -93,9 +97,39 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
     }
   }
 
+  // 2. Resume active attempt from cookie (handles reload/F5, back, reopen)
+  if (!initialSession) {
+    const sessionCookie = cookieStore.get(anonymousSessionCookie)?.value;
+    if (sessionCookie) {
+      try {
+        const active = await getActiveSessionByToken(sessionCookie, slug);
+        if (active) {
+          initialSession = active;
+        }
+      } catch {
+        initialSession = null;
+      }
+    }
+  }
+
+  // 3. Load questions strictly belonging to this attempt (or catalog fallback)
+  let attemptQuestions = quiz.questions;
+  if (initialSession) {
+    const sessionQs = await getSessionQuestions(initialSession.id, locale as Locale);
+    if (sessionQs.length > 0) {
+      attemptQuestions = sessionQs;
+    }
+  }
+
+  const runnerQuiz: PublicQuiz = {
+    ...quiz,
+    totalQuestions: attemptQuestions.length,
+    questions: attemptQuestions,
+  };
+
   return (
     <QuizRunner
-      quiz={quiz}
+      quiz={runnerQuiz}
       initialSession={initialSession}
       locale={locale}
       market={market.market}

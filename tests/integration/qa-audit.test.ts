@@ -160,14 +160,11 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
         market: "BR",
       });
 
-      const { data: questions } = await secretSupabase
-        .from("questions")
-        .select("id, options(id)")
-        .eq("quiz_version_id", session.quizVersionId);
+      const quiz = await getPublicQuiz("brainrank", "pt", session.id);
 
-      for (let i = 0; i < (questions?.length ?? 0); i++) {
-        const q = questions![i]!;
-        const optId = (q.options as Array<{ id: string }>)[0]?.id;
+      for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
+        const q = quiz!.questions[i]!;
+        const optId = q.options[0]?.id;
         await saveAnswer({
           sessionId: session.id,
           token,
@@ -236,14 +233,11 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
       });
       expect(session.id).toBeDefined();
 
-      const { data: questions } = await secretSupabase
-        .from("questions")
-        .select("id, options(id)")
-        .eq("quiz_version_id", session.quizVersionId);
+      const quiz = await getPublicQuiz("brainrank", "pt", session.id);
 
-      for (let i = 0; i < (questions?.length ?? 0); i++) {
-        const q = questions![i]!;
-        const optId = (q.options as Array<{ id: string }>)[0]?.id;
+      for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
+        const q = quiz!.questions[i]!;
+        const optId = q.options[0]?.id;
         await saveAnswer({
           sessionId: session.id,
           token,

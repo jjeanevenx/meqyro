@@ -71,6 +71,13 @@ describe("i18n Dictionary Completeness & Consistency (Unit Tests)", () => {
       // Result view & paywall
       expect(target.resultView.freeTitle.length).toBeGreaterThan(0);
       expect(target.resultView.unlockPremium.length).toBeGreaterThan(0);
+      expect(target.resultView.unlockCompleteAnalysis.length).toBeGreaterThan(0);
+      expect(target.resultView.viewUnlockedReport.length).toBeGreaterThan(0);
+      expect(target.resultView.preparingCheckout.length).toBeGreaterThan(0);
+      expect(target.resultView.oneTimePayment.length).toBeGreaterThan(0);
+      expect(target.resultView.instantAccess.length).toBeGreaterThan(0);
+      expect(target.resultView.moneyBackGuarantee.length).toBeGreaterThan(0);
+      expect(target.resultView.securePayment.length).toBeGreaterThan(0);
       expect(target.resultView.disclaimer.length).toBeGreaterThan(0);
 
       // Checkout

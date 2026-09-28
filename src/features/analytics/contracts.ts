@@ -31,11 +31,15 @@ export const FUNNEL_EVENTS = [
   "checkout_failed",
   "share_link_created",
   "share_link_clicked",
+  "premium_offer_viewed",
+  "premium_cta_clicked",
 ] as const;
 
 export type FunnelEventName = (typeof FUNNEL_EVENTS)[number];
 
 export const ALLOWED_ANALYTICS_PROPERTY_KEYS = new Set([
+  "assessment_id",
+  "product_id",
   "quiz_slug",
   "locale",
   "market",

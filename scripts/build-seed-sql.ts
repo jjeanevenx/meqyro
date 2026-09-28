@@ -1,6 +1,6 @@
 import fs from "node:fs";
 import path from "node:path";
-import { brainRankQuestions } from "../src/content/quizzes/brainrank";
+import { brainRankPool } from "../src/content/quizzes/brainrank";
 import { personalityMapQuestions } from "../src/content/quizzes/personality-map";
 import { careerFitQuestions } from "../src/content/quizzes/careerfit";
 import { moneyDnaQuestions } from "../src/content/quizzes/moneydna";
@@ -61,22 +61,26 @@ export function generateSeedSql(): string {
   ];
 
   // BrainRank questions
-  for (const q of brainRankQuestions) {
+  for (const q of brainRankPool) {
     const scoringKeyJson = JSON.stringify({
       dimension: q.dimension,
       difficulty: q.difficulty,
     });
-    const metadataJson = JSON.stringify(q.clue ? { clue: q.clue } : {});
+    const metadataJson = JSON.stringify({
+      ...(q.clue ? { clue: q.clue } : {}),
+      ...(q.visualType ? { visualType: q.visualType } : {}),
+      ...(q.stimulus ? { stimulus: q.stimulus } : {}),
+    });
 
     lines.push(`  -- Question ${q.position}: ${q.stableKey}`);
     lines.push(
       `  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)`,
     );
     lines.push(
-      `  values (v_quiz_version_id, '${q.stableKey}', ${q.position}, 'SINGLE_CHOICE', '${scoringKeyJson}'::jsonb, '${escapeSql(metadataJson)}'::jsonb)`,
+      `  values (v_quiz_version_id, '${q.stableKey}', ${q.position}, '${q.kind ?? "SINGLE_CHOICE"}', '${scoringKeyJson}'::jsonb, '${escapeSql(metadataJson)}'::jsonb)`,
     );
     lines.push(
-      `  on conflict (quiz_version_id, stable_key) do update set scoring_key = excluded.scoring_key, metadata = excluded.metadata`,
+      `  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true`,
     );
     lines.push(`  returning id into v_question_id;`);
     lines.push("");
@@ -90,12 +94,13 @@ export function generateSeedSql(): string {
 
     for (const opt of q.options) {
       const scoringVal = JSON.stringify({ isCorrect: opt.isCorrect });
-      lines.push(`  insert into meqyro.options (question_id, stable_key, position, scoring_value)`);
+      const optionMetadata = JSON.stringify(opt.visual ? { visual: opt.visual } : {});
+      lines.push(`  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)`);
       lines.push(
-        `  values (v_question_id, '${opt.stableKey}', ${opt.position}, '${scoringVal}'::jsonb)`,
+        `  values (v_question_id, '${opt.stableKey}', ${opt.position}, '${scoringVal}'::jsonb, '${escapeSql(optionMetadata)}'::jsonb)`,
       );
       lines.push(
-        `  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value`,
+        `  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata`,
       );
       lines.push(`  returning id into v_option_id;`);
 

@@ -434,6 +434,13 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
     }
   };
 
+  const backLabel = {
+    pt: "Voltar para a página inicial",
+    en: "Back to home page",
+    es: "Volver a la página principal",
+    fr: "Retour à la page d'accueil",
+  }[locale as Locale];
+
   return (
     <main className="quiz-landing-container">
       <script
@@ -444,7 +451,7 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
         <Link
           href={`/${locale}`}
           className="quiz-landing-back"
-          aria-label="Voltar para a página inicial"
+          aria-label={backLabel}
         >
           <ArrowLeft size={18} />
           <span>MEQYRO</span>

@@ -3,6 +3,7 @@
 import type { PublicQuestion } from "@/features/quiz-engine/contracts";
 import { SingleChoiceRenderer, SingleChoiceQuestion } from "./single-choice";
 import { LikertScaleRenderer, LikertQuestion } from "./likert-scale";
+import { VisualChoiceRenderer } from "./visual-choice";
 
 export { SingleChoiceRenderer, SingleChoiceQuestion, LikertScaleRenderer, LikertQuestion };
 
@@ -36,7 +37,20 @@ export function QuestionRenderer({
     );
   }
 
-  // Fallback to SINGLE_CHOICE for SINGLE_CHOICE, VISUAL_CHOICE, SCENARIO
+  if (question.kind === "VISUAL_CHOICE") {
+    if (!question.stimulus) throw new Error(`Missing visual stimulus for ${question.stableKey}`);
+    return (
+      <VisualChoiceRenderer
+        stimulus={question.stimulus}
+        options={question.options}
+        selectedOptionId={selectedOptionId}
+        onSelect={onSelectOption}
+        disabled={disabled}
+      />
+    );
+  }
+
+  // Fallback to SINGLE_CHOICE for SINGLE_CHOICE and SCENARIO
   return (
     <SingleChoiceRenderer
       options={question.options}
