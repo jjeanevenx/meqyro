@@ -1,16 +1,68 @@
-import { describe, it, expect } from "vitest";
-import { createHmac } from "node:crypto";
+import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { startQuizSession } from "@/features/quiz-engine/session-service";
-import { createOrder, getOrderById } from "@/features/commerce/order-service";
+import {
+  createOrder,
+  getOrderById,
+  setPaymentProviderFactoryForTests,
+} from "@/features/commerce/order-service";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
 import { reconcileUnfulfilledPaidOrders } from "@/features/commerce/reconciliation-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { isSupabaseAvailable } from "./db-check";
+import { ControlledPaymentProvider } from "./controlled-payment-provider";
 
 const isOnline = await isSupabaseAvailable();
 
+beforeAll(() => {
+  setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name));
+});
+
+afterAll(() => {
+  setPaymentProviderFactoryForTests(null);
+});
+
 describe.skipIf(!isOnline)("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
+  it("preserves confirmed payment when it arrives while checkout creation is still processing", async () => {
+    setPaymentProviderFactoryForTests((name) => {
+      const provider = new ControlledPaymentProvider(name);
+      const createCheckout = provider.createCheckout.bind(provider);
+      provider.createCheckout = async (input) => {
+        await fulfillOrder(input.orderId, "early-confirmation", `early-payment-${input.orderId}`);
+        return createCheckout(input);
+      };
+      return provider;
+    });
+    try {
+      const { session, token } = await startQuizSession({
+        quizSlug: "brainrank",
+        locale: "pt",
+        market: "BR",
+      });
+      const { order } = await createOrder({
+        sessionId: session.id,
+        sessionToken: token,
+        productCode: "BRAINRANK",
+        customerEmail: "early-confirmation@example.com",
+        market: "BR",
+        locale: "pt",
+      });
+      expect((await getOrderById(order.id, { allowInternal: true }))?.status).toBe("FULFILLED");
+      const db = createSupabaseSecretClient();
+      const { data: grants, error } = await db
+        .from("result_access_grants")
+        .select("id")
+        .eq("order_id", order.id);
+      expect(error).toBeNull();
+      expect(grants).toHaveLength(1);
+      expect(await fulfillOrder(order.id, "early-confirmation-replay")).toEqual({
+        success: true,
+        alreadyFulfilled: true,
+      });
+    } finally {
+      setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name));
+    }
+  });
   it("creates order with approved server price and state machine transition", async () => {
     const { session, token } = await startQuizSession({
       quizSlug: "brainrank",
@@ -121,12 +173,7 @@ describe.skipIf(!isOnline)("Commerce & Fulfillment Lifecycle — Integration Tes
       },
     };
 
-    const now = Math.floor(Date.now() / 1000);
-    const payloadStr = JSON.stringify(webhookPayload);
-    const sig = createHmac("sha256", process.env.STRIPE_WEBHOOK_SECRET!)
-      .update(`${now}.${payloadStr}`)
-      .digest("hex");
-    const headers = { "stripe-signature": `t=${now},v1=${sig}` };
+    const headers = {};
 
     // First delivery
     const res1 = await handleWebhook("stripe", {

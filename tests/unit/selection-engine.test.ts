@@ -1,15 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
   selectQuestionsForAttempt,
-  createPrng,
-  shuffleWithSeed,
   InsufficientQuestionPoolError,
   type CandidateQuestion,
 } from "@/features/quiz-engine/selection-engine";
-import {
-  ASSESSMENT_SELECTION_CONFIGS,
-  getAssessmentSelectionConfig,
-} from "@/features/quiz-engine/selection-config";
+import { getAssessmentSelectionConfig } from "@/features/quiz-engine/selection-config";
 
 function generateMockCandidates(
   prefix: string,
@@ -122,11 +117,11 @@ describe("Question Selection Engine", () => {
     const candidates = generateMockCandidates("BR", brainRankDims, ["EASY", "MEDIUM", "HARD"], 5);
 
     // Make one inactive
-    (candidates[0] as any).active = false;
+    candidates[0] = { ...candidates[0], active: false };
     // Make one missing translations
-    (candidates[1] as any).translations = [{ locale: "pt", prompt: "Only pt" }];
+    candidates[1] = { ...candidates[1], translations: [{ locale: "pt", prompt: "Only pt" }] };
     // Make one missing options
-    (candidates[2] as any).options = [];
+    candidates[2] = { ...candidates[2], options: [] };
 
     const config = getAssessmentSelectionConfig("brainrank");
     const selected = selectQuestionsForAttempt(candidates, config, "seed-active-filter");
@@ -143,8 +138,8 @@ describe("Question Selection Engine", () => {
     // and only 1 MEDIUM instead of required 2 (so fallback must pull from EASY)
     const candidates = generateMockCandidates("BR", brainRankDims, ["EASY", "MEDIUM", "HARD"], 3);
     const filteredCandidates = candidates.filter((q) => {
-      const isPat = (q.scoringKey as any).dimension === "PATTERN_RECOGNITION";
-      const isMed = (q.scoringKey as any).difficulty === "MEDIUM";
+      const isPat = q.scoringKey.dimension === "PATTERN_RECOGNITION";
+      const isMed = q.scoringKey.difficulty === "MEDIUM";
       // Remove one MEDIUM from PATTERN_RECOGNITION leaving only 1
       if (isPat && isMed && q.id.endsWith("-2")) return false;
       return true;
@@ -273,7 +268,6 @@ describe("Question Selection Engine", () => {
     it("simulates 1000 attempts and verifies reasonable distribution across candidates", () => {
       // 6 dimensions * (3 easy, 4 medium, 3 hard) = 60 candidates
       const candidates: CandidateQuestion[] = [];
-      let count = 1;
 
       for (const dim of brainRankDims) {
         // 3 easy
@@ -337,7 +331,7 @@ describe("Question Selection Engine", () => {
       }
 
       // Check that EVERY candidate question is selected a healthy amount of times
-      for (const [qId, count] of Object.entries(appearances)) {
+      for (const count of Object.values(appearances)) {
         // In theory:
         // Easy: 1 selected out of 3 -> expected ~333 times in 1000 runs
         // Medium: 2 selected out of 4 -> expected ~500 times in 1000 runs

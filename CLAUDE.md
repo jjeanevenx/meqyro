@@ -10,19 +10,19 @@ This file is the entry point for Claude Code sessions on the Meqyro repository. 
 
 Full documentation lives in `docs/ai/`. Load only what the task requires:
 
-| Document | When to read it |
-|---|---|
-| `docs/ai/PROJECT_CONTEXT.md` | Any task — understand the product first |
-| `docs/ai/ARCHITECTURE.md` | Any structural or server-side change |
-| `docs/ai/STRUCTURE.md` | Adding files or unsure where something belongs |
-| `docs/ai/TECH_STACK.md` | Checking available libraries before adding one |
-| `docs/ai/DOMAIN_RULES.md` | Quiz, scoring, session, order, or consent changes |
-| `docs/ai/CONVENTIONS.md` | Writing new code in any layer |
-| `docs/ai/WORKFLOWS.md` | Build, test, migration, or seed commands |
-| `docs/ai/TESTING.md` | Adding or changing tests |
-| `docs/ai/SECURITY.md` | Auth, tokens, payments, PII, webhooks |
-| `docs/ai/DO_NOT_DO.md` | **Always — before touching any file** |
-| `docs/ai/DECISIONS.md` | Understanding why something is built a certain way |
+| Document                     | When to read it                                    |
+| ---------------------------- | -------------------------------------------------- |
+| `docs/ai/PROJECT_CONTEXT.md` | Any task — understand the product first            |
+| `docs/ai/ARCHITECTURE.md`    | Any structural or server-side change               |
+| `docs/ai/STRUCTURE.md`       | Adding files or unsure where something belongs     |
+| `docs/ai/TECH_STACK.md`      | Checking available libraries before adding one     |
+| `docs/ai/DOMAIN_RULES.md`    | Quiz, scoring, session, order, or consent changes  |
+| `docs/ai/CONVENTIONS.md`     | Writing new code in any layer                      |
+| `docs/ai/WORKFLOWS.md`       | Build, test, migration, or seed commands           |
+| `docs/ai/TESTING.md`         | Adding or changing tests                           |
+| `docs/ai/SECURITY.md`        | Auth, tokens, payments, PII, webhooks              |
+| `docs/ai/DO_NOT_DO.md`       | **Always — before touching any file**              |
+| `docs/ai/DECISIONS.md`       | Understanding why something is built a certain way |
 
 ---
 
@@ -39,10 +39,13 @@ Full documentation lives in `docs/ai/`. Load only what the task requires:
 ## Task execution protocol
 
 ### 1 · UNDERSTAND
+
 Read the requirement fully. Do not begin coding because the implementation seems obvious.
 
 ### 2 · EXPLORE
+
 Before writing anything, locate in the repository:
+
 - existing implementations related to the task
 - existing tests for the area being changed
 - existing abstractions, services, helpers, or adapters
@@ -51,25 +54,33 @@ Before writing anything, locate in the repository:
 Use search tools to find. Do not assume file locations from names alone.
 
 ### 3 · CHECK RULES
+
 Re-read `docs/ai/DO_NOT_DO.md` and `docs/ai/ARCHITECTURE.md` with the specific task in mind.
 
 ### 4 · PLAN
+
 Identify the **smallest coherent change** that satisfies the requirement. Write out the list of files that will change and why, before editing any of them. For non-trivial tasks, state this plan explicitly before implementing.
 
 ### 5 · IMPLEMENT
+
 Follow existing patterns. Match the naming, structure, and style of the surrounding code. Do not introduce new patterns or abstractions unless required by the task.
 
 ### 6 · VALIDATE
+
 Run, in order:
+
 ```bash
 pnpm typecheck
 pnpm test
 pnpm build
 ```
+
 If the environment does not support a DB, unit tests must still pass. Report what could not be validated and why.
 
 ### 7 · REVIEW
+
 Inspect the diff before reporting completion. Verify:
+
 - no unrelated files changed
 - no accidental formatting-only changes
 - no test weakened or removed
@@ -77,6 +88,7 @@ Inspect the diff before reporting completion. Verify:
 - no secret or PII introduced into logs or client code
 
 ### 8 · REPORT
+
 ```
 Changed:
 - <file>: <reason>
@@ -114,6 +126,7 @@ Prefer **minimal coherent change** over architectural cleanup.
 ## Refactoring policy
 
 Refactoring is acceptable only when:
+
 1. explicitly requested by the user, or
 2. strictly necessary to implement the requested behavior safely.
 
@@ -130,6 +143,7 @@ Before creating an interface, service, adapter, helper, factory, provider, or wr
 ## Dependencies
 
 Before adding any package:
+
 1. Check if the framework or Node.js stdlib already provides it.
 2. Check packages already installed in `package.json`.
 3. Check if a few lines of code would suffice.
@@ -144,6 +158,7 @@ Never upgrade unrelated dependencies as a side effect of another task. Use `pnpm
 The existing architecture takes precedence over generic best practices. Do not introduce a different architectural style because you prefer it. See `docs/ai/ARCHITECTURE.md` for the actual structure.
 
 Key invariants:
+
 - All scoring logic stays in `src/features/scoring/` — pure, server-side, no I/O.
 - All DB access uses `createSupabaseSecretClient()` — never raw Supabase anon client for mutations.
 - All feature modules start with `import "server-only"`.
@@ -156,6 +171,7 @@ Key invariants:
 ## Avoid overengineering
 
 Prefer the simplest implementation consistent with the existing architecture. Do not introduce without clear need:
+
 - new layers, new services, new microservices
 - new design patterns, new queues, new events
 - premature extension points or generic frameworks
@@ -189,6 +205,7 @@ Never reproduce, log, or hardcode real API keys, tokens, passwords, connection s
 ## Testing
 
 When changing behavior:
+
 1. Identify existing relevant tests in `tests/unit/` and `tests/integration/`.
 2. Preserve existing test conventions and assertion strength.
 3. Add or update tests when behavior changes.
@@ -201,6 +218,7 @@ Never delete or weaken a test to make the suite pass. Fix the underlying issue.
 ## Git safety
 
 Do not:
+
 - discard existing uncommitted user changes
 - force-push or rewrite history
 - commit unrelated files
@@ -213,6 +231,7 @@ unless explicitly requested.
 ## Uncertainty
 
 Do not transform assumptions into facts. When something cannot be confirmed from the repository:
+
 - state the assumption explicitly
 - investigate further using search/read tools
 - or mark it as UNKNOWN

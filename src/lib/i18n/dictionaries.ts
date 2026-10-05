@@ -1,6 +1,126 @@
 import type { Locale } from "./config";
 
+const coupleFlowCopy = {
+  pt: {
+    title: "Construam a comparação juntos",
+    accessConditions: "Comparação após pagamento, conclusão dos dois testes e autorização de ambos",
+    consent:
+      "Autorizo compartilhar a comparação com a pessoa que aceitar meu convite. Posso retirar essa autorização aqui.",
+    invite: "Criar convite",
+    withdraw: "Retirar autorização",
+    allow: "Autorizar comparação",
+    refresh: "Atualizar andamento",
+    link: "Copie este link e envie para a outra pessoa:",
+    error: "Não foi possível atualizar. Tente novamente.",
+    paid: "Compra confirmada. O download e o e-mail da comparação ficam disponíveis quando os dois concluírem e autorizarem o compartilhamento.",
+    states: {
+      NO_INVITE: "Convide a outra pessoa para responder ao mesmo teste.",
+      WAITING_PARTNER: "Aguardando a outra pessoa aceitar o convite.",
+      WAITING_RESULTS: "Aguardando os dois concluírem o teste.",
+      CONSENT_REQUIRED: "Os dois precisam autorizar o compartilhamento para acessar a comparação.",
+      PAYMENT_REQUIRED:
+        "Os dois resultados estão prontos. Uma compra libera a comparação para ambos.",
+      READY: "A comparação de vocês está pronta abaixo.",
+      EXPIRED: "Este convite expirou. Crie um novo convite.",
+    },
+  },
+  en: {
+    title: "Build your comparison together",
+    accessConditions: "Comparison after payment, both completed assessments and both permissions",
+    consent:
+      "I allow the comparison to be shared with the person who accepts my invitation. I can withdraw permission here.",
+    invite: "Create invitation",
+    withdraw: "Withdraw permission",
+    allow: "Allow comparison",
+    refresh: "Refresh progress",
+    link: "Copy this link and send it to your partner:",
+    error: "Unable to update. Please retry.",
+    paid: "Purchase confirmed. Download and email become available when both people complete the test and allow sharing.",
+    states: {
+      NO_INVITE: "Invite your partner to answer the same assessment.",
+      WAITING_PARTNER: "Waiting for your partner to accept.",
+      WAITING_RESULTS: "Waiting for both assessments to be completed.",
+      CONSENT_REQUIRED: "Both people must allow sharing to access the comparison.",
+      PAYMENT_REQUIRED: "Both results are ready. One purchase unlocks the comparison for both.",
+      READY: "Your comparison is ready below.",
+      EXPIRED: "This invitation expired. Create a new invitation.",
+    },
+  },
+  es: {
+    title: "Construyan la comparación juntos",
+    accessConditions: "Comparación tras el pago, los dos tests completados y ambas autorizaciones",
+    consent:
+      "Autorizo compartir la comparación con quien acepte mi invitación. Puedo retirar la autorización aquí.",
+    invite: "Crear invitación",
+    withdraw: "Retirar autorización",
+    allow: "Autorizar comparación",
+    refresh: "Actualizar progreso",
+    link: "Copia este enlace y envíalo a la otra persona:",
+    error: "No se pudo actualizar. Inténtalo de nuevo.",
+    paid: "Compra confirmada. La descarga y el correo estarán disponibles cuando ambos completen el test y autoricen compartir.",
+    states: {
+      NO_INVITE: "Invita a la otra persona a responder el mismo test.",
+      WAITING_PARTNER: "Esperando que la otra persona acepte.",
+      WAITING_RESULTS: "Esperando que ambos completen el test.",
+      CONSENT_REQUIRED: "Ambas personas deben autorizar compartir la comparación.",
+      PAYMENT_REQUIRED:
+        "Ambos resultados están listos. Una compra libera la comparación para ambos.",
+      READY: "La comparación está lista abajo.",
+      EXPIRED: "La invitación expiró. Crea una nueva.",
+    },
+  },
+  fr: {
+    title: "Construisez votre comparaison ensemble",
+    accessConditions:
+      "Comparaison après paiement, les deux tests terminés et les deux autorisations",
+    consent:
+      "J'autorise le partage de la comparaison avec la personne qui accepte mon invitation. Je peux retirer cette autorisation ici.",
+    invite: "Créer une invitation",
+    withdraw: "Retirer l'autorisation",
+    allow: "Autoriser la comparaison",
+    refresh: "Actualiser",
+    link: "Copiez ce lien et envoyez-le à l'autre personne :",
+    error: "Impossible de mettre à jour. Réessayez.",
+    paid: "Achat confirmé. Le téléchargement et l'e-mail seront disponibles après les deux tests et les autorisations de partage.",
+    states: {
+      NO_INVITE: "Invitez l'autre personne à répondre au même test.",
+      WAITING_PARTNER: "En attente de l'acceptation de l'invitation.",
+      WAITING_RESULTS: "En attente de la fin des deux tests.",
+      CONSENT_REQUIRED: "Les deux personnes doivent autoriser le partage.",
+      PAYMENT_REQUIRED:
+        "Les deux résultats sont prêts. Un achat débloque la comparaison pour les deux.",
+      READY: "Votre comparaison est prête ci-dessous.",
+      EXPIRED: "Cette invitation a expiré. Créez-en une nouvelle.",
+    },
+  },
+};
+const coupleInviteCopy = {
+  pt: [
+    "Convite para o CoupleDNA",
+    "Ao participar, você autoriza compartilhar a comparação das suas respostas com a pessoa que enviou este convite. O relatório será liberado após os dois concluírem e uma compra for confirmada. Você pode retirar essa autorização na página do resultado.",
+    "Autorizar comparação e começar",
+  ],
+  en: [
+    "CoupleDNA invitation",
+    "By joining, you allow your answer comparison to be shared with the person who invited you. The report requires both assessments and one confirmed purchase. You can withdraw permission on your result page.",
+    "Allow comparison and start",
+  ],
+  es: [
+    "Invitación a CoupleDNA",
+    "Al participar, autorizas compartir la comparación con quien te invitó. El informe requiere ambos tests y una compra confirmada. Puedes retirar la autorización en tu resultado.",
+    "Autorizar comparación y empezar",
+  ],
+  fr: [
+    "Invitation CoupleDNA",
+    "En participant, vous autorisez le partage de la comparaison avec la personne qui vous invite. Le rapport nécessite les deux tests et un achat confirmé. Vous pouvez retirer cette autorisation sur votre résultat.",
+    "Autoriser la comparaison et commencer",
+  ],
+} as const;
+
 export type Dictionary = {
+  coupleFlow: typeof coupleFlowCopy.pt;
+  coupleInviteStart: readonly [string, string, string];
+  includedPurchasesTitle: string;
   nav: {
     discover: string;
     about: string;
@@ -122,6 +242,9 @@ export type Dictionary = {
 
 export const dictionaries: Record<Locale, Dictionary> = {
   pt: {
+    coupleFlow: coupleFlowCopy.pt,
+    coupleInviteStart: coupleInviteCopy.pt,
+    includedPurchasesTitle: "Quizzes incluídos na sua compra",
     nav: {
       discover: "Descobrir",
       about: "Como funciona",
@@ -186,7 +309,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       viewUnlockedReport: "Ver meu relatório completo",
       preparingCheckout: "Preparando checkout seguro...",
       oneTimePayment: "pagamento único",
-      instantAccess: "Acesso imediato",
+      instantAccess: "Acesso após confirmação do pagamento",
       moneyBackGuarantee: "Garantia incondicional de 7 dias",
       securePayment: "Ambiente de pagamento seguro e criptografado",
       premiumUnlocked: "Acesso Premium Desbloqueado",
@@ -199,7 +322,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     checkout: {
       title: "Finalizar Compra",
       summary: "Resumo do Pedido",
-      immediateAccess: "Acesso imediato e vitalício após confirmação",
+      immediateAccess: "Download e resultado por e-mail após confirmação",
       securePayment: "Ambiente criptografado e seguro",
       payNow: "Pagar Agora",
       processing: "Processando pagamento...",
@@ -282,6 +405,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   en: {
+    coupleFlow: coupleFlowCopy.en,
+    coupleInviteStart: coupleInviteCopy.en,
+    includedPurchasesTitle: "Assessments included in your purchase",
     nav: {
       discover: "Discover",
       about: "How it works",
@@ -346,7 +472,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       viewUnlockedReport: "View My Full Report",
       preparingCheckout: "Preparing secure checkout...",
       oneTimePayment: "one-time payment",
-      instantAccess: "Instant access",
+      instantAccess: "Access after payment confirmation",
       moneyBackGuarantee: "7-day money-back guarantee",
       securePayment: "Encrypted and secure checkout",
       premiumUnlocked: "Premium Access Unlocked",
@@ -359,7 +485,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     checkout: {
       title: "Complete Checkout",
       summary: "Order Summary",
-      immediateAccess: "Instant lifetime access upon confirmation",
+      immediateAccess: "Download and result by email upon confirmation",
       securePayment: "Encrypted and secure checkout",
       payNow: "Pay Now",
       processing: "Processing payment...",
@@ -442,6 +568,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   es: {
+    coupleFlow: coupleFlowCopy.es,
+    coupleInviteStart: coupleInviteCopy.es,
+    includedPurchasesTitle: "Tests incluidos en tu compra",
     nav: {
       discover: "Descubrir",
       about: "Cómo funciona",
@@ -506,7 +635,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       viewUnlockedReport: "Ver mi informe completo",
       preparingCheckout: "Preparando pago seguro...",
       oneTimePayment: "pago único",
-      instantAccess: "Acceso inmediato",
+      instantAccess: "Acceso tras confirmar el pago",
       moneyBackGuarantee: "Garantía de reembolso de 7 días",
       securePayment: "Proceso de pago cifrado y seguro",
       premiumUnlocked: "Acceso Premium Desbloqueado",
@@ -519,7 +648,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     checkout: {
       title: "Finalizar Compra",
       summary: "Resumen del Pedido",
-      immediateAccess: "Acceso inmediato e ilimitado tras la confirmación",
+      immediateAccess: "Descarga y resultado por correo tras la confirmación",
       securePayment: "Proceso de pago cifrado y seguro",
       payNow: "Pagar Ahora",
       processing: "Procesando pago...",
@@ -602,6 +731,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   fr: {
+    coupleFlow: coupleFlowCopy.fr,
+    coupleInviteStart: coupleInviteCopy.fr,
+    includedPurchasesTitle: "Tests inclus dans votre achat",
     nav: {
       discover: "Découvrir",
       about: "Comment ça marche",
@@ -666,7 +798,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       viewUnlockedReport: "Voir mon rapport complet",
       preparingCheckout: "Préparation du paiement sécurisé...",
       oneTimePayment: "paiement unique",
-      instantAccess: "Accès instantané",
+      instantAccess: "Accès après confirmation du paiement",
       moneyBackGuarantee: "Garantie satisfait ou remboursé 7 jours",
       securePayment: "Paiement chiffré et sécurisé",
       premiumUnlocked: "Accès Premium Débloqué",
@@ -679,7 +811,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
     checkout: {
       title: "Finaliser la Commande",
       summary: "Récapitulatif de la Commande",
-      immediateAccess: "Accès immédiat et illimité dès confirmation",
+      immediateAccess: "Téléchargement et résultat par e-mail après confirmation",
       securePayment: "Paiement chiffré et sécurisé",
       payNow: "Payer Maintenant",
       processing: "Traitement du paiement...",

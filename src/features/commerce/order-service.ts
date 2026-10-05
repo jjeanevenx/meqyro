@@ -6,9 +6,9 @@ import { matchesAnonymousSessionToken } from "@/lib/security/anonymous-session";
 import { generateSecureToken, hashToken } from "@/features/privacy/consent-service";
 import { getSiteUrl } from "@/lib/config/env";
 import { StripeAdapter } from "./adapters/stripe";
-import { InfinitePayAdapter } from "./adapters/infinitepay";
 import type {
   CreateOrderInput,
+  CheckoutResult,
   OrderRecord,
   PaymentProvider,
   PaymentProviderName,
@@ -16,14 +16,34 @@ import type {
 import { assertTransition, orderTransitions } from "@/lib/domain/states";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
 import { isBundleProduct, getBundlePrice } from "@/lib/market/prices";
-import { resolveMarketContext, type Market } from "@/lib/market/market-context";
-import type { Locale } from "@/lib/i18n/config";
+import { isMarket, resolveMarketContext, type Market } from "@/lib/market/market-context";
+import { isLocale, type Locale } from "@/lib/i18n/config";
+import { fulfillOrder } from "./fulfillment-service";
+
+function createDefaultPaymentProvider(name: PaymentProviderName): PaymentProvider {
+  void name;
+  return new StripeAdapter();
+}
+
+let paymentProviderFactory = createDefaultPaymentProvider;
 
 export function getPaymentProvider(name: PaymentProviderName): PaymentProvider {
-  if (name === "infinitepay") {
-    return new InfinitePayAdapter();
+  return paymentProviderFactory(name);
+}
+
+export function setPaymentProviderFactoryForTests(
+  factory: ((name: PaymentProviderName) => PaymentProvider) | null,
+): void {
+  if (process.env.NODE_ENV !== "test") {
+    throw new Error("Payment provider overrides are test-only.");
   }
-  return new StripeAdapter();
+  paymentProviderFactory = factory ?? createDefaultPaymentProvider;
+}
+
+export function resolvePaymentProvider(market: Market, currency: string): PaymentProviderName {
+  void market;
+  void currency;
+  return "stripe";
 }
 
 function generateOrderNumber(market: string): string {
@@ -32,9 +52,12 @@ function generateOrderNumber(market: string): string {
   return `MQ-${market}-${dateStr}-${rand}`;
 }
 
-export async function createOrder(
-  input: CreateOrderInput,
-): Promise<{ order: OrderRecord; checkoutUrl: string; lookupToken: string }> {
+export async function createOrder(input: CreateOrderInput): Promise<{
+  order: OrderRecord;
+  checkoutUrl: string | null;
+  lookupToken: string;
+  alreadyPaid?: boolean;
+}> {
   const supabase = createSupabaseSecretClient();
 
   // 1. Verify session
@@ -45,6 +68,8 @@ export async function createOrder(
       id,
       access_token_hash,
       status,
+      market,
+      locale,
       quiz_versions(quiz_id, quizzes(id, slug, product_code))
     `,
     )
@@ -60,6 +85,8 @@ export async function createOrder(
   }
 
   type SessionVersions = {
+    market?: string;
+    locale?: string;
     quiz_versions?: {
       quiz_id?: string;
       quizzes?: {
@@ -75,6 +102,21 @@ export async function createOrder(
   if (!quizId) {
     throw new Error("Quiz associado à sessão não encontrado.");
   }
+
+  if (!isMarket(sessionRecord.market)) {
+    throw new Error("Mercado da sessão é inválido ou não foi persistido.");
+  }
+  const persistedLocale = sessionRecord.locale;
+  const orderLocale: Locale =
+    typeof persistedLocale === "string" && isLocale(persistedLocale)
+      ? persistedLocale
+      : isLocale(input.locale)
+        ? input.locale
+        : "en";
+  const orderMarket = resolveMarketContext({
+    locale: isLocale(input.locale) ? input.locale : orderLocale,
+    market: sessionRecord.market,
+  }).market;
 
   const expectedProductCode = sessionRecord.quiz_versions?.quizzes?.product_code;
   const normalizedInputCode = input.productCode.toUpperCase().replace(/^PROD_/, "");
@@ -93,13 +135,11 @@ export async function createOrder(
   let currency: string;
 
   if (isBundleProduct(input.productCode)) {
-    const bundlePrice = getBundlePrice(input.productCode, input.market as Market);
+    const bundlePrice = getBundlePrice(input.productCode, orderMarket);
     if (!bundlePrice) {
-      throw new Error(`Preço de bundle não configurado para o mercado ${input.market}.`);
+      throw new Error(`Preço de bundle não configurado para o mercado ${orderMarket}.`);
     }
-    const safeLocale: Locale =
-      input.locale === "en" || input.locale === "es" || input.locale === "fr" ? input.locale : "pt";
-    const marketCtx = resolveMarketContext({ locale: safeLocale, market: input.market });
+    const marketCtx = resolveMarketContext({ locale: orderLocale, market: orderMarket });
     amount = bundlePrice;
     currency = marketCtx.currency;
   } else {
@@ -107,20 +147,19 @@ export async function createOrder(
       .from("product_prices")
       .select("amount, currency")
       .eq("quiz_id", quizId)
-      .eq("market", input.market)
+      .eq("market", orderMarket)
       .eq("active", true)
       .single();
 
     if (priceError || !priceRecord) {
-      throw new Error(`Preço não configurado para o mercado ${input.market}.`);
+      throw new Error(`Preço não configurado para o mercado ${orderMarket}.`);
     }
 
     amount = priceRecord.amount;
     currency = priceRecord.currency;
   }
 
-  const providerName: PaymentProviderName =
-    input.market === "BR" || currency === "BRL" ? "infinitepay" : "stripe";
+  const providerName = resolvePaymentProvider(orderMarket, currency);
 
   // 3. Find or link lead
   const normalizedEmail = input.customerEmail.trim().toLowerCase();
@@ -130,7 +169,65 @@ export async function createOrder(
     .eq("email_normalized", normalizedEmail)
     .single();
 
-  const orderNumber = generateOrderNumber(input.market);
+  // Reuse an active checkout and stop a second purchase after fulfillment.
+  const { data: existingOrder } = await supabase
+    .from("orders")
+    .select(
+      "id, order_number, session_id, status, amount, currency, market, payment_provider, provider_payment_id, customer_email, payment_attempts(checkout_url, created_at)",
+    )
+    .eq("session_id", input.sessionId)
+    .eq("product_code", input.productCode)
+    .eq("payment_provider", providerName)
+    .in("status", ["CREATED", "PROCESSING", "PENDING", "PAID", "FULFILLED"])
+    .order("created_at", { referencedTable: "payment_attempts", ascending: false })
+    .maybeSingle();
+
+  if (existingOrder) {
+    if (
+      existingOrder.status !== "PAID" &&
+      existingOrder.status !== "FULFILLED" &&
+      (existingOrder.market !== orderMarket || existingOrder.currency !== currency)
+    ) {
+      throw new Error(
+        "Este checkout antigo usa outra moeda. Inicie um novo teste para comprar em reais.",
+      );
+    }
+    const lookupToken = generateSecureToken();
+    await supabase
+      .from("orders")
+      .update({ lookup_token_hash: hashToken(lookupToken), updated_at: new Date().toISOString() })
+      .eq("id", existingOrder.id);
+
+    const attempts = existingOrder.payment_attempts as Array<{
+      checkout_url?: string | null;
+      created_at?: string;
+    }>;
+    const checkoutUrl = attempts?.[0]?.checkout_url ?? null;
+    const orderRecord: OrderRecord = {
+      id: existingOrder.id,
+      orderNumber: existingOrder.order_number,
+      sessionId: existingOrder.session_id,
+      status: existingOrder.status,
+      amount: existingOrder.amount,
+      currency: existingOrder.currency,
+      market: existingOrder.market,
+      paymentProvider: existingOrder.payment_provider,
+      customerEmail: existingOrder.customer_email,
+    };
+
+    if (existingOrder.status === "PAID") {
+      await fulfillOrder(existingOrder.id, "checkout_repair", existingOrder.provider_payment_id);
+      orderRecord.status = "FULFILLED";
+      return { order: orderRecord, checkoutUrl: null, lookupToken, alreadyPaid: true };
+    }
+    if (existingOrder.status === "FULFILLED") {
+      return { order: orderRecord, checkoutUrl: null, lookupToken, alreadyPaid: true };
+    }
+    if (checkoutUrl) return { order: orderRecord, checkoutUrl, lookupToken };
+    throw new Error("Um checkout para este relatório já está sendo preparado. Tente novamente.");
+  }
+
+  const orderNumber = generateOrderNumber(orderMarket);
   const lookupToken = generateSecureToken();
   const lookupTokenHash = hashToken(lookupToken);
 
@@ -140,15 +237,16 @@ export async function createOrder(
     lead_id: lead?.id ?? null,
     order_number: orderNumber,
     status: "CREATED",
+    product_code: input.productCode,
     amount,
     currency,
-    market: input.market,
+    market: orderMarket,
     payment_provider: providerName,
     customer_email: normalizedEmail,
     referral_code: input.referralCode ?? null,
   };
 
-  let orderResult = await supabase
+  const orderResult = await supabase
     .from("orders")
     .insert({
       ...baseOrderPayload,
@@ -157,64 +255,102 @@ export async function createOrder(
     .select()
     .single();
 
-  if (orderResult.error && orderResult.error.message.includes("lookup_token_hash")) {
-    orderResult = await supabase.from("orders").insert(baseOrderPayload).select().single();
-  }
-
   const order = orderResult.data;
   if (orderResult.error || !order) {
     throw new Error(`Erro ao criar pedido: ${orderResult.error?.message}`);
   }
 
   // 5. Create Order Item
-  await supabase.from("order_items").insert({
+  const { error: itemError } = await supabase.from("order_items").insert({
     order_id: order.id,
     product_code: input.productCode,
     quiz_id: quizId,
     amount,
   });
+  if (itemError) {
+    assertTransition("order", "CREATED", "FAILED", orderTransitions);
+    await supabase.from("orders").update({ status: "FAILED" }).eq("id", order.id);
+    throw new Error(`Erro ao registrar item do pedido: ${itemError.message}`);
+  }
 
   // 6. Invoke payment provider checkout creation
   const provider = getPaymentProvider(providerName);
   const siteUrl = getSiteUrl();
 
-  const checkoutResult = await provider.createCheckout({
-    orderId: order.id,
-    orderNumber,
-    amount,
-    currency,
-    customerEmail: normalizedEmail,
-    productCode: input.productCode,
-    locale: input.locale,
-    successUrl: `${siteUrl}/${input.locale}/checkout/success?session=${input.sessionId}&order=${orderNumber}&token=${lookupToken}`,
-    cancelUrl: `${siteUrl}/${input.locale}/checkout/failed?session=${input.sessionId}&order=${orderNumber}&token=${lookupToken}`,
-  });
+  assertTransition("order", "CREATED", "PROCESSING", orderTransitions);
+  await supabase
+    .from("orders")
+    .update({ status: "PROCESSING" })
+    .eq("id", order.id)
+    .eq("status", "CREATED");
+
+  let checkoutResult: CheckoutResult;
+  try {
+    checkoutResult = await provider.createCheckout({
+      orderId: order.id,
+      orderNumber,
+      amount,
+      currency,
+      customerEmail: normalizedEmail,
+      productCode: input.productCode,
+      locale: orderLocale,
+      successUrl: `${siteUrl}/${orderLocale}/checkout/success?order=${order.id}&token=${lookupToken}`,
+      cancelUrl: `${siteUrl}/${orderLocale}/checkout/failed?order=${order.id}&token=${lookupToken}`,
+      idempotencyKey: `checkout:${order.id}`,
+    });
+  } catch (error) {
+    assertTransition("order", "PROCESSING", "FAILED", orderTransitions);
+    await supabase
+      .from("orders")
+      .update({ status: "FAILED", updated_at: new Date().toISOString() })
+      .eq("id", order.id)
+      .eq("status", "PROCESSING");
+    throw error;
+  }
 
   // 7. Record payment attempt
-  await supabase.from("payment_attempts").insert({
+  const { error: attemptError } = await supabase.from("payment_attempts").insert({
     order_id: order.id,
     provider: providerName,
     provider_attempt_id: checkoutResult.providerAttemptId,
     status: "REDIRECTED",
     checkout_url: checkoutResult.checkoutUrl,
   });
+  if (attemptError) {
+    assertTransition("order", "PROCESSING", "FAILED", orderTransitions);
+    await supabase
+      .from("orders")
+      .update({ status: "FAILED", updated_at: new Date().toISOString() })
+      .eq("id", order.id)
+      .eq("status", "PROCESSING");
+    throw new Error(`Erro ao persistir tentativa de pagamento: ${attemptError.message}`);
+  }
 
   // 8. Transition order to PENDING
   const nextStatus = "PENDING";
-  assertTransition("order", "CREATED", nextStatus, orderTransitions);
+  assertTransition("order", "PROCESSING", nextStatus, orderTransitions);
 
-  await supabase
+  const { error: pendingError } = await supabase
     .from("orders")
-    .update({ status: nextStatus, updated_at: new Date().toISOString() })
-    .eq("id", order.id);
+    .update({
+      status: nextStatus,
+      provider_checkout_id: checkoutResult.providerAttemptId,
+      expires_at: checkoutResult.expiresAt ?? null,
+      updated_at: new Date().toISOString(),
+    })
+    .eq("id", order.id)
+    .eq("status", "PROCESSING");
+  if (pendingError) {
+    throw new Error(`Erro ao ativar pedido pendente: ${pendingError.message}`);
+  }
 
   // 9. Funnel tracking
   await recordFunnelEvent({
     eventName: "checkout_initiated",
     sessionId: input.sessionId,
     quizSlug: sessionRecord.quiz_versions?.quizzes?.slug,
-    locale: input.locale as Locale,
-    market: input.market as Market,
+    locale: orderLocale,
+    market: orderMarket,
     properties: {
       amount,
       currency,
@@ -230,7 +366,7 @@ export async function createOrder(
     status: nextStatus,
     amount,
     currency,
-    market: input.market,
+    market: orderMarket,
     paymentProvider: providerName,
     customerEmail: normalizedEmail,
   };
@@ -322,7 +458,7 @@ export async function getOrderById(
     amount: order.amount,
     currency: order.currency,
     market: order.market,
-    paymentProvider: order.payment_provider as PaymentProviderName,
+    paymentProvider: order.payment_provider,
     customerEmail: order.customer_email,
   };
 }
@@ -400,7 +536,7 @@ export async function getOrderByNumber(
     amount: order.amount,
     currency: order.currency,
     market: order.market,
-    paymentProvider: order.payment_provider as PaymentProviderName,
+    paymentProvider: order.payment_provider,
     customerEmail: order.customer_email,
   };
 }

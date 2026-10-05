@@ -32,10 +32,10 @@ import { getDictionary } from "../../../lib/i18n/dictionaries";
 
 ## Supabase client usage
 
-| Context | Client | How to obtain |
-|---|---|---|
+| Context                                                    | Client                         | How to obtain                                                        |
+| ---------------------------------------------------------- | ------------------------------ | -------------------------------------------------------------------- |
 | Server Components, Route Handlers (reading session cookie) | `createSupabaseServerClient()` | `import { createSupabaseServerClient } from "@/lib/supabase/server"` |
-| Feature services, all mutations, scoring | `createSupabaseSecretClient()` | `import { createSupabaseSecretClient } from "@/lib/supabase/server"` |
+| Feature services, all mutations, scoring                   | `createSupabaseSecretClient()` | `import { createSupabaseSecretClient } from "@/lib/supabase/server"` |
 
 - **Always** use the secret client for any DB mutation.
 - Never expose the service role key or use it client-side.
@@ -159,6 +159,7 @@ if (actualBuf.length !== expectedBuf.length || !timingSafeEqual(actualBuf, expec
 ## Prices / amounts
 
 Amounts are always in **minor units** (integer cents):
+
 - BRL 12.90 → `1290`
 - USD 2.99 → `299`
 

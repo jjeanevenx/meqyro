@@ -63,7 +63,7 @@ src/app/
 └── api/                   Route Handlers (server-only, no UI)
     ├── sessions/          Quiz session lifecycle (POST create, GET, POST answers, POST complete, GET result)
     ├── checkout/          Order creation + payment provider redirect
-    ├── webhooks/          stripe/ and infinitepay/ event handlers
+    ├── webhooks/          stripe/ payment event handler
     ├── leads/             Email capture
     ├── orders/            Order status lookup
     ├── couple/            CoupleDNA invite creation and status
@@ -86,7 +86,7 @@ Each feature is a self-contained module. All files must include `import "server-
 src/features/
 ├── analytics/             Funnel event recording, property sanitization
 ├── commerce/              Payment flow: orders, fulfillment, webhooks, reconciliation
-│   └── adapters/          StripeAdapter, InfinitePayAdapter (implement PaymentProvider)
+│   └── adapters/          StripeAdapter (implement PaymentProvider)
 ├── couple/                CoupleDNA invite creation, partner linking, bilateral comparison
 ├── email/                 All transactional emails via Resend API
 ├── experiments/           Feature flags, deterministic A/B bucketing

@@ -14,7 +14,7 @@
 | F7-05 Runbook de Webhooks          | Concluído | `docs/runbooks/payment-webhooks.md` com procedimentos para diagnóstico de webhooks e reconciliação de pedidos `PAID`                |
 | F7-06 Runbook de Backup/Restore    | Concluído | `docs/runbooks/database-backup-restore.md` com instruções de dump lógico e rotina de restauração (Restore Drill)                    |
 | F7-07 Entregabilidade de E-mail    | Concluído | `docs/operations/email-deliverability.md` com registros DNS (SPF, DKIM, DMARC) e diretrizes de reputação de remetente               |
-| F7-08 Segurança de Webhooks        | Concluído | HMAC timingSafeEqual, tolerância 300s, IDs estáveis, conferência exata de moeda/valor em Stripe e InfinitePay                       |
+| F7-08 Segurança de Webhooks        | Concluído | SDK Stripe, tolerância 300s, IDs estáveis e conferência exata de moeda/valor                                                        |
 | F7-09 Proteção de Admin & Métricas | Concluído | Auth fail-closed via token/header/cookie, exclusão de sitemap, noindex/nofollow e dados reais sem PII                               |
 | F7-10 Reconciliação Operacional    | Concluído | `POST /api/cron/reconcile` protegido por `CRON_SECRET` com distributed locks em `meqyro.operational_locks`                          |
 

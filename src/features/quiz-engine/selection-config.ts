@@ -1,7 +1,4 @@
-export type QuizOrderingStrategy =
-  | "PROGRESSIVE_RAMP"
-  | "INTERLEAVED_DIMENSIONS"
-  | "SEQUENTIAL";
+export type QuizOrderingStrategy = "PROGRESSIVE_RAMP" | "INTERLEAVED_DIMENSIONS" | "SEQUENTIAL";
 
 export type DimensionQuota = Readonly<{
   total: number;

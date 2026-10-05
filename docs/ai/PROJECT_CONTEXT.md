@@ -14,15 +14,15 @@ Meqyro is a self-discovery assessment platform. Anonymous users take short psych
 
 ## The seven assessments
 
-| Slug | Name | Model | Questions | Type |
-|---|---|---|---|---|
-| `brainrank` | BrainRank | Cognitive dimensions (6) | 24 | SINGLE_CHOICE |
-| `personality-map` | Personality Map | Big Five (O/C/E/A/ES) | 40 | LIKERT |
-| `careerfit` | CareerFit | Career anchors (6) | 24 | LIKERT |
-| `moneydna` | MoneyDNA | Financial archetypes (5) | 20 | LIKERT |
-| `coupledna` | CoupleDNA | Couple dimensions (5) | 20 | LIKERT |
-| `decisiondna` | DecisionDNA | Decision styles (4) | 4 | SCENARIO |
-| `focusstyle` | FocusStyle | Focus styles (4) | 20 | LIKERT |
+| Slug              | Name            | Model                    | Questions | Type          |
+| ----------------- | --------------- | ------------------------ | --------- | ------------- |
+| `brainrank`       | BrainRank       | Cognitive dimensions (6) | 24        | SINGLE_CHOICE |
+| `personality-map` | Personality Map | Big Five (O/C/E/A/ES)    | 40        | LIKERT        |
+| `careerfit`       | CareerFit       | Career anchors (6)       | 24        | LIKERT        |
+| `moneydna`        | MoneyDNA        | Financial archetypes (5) | 20        | LIKERT        |
+| `coupledna`       | CoupleDNA       | Couple dimensions (5)    | 20        | LIKERT        |
+| `decisiondna`     | DecisionDNA     | Decision styles (4)      | 4         | SCENARIO      |
+| `focusstyle`      | FocusStyle      | Focus styles (4)         | 20        | LIKERT        |
 
 ## Languages
 
@@ -45,7 +45,7 @@ Portuguese (pt), English (en), Spanish (es), French (fr). All four must be prese
   → Premium offer / paywall
   → Checkout (/[locale]/checkout?session=...&product=...)
       → /api/checkout → price resolved server-side → provider checkout created
-      → Redirect to Stripe or InfinitePay
+      → Redirect to Stripe
   → Payment success → /[locale]/checkout/success
       → Webhook (async) confirms and fulfills the order
   → Premium result unlocked
@@ -54,17 +54,17 @@ Portuguese (pt), English (en), Spanish (es), French (fr). All four must be prese
 ## Payment providers
 
 | Market | Provider | Currency |
-|---|---|---|
-| BR | InfinitePay (PIX + credit card) | BRL |
-| US | Stripe | USD |
-| EU | Stripe | EUR |
-| GB | Stripe | GBP |
+| ------ | -------- | -------- |
+| BR     | Stripe   | BRL      |
+| US     | Stripe   | USD      |
+| EU     | Stripe   | EUR      |
+| GB     | Stripe   | GBP      |
 
-Market is determined by an explicit cookie (`meqyro_market`) or defaults to US. **Market is independent of locale** — a French-speaking user can be in Brazil and should pay via InfinitePay.
+Market is determined by an explicit cookie (`meqyro_market`) or defaults to US. **Market is independent of locale** — a French-speaking user can be in Brazil and should pay via Stripe in BRL.
 
 ## CoupleDNA special flow
 
-Person A starts the quiz → gets an invite link/code → shares with Person B → Person B completes the same quiz → bilateral comparison unlocked only after both consent. Two separate `quiz_sessions` are linked via `couple_invites` table.
+Person A starts the quiz → gets an invite link/code → shares with Person B → Person B completes the same quiz → bilateral comparison unlocked only after both complete, consent and payment is confirmed. Two separate `quiz_sessions` are linked via `couple_invites` table.
 
 ## Result access model
 
@@ -89,3 +89,7 @@ Users can request data export, deletion, or rectification via `/[locale]/privacy
 ## Referrals
 
 Users can generate shareable referral links. Referral codes are tracked on session creation and converted on order fulfillment.
+
+## Contratos do candidato de homologação
+
+Sessões novas herdam `buyer_id` apenas mediante cookie válido; não há login obrigatório. Grants premium exigem pedido FULFILLED e prazo de 24 meses. Pacotes cobrem testes posteriores do comprador. CoupleDNA exige pagamento, conclusão e autorização dos dois participantes. A entrega completa ocorre por Supabase Function com corpo de texto e anexo HTML, registrada por pedido/sessão.

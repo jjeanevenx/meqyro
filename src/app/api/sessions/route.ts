@@ -12,6 +12,7 @@ import {
 import { createRequestId } from "@/lib/observability/request-id";
 import { logEvent } from "@/lib/observability/logger";
 import type { Locale } from "@/lib/i18n/config";
+import { isMarket, marketForCountry } from "@/lib/market/market-context";
 
 const createSessionSchema = z.object({
   quizSlug: z.string().min(1),
@@ -19,6 +20,7 @@ const createSessionSchema = z.object({
   market: z.enum(["BR", "US", "EU", "GB"]).default("BR"),
   referralCode: z.string().optional(),
   inviteCode: z.string().optional(),
+  comparisonConsent: z.boolean().optional(),
 });
 
 export async function POST(request: NextRequest) {
@@ -37,8 +39,18 @@ export async function POST(request: NextRequest) {
 
     const cookieToken = request.cookies.get(anonymousSessionCookie)?.value;
 
+    const marketCookie = request.cookies.get("meqyro_market")?.value;
+    const country =
+      request.headers.get("x-vercel-ip-country") ?? request.headers.get("cf-ipcountry");
+    const resolvedMarket = isMarket(marketCookie)
+      ? marketCookie
+      : country
+        ? marketForCountry(country)
+        : parsed.data.market;
+
     const { session, token } = await startQuizSession({
       ...parsed.data,
+      market: resolvedMarket,
       existingToken: cookieToken,
     });
 

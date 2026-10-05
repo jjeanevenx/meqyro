@@ -5,7 +5,6 @@ import { getFallbackPublicQuiz } from "@/features/quiz-engine/repository";
 import { brainRankScoringV1 } from "@/features/scoring/brainrank";
 import { buildComprehensiveReport } from "@/features/results/result-service";
 import { StripeAdapter } from "@/features/commerce/adapters/stripe";
-import { InfinitePayAdapter } from "@/features/commerce/adapters/infinitepay";
 import { formatMoney } from "@/lib/market/prices";
 
 describe("Complete End-to-End Funnel Simulation (Reference: BrainRank)", () => {
@@ -40,13 +39,18 @@ describe("Complete End-to-End Funnel Simulation (Reference: BrainRank)", () => {
     expect(answers.length).toBe(24);
 
     // 6. Complete & Free Result
-    const items = quiz!.questions.map((q) => ({
-      id: q.id,
-      dimension: "PATTERN_RECOGNITION" as const,
-      difficulty: "MEDIUM" as const,
-      correctOptionId: q.options[0].id,
-    }));
-    const scoreResult = brainRankScoringV1.score(items, answers);
+    const items = quiz!.questions
+      .filter((q) => !q.memoryRecall)
+      .map((q) => ({
+        id: q.id,
+        dimension: "PATTERN_RECOGNITION" as const,
+        difficulty: "MEDIUM" as const,
+        correctOptionId: q.options[0].id,
+      }));
+    const scoreResult = brainRankScoringV1.score(
+      items,
+      answers.filter((answer) => items.some((item) => item.id === answer.questionId)),
+    );
     expect(scoreResult.overallScore).toBeGreaterThanOrEqual(0);
     expect(scoreResult.strongestDimension).toBeDefined();
 
@@ -65,43 +69,39 @@ describe("Complete End-to-End Funnel Simulation (Reference: BrainRank)", () => {
     const formattedUsd = formatMoney(usdPrice, "USD", "en");
     expect(formattedUsd).toBe("$2.90");
 
-    // 9. Checkout Creation (Test/Dev mode)
+    // 9. Providers fail closed: development must never simulate a paid checkout.
+    const previousStripeKey = process.env.STRIPE_SECRET_KEY;
+    delete process.env.STRIPE_SECRET_KEY;
     const stripe = new StripeAdapter();
-    const stripeCheckout = await stripe.createCheckout({
-      orderId: "ord_test_stripe_123",
-      orderNumber: "MQ-US-20260926-TEST1",
-      amount: usdPrice,
-      currency: "USD",
-      customerEmail: candidateEmail,
-      productCode: "BRAINRANK",
-      locale: "en",
-      successUrl: "http://localhost:3000/en/checkout/success",
-      cancelUrl: "http://localhost:3000/en/checkout/failed",
-    });
-    expect(stripeCheckout.provider).toBe("stripe");
-    expect(stripeCheckout.checkoutUrl).toBeDefined();
+    await expect(
+      stripe.createCheckout({
+        orderId: "ord_test_stripe_123",
+        orderNumber: "MQ-US-20260926-TEST1",
+        amount: usdPrice,
+        currency: "USD",
+        customerEmail: candidateEmail,
+        productCode: "BRAINRANK",
+        locale: "en",
+        successUrl: "http://localhost:3000/en/checkout/success",
+        cancelUrl: "http://localhost:3000/en/checkout/failed",
+        idempotencyKey: "checkout:ord_test_stripe_123",
+      }),
+    ).rejects.toThrow(/STRIPE_SECRET_KEY/);
 
-    const infinitepay = new InfinitePayAdapter();
-    const infCheckout = await infinitepay.createCheckout({
-      orderId: "ord_test_inf_123",
-      orderNumber: "MQ-BR-20260926-TEST2",
-      amount: brlPrice,
-      currency: "BRL",
-      customerEmail: candidateEmail,
-      productCode: "BRAINRANK",
-      locale: "pt",
-      successUrl: "http://localhost:3000/pt/checkout/success",
-      cancelUrl: "http://localhost:3000/pt/checkout/failed",
-    });
-    expect(infCheckout.provider).toBe("infinitepay");
-    expect(infCheckout.checkoutUrl).toBeDefined();
+    if (previousStripeKey) process.env.STRIPE_SECRET_KEY = previousStripeKey;
 
     // 10. Premium Report Delivery
-    const premiumReport = buildComprehensiveReport("brainrank", scoreResult as unknown as Record<string, unknown>, locale);
+    const premiumReport = buildComprehensiveReport(
+      "brainrank",
+      scoreResult as unknown as Record<string, unknown>,
+      locale,
+    );
     expect(premiumReport.executiveSummary).toBeDefined();
-    expect(premiumReport.percentileRank).toBeGreaterThanOrEqual(0);
+    expect(premiumReport.percentileRank).toBeUndefined();
     expect(premiumReport.bandLabel).toBeDefined();
     expect(premiumReport.sections.length).toBeGreaterThan(0);
-    expect(premiumReport.comparativeBenchmark.description).toContain("autoconhecimento");
+    expect(premiumReport.comparativeBenchmark.description).toContain(
+      "nem substitui avaliação profissional",
+    );
   });
 });

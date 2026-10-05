@@ -12,7 +12,11 @@ import {
 import { careerFitScoringV1, type CareerFitDimension } from "@/features/scoring/careerfit";
 import { moneyDnaScoringV1, type MoneyArchetype } from "@/features/scoring/moneydna";
 import { focusStyleScoringV1, type FocusStyleType } from "@/features/scoring/focusstyle";
-import { decisionDnaScoringV1, type DecisionDnaItem, type DecisionStyleType } from "@/features/scoring/decisiondna";
+import {
+  decisionDnaScoringV1,
+  type DecisionDnaItem,
+  type DecisionStyleType,
+} from "@/features/scoring/decisiondna";
 import { coupleDnaScoringV1, type CoupleDimension } from "@/features/scoring/coupledna";
 
 describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
@@ -23,7 +27,12 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
     const items: BrainRankItem[] = brainRankDimensions.flatMap((dim, dimIdx) => [
       { id: `br_${dimIdx}_1`, dimension: dim, difficulty: "EASY", correctOptionId: "opt_correct" },
       { id: `br_${dimIdx}_2`, dimension: dim, difficulty: "EASY", correctOptionId: "opt_correct" },
-      { id: `br_${dimIdx}_3`, dimension: dim, difficulty: "MEDIUM", correctOptionId: "opt_correct" },
+      {
+        id: `br_${dimIdx}_3`,
+        dimension: dim,
+        difficulty: "MEDIUM",
+        correctOptionId: "opt_correct",
+      },
       { id: `br_${dimIdx}_4`, dimension: dim, difficulty: "HARD", correctOptionId: "opt_correct" },
     ]);
 
@@ -94,8 +103,10 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
       // Dim 0: answers 1 EASY correct (difficulty EASY) -> 1 correct
       // Dim 1: answers 1 HARD correct (difficulty HARD) -> 1 correct
       const answers = items.map((item) => {
-        if (item.id === "br_0_1") return { questionId: item.id, optionId: "opt_correct", durationMs: 4000 };
-        if (item.id === "br_1_4") return { questionId: item.id, optionId: "opt_correct", durationMs: 4000 };
+        if (item.id === "br_0_1")
+          return { questionId: item.id, optionId: "opt_correct", durationMs: 4000 };
+        if (item.id === "br_1_4")
+          return { questionId: item.id, optionId: "opt_correct", durationMs: 4000 };
         return { questionId: item.id, optionId: "opt_wrong", durationMs: 4000 };
       });
       const res = brainRankScoringV1.score(items, answers);
@@ -234,11 +245,23 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
 
     it("returns locked state (all 0) when consent is NOT given", () => {
       const scoreA = {
-        dimensionScores: { COMMUNICATION: 80, LIFE_VALUES: 80, CONFLICT_MANAGEMENT: 80, FINANCES: 80, FUTURE_PLANS: 80 },
+        dimensionScores: {
+          COMMUNICATION: 80,
+          LIFE_VALUES: 80,
+          CONFLICT_MANAGEMENT: 80,
+          FINANCES: 80,
+          FUTURE_PLANS: 80,
+        },
         totalResponses: 20,
       };
       const scoreB = {
-        dimensionScores: { COMMUNICATION: 80, LIFE_VALUES: 80, CONFLICT_MANAGEMENT: 80, FINANCES: 80, FUTURE_PLANS: 80 },
+        dimensionScores: {
+          COMMUNICATION: 80,
+          LIFE_VALUES: 80,
+          CONFLICT_MANAGEMENT: 80,
+          FINANCES: 80,
+          FUTURE_PLANS: 80,
+        },
         totalResponses: 20,
       };
 
@@ -249,7 +272,13 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
 
     it("calculates 100% alignment when both partners give identical scores with consent", () => {
       const scoreA = {
-        dimensionScores: { COMMUNICATION: 75, LIFE_VALUES: 50, CONFLICT_MANAGEMENT: 90, FINANCES: 60, FUTURE_PLANS: 100 },
+        dimensionScores: {
+          COMMUNICATION: 75,
+          LIFE_VALUES: 50,
+          CONFLICT_MANAGEMENT: 90,
+          FINANCES: 60,
+          FUTURE_PLANS: 100,
+        },
         totalResponses: 20,
       };
       const scoreB = { ...scoreA };
@@ -264,11 +293,23 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
 
     it("correctly identifies strongest alignment and growth dialogue area", () => {
       const scoreA = {
-        dimensionScores: { COMMUNICATION: 100, LIFE_VALUES: 80, CONFLICT_MANAGEMENT: 70, FINANCES: 20, FUTURE_PLANS: 90 },
+        dimensionScores: {
+          COMMUNICATION: 100,
+          LIFE_VALUES: 80,
+          CONFLICT_MANAGEMENT: 70,
+          FINANCES: 20,
+          FUTURE_PLANS: 90,
+        },
         totalResponses: 20,
       };
       const scoreB = {
-        dimensionScores: { COMMUNICATION: 100, LIFE_VALUES: 80, CONFLICT_MANAGEMENT: 70, FINANCES: 100, FUTURE_PLANS: 90 },
+        dimensionScores: {
+          COMMUNICATION: 100,
+          LIFE_VALUES: 80,
+          CONFLICT_MANAGEMENT: 70,
+          FINANCES: 100,
+          FUTURE_PLANS: 90,
+        },
         totalResponses: 20,
       };
 
@@ -289,22 +330,42 @@ describe("Deterministic Scoring Suite — All 7 Quizzes", () => {
       {
         id: "scen_1",
         stableKey: "DD_01",
-        optionStyleMap: { opt_1_a: "ANALYTICAL", opt_1_b: "INTUITIVE", opt_1_c: "PRAGMATIC", opt_1_d: "COLLABORATIVE" },
+        optionStyleMap: {
+          opt_1_a: "ANALYTICAL",
+          opt_1_b: "INTUITIVE",
+          opt_1_c: "PRAGMATIC",
+          opt_1_d: "COLLABORATIVE",
+        },
       },
       {
         id: "scen_2",
         stableKey: "DD_02",
-        optionStyleMap: { opt_2_a: "ANALYTICAL", opt_2_b: "INTUITIVE", opt_2_c: "PRAGMATIC", opt_2_d: "COLLABORATIVE" },
+        optionStyleMap: {
+          opt_2_a: "ANALYTICAL",
+          opt_2_b: "INTUITIVE",
+          opt_2_c: "PRAGMATIC",
+          opt_2_d: "COLLABORATIVE",
+        },
       },
       {
         id: "scen_3",
         stableKey: "DD_03",
-        optionStyleMap: { opt_3_a: "ANALYTICAL", opt_3_b: "INTUITIVE", opt_3_c: "PRAGMATIC", opt_3_d: "COLLABORATIVE" },
+        optionStyleMap: {
+          opt_3_a: "ANALYTICAL",
+          opt_3_b: "INTUITIVE",
+          opt_3_c: "PRAGMATIC",
+          opt_3_d: "COLLABORATIVE",
+        },
       },
       {
         id: "scen_4",
         stableKey: "DD_04",
-        optionStyleMap: { opt_4_a: "ANALYTICAL", opt_4_b: "INTUITIVE", opt_4_c: "PRAGMATIC", opt_4_d: "COLLABORATIVE" },
+        optionStyleMap: {
+          opt_4_a: "ANALYTICAL",
+          opt_4_b: "INTUITIVE",
+          opt_4_c: "PRAGMATIC",
+          opt_4_d: "COLLABORATIVE",
+        },
       },
     ];
 

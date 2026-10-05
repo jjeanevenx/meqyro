@@ -8,15 +8,15 @@ Meqyro is a self-discovery assessment platform. Anonymous users take one or more
 
 ## The seven assessments
 
-| Slug | Name | Type | Questions |
-|---|---|---|---|
-| `brainrank` | BrainRank | SINGLE_CHOICE | 24 |
-| `personality-map` | Personality Map | LIKERT | 40 |
-| `careerfit` | CareerFit | LIKERT | 24 |
-| `moneydna` | MoneyDNA | LIKERT | 20 |
-| `coupledna` | CoupleDNA | LIKERT | 20 |
-| `decisiondna` | DecisionDNA | SCENARIO | 4 |
-| `focusstyle` | FocusStyle | LIKERT | 20 |
+| Slug              | Name            | Type          | Questions |
+| ----------------- | --------------- | ------------- | --------- |
+| `brainrank`       | BrainRank       | SINGLE_CHOICE | 24        |
+| `personality-map` | Personality Map | LIKERT        | 40        |
+| `careerfit`       | CareerFit       | LIKERT        | 24        |
+| `moneydna`        | MoneyDNA        | LIKERT        | 20        |
+| `coupledna`       | CoupleDNA       | LIKERT        | 20        |
+| `decisiondna`     | DecisionDNA     | SCENARIO      | 4         |
+| `focusstyle`      | FocusStyle      | LIKERT        | 20        |
 
 ## Languages
 
@@ -38,12 +38,12 @@ Home → Discover → Quiz landing → Quiz play
 
 ## Payment providers
 
-| Market | Provider | Currency |
-|---|---|---|
-| BR | InfinitePay (PIX + card) | BRL |
-| US | Stripe | USD |
-| EU | Stripe | EUR |
-| GB | Stripe | GBP |
+| Market | Provider                 | Currency |
+| ------ | ------------------------ | -------- |
+| BR     | InfinitePay (PIX + card) | BRL      |
+| US     | Stripe                   | USD      |
+| EU     | Stripe                   | EUR      |
+| GB     | Stripe                   | GBP      |
 
 **Market ≠ Locale.** Language does not determine payment provider.
 

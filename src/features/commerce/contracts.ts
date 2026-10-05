@@ -1,6 +1,6 @@
 import type { Market } from "@/lib/market/market-context";
 
-export type PaymentProviderName = "infinitepay" | "stripe";
+export type PaymentProviderName = "stripe";
 
 export type CheckoutInput = {
   orderId: string;
@@ -12,18 +12,22 @@ export type CheckoutInput = {
   locale: string;
   successUrl: string;
   cancelUrl: string;
+  idempotencyKey: string;
 };
 
 export type CheckoutResult = {
   provider: PaymentProviderName;
   providerAttemptId: string;
   checkoutUrl: string;
+  expiresAt?: string;
   rawResponse?: Record<string, unknown>;
 };
 
 export type PaymentLookup = {
   orderId: string;
   providerAttemptId: string;
+  orderNumber?: string;
+  providerPaymentId?: string;
 };
 
 export type PaymentStatus = {
@@ -47,6 +51,8 @@ export type VerifiedPaymentEvent = {
   status: "CONFIRMED" | "FAILED" | "REFUNDED" | "CHARGEBACK" | "IGNORED";
   amount?: number;
   currency?: string;
+  providerPaymentId?: string;
+  productCode?: string;
 };
 
 export interface PaymentProvider {
@@ -74,6 +80,6 @@ export type OrderRecord = {
   amount: number;
   currency: string;
   market: string;
-  paymentProvider: PaymentProviderName;
+  paymentProvider: string;
   customerEmail: string;
 };

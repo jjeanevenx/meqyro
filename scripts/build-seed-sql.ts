@@ -7,6 +7,7 @@ import { moneyDnaQuestions } from "../src/content/quizzes/moneydna";
 import { focusStyleQuestions } from "../src/content/quizzes/focusstyle";
 import { decisionDnaScenarios } from "../src/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "../src/content/quizzes/coupledna";
+import { memorySeedSql } from "./memory-seed";
 
 function escapeSql(str: string): string {
   return str.replace(/'/g, "''");
@@ -95,7 +96,9 @@ export function generateSeedSql(): string {
     for (const opt of q.options) {
       const scoringVal = JSON.stringify({ isCorrect: opt.isCorrect });
       const optionMetadata = JSON.stringify(opt.visual ? { visual: opt.visual } : {});
-      lines.push(`  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)`);
+      lines.push(
+        `  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)`,
+      );
       lines.push(
         `  values (v_question_id, '${opt.stableKey}', ${opt.position}, '${scoringVal}'::jsonb, '${escapeSql(optionMetadata)}'::jsonb)`,
       );
@@ -366,7 +369,7 @@ export function generateSeedSql(): string {
   lines.push("end $$;");
   lines.push("");
 
-  return lines.join("\n");
+  return lines.join("\n") + "\n" + memorySeedSql();
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

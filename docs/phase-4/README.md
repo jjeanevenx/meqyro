@@ -1,7 +1,7 @@
 # Fase 4 — Comércio e Fulfillment
 
 **Data de validação:** 26/09/2026  
-**Estado:** Concluído localmente; arquitetura desacoplada de provedores de pagamento (Stripe e InfinitePay), precificação exclusivamente server-side (zero manipulação de preços pelo cliente), webhooks assinados com processamento estritamente idempotente (tabela append-only com restrição única de provider_event_id), máquina de estados de pedidos (`CREATED -> PENDING -> PAID -> FULFILLED`), concessão automática de grants premium (`result_access_grants`), reconciliação de pedidos e páginas completas de checkout e retorno (`/[locale]/checkout`, `/success`, `/pending`, `/failed`).
+**Estado:** Concluído localmente; Stripe é o único provedor, com precificação exclusivamente server-side (zero manipulação de preços pelo cliente), webhooks assinados com processamento estritamente idempotente (tabela append-only com restrição única de provider_event_id), máquina de estados de pedidos (`CREATED -> PENDING -> PAID -> FULFILLED`), concessão automática de grants premium (`result_access_grants`), reconciliação de pedidos e páginas completas de checkout e retorno (`/[locale]/checkout`, `/success`, `/pending`, `/failed`).
 
 ## Entregas
 
@@ -9,12 +9,12 @@
 | ------------------------------------ | --------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
 | F4-01 Modelo de dados comercial      | Concluído | Migration `20260926030000_commerce_fulfillment.sql` com `orders`, `order_items`, `payment_attempts`, `payment_events`, `refunds`                  |
 | F4-02 Precificação server-side       | Concluído | Preço é resolvido exclusivamente no servidor consultando `meqyro.product_prices` aprovado. Payload do cliente não pode definir ou alterar valores |
-| F4-03 Adapters de pagamento          | Concluído | Interface `PaymentProvider` com implementações `StripeAdapter` (cartão/internacional) e `InfinitePayAdapter` (PIX/Brasil/BRL)                     |
+| F4-03 Adapter de pagamento           | Concluído | Interface `PaymentProvider` com `StripeAdapter` e métodos dinâmicos (Pix, cartões e carteiras elegíveis)                                          |
 | F4-04 Ingestão idempotente webhooks  | Concluído | Tabela `payment_events` com restrição única `(provider, provider_event_id)`. Eventos duplicados são descartados de forma segura e idempotente     |
 | F4-05 Fulfillment automático         | Concluído | `fulfillment-service.ts` concede grant `PREMIUM_REPORT` na tabela `result_access_grants` e transiciona pedido para `PAID` e `FULFILLED`           |
 | F4-06 Reconciliação e resiliência    | Concluído | `reconciliation-service.ts` detecta pedidos pagos sem fulfillment ou pendentes e executa autofix e sincronização                                  |
 | F4-07 Reembolsos rastreáveis         | Concluído | `refundOrder` registra motivo em `refunds`, revoga grant de acesso e transiciona pedido para `REFUNDED`                                           |
-| F4-08 APIs de comércio               | Concluído | `POST /api/checkout`, `POST /api/webhooks/stripe`, `POST /api/webhooks/infinitepay`, `GET /api/orders/[id]`                                       |
+| F4-08 APIs de comércio               | Concluído | `POST /api/checkout`, `POST /api/webhooks/stripe`, `GET /api/orders/[id]`                                                                         |
 | F4-09 Interface de checkout e status | Concluído | `/[locale]/checkout`, `/[locale]/checkout/success`, `/[locale]/checkout/pending`, `/[locale]/checkout/failed` estilizadas e responsivas           |
 
 ## Validação executada

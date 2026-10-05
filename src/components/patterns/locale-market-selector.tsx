@@ -82,11 +82,7 @@ export function LocaleMarketSelector({
       </button>
 
       {isOpen && (
-        <ul
-          className="locale-selector__menu"
-          role="listbox"
-          aria-label={languageLabel}
-        >
+        <ul className="locale-selector__menu" role="listbox" aria-label={languageLabel}>
           {localeOptions.map((option) => (
             <li key={option.value} role="option" aria-selected={locale === option.value}>
               <button

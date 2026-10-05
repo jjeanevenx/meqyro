@@ -1,3 +1,4 @@
+import { acknowledgeMemory } from "./memory-helper";
 import { describe, expect, it } from "vitest";
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import {
@@ -67,6 +68,7 @@ describe.skipIf(!isOnline)(
 
       for (let i = 0; i < quiz!.questions.length; i++) {
         const q = quiz!.questions[i];
+        await acknowledgeMemory(q, session.id, token);
         const opt = q.options[0];
         await saveAnswer({
           sessionId: session.id,

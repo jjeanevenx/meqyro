@@ -9,6 +9,7 @@
 **Decision:** Sessions are fully anonymous. A 256-bit random token is stored in an `HttpOnly` cookie and its SHA-256 hash is stored in the database. Optional email capture (lead capture) allows result recovery via a signed link — not account login.
 
 **Evidence:**
+
 - `src/lib/security/anonymous-session.ts`
 - `src/features/quiz-engine/session-service.ts` — `startQuizSession()` creates sessions without any user identity
 - `.env.example` — no auth provider credentials defined
@@ -26,11 +27,12 @@
 **Decision:** Market (`BR`/`US`/`EU`/`GB`) is resolved from: (1) explicit `meqyro_market` cookie, (2) country from geolocation header, (3) default `US`. Locale only controls language display.
 
 **Evidence:**
+
 - `src/lib/market/market-context.ts` — `resolveMarketContext()` with explicit comment
 - `docs/decisions/0003-pagamentos-e-grants.md`
 - `tests/unit/market-context.test.ts`
 
-**Consequences:** Checkout page shows InfinitePay/PIX badges only when `market === "BR"`, regardless of locale.
+**Consequences:** All markets use Stripe. Currency follows market; payment methods depend on account configuration, independently of locale.
 
 ---
 
@@ -43,6 +45,7 @@
 **Decision:** All scoring is computed server-side at session completion. The client submits raw answers (option IDs or Likert values) to `/api/sessions/[id]/complete`. The server loads questions, constructs scoring items, calls the pure scoring function, and stores the result.
 
 **Evidence:**
+
 - `src/features/quiz-engine/session-service.ts` — `completeQuizSession()`
 - `src/features/scoring/*.ts` — all marked `server-only` indirectly via feature imports
 - `src/features/quiz-engine/repository.ts` — `getFallbackPublicQuiz()` strips `isCorrect` and `scoringKey` from public question data
@@ -51,20 +54,15 @@
 
 ---
 
-## ADR-004 — Two payment providers, no SDK
+## ADR-004 — Stripe as the sole payment provider
 
-**Status:** Existing (confirmed by codebase)
+**Status:** Current, confirmed by source code and the product decision.
 
-**Context:** Brazilian users pay via InfinitePay (PIX/credit); international users pay via Stripe. SDKs add version lock-in and bundle weight for server-side-only code.
+**Decision:** Use hosted Stripe Checkout through the installed official SDK (22.6.2) for BR/US/EU/GB. Market determines BRL/USD/EUR/GBP independently of locale. Payment methods require account eligibility and configuration.
 
-**Decision:** Both providers are called via raw `fetch()`. A `PaymentProvider` interface in `src/features/commerce/contracts.ts` defines the contract; `StripeAdapter` and `InfinitePayAdapter` implement it.
+**Evidence:** `src/features/commerce/adapters/stripe.ts`, `src/features/commerce/contracts.ts`, `package.json`.
 
-**Evidence:**
-- `src/features/commerce/adapters/stripe.ts`
-- `src/features/commerce/adapters/infinitepay.ts`
-- `package.json` — no `stripe` or `infinitepay` packages
-
-**Consequences:** No auto-generated types from provider SDKs. Webhook verification is implemented manually using `node:crypto`. Both adapters have unit tests verifying HMAC signature logic.
+**Consequences:** Only `/api/webhooks/stripe` processes payments. The SDK verifies the raw-body signature; fulfillment validates order, amount, currency and idempotency before granting access.
 
 ---
 
@@ -77,6 +75,7 @@
 **Decision:** A single `dictionaries.ts` file exports a typed `Dictionary` object for all four locales. `getDictionary(locale)` returns the appropriate locale's strings. No dynamic imports, no i18n library.
 
 **Evidence:**
+
 - `src/lib/i18n/dictionaries.ts`
 - `src/lib/i18n/config.ts`
 - `package.json` — no next-intl, react-i18next, or similar
@@ -94,6 +93,7 @@
 **Decision:** All application tables live in the `meqyro` Postgres schema. The Supabase config exposes this schema via the API.
 
 **Evidence:**
+
 - `supabase/config.toml` — `schemas = ["public", "graphql_public", "meqyro"]`
 - `supabase/migrations/` — all `CREATE TABLE` statements use `meqyro.` prefix
 - `src/features/analytics/analytics-service.ts` — `.schema("meqyro")` call
@@ -111,6 +111,7 @@
 **Decision:** A `payment_events(provider, provider_event_id)` unique constraint prevents duplicate processing. On `23505` error (unique violation), the handler returns `{ handled: true, duplicate: true }` without error.
 
 **Evidence:**
+
 - `src/features/commerce/webhook-handler.ts` — `handleWebhook()` duplicate detection
 - `supabase/migrations/20260926030000_commerce_fulfillment.sql` — unique constraint definition
 
@@ -127,6 +128,7 @@
 **Decision:** `scripts/build-seed-sql.ts` generates `supabase/seed.sql` from the TypeScript content arrays. The seed file is committed but should not be edited manually.
 
 **Evidence:**
+
 - `scripts/build-seed-sql.ts`
 - `tests/unit/seed-builder.test.ts` — calls `generateSeedSql()` and writes the file as part of the test run
 - `supabase/seed.sql` — comment at top indicates it is generated
@@ -144,6 +146,7 @@
 **Decision:** All styling is in `src/app/globals.css` using BEM-like class naming and CSS custom properties. No Tailwind, no CSS Modules, no styled-components, no shadcn/ui.
 
 **Evidence:**
+
 - `package.json` — no UI library dependencies
 - `src/app/globals.css` — extensive custom CSS
 - Component files use plain `className` strings
@@ -151,3 +154,9 @@
 **Reason:** UNKNOWN (not documented in project decisions).
 
 **Consequences:** New components must follow the existing CSS patterns. Do not introduce a CSS framework.
+
+## ADR — comprador, comparação e entrega
+
+Usar identidade anônima de comprador herdada de sessão autenticada para grants de pacotes. Exigir conclusão, consentimentos bilaterais e pagamento na comparação CoupleDNA. Registrar entrega por pedido/sessão para abranger testes concluídos depois da compra, selecionando o grant mais recente antes de filtrar entregas pendentes.
+
+Permitir PROCESSING para FULFILLED quando o pagamento verificado chega antes de persistir o checkout; atualizações subsequentes usam estado esperado para não regredir pedido confirmado. Scoring continua exclusivamente no servidor.

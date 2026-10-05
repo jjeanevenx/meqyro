@@ -8,21 +8,38 @@ import { focusStyleQuestions } from "@/content/quizzes/focusstyle";
 import { decisionDnaScenarios } from "@/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "@/content/quizzes/coupledna";
 import { locales, type Locale } from "@/lib/i18n/config";
+import { distributeMemoryItems } from "@/features/quiz-engine/delayed-memory";
+import { memoryExercises } from "@/content/quizzes/memory-exercises";
 
 /**
  * Map of quiz slug to its actual content array and expected question count.
  */
 const quizContentMap: Record<
   string,
-  { content: readonly { stableKey: string; prompt: Record<Locale, string> }[]; expectedCount: number }
+  {
+    content: readonly { stableKey: string; prompt: Record<Locale, string> }[];
+    expectedCount: number;
+  }
 > = {
-  brainrank: { content: brainRankQuestions as never[], expectedCount: 24 },
+  brainrank: {
+    content: distributeMemoryItems(
+      brainRankQuestions.map(({ stableKey, prompt }) => ({ stableKey, prompt })),
+      memoryExercises.map((m) => ({ stableKey: m.key, prompt: m.prompt })),
+    ),
+    expectedCount: 24,
+  },
   "personality-map": { content: personalityMapQuestions as never[], expectedCount: 40 },
   careerfit: { content: careerFitQuestions as never[], expectedCount: 24 },
   moneydna: { content: moneyDnaQuestions as never[], expectedCount: 20 },
   coupledna: { content: coupleDnaQuestions as never[], expectedCount: 20 },
   decisiondna: { content: decisionDnaScenarios as never[], expectedCount: 4 },
-  focusstyle: { content: focusStyleQuestions as never[], expectedCount: 20 },
+  focusstyle: {
+    content: distributeMemoryItems(
+      focusStyleQuestions.map(({ stableKey, prompt }) => ({ stableKey, prompt })),
+      memoryExercises.map((m) => ({ stableKey: m.key, prompt: m.prompt })),
+    ),
+    expectedCount: 20,
+  },
 };
 
 describe("Content integrity — experiences.ts must match actual quiz content", () => {

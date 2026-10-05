@@ -1,5 +1,7 @@
 # Fase 0 — Descoberta técnica e protótipo
 
+> Registro histórico. A arquitetura atual usa somente Stripe para pagamentos.
+
 **Status:** concluída; pendências externas de conta/jurídico permanecem como gates  
 **Data:** 25/09/2026  
 **Corte vertical:** BrainRank PT-BR, mobile web, do início ao paywall
@@ -19,28 +21,27 @@ A Fase 0 transformou a especificação em decisões implementáveis e gates veri
 
 ## Decisões fechadas
 
-| Tema               | Decisão                                                               |
-| ------------------ | --------------------------------------------------------------------- |
-| Primeiro fluxo     | BrainRank PT-BR                                                       |
-| Superfície         | Web mobile-first; viewport de referência 390 × 844                    |
-| Resultado gratuito | Score geral, dimensão mais forte e uma interpretação curta            |
-| Conversão          | E-mail transacional antes do preview; marketing separado e desmarcado |
-| Brasil             | InfinitePay Checkout Integrado; Pix e crédito                         |
-| Internacional      | Stripe Checkout hospedado, modo `payment`                             |
-| Liberação premium  | Apenas após evento confirmado no servidor e grant persistido          |
-| Scoring            | Servidor, determinístico, versionado e reproduzível                   |
-| Retenção           | Prazos por categoria, minimização e rotina de exclusão                |
-| Publicação         | Nenhum locale entra parcialmente; gate editorial por versão           |
+| Tema               | Decisão                                                                 |
+| ------------------ | ----------------------------------------------------------------------- |
+| Primeiro fluxo     | BrainRank PT-BR                                                         |
+| Superfície         | Web mobile-first; viewport de referência 390 × 844                      |
+| Resultado gratuito | Score geral, dimensão mais forte e uma interpretação curta              |
+| Conversão          | E-mail transacional antes do preview; marketing separado e desmarcado   |
+| Brasil             | Stripe Checkout; métodos conforme configuração e elegibilidade da conta |
+| Internacional      | Stripe Checkout hospedado, modo `payment`                               |
+| Liberação premium  | Apenas após evento confirmado no servidor e grant persistido            |
+| Scoring            | Servidor, determinístico, versionado e reproduzível                     |
+| Retenção           | Prazos por categoria, minimização e rotina de exclusão                  |
+| Publicação         | Nenhum locale entra parcialmente; gate editorial por versão             |
 
 ## Gates ainda abertos
 
 Estes itens exigem acesso do responsável às contas ou validação profissional e não podem ser confirmados apenas pelo repositório:
 
-1. **InfinitePay:** conta aprovada, InfiniteTag, comportamento real de retentativas, autenticação do webhook, ambiente de teste, reembolso e chargeback.
-2. **Stripe:** conta comercial ativada, países/moedas efetivamente habilitados, conta bancária de liquidação, descriptor e método fiscal.
-3. **Fiscal/jurídico:** entidade vendedora, emissão fiscal, tratamento de IVA/VAT/sales tax e textos legais finais.
-4. **Conteúdo:** banco definitivo de questões e revisão metodológica/editorial.
-5. **Design:** seleção explícita de uma das três direções visuais antes de construir o protótipo interativo.
+1. **Stripe:** conta comercial ativada, países/moedas efetivamente habilitados, conta bancária de liquidação, descriptor e método fiscal.
+2. **Fiscal/jurídico:** entidade vendedora, emissão fiscal, tratamento de IVA/VAT/sales tax e textos legais finais.
+3. **Conteúdo:** banco definitivo de questões e revisão metodológica/editorial.
+4. **Design:** seleção explícita de uma das três direções visuais antes de construir o protótipo interativo.
 
 ## Critérios de saída da Fase 0
 

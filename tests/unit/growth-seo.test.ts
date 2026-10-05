@@ -134,8 +134,8 @@ describe("Phase 5 — Growth, SEO, Analytics & Experiments (In-Memory)", () => {
 
     it("evaluates feature flags with market context", () => {
       expect(isFeatureEnabled("enable_referrals")).toBe(true);
-      expect(isFeatureEnabled("enable_infinitepay_brazil", { market: "BR" })).toBe(true);
-      expect(isFeatureEnabled("enable_infinitepay_brazil", { market: "US" })).toBe(false);
+      expect(isFeatureEnabled("enable_stripe_payments", { market: "BR" })).toBe(true);
+      expect(isFeatureEnabled("enable_stripe_payments", { market: "US" })).toBe(true);
     });
   });
 });

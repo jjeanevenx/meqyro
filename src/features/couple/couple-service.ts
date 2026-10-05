@@ -1,299 +1,238 @@
 import "server-only";
-
 import { randomBytes } from "node:crypto";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { matchesAnonymousSessionToken } from "@/lib/security/anonymous-session";
-import { logEvent } from "@/lib/observability/logger";
-import {
-  coupleDnaScoringV1,
-  type BilateralCoupleComparison,
-  type IndividualCoupleScore,
-} from "@/features/scoring/coupledna";
+import { findPaidEntitlement } from "@/features/commerce/entitlement-service";
+import { coupleDnaScoringV1, type IndividualCoupleScore } from "@/features/scoring/coupledna";
+import type { BilateralCoupleComparison } from "@/features/scoring/coupledna";
+import type { ProtectedResultResponse } from "@/features/results/contracts";
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+type CoupleProgress = NonNullable<ProtectedResultResponse["couple"]>;
+export type CoupleState = CoupleProgress &
+  (
+    | { state: "READY"; comparison: BilateralCoupleComparison }
+    | { state: Exclude<CoupleProgress["state"], "READY"> }
+  );
+type CoupleInvite = { inviteId: string; inviteCode: string; inviteUrl: string };
 
-function generateInviteCode(): string {
-  return `CP-${randomBytes(4).toString("hex").toUpperCase()}`;
+async function authorize(sessionId: string, token: string) {
+  const { data } = await createSupabaseSecretClient()
+    .from("quiz_sessions")
+    .select("id,access_token_hash,quiz_versions!inner(quizzes!inner(slug))")
+    .eq("id", sessionId)
+    .single();
+  const record = data as unknown as {
+    access_token_hash: string;
+    quiz_versions: { quizzes: { slug: string } };
+  } | null;
+  return Boolean(
+    record &&
+    record.quiz_versions.quizzes.slug === "coupledna" &&
+    matchesAnonymousSessionToken(token, record.access_token_hash),
+  );
 }
 
 export async function createCoupleInvite(
-  initiatorSessionId: string,
-  initiatorToken: string,
+  sessionId: string,
+  token: string,
   locale = "pt",
-): Promise<{ inviteCode: string; inviteUrl: string; inviteId: string } | null> {
-  const supabase = createSupabaseSecretClient();
-
-  const { data: session, error: sessionErr } = await supabase
-    .schema("meqyro")
-    .from("quiz_sessions")
-    .select("id, access_token_hash")
-    .eq("id", initiatorSessionId)
-    .single();
-
-  if (
-    sessionErr ||
-    !session ||
-    !matchesAnonymousSessionToken(initiatorToken, session.access_token_hash)
-  ) {
-    return null;
-  }
-
-  const inviteCode = generateInviteCode();
-  const expiresAt = new Date(Date.now() + 14 * 24 * 60 * 60 * 1000).toISOString();
-
-  const { data: invite, error: inviteErr } = await supabase
-    .schema("meqyro")
+  consent = false,
+): Promise<CoupleInvite | null> {
+  if (!consent || !(await authorize(sessionId, token))) return null;
+  const db = createSupabaseSecretClient();
+  const { data: existing } = await db
     .from("couple_invites")
-    .insert({
-      invite_code: inviteCode,
-      initiator_session_id: initiatorSessionId,
-      status: "PENDING",
-      expires_at: expiresAt,
-    })
-    .select("id")
-    .single();
-
-  if (inviteErr || !invite) {
-    logEvent("error", "couple_invite_create_failed", { message: inviteErr?.message });
-    return null;
+    .select("id,invite_code,expires_at,partner_session_id")
+    .or(`initiator_session_id.eq.${sessionId},partner_session_id.eq.${sessionId}`)
+    .neq("status", "EXPIRED")
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  let invite = existing;
+  if (!invite || (!invite.partner_session_id && new Date(invite.expires_at) <= new Date())) {
+    if (invite) {
+      const { error: expireError } = await db
+        .from("couple_invites")
+        .update({ status: "EXPIRED" })
+        .eq("id", invite.id)
+        .is("partner_session_id", null);
+      if (expireError) throw expireError;
+    }
+    const { data, error } = await db
+      .from("couple_invites")
+      .insert({
+        invite_code: `CP-${randomBytes(4).toString("hex").toUpperCase()}`,
+        initiator_session_id: sessionId,
+        expires_at: new Date(Date.now() + 14 * 86400_000).toISOString(),
+        status: "PENDING",
+      })
+      .select("id,invite_code,expires_at,partner_session_id")
+      .single();
+    if (error || !data) throw new Error("Unable to create invite");
+    invite = data;
   }
-
-  // Register initiator bilateral consent
-  await supabase.schema("meqyro").from("couple_consents").insert({
-    invite_id: invite.id,
-    session_id: initiatorSessionId,
-    can_share_comparison: true,
-  });
-
-  const inviteUrl = `${SITE_URL}/${locale}/quizzes/coupledna/play?invite=${inviteCode}`;
-
-  logEvent("info", "couple_invite_created", {
-    inviteCode,
-    initiatorSessionId,
-  });
-
+  const { error } = await db.from("couple_consents").upsert(
+    {
+      invite_id: invite.id,
+      session_id: sessionId,
+      can_share_comparison: true,
+      consented_at: new Date().toISOString(),
+    },
+    { onConflict: "invite_id,session_id" },
+  );
+  if (error) throw error;
+  const language = ["pt", "en", "es", "fr"].includes(locale) ? locale : "pt";
   return {
-    inviteCode,
-    inviteUrl,
     inviteId: invite.id,
+    inviteCode: invite.invite_code,
+    inviteUrl: `${process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com"}/${language}/quizzes/coupledna/play?invite=${invite.invite_code}`,
   };
 }
 
 export async function acceptCoupleInvite(
-  inviteCode: string,
-  partnerSessionId: string,
-  partnerToken: string,
+  code: string,
+  sessionId: string,
+  token: string,
+  consent = false,
 ): Promise<{ success: boolean; inviteId: string } | null> {
-  const supabase = createSupabaseSecretClient();
-
-  const { data: session, error: sessionErr } = await supabase
-    .schema("meqyro")
-    .from("quiz_sessions")
-    .select("id, access_token_hash")
-    .eq("id", partnerSessionId)
-    .single();
-
+  if (!consent || !(await authorize(sessionId, token))) return null;
+  const db = createSupabaseSecretClient();
+  const { data: invite } = await db
+    .from("couple_invites")
+    .select("id,initiator_session_id,partner_session_id,status,expires_at")
+    .eq("invite_code", code.trim().toUpperCase())
+    .maybeSingle();
   if (
-    sessionErr ||
-    !session ||
-    !matchesAnonymousSessionToken(partnerToken, session.access_token_hash)
-  ) {
+    !invite ||
+    invite.initiator_session_id === sessionId ||
+    invite.status === "EXPIRED" ||
+    (!invite.partner_session_id && new Date(invite.expires_at) <= new Date()) ||
+    (invite.partner_session_id && invite.partner_session_id !== sessionId)
+  )
     return null;
+  if (!invite.partner_session_id) {
+    const { data, error } = await db
+      .from("couple_invites")
+      .update({ partner_session_id: sessionId, status: "ACCEPTED" })
+      .eq("id", invite.id)
+      .is("partner_session_id", null)
+      .select("id")
+      .maybeSingle();
+    if (error || !data) return null;
   }
-
-  const { data: invite, error: inviteErr } = await supabase
-    .schema("meqyro")
-    .from("couple_invites")
-    .select("id, initiator_session_id, status, expires_at")
-    .eq("invite_code", inviteCode.trim().toUpperCase())
-    .single();
-
-  if (inviteErr || !invite) {
-    return null;
-  }
-
-  if (new Date(invite.expires_at) < new Date()) {
-    return null;
-  }
-
-  // Partner cannot be the initiator
-  if (invite.initiator_session_id === partnerSessionId) {
-    return { success: true, inviteId: invite.id };
-  }
-
-  // Update invite with partner session
-  await supabase
-    .schema("meqyro")
-    .from("couple_invites")
-    .update({
-      partner_session_id: partnerSessionId,
-      status: "ACCEPTED",
-      updated_at: new Date().toISOString(),
-    })
-    .eq("id", invite.id);
-
-  // Register partner bilateral consent
-  await supabase.schema("meqyro").from("couple_consents").upsert(
+  const { error } = await db.from("couple_consents").upsert(
     {
       invite_id: invite.id,
-      session_id: partnerSessionId,
+      session_id: sessionId,
       can_share_comparison: true,
+      consented_at: new Date().toISOString(),
     },
     { onConflict: "invite_id,session_id" },
   );
-
-  logEvent("info", "couple_invite_accepted", {
-    inviteCode,
-    partnerSessionId,
-  });
-
+  if (error) throw error;
   return { success: true, inviteId: invite.id };
 }
 
-export async function getCoupleComparison(
-  inviteCode: string,
-  requestingSessionId: string,
-  requestingToken: string,
-): Promise<BilateralCoupleComparison | null> {
-  const supabase = createSupabaseSecretClient();
-
-  const { data: session, error: sessionErr } = await supabase
-    .schema("meqyro")
-    .from("quiz_sessions")
-    .select("id, access_token_hash")
-    .eq("id", requestingSessionId)
-    .single();
-
-  if (
-    sessionErr ||
-    !session ||
-    !matchesAnonymousSessionToken(requestingToken, session.access_token_hash)
-  ) {
-    return null;
-  }
-
-  const { data: invite, error: inviteErr } = await supabase
-    .schema("meqyro")
+/** Server-only; comparison requires consent, completed results AND payment. */
+export async function getCoupleState(sessionId: string, code?: string): Promise<CoupleState> {
+  const db = createSupabaseSecretClient();
+  let query = db
     .from("couple_invites")
-    .select("id, initiator_session_id, partner_session_id, status")
-    .eq("invite_code", inviteCode.trim().toUpperCase())
-    .single();
-
-  if (inviteErr || !invite) {
-    return null;
-  }
-
-  // Validate requester is a participant
-  if (
-    requestingSessionId !== invite.initiator_session_id &&
-    requestingSessionId !== invite.partner_session_id
-  ) {
-    return null;
-  }
-
-  if (!invite.partner_session_id) {
-    // Partner has not joined yet
-    return coupleDnaScoringV1.compareBilateral(
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      false,
-    );
-  }
-
-  // Check bilateral consents: both participants must have explicitly consented
-  const { data: consents } = await supabase
-    .schema("meqyro")
+    .select("id,invite_code,initiator_session_id,partner_session_id,status,expires_at")
+    .or(`initiator_session_id.eq.${sessionId},partner_session_id.eq.${sessionId}`);
+  if (code) query = query.eq("invite_code", code.trim().toUpperCase());
+  const { data: invite, error } = await query
+    .order("created_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+  if (error) throw error;
+  if (!invite) return { state: "NO_INVITE" as const, inviteCode: null, consentGiven: false };
+  const { data: consents, error: consentError } = await db
     .from("couple_consents")
-    .select("session_id, can_share_comparison")
-    .eq("invite_id", invite.id)
-    .eq("can_share_comparison", true);
-
-  const hasInitiatorConsent = consents?.some((c) => c.session_id === invite.initiator_session_id);
-  const hasPartnerConsent = consents?.some((c) => c.session_id === invite.partner_session_id);
-
-  if (!hasInitiatorConsent || !hasPartnerConsent) {
-    return coupleDnaScoringV1.compareBilateral(
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      false,
-    );
-  }
-
-  // Fetch results for both sessions
-  const { data: results } = await supabase
-    .schema("meqyro")
+    .select("session_id,can_share_comparison")
+    .eq("invite_id", invite.id);
+  if (consentError) throw consentError;
+  const consentGiven = Boolean(
+    consents?.some((row) => row.session_id === sessionId && row.can_share_comparison),
+  );
+  const base = { inviteCode: invite.invite_code as string, consentGiven };
+  if (
+    invite.status === "EXPIRED" ||
+    (!invite.partner_session_id && new Date(invite.expires_at) <= new Date())
+  )
+    return { ...base, state: "EXPIRED" as const };
+  if (!invite.partner_session_id) return { ...base, state: "WAITING_PARTNER" as const };
+  if (
+    ![invite.initiator_session_id, invite.partner_session_id].every((id) =>
+      consents?.some((row) => row.session_id === id && row.can_share_comparison),
+    )
+  )
+    return { ...base, state: "CONSENT_REQUIRED" as const };
+  const { data: results, error: resultError } = await db
     .from("results")
-    .select("session_id, score")
+    .select("session_id,score,quiz_sessions!inner(status)")
     .in("session_id", [invite.initiator_session_id, invite.partner_session_id]);
+  if (resultError) throw resultError;
+  const a = results?.find((row) => row.session_id === invite.initiator_session_id);
+  const b = results?.find((row) => row.session_id === invite.partner_session_id);
+  if (
+    !a ||
+    !b ||
+    (a.quiz_sessions as unknown as { status: string }).status !== "COMPLETED" ||
+    (b.quiz_sessions as unknown as { status: string }).status !== "COMPLETED"
+  )
+    return { ...base, state: "WAITING_RESULTS" as const };
+  if (!(await findPaidEntitlement(sessionId, "COUPLEDNA")))
+    return { ...base, state: "PAYMENT_REQUIRED" as const };
+  const comparison = coupleDnaScoringV1.compareBilateral(
+    a.score as unknown as IndividualCoupleScore,
+    b.score as unknown as IndividualCoupleScore,
+    true,
+  );
+  return { ...base, state: "READY" as const, comparison };
+}
 
-  const resultA = results?.find((r) => r.session_id === invite.initiator_session_id);
-  const resultB = results?.find((r) => r.session_id === invite.partner_session_id);
+export async function getCoupleComparison(
+  code: string,
+  sessionId: string,
+  token: string,
+): Promise<BilateralCoupleComparison | null> {
+  if (!(await authorize(sessionId, token))) return null;
+  const state = await getCoupleState(sessionId, code);
+  if (!state.inviteCode) return null;
+  return state.state === "READY"
+    ? state.comparison
+    : coupleDnaScoringV1.compareBilateral(
+        { dimensionScores: {} as IndividualCoupleScore["dimensionScores"], totalResponses: 0 },
+        { dimensionScores: {} as IndividualCoupleScore["dimensionScores"], totalResponses: 0 },
+        false,
+      );
+}
 
-  if (!resultA || !resultB) {
-    // One or both haven't completed the quiz yet
-    return coupleDnaScoringV1.compareBilateral(
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      {
-        dimensionScores: {
-          COMMUNICATION: 0,
-          LIFE_VALUES: 0,
-          CONFLICT_MANAGEMENT: 0,
-          FINANCES: 0,
-          FUTURE_PLANS: 0,
-        },
-        totalResponses: 0,
-      },
-      false,
-    );
-  }
-
-  const scoreA = resultA.score as unknown as IndividualCoupleScore;
-  const scoreB = resultB.score as unknown as IndividualCoupleScore;
-
-  return coupleDnaScoringV1.compareBilateral(scoreA, scoreB, true);
+export async function setCoupleConsent(
+  sessionId: string,
+  token: string,
+  granted: boolean,
+): Promise<boolean> {
+  if (!(await authorize(sessionId, token))) return false;
+  const state = await getCoupleState(sessionId);
+  if (!state.inviteCode) return false;
+  const db = createSupabaseSecretClient();
+  const { data: invite } = await db
+    .from("couple_invites")
+    .select("id")
+    .eq("invite_code", state.inviteCode)
+    .single();
+  if (!invite) return false;
+  const { error } = await db.from("couple_consents").upsert(
+    {
+      invite_id: invite.id,
+      session_id: sessionId,
+      can_share_comparison: granted,
+      consented_at: new Date().toISOString(),
+    },
+    { onConflict: "invite_id,session_id" },
+  );
+  if (error) throw error;
+  return true;
 }

@@ -132,8 +132,9 @@ export default async function PrivacyPolicyPage({ params }: PageProps) {
               <Clock size={20} className="text-forest" />
               <h3>Resultado e relatório premium</h3>
               <p>
-                Acesso vitalício garantido por até <strong>24 meses</strong>; registro contábil
-                preservado conforme legislação fiscal.
+                Relatório online disponível por até <strong>24 meses</strong>, com download após a
+                confirmação do pagamento; o arquivo baixado pode ser guardado pelo usuário. Registro
+                contábil preservado conforme legislação fiscal.
               </p>
             </div>
             <div className="retention-card">

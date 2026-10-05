@@ -107,8 +107,8 @@ The project has a custom dictionary system. Adding next-intl, react-i18next, or 
 
 ## Dependencies
 
-**DO NOT install a payment provider SDK (Stripe SDK, InfinitePay SDK).**  
-Both providers are called via raw `fetch()`. This is intentional to avoid SDK version lock-in and keep the bundle lean.
+**DO NOT introduce another payment provider.**
+Use the existing official Stripe SDK and StripeAdapter. Keep SDK signature verification on the server.
 
 **DO NOT install an ORM (Prisma, Drizzle, TypeORM).**  
 The Supabase client is the data access layer.

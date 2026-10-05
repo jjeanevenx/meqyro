@@ -15,6 +15,7 @@ The cookie is never accessible to JavaScript. Client components identify session
 ## Admin access
 
 `/api/admin/*` and `/[locale]/admin` are protected by the `ADMIN_API_SECRET` environment variable. The secret must be ≥ 16 characters. Accepts the token via:
+
 - `x-admin-token` header
 - `Authorization: Bearer <token>` header
 - `token` query parameter
@@ -26,6 +27,7 @@ Routes fail-closed: if `ADMIN_API_SECRET` is not set, all admin requests are rej
 ### Server-side price resolution
 
 The amount charged is **never taken from the client request**. The server resolves price from:
+
 - `product_prices` DB table (for individual quizzes)
 - `BUNDLE_PRICES` constant in `src/lib/market/prices.ts` (for bundles)
 
@@ -33,10 +35,7 @@ Any attempt to pass a `price` or `amount` in the checkout request body is ignore
 
 ### Webhook signature verification
 
-Both Stripe and InfinitePay webhooks are verified using HMAC-SHA256 before any processing:
-
-- **Stripe**: `t=<timestamp>,v1=<signature>` format; timestamps older than 300 seconds are rejected (replay attack protection); uses `timingSafeEqual`.
-- **InfinitePay**: `sha256=<signature>` header format; same constant-time comparison.
+Stripe webhooks are verified by the official SDK on the raw request body using `STRIPE_WEBHOOK_SECRET`. Signature and timestamp checks run before processing.
 
 Webhooks fail-closed: if the secret is not configured in production, all webhook requests throw immediately.
 
@@ -51,6 +50,7 @@ Premium content access requires a row in `result_access_grants` with `grant_type
 ## IDOR protection
 
 Quiz results require the session token (cookie) to access:
+
 - The session token must match the `access_token_hash` stored for that session.
 - A user cannot access another user's result by changing a session ID in the URL.
 - Recovery tokens use separate HMAC-based tokens with max-use limits.
@@ -81,14 +81,14 @@ All tables in the `meqyro` Postgres schema have RLS enabled. The application use
 
 Applied to all routes (`/:path*`):
 
-| Header | Value |
-|---|---|
-| `X-Content-Type-Options` | `nosniff` |
-| `Referrer-Policy` | `strict-origin-when-cross-origin` |
-| `Permissions-Policy` | `camera=(), microphone=(), geolocation=()` |
-| `X-Frame-Options` | `DENY` |
-| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload` |
-| `Content-Security-Policy` | `default-src 'self'; script-src 'self' 'unsafe-inline' ['unsafe-eval' in dev]; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https: http://127.0.0.1:*; frame-ancestors 'none'` |
+| Header                      | Value                                                                                                                                                                                                               |
+| --------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `X-Content-Type-Options`    | `nosniff`                                                                                                                                                                                                           |
+| `Referrer-Policy`           | `strict-origin-when-cross-origin`                                                                                                                                                                                   |
+| `Permissions-Policy`        | `camera=(), microphone=(), geolocation=()`                                                                                                                                                                          |
+| `X-Frame-Options`           | `DENY`                                                                                                                                                                                                              |
+| `Strict-Transport-Security` | `max-age=63072000; includeSubDomains; preload`                                                                                                                                                                      |
+| `Content-Security-Policy`   | `default-src 'self'; script-src 'self' 'unsafe-inline' ['unsafe-eval' in dev]; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; connect-src 'self' https: http://127.0.0.1:*; frame-ancestors 'none'` |
 
 `poweredByHeader: false` — removes the `X-Powered-By: Next.js` header.
 

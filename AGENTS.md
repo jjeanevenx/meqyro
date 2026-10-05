@@ -2,7 +2,7 @@
 
 ## Project
 
-Meqyro is a self-discovery assessment platform. Users take one or more of seven psychological/cognitive quizzes (BrainRank, Personality Map, CareerFit, MoneyDNA, CoupleDNA, DecisionDNA, FocusStyle), receive a free partial result, and may purchase a premium analytical report. The stack is Next.js 16 (App Router), TypeScript, Supabase (Postgres + RLS), and two payment providers: Stripe (international) and InfinitePay (Brazil/PIX).
+Meqyro is a self-discovery assessment platform. Users take one or more of seven psychological/cognitive quizzes (BrainRank, Personality Map, CareerFit, MoneyDNA, CoupleDNA, DecisionDNA, FocusStyle), receive a free partial result, and may purchase a premium analytical report. The stack is Next.js 16 (App Router), TypeScript, Supabase (Postgres + RLS), and Stripe as the sole payment provider for BR/US/EU/GB.
 
 ## Before making changes
 
@@ -13,19 +13,19 @@ Meqyro is a self-discovery assessment platform. Users take one or more of seven 
 
 ## Source of truth
 
-| Topic | File |
-|---|---|
-| Product & flows | `docs/ai/PROJECT_CONTEXT.md` |
-| Architecture | `docs/ai/ARCHITECTURE.md` |
-| Folder structure | `docs/ai/STRUCTURE.md` |
-| Stack & versions | `docs/ai/TECH_STACK.md` |
-| Domain & business rules | `docs/ai/DOMAIN_RULES.md` |
-| Code conventions | `docs/ai/CONVENTIONS.md` |
-| Dev workflow & commands | `docs/ai/WORKFLOWS.md` |
-| Testing | `docs/ai/TESTING.md` |
-| Security practices | `docs/ai/SECURITY.md` |
-| Prohibited actions | `docs/ai/DO_NOT_DO.md` |
-| Architecture decisions | `docs/ai/DECISIONS.md` |
+| Topic                   | File                         |
+| ----------------------- | ---------------------------- |
+| Product & flows         | `docs/ai/PROJECT_CONTEXT.md` |
+| Architecture            | `docs/ai/ARCHITECTURE.md`    |
+| Folder structure        | `docs/ai/STRUCTURE.md`       |
+| Stack & versions        | `docs/ai/TECH_STACK.md`      |
+| Domain & business rules | `docs/ai/DOMAIN_RULES.md`    |
+| Code conventions        | `docs/ai/CONVENTIONS.md`     |
+| Dev workflow & commands | `docs/ai/WORKFLOWS.md`       |
+| Testing                 | `docs/ai/TESTING.md`         |
+| Security practices      | `docs/ai/SECURITY.md`        |
+| Prohibited actions      | `docs/ai/DO_NOT_DO.md`       |
+| Architecture decisions  | `docs/ai/DECISIONS.md`       |
 
 **The source code is always more authoritative than these docs. If they conflict, investigate and report the discrepancy — do not blindly follow stale documentation.**
 
@@ -57,7 +57,8 @@ Every task must follow this sequence:
 ## Before creating something new
 
 Search for an existing:
-- service (`src/features/*/`) 
+
+- service (`src/features/*/`)
 - abstraction (`src/lib/`)
 - scoring module (`src/features/scoring/`)
 - question content (`src/content/quizzes/`)

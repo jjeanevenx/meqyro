@@ -12,6 +12,7 @@ This directory is the canonical knowledge base for AI agents working on the Meqy
 ## Compatible agents
 
 This documentation is designed for:
+
 - **Kiro** — uses `AGENTS.md` (root) + `.kiro/steering/` files
 - **GitHub Copilot** — uses `.github/copilot-instructions.md` + this directory
 - **OpenAI Codex** — uses `AGENTS.md` (root) as primary context
@@ -20,19 +21,19 @@ This documentation is designed for:
 
 ## Navigation
 
-| Question | Document |
-|---|---|
-| What is this project and how does it work? | [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md) |
-| How is the code structured architecturally? | [`ARCHITECTURE.md`](./ARCHITECTURE.md) |
-| Where do I put this type of file? | [`STRUCTURE.md`](./STRUCTURE.md) |
-| Which libraries and versions are in use? | [`TECH_STACK.md`](./TECH_STACK.md) |
-| What are the business/domain rules? | [`DOMAIN_RULES.md`](./DOMAIN_RULES.md) |
-| How should I write code in this project? | [`CONVENTIONS.md`](./CONVENTIONS.md) |
-| How do I build, run, and test locally? | [`WORKFLOWS.md`](./WORKFLOWS.md) |
-| How are tests structured and run? | [`TESTING.md`](./TESTING.md) |
-| What security constraints apply? | [`SECURITY.md`](./SECURITY.md) |
-| What must I never do? | [`DO_NOT_DO.md`](./DO_NOT_DO.md) |
-| Why were key decisions made? | [`DECISIONS.md`](./DECISIONS.md) |
+| Question                                    | Document                                     |
+| ------------------------------------------- | -------------------------------------------- |
+| What is this project and how does it work?  | [`PROJECT_CONTEXT.md`](./PROJECT_CONTEXT.md) |
+| How is the code structured architecturally? | [`ARCHITECTURE.md`](./ARCHITECTURE.md)       |
+| Where do I put this type of file?           | [`STRUCTURE.md`](./STRUCTURE.md)             |
+| Which libraries and versions are in use?    | [`TECH_STACK.md`](./TECH_STACK.md)           |
+| What are the business/domain rules?         | [`DOMAIN_RULES.md`](./DOMAIN_RULES.md)       |
+| How should I write code in this project?    | [`CONVENTIONS.md`](./CONVENTIONS.md)         |
+| How do I build, run, and test locally?      | [`WORKFLOWS.md`](./WORKFLOWS.md)             |
+| How are tests structured and run?           | [`TESTING.md`](./TESTING.md)                 |
+| What security constraints apply?            | [`SECURITY.md`](./SECURITY.md)               |
+| What must I never do?                       | [`DO_NOT_DO.md`](./DO_NOT_DO.md)             |
+| Why were key decisions made?                | [`DECISIONS.md`](./DECISIONS.md)             |
 
 ## Freshness policy
 

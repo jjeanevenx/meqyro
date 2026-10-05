@@ -448,11 +448,7 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
       <header className="quiz-landing-header">
-        <Link
-          href={`/${locale}`}
-          className="quiz-landing-back"
-          aria-label={backLabel}
-        >
+        <Link href={`/${locale}`} className="quiz-landing-back" aria-label={backLabel}>
           <ArrowLeft size={18} />
           <span>MEQYRO</span>
         </Link>

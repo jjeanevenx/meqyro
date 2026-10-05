@@ -6,6 +6,7 @@ import {
   completeQuizSession,
 } from "@/features/quiz-engine/session-service";
 import { isSupabaseAvailable } from "./db-check";
+import { acknowledgeMemory } from "./memory-helper";
 
 const isOnline = await isSupabaseAvailable();
 
@@ -42,6 +43,7 @@ describe.skipIf(!isOnline)(
         // 3. Answer all questions sequentially
         for (let i = 0; i < quiz!.questions.length; i++) {
           const q = quiz!.questions[i];
+          await acknowledgeMemory(q, session.id, token);
           const payload: {
             sessionId: string;
             token: string;

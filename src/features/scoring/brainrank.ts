@@ -44,13 +44,15 @@ function scoreBrainRank(
   items: readonly BrainRankItem[],
   submittedAnswers: Parameters<typeof indexUniqueAnswers>[0],
 ): BrainRankResult {
-  if (items.length !== 24) {
-    throw new InvalidQuizSubmissionError("BrainRank v1.0 requires exactly 24 items");
+  if (items.length !== 24 && items.length !== 21) {
+    throw new InvalidQuizSubmissionError(
+      "BrainRank requires 24 original items or 21 with separate recall exercises",
+    );
   }
 
   const answers = indexUniqueAnswers(submittedAnswers);
   if (answers.size !== items.length) {
-    throw new InvalidQuizSubmissionError("BrainRank v1.0 requires 24 unique answers");
+    throw new InvalidQuizSubmissionError(`BrainRank requires ${items.length} unique answers`);
   }
 
   const itemIds = new Set(items.map((item) => item.id));
@@ -83,7 +85,10 @@ function scoreBrainRank(
   const dimensionScores = Object.fromEntries(
     brainRankDimensions.map((dimension) => [
       dimension,
-      Math.round((100 * correctByDimension[dimension]) / 4),
+      Math.round(
+        (100 * correctByDimension[dimension]) /
+          items.filter((item) => item.dimension === dimension).length,
+      ) || 0,
     ]),
   ) as Record<BrainRankDimension, number>;
   const highestScore = Math.max(...Object.values(dimensionScores));
@@ -111,7 +116,7 @@ function scoreBrainRank(
     quizVersion: "1.0",
     scoringVersion: "1.0",
     rawCorrect,
-    overallScore: Math.round((1_000 * rawCorrect) / 24),
+    overallScore: Math.round((1_000 * rawCorrect) / items.length),
     dimensionScores,
     strongestDimension: candidates[0],
     tieBreak,

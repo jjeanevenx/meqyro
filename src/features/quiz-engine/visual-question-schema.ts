@@ -32,12 +32,24 @@ export function isVisualScene(value: unknown): value is VisualScene {
 export function isVisualStimulus(value: unknown): value is VisualStimulus {
   if (!isRecord(value)) return false;
   if (value.kind === "sequence") {
-    return Array.isArray(value.items) && value.items.length >= 2 && value.items.every((item) => item === null || isVisualScene(item));
+    return (
+      Array.isArray(value.items) &&
+      value.items.length >= 2 &&
+      value.items.every((item) => item === null || isVisualScene(item))
+    );
   }
   if (value.kind === "matrix") {
     if (!Array.isArray(value.rows) || value.rows.length < 2) return false;
     const width = Array.isArray(value.rows[0]) ? value.rows[0].length : 0;
-    return width >= 2 && value.rows.every((row) => Array.isArray(row) && row.length === width && row.every((cell) => cell === null || isVisualScene(cell)));
+    return (
+      width >= 2 &&
+      value.rows.every(
+        (row) =>
+          Array.isArray(row) &&
+          row.length === width &&
+          row.every((cell) => cell === null || isVisualScene(cell)),
+      )
+    );
   }
   return value.kind === "group" && isVisualScene(value.scene);
 }
@@ -49,7 +61,8 @@ export function assertVisualQuestion(input: {
   options: readonly { visual?: unknown }[];
 }) {
   if (input.kind !== "VISUAL_CHOICE") return;
-  if (!isVisualStimulus(input.stimulus)) throw new Error(`Invalid visual stimulus for ${input.stableKey}`);
+  if (!isVisualStimulus(input.stimulus))
+    throw new Error(`Invalid visual stimulus for ${input.stableKey}`);
   if (input.options.length < 2 || input.options.some((option) => !isVisualScene(option.visual))) {
     throw new Error(`Invalid visual options for ${input.stableKey}`);
   }

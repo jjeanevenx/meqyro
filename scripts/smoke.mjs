@@ -1,5 +1,6 @@
 import { spawn } from "node:child_process";
 import process from "node:process";
+import { fileURLToPath } from "node:url";
 
 const port = process.env.SMOKE_PORT ?? "3100";
 const baseUrl = process.env.SMOKE_BASE_URL ?? `http://127.0.0.1:${port}`;
@@ -7,7 +8,7 @@ const nextBin = new URL("../node_modules/next/dist/bin/next", import.meta.url);
 const adminSecret = process.env.ADMIN_API_SECRET ?? "admin-super-secure-secret-token-meqyro-v1";
 const server = process.env.SMOKE_BASE_URL
   ? null
-  : spawn(process.execPath, [nextBin.pathname.slice(1), "start", "-p", port], {
+  : spawn(process.execPath, [fileURLToPath(nextBin), "start", "-p", port], {
       cwd: new URL("..", import.meta.url),
       stdio: ["ignore", "pipe", "pipe"],
       env: {
@@ -30,25 +31,28 @@ async function waitUntilReady() {
 }
 
 async function verify(path, expected, options = {}) {
+  const displayPath = path.split("?")[0];
   const headers = options.headers ?? {};
   const response = await fetch(`${baseUrl}${path}`, { redirect: "manual", headers });
   const body = await response.text();
   if (!response.ok || !body.includes(expected)) {
-    throw new Error(`${path} failed: ${response.status}; expected ${JSON.stringify(expected)}`);
+    throw new Error(
+      `${displayPath} failed: ${response.status}; expected ${JSON.stringify(expected)}`,
+    );
   }
-  console.log(`PASS ${path} (${response.status})`);
+  console.log(`PASS ${displayPath} (${response.status})`);
 }
 
 try {
   await waitUntilReady();
   await verify("/api/health", '"status":"ok"');
-  await verify("/pt", "Descubra mais sobre você");
-  await verify("/en", "Discover more about you");
-  await verify("/es", "Descubre más sobre ti");
-  await verify("/fr", "Découvrez-en davantage sur vous");
+  await verify("/pt", "Entenda como você pensa.");
+  await verify("/en", "Understand how you think.");
+  await verify("/es", "Entiende cómo piensas.");
+  await verify("/fr", "Comprenez comment vous pensez.");
 
   // Catalog and Landing
-  await verify("/pt/discover", "Catálogo");
+  await verify("/pt/discover", "Escolha uma experiência");
   await verify("/pt/quizzes/brainrank", "BrainRank");
   await verify("/en/quizzes/personality-map", "Personality Map");
   await verify("/pt/quizzes/careerfit", "CareerFit");

@@ -1,6 +1,16 @@
 export const sessionStates = ["CREATED", "IN_PROGRESS", "COMPLETED", "EXPIRED"] as const;
 export const attemptStates = ["ACTIVE", "COMPLETED", "ABANDONED", "EXPIRED"] as const;
-export const orderStates = ["CREATED", "PENDING", "PAID", "FAILED", "REFUNDED"] as const;
+export const orderStates = [
+  "CREATED",
+  "PROCESSING",
+  "PENDING",
+  "PAID",
+  "FULFILLED",
+  "FAILED",
+  "CANCELLED",
+  "EXPIRED",
+  "REFUNDED",
+] as const;
 export const eventStates = ["RECEIVED", "VERIFIED", "PROCESSED", "REJECTED"] as const;
 export const grantStates = ["PENDING", "ACTIVE", "REVOKED"] as const;
 
@@ -25,10 +35,15 @@ export const attemptTransitions: TransitionMap<AttemptState> = {
   EXPIRED: [],
 };
 export const orderTransitions: TransitionMap<OrderState> = {
-  CREATED: ["PENDING", "FAILED"],
-  PENDING: ["PAID", "FAILED"],
-  PAID: ["REFUNDED"],
+  CREATED: ["PROCESSING", "FAILED", "CANCELLED"],
+  // A verified payment can arrive before checkout creation finishes persisting.
+  PROCESSING: ["PENDING", "FULFILLED", "FAILED", "CANCELLED"],
+  PENDING: ["PAID", "FULFILLED", "FAILED", "CANCELLED", "EXPIRED"],
+  PAID: ["FULFILLED", "REFUNDED"],
+  FULFILLED: ["REFUNDED"],
   FAILED: [],
+  CANCELLED: ["FULFILLED"],
+  EXPIRED: [],
   REFUNDED: [],
 };
 export const eventTransitions: TransitionMap<EventState> = {

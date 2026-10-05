@@ -53,7 +53,7 @@ export function LikertScaleRenderer({
   };
 
   return (
-    <div className="likert-group" role="radiogroup" aria-label="Escala de concordância">
+    <div className="likert-group" role="radiogroup" aria-labelledby="quiz-question-heading">
       {values.map((val, idx) => {
         const isSelected = selectedValue === val;
         const labelText = labels[idx];

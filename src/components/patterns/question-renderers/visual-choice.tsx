@@ -50,7 +50,13 @@ function Shape({ element }: { element: VisualElement }) {
       break;
     case "arrow":
       graphic = (
-        <g fill="none" stroke="currentColor" strokeWidth="5" strokeLinecap="round" strokeLinejoin="round">
+        <g
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <path d="M50 78V22" />
           <path d="m32 40 18-18 18 18" />
         </g>
@@ -63,7 +69,14 @@ function Shape({ element }: { element: VisualElement }) {
       graphic = <polygon points="50,20 80,50 50,80 20,50" {...shared} />;
       break;
     default: {
-      const sides = element.shape === "triangle" ? 3 : element.shape === "pentagon" ? 5 : element.shape === "hexagon" ? 6 : 8;
+      const sides =
+        element.shape === "triangle"
+          ? 3
+          : element.shape === "pentagon"
+            ? 5
+            : element.shape === "hexagon"
+              ? 6
+              : 8;
       graphic = <polygon points={polygonPoints(sides)} {...shared} />;
     }
   }
@@ -79,21 +92,50 @@ function Shape({ element }: { element: VisualElement }) {
   return (
     <g transform={transform} opacity={element.opacity ?? 1}>
       {graphic}
-      {marker ? <circle cx={marker[0]} cy={marker[1]} r="5" fill="var(--mint-strong, #10b981)" stroke="white" strokeWidth="2" /> : null}
+      {marker ? (
+        <circle
+          cx={marker[0]}
+          cy={marker[1]}
+          r="5"
+          fill="var(--mint-strong, #10b981)"
+          stroke="white"
+          strokeWidth="2"
+        />
+      ) : null}
     </g>
   );
 }
 
-export function VisualSceneSvg({ scene, className = "", viewBox = "0 0 100 100" }: { scene: VisualScene; className?: string; viewBox?: string }) {
+export function VisualSceneSvg({
+  scene,
+  className = "",
+  viewBox = "0 0 100 100",
+}: {
+  scene: VisualScene;
+  className?: string;
+  viewBox?: string;
+}) {
   return (
-    <svg className={className} viewBox={viewBox} preserveAspectRatio="xMidYMid meet" aria-hidden="true" focusable="false">
-      {scene.elements.map((element, index) => <Shape key={`${element.shape}-${index}`} element={element} />)}
+    <svg
+      className={className}
+      viewBox={viewBox}
+      preserveAspectRatio="xMidYMid meet"
+      aria-hidden="true"
+      focusable="false"
+    >
+      {scene.elements.map((element, index) => (
+        <Shape key={`${element.shape}-${index}`} element={element} />
+      ))}
     </svg>
   );
 }
 
 function MissingCell() {
-  return <span className="visual-missing" aria-hidden="true">?</span>;
+  return (
+    <span className="visual-missing" aria-hidden="true">
+      ?
+    </span>
+  );
 }
 
 export function VisualStimulusView({ stimulus }: { stimulus: VisualStimulus }) {
@@ -105,7 +147,11 @@ export function VisualStimulusView({ stimulus }: { stimulus: VisualStimulus }) {
             <div className={`visual-cell ${scene ? "" : "visual-cell--missing"}`}>
               {scene ? <VisualSceneSvg scene={scene} /> : <MissingCell />}
             </div>
-            {index < stimulus.items.length - 1 ? <span className="visual-sequence__connector" aria-hidden="true">→</span> : null}
+            {index < stimulus.items.length - 1 ? (
+              <span className="visual-sequence__connector" aria-hidden="true">
+                →
+              </span>
+            ) : null}
           </div>
         ))}
       </div>
@@ -115,12 +161,22 @@ export function VisualStimulusView({ stimulus }: { stimulus: VisualStimulus }) {
   if (stimulus.kind === "matrix") {
     const columns = stimulus.rows[0]?.length ?? 1;
     return (
-      <div className="visual-stimulus visual-matrix" style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }} role="img" aria-label="Visual matrix with one missing cell">
-        {stimulus.rows.flatMap((row, rowIndex) => row.map((scene, columnIndex) => (
-          <div className={`visual-cell visual-matrix__cell ${scene ? "" : "visual-cell--missing"}`} key={`${rowIndex}-${columnIndex}`}>
-            {scene ? <VisualSceneSvg scene={scene} /> : <MissingCell />}
-          </div>
-        )))}
+      <div
+        className="visual-stimulus visual-matrix"
+        style={{ gridTemplateColumns: `repeat(${columns}, 1fr)` }}
+        role="img"
+        aria-label="Visual matrix with one missing cell"
+      >
+        {stimulus.rows.flatMap((row, rowIndex) =>
+          row.map((scene, columnIndex) => (
+            <div
+              className={`visual-cell visual-matrix__cell ${scene ? "" : "visual-cell--missing"}`}
+              key={`${rowIndex}-${columnIndex}`}
+            >
+              {scene ? <VisualSceneSvg scene={scene} /> : <MissingCell />}
+            </div>
+          )),
+        )}
       </div>
     );
   }
@@ -132,10 +188,21 @@ export function VisualStimulusView({ stimulus }: { stimulus: VisualStimulus }) {
   );
 }
 
-export function VisualChoiceRenderer({ stimulus, options, selectedOptionId, onSelect, disabled = false }: VisualChoiceProps) {
+export function VisualChoiceRenderer({
+  stimulus,
+  options,
+  selectedOptionId,
+  onSelect,
+  disabled = false,
+}: VisualChoiceProps) {
   const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (disabled) return;
-    const direction = event.key === "ArrowRight" || event.key === "ArrowDown" ? 1 : event.key === "ArrowLeft" || event.key === "ArrowUp" ? -1 : 0;
+    const direction =
+      event.key === "ArrowRight" || event.key === "ArrowDown"
+        ? 1
+        : event.key === "ArrowLeft" || event.key === "ArrowUp"
+          ? -1
+          : 0;
     if (direction) {
       event.preventDefault();
       const nextIndex = (index + direction + options.length) % options.length;
@@ -150,7 +217,7 @@ export function VisualChoiceRenderer({ stimulus, options, selectedOptionId, onSe
   return (
     <div className="visual-question">
       <VisualStimulusView stimulus={stimulus} />
-      <div className="visual-answer-grid" role="radiogroup" aria-label="Opções de resposta">
+      <div className="visual-answer-grid" role="radiogroup" aria-labelledby="quiz-question-heading">
         {options.map((option, index) => {
           const selected = selectedOptionId === option.id;
           return (
@@ -167,8 +234,12 @@ export function VisualChoiceRenderer({ stimulus, options, selectedOptionId, onSe
               onClick={() => onSelect(option.id)}
               onKeyDown={(event) => handleKeyDown(event, index)}
             >
-              <span className="visual-option__letter" aria-hidden="true">{String.fromCharCode(65 + index)}</span>
-              {option.visual ? <VisualSceneSvg scene={option.visual} className="visual-option__figure" /> : null}
+              <span className="visual-option__letter" aria-hidden="true">
+                {String.fromCharCode(65 + index)}
+              </span>
+              {option.visual ? (
+                <VisualSceneSvg scene={option.visual} className="visual-option__figure" />
+              ) : null}
               <span className="sr-only">{option.label}</span>
             </button>
           );

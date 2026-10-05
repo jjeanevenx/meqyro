@@ -5,7 +5,7 @@
 
 ## Decisão
 
-Preço, moeda, produto e provedor são resolvidos no servidor. Redirects são apenas navegação. Eventos de pagamento passam por verificação, conferência e idempotência; InfinitePay exige também `payment_check`. O acesso premium é representado por `result_access_grants`.
+Preço, moeda e produto são resolvidos no servidor. A Stripe é o único provedor e usa Checkout hospedado com métodos de pagamento dinâmicos. Redirects são apenas navegação; eventos passam por assinatura, conferência e idempotência. O acesso premium é representado por `result_access_grants`.
 
 ## Consequência
 

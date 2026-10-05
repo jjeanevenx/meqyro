@@ -1,6 +1,7 @@
 import "server-only";
 
 import { timingSafeEqual } from "node:crypto";
+import { assertTransition, sessionTransitions, type SessionState } from "@/lib/domain/states";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import {
   createAnonymousSessionToken,
@@ -26,8 +27,13 @@ import { recordReferralClick } from "@/features/referrals/referral-service";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicQuestion, PublicOption, QuestionKind } from "./contracts";
 import { isVisualScene, isVisualStimulus } from "./visual-question-schema";
-import { selectQuestionsForAttempt, type CandidateQuestion } from "./selection-engine";
+import {
+  selectQuestionsForAttempt,
+  type CandidateQuestion,
+  type SelectedQuestionItem,
+} from "./selection-engine";
 import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
+import { attachMemoryCues, distributeMemoryItems } from "./delayed-memory";
 
 export class SessionNotFoundError extends Error {
   constructor(message = "Session not found or expired") {
@@ -56,6 +62,7 @@ export type StartQuizSessionInput = {
   market: string;
   referralCode?: string;
   inviteCode?: string;
+  comparisonConsent?: boolean;
   existingToken?: string;
   seed?: string;
 };
@@ -65,8 +72,38 @@ export async function startQuizSession(
 ): Promise<{ session: ActiveSession; token: string }> {
   const supabase = createSupabaseSecretClient();
 
-  // If client provided an existing token, try to resume active attempt for this quiz
+  let buyerId: string | undefined;
   if (input.existingToken) {
+    const { data: owner } = await supabase
+      .from("quiz_sessions")
+      .select("buyer_id")
+      .eq("access_token_hash", hashAnonymousSessionToken(input.existingToken))
+      .gt("expires_at", new Date().toISOString())
+      .limit(1)
+      .maybeSingle();
+    buyerId = owner?.buyer_id;
+  }
+  let coupleInvite: { id: string; initiator_session_id: string } | null = null;
+  if (input.inviteCode) {
+    if (input.quizSlug !== "coupledna" || input.comparisonConsent !== true)
+      throw new Error("Explicit comparison consent required");
+    const { data: invite } = await supabase
+      .from("couple_invites")
+      .select("id,initiator_session_id,partner_session_id,status,expires_at")
+      .eq("invite_code", input.inviteCode.trim().toUpperCase())
+      .maybeSingle();
+    if (
+      !invite ||
+      invite.status !== "PENDING" ||
+      invite.partner_session_id ||
+      new Date(invite.expires_at) <= new Date()
+    )
+      throw new Error("Invite unavailable or expired");
+    coupleInvite = invite;
+  }
+
+  // If client provided an existing token, try to resume active attempt for this quiz
+  if (input.existingToken && !input.inviteCode) {
     try {
       const existing = await getActiveSessionByToken(input.existingToken, input.quizSlug);
       if (existing) {
@@ -98,11 +135,30 @@ export async function startQuizSession(
 
   const rawVersions = quiz.quiz_versions as unknown as VersionRecord | VersionRecord[];
   const versions = Array.isArray(rawVersions) ? rawVersions : [rawVersions];
-  const activeVersion =
+  let activeVersion =
     versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED") ?? versions[0];
 
   if (!activeVersion) {
     throw new SessionNotFoundError(`No active version for ${input.quizSlug}`);
+  }
+  if (coupleInvite) {
+    const { data: original } = await supabase
+      .from("quiz_sessions")
+      .select("quiz_version_id,quiz_version,scoring_version,access_token_hash")
+      .eq("id", coupleInvite.initiator_session_id)
+      .single();
+    if (
+      !original ||
+      (input.existingToken &&
+        matchesAnonymousSessionToken(input.existingToken, original.access_token_hash))
+    )
+      throw new Error("Use a separate participant session");
+    activeVersion = {
+      id: original.quiz_version_id,
+      version: original.quiz_version,
+      scoring_version: original.scoring_version,
+      status: "PUBLISHED",
+    };
   }
 
   const token = createAnonymousSessionToken();
@@ -122,9 +178,10 @@ export async function startQuizSession(
       current_position: 1,
       expires_at: expiresAt,
       referral_code: input.referralCode ?? null,
+      ...(buyerId ? { buyer_id: buyerId } : {}),
     })
     .select(
-      "id, quiz_version_id, quiz_version, scoring_version, locale, market, status, current_position, expires_at",
+      "id, quiz_version_id, quiz_version, scoring_version, locale, market, status, current_position, memory_exposures, expires_at",
     )
     .single();
 
@@ -135,14 +192,9 @@ export async function startQuizSession(
   // --- Dynamic Question Selection & Persistence ---
   let selectedSaved = false;
 
-  if (input.inviteCode) {
+  if (coupleInvite) {
     // Bilateral CoupleDNA session: partner mirrors initiator's exact question set & positions
-    const formattedInvite = input.inviteCode.trim().toUpperCase();
-    const { data: invite } = await supabase
-      .from("couple_invites")
-      .select("id, initiator_session_id")
-      .eq("invite_code", formattedInvite)
-      .maybeSingle();
+    const invite = coupleInvite;
 
     if (invite?.initiator_session_id) {
       const { data: initiatorQuestions } = await supabase
@@ -160,14 +212,19 @@ export async function startQuizSession(
         await supabase.from("quiz_session_questions").insert(partnerRows);
 
         // Update invite and record partner consent
-        await supabase
+        const { data: claimed, error: claimError } = await supabase
           .from("couple_invites")
           .update({
             partner_session_id: session.id,
             status: "ACCEPTED",
             updated_at: new Date().toISOString(),
           })
-          .eq("id", invite.id);
+          .eq("id", invite.id)
+          .is("partner_session_id", null)
+          .eq("status", "PENDING")
+          .select("id")
+          .maybeSingle();
+        if (claimError || !claimed) throw new Error("Invite already accepted");
 
         await supabase.from("couple_consents").upsert(
           {
@@ -186,7 +243,9 @@ export async function startQuizSession(
   if (!selectedSaved) {
     const { data: candidates } = await supabase
       .from("questions")
-      .select("id, stable_key, position, kind, scoring_key, metadata, active, options(id, stable_key, position)")
+      .select(
+        "id, stable_key, position, kind, scoring_key, metadata, active, options(id, stable_key, position)",
+      )
       .eq("quiz_version_id", activeVersion.id)
       .eq("active", true)
       .order("position", { ascending: true });
@@ -209,13 +268,35 @@ export async function startQuizSession(
           : [],
       }));
 
-      const selected = config
-        ? selectQuestionsForAttempt(candidateList, config, input.seed ?? session.id)
-        : candidateList.slice(0, 24);
+      const memoryCandidates = candidateList
+        .filter((q) => q.scoringKey.dimension === "DELAYED_MEMORY")
+        .sort((a, b) => a.stableKey.localeCompare(b.stableKey));
+      const coreCandidates = candidateList.filter(
+        (q) => q.scoringKey.dimension !== "DELAYED_MEMORY",
+      );
+      const coreSelected: SelectedQuestionItem[] = config
+        ? selectQuestionsForAttempt(coreCandidates, config, input.seed ?? session.id)
+        : coreCandidates.slice(0, 24).map((q, index) => ({
+            questionId: q.id,
+            stableKey: q.stableKey,
+            position: index + 1,
+            dimension: String(q.scoringKey.dimension ?? ""),
+          }));
+      const selected = memoryCandidates.length
+        ? distributeMemoryItems(
+            coreSelected,
+            memoryCandidates.map((q) => ({
+              questionId: q.id,
+              stableKey: q.stableKey,
+              position: 0,
+              dimension: "DELAYED_MEMORY",
+            })),
+          )
+        : coreSelected;
 
       const rowsToInsert = selected.map((q, idx) => ({
         session_id: session.id,
-        question_id: "questionId" in q ? q.questionId : (q as { id: string }).id,
+        question_id: q.questionId,
         position: idx + 1,
       }));
 
@@ -252,6 +333,7 @@ export async function startQuizSession(
       market: session.market,
       status: session.status,
       currentPosition: session.current_position,
+      memorySeen: session.memory_exposures ?? [],
       expiresAt: session.expires_at,
       answers: {},
     },
@@ -279,7 +361,8 @@ export async function getSessionQuestions(
 
   const { data: questionsData, error: qError } = await supabase
     .from("questions")
-    .select(`
+    .select(
+      `
       id,
       stable_key,
       position,
@@ -293,7 +376,8 @@ export async function getSessionQuestions(
         metadata,
         option_translations(locale, label, image_alt)
       )
-    `)
+    `,
+    )
     .in("id", questionIds);
 
   if (qError || !questionsData) {
@@ -302,7 +386,7 @@ export async function getSessionQuestions(
 
   const questionsMap = new Map(questionsData.map((q) => [q.id, q]));
 
-  return sessionQuestions
+  const publicQuestions = sessionQuestions
     .map((sq) => {
       const q = questionsMap.get(sq.question_id);
       if (!q) return null;
@@ -320,7 +404,9 @@ export async function getSessionQuestions(
         .slice()
         .sort((a, b) => a.position - b.position)
         .map((opt) => {
-          const optTransList = Array.isArray(opt.option_translations) ? opt.option_translations : [];
+          const optTransList = Array.isArray(opt.option_translations)
+            ? opt.option_translations
+            : [];
           const optTrans = optTransList.find((t) => t.locale === locale) ?? optTransList[0];
 
           return {
@@ -341,6 +427,17 @@ export async function getSessionQuestions(
         prompt: translation?.prompt ?? q.stable_key,
         accessibilityText: translation?.accessibility_text ?? null,
         clue,
+        ...(q.metadata &&
+        typeof q.metadata === "object" &&
+        q.metadata.memoryCue &&
+        typeof q.metadata.memoryCue === "object"
+          ? {
+              memoryRecall: {
+                id: q.stable_key,
+                cue: String((q.metadata.memoryCue as Record<string, unknown>)[locale] ?? ""),
+              },
+            }
+          : {}),
         visualType:
           typeof q.metadata?.visualType === "string"
             ? (q.metadata.visualType as PublicQuestion["visualType"])
@@ -351,6 +448,7 @@ export async function getSessionQuestions(
       return publicQuestion;
     })
     .filter((q): q is PublicQuestion => q !== null);
+  return attachMemoryCues(publicQuestions);
 }
 
 export async function getActiveSessionByToken(
@@ -362,7 +460,8 @@ export async function getActiveSessionByToken(
 
   const { data: sessions, error } = await supabase
     .from("quiz_sessions")
-    .select(`
+    .select(
+      `
       id,
       quiz_version_id,
       quiz_version,
@@ -371,10 +470,12 @@ export async function getActiveSessionByToken(
       market,
       status,
       access_token_hash,
-      current_position,
+      current_position, memory_exposures,
       expires_at,
+      memory_exposures,
       quizzes:quiz_versions(quizzes(slug))
-    `)
+    `,
+    )
     .eq("access_token_hash", tokenHash)
     .neq("status", "COMPLETED")
     .neq("status", "EXPIRED")
@@ -419,6 +520,7 @@ export async function getActiveSessionByToken(
     market: session.market,
     status: session.status,
     currentPosition: session.current_position,
+    memorySeen: session.memory_exposures ?? [],
     expiresAt: session.expires_at,
     answers: answersMap,
   };
@@ -442,8 +544,9 @@ export async function getActiveSession(
       market,
       status,
       access_token_hash,
-      current_position,
+      current_position, memory_exposures,
       expires_at,
+      memory_exposures,
       quizzes:quiz_versions(quizzes(slug))
     `,
     )
@@ -490,6 +593,7 @@ export async function getActiveSession(
     market: session.market,
     status: session.status,
     currentPosition: session.current_position,
+    memorySeen: session.memory_exposures ?? [],
     expiresAt: session.expires_at,
     answers: answersMap,
   };
@@ -573,7 +677,7 @@ export async function validateAndRecoverSession(input: {
       locale,
       market,
       status,
-      current_position,
+      current_position, memory_exposures,
       expires_at,
       quiz_versions(quiz_id, quizzes(slug, product_code))
     `,
@@ -593,14 +697,30 @@ export async function validateAndRecoverSession(input: {
     throw new SessionNotFoundError("O quiz desta sessão não corresponde à URL informada.");
   }
 
+  if (
+    session.status === "EXPIRED" ||
+    (session.status !== "COMPLETED" && new Date(session.expires_at) <= new Date())
+  ) {
+    throw new SessionNotFoundError("Sessão expirada.");
+  }
+
+  // A recovery token is not an anonymous access token. Issue a fresh credential
+  // for the recovered attempt so answer and result authorization agree.
+  const accessToken = createAnonymousSessionToken();
+  const { error: accessError } = await supabase
+    .from("quiz_sessions")
+    .update({ access_token_hash: hashAnonymousSessionToken(accessToken) })
+    .eq("id", session.id);
+  if (accessError) throw new Error("Failed to authenticate recovered session");
+
   // 3. If session is already completed, point to results
   if (session.status === "COMPLETED") {
     return {
       status: "COMPLETED",
       sessionId: session.id,
-      token: input.recoveryToken,
+      token: accessToken,
       quizSlug: actualSlug,
-      resultRedirectUrl: `/${session.locale}/quizzes/${actualSlug}/result?session=${session.id}&token=${input.recoveryToken}`,
+      resultRedirectUrl: `/${session.locale}/quizzes/${actualSlug}/result?session=${session.id}`,
     };
   }
 
@@ -634,10 +754,11 @@ export async function validateAndRecoverSession(input: {
       market: session.market,
       status: session.status as "CREATED" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED",
       currentPosition: session.current_position,
+      memorySeen: session.memory_exposures ?? [],
       expiresAt: session.expires_at,
       answers: answersMap,
     },
-    token: input.recoveryToken,
+    token: accessToken,
   };
 }
 
@@ -694,6 +815,9 @@ export async function saveAnswer(input: {
   }
 
   // Upsert answer
+  if (session.status !== "IN_PROGRESS") {
+    assertTransition("session", session.status as SessionState, "IN_PROGRESS", sessionTransitions);
+  }
   const answerPayload: {
     session_id: string;
     question_id: string;
@@ -752,6 +876,7 @@ export async function completeQuizSession(input: {
       market,
       status,
       access_token_hash,
+      memory_exposures,
       quizzes:quiz_versions(quizzes(slug))
     `,
     )
@@ -871,12 +996,17 @@ export async function completeQuizSession(input: {
     );
   }
 
-  const scoringAnswers: ScoringAnswer[] = answers.map((a) => ({
-    questionId: a.question_id,
-    optionId: a.option_id ?? undefined,
-    value: a.numeric_value ?? undefined,
-    durationMs: a.duration_ms ?? undefined,
-  }));
+  const memoryQuestions = rawQuestions.filter((q) => q.scoring_key?.dimension === "DELAYED_MEMORY");
+  rawQuestions = rawQuestions.filter((q) => q.scoring_key?.dimension !== "DELAYED_MEMORY");
+  const coreQuestionIds = new Set(rawQuestions.map((q) => q.id));
+  const scoringAnswers: ScoringAnswer[] = answers
+    .filter((a) => coreQuestionIds.has(a.question_id))
+    .map((a) => ({
+      questionId: a.question_id,
+      optionId: a.option_id ?? undefined,
+      value: a.numeric_value ?? undefined,
+      durationMs: a.duration_ms ?? undefined,
+    }));
 
   let calculatedScore: Record<string, unknown>;
 
@@ -999,12 +1129,34 @@ export async function completeQuizSession(input: {
   }
 
   // Snapshot input
+  if (memoryQuestions.length) {
+    const seen = (session.memory_exposures as string[] | null) ?? [];
+    if (memoryQuestions.some((q) => !seen.includes(q.stable_key))) {
+      throw new IncompleteQuizSubmissionError("Memory stimuli must be viewed before completing");
+    }
+    calculatedScore.memoryRecall = {
+      version: "1.0",
+      total: memoryQuestions.length,
+      correct: memoryQuestions.filter((q) => {
+        const answer = answers.find((a) => a.question_id === q.id);
+        return q.options?.some(
+          (o) => o.id === answer?.option_id && o.scoring_value?.isCorrect === true,
+        );
+      }).length,
+    };
+  }
   const inputSnapshot = {
-    answers: scoringAnswers,
+    answers: answers.map((a) => ({
+      questionId: a.question_id,
+      optionId: a.option_id,
+      value: a.numeric_value,
+      durationMs: a.duration_ms,
+    })),
     completedAt: new Date().toISOString(),
   };
 
   // Insert result
+  assertTransition("session", session.status as SessionState, "COMPLETED", sessionTransitions);
   const { error: resultError } = await supabase.from("results").insert({
     session_id: input.sessionId,
     quiz_version: session.quiz_version,

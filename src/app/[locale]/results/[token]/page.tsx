@@ -119,6 +119,18 @@ export default async function TokenResultPage({ params }: TokenResultPageProps) 
   type SessionVersions = { quiz_versions?: { quizzes?: { slug?: string } } };
   const slug = (session as unknown as SessionVersions)?.quiz_versions?.quizzes?.slug ?? "brainrank";
 
+  // Recovery links must establish a fresh anonymous credential/cookie before
+  // entering protected results or the download endpoint.
+  if (
+    recoveryRecord &&
+    !recoveryRecord.revoked_at &&
+    new Date(recoveryRecord.expires_at) >= new Date()
+  ) {
+    redirect(
+      `/${locale}/quizzes/${slug}/play?session=${sessionId}&recover=${encodeURIComponent(token)}`,
+    );
+  }
+
   // Redirect to canonical quiz result page with authenticated query
   redirect(`/${locale}/quizzes/${slug}/result?session=${sessionId}&token=${token}`);
 }

@@ -7,19 +7,16 @@ export interface FlagEvaluationContext {
 }
 
 export type FeatureFlagKey =
-  | "enable_referrals"
-  | "enable_bundle_checkout"
-  | "enable_infinitepay_brazil"
-  | "enable_stripe_international";
+  "enable_referrals" | "enable_bundle_checkout" | "enable_stripe_payments";
 
 const DEFAULT_FLAGS: Record<FeatureFlagKey, boolean> = {
   enable_referrals: true,
   enable_bundle_checkout: true,
-  enable_infinitepay_brazil: true,
-  enable_stripe_international: true,
+  enable_stripe_payments: true,
 };
 
 export function isFeatureEnabled(flag: FeatureFlagKey, context?: FlagEvaluationContext): boolean {
+  void context;
   // Environmental override check (e.g. NEXT_PUBLIC_FLAG_ENABLE_REFERRALS)
   const envKey = `NEXT_PUBLIC_FLAG_${flag.toUpperCase()}`;
   if (process.env[envKey] === "false" || process.env[envKey] === "0") {
@@ -27,13 +24,6 @@ export function isFeatureEnabled(flag: FeatureFlagKey, context?: FlagEvaluationC
   }
   if (process.env[envKey] === "true" || process.env[envKey] === "1") {
     return true;
-  }
-
-  // Market specific constraints
-  if (flag === "enable_infinitepay_brazil") {
-    if (context?.market && context.market !== "BR") {
-      return false;
-    }
   }
 
   return DEFAULT_FLAGS[flag] ?? false;

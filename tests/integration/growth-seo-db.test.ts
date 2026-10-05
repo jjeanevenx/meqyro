@@ -74,7 +74,7 @@ describe.skipIf(!isOnline)("Growth, SEO & Commerce DB Integration Tests", () => 
         amount: 2990,
         currency: "BRL",
         market: "BR",
-        payment_provider: "infinitepay",
+        payment_provider: "stripe",
         customer_email: "bundle-tester@meqyro.com",
       })
       .select("id")

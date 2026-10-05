@@ -19,7 +19,7 @@ Landing
   → E-mail de entrega + consentimento opcional
   → Resultado gratuito
   → Paywall
-  → Checkout InfinitePay
+  → Checkout Stripe
   → Retorno pendente
   → Confirmação server-to-server
   → Relatório premium

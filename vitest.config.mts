@@ -5,12 +5,14 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": path.resolve(import.meta.dirname, "src"),
-      "server-only": path.resolve(import.meta.dirname, "node_modules/server-only/empty.js"),
+      "server-only": path.resolve(import.meta.dirname, "tests/mocks/server-only.ts"),
     },
   },
   test: {
     environment: "node",
-    include: ["tests/unit/**/*.test.ts"],
+    include: ["tests/**/*.test.ts"],
+    globals: true,
+    setupFiles: ["./tests/setup.ts"],
     env: {
       NEXT_PUBLIC_SUPABASE_URL: "http://127.0.0.1:54321",
       NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY:
@@ -18,6 +20,6 @@ export default defineConfig({
       SUPABASE_SECRET_KEY:
         "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZS1kZW1vIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImV4cCI6MTk4MzgxMjk5Nn0.EGIM96RAZx35lJzdJsyH-qQwv8Hdp7fsn3W0YpN81IU",
     },
-    testTimeout: 15000,
+    testTimeout: 30000,
   },
 });

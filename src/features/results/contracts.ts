@@ -24,12 +24,12 @@ export type PremiumSection = {
 
 export type ComprehensiveReport = {
   executiveSummary: string;
-  percentileRank: number;
+  percentileRank?: number;
   bandLabel: string;
   sections: PremiumSection[];
   comparativeBenchmark: {
     cohort: string;
-    percentile: number;
+    percentile?: number;
     description: string;
   };
 };
@@ -41,4 +41,17 @@ export type ProtectedResultResponse = {
   summary: PartialResultSummary;
   paywall?: PaywallOffer;
   premiumReport?: ComprehensiveReport;
+  couple?: {
+    state:
+      | "NO_INVITE"
+      | "EXPIRED"
+      | "WAITING_PARTNER"
+      | "WAITING_RESULTS"
+      | "CONSENT_REQUIRED"
+      | "PAYMENT_REQUIRED"
+      | "READY";
+    inviteCode: string | null;
+    consentGiven: boolean;
+  };
+  includedQuizzes?: string[];
 };

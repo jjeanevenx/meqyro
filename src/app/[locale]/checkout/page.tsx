@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, Suspense } from "react";
+import { useEffect, useState, Suspense } from "react";
 import { useSearchParams, useRouter, useParams } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft, ShieldCheck, CheckCircle2, Loader2, Lock, CreditCard } from "lucide-react";
@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { resolveMarketContext } from "@/lib/market/market-context";
+import { isMarket, resolveMarketContext, type Market } from "@/lib/market/market-context";
 import { brainRankPrice, getBundlePrice, isBundleProduct, formatMoney } from "@/lib/market/prices";
 
 const checkoutTranslations: Record<
@@ -29,6 +29,8 @@ const checkoutTranslations: Record<
     acceptedMethodsTitle: string;
     pixBadge: string;
     cardBadge: string;
+    walletBadge: string;
+    methodsAvailability: string;
     payButton: string;
     preparingPayment: string;
     trustFooter: string;
@@ -41,9 +43,9 @@ const checkoutTranslations: Record<
 > = {
   pt: {
     back: "Voltar",
-    secureCheckoutBadge: "Checkout Seguro de Alta Criptografia",
+    secureCheckoutBadge: "Checkout seguro",
     orderSummaryTitle: "Resumo do Pedido",
-    orderSubtitle: "Acesso vitalício, análise completa e certificado digital.",
+    orderSubtitle: "Download do resultado, análise completa e certificado digital.",
     features: [
       "Detalhamento aprofundado de todas as dimensões",
       "Identificação de pontos cegos sob pressão",
@@ -60,9 +62,11 @@ const checkoutTranslations: Record<
     acceptedMethodsTitle: "Métodos aceitos",
     pixBadge: "PIX (Aprovação Instantânea)",
     cardBadge: "Cartão de Crédito",
+    walletBadge: "Google Pay e outras carteiras",
+    methodsAvailability: "A Stripe exibirá os métodos elegíveis para sua região e dispositivo.",
     payButton: "Prosseguir para o Pagamento",
     preparingPayment: "Preparando pagamento seguro…",
-    trustFooter: "Transação protegida por criptografia de ponta a ponta.",
+    trustFooter: "Pagamento processado com segurança pela Stripe.",
     bundleDiscover: "Pacote Descoberta (3 Testes)",
     bundleLife: "Pacote Vida & Carreira (3 Testes)",
     bundleAllAccess: "Passe Acesso Total (Todos os 7 Testes)",
@@ -71,9 +75,9 @@ const checkoutTranslations: Record<
   },
   en: {
     back: "Back",
-    secureCheckoutBadge: "High-Encryption Secure Checkout",
+    secureCheckoutBadge: "Secure checkout",
     orderSummaryTitle: "Order Summary",
-    orderSubtitle: "Lifetime access, comprehensive analysis, and digital certificate.",
+    orderSubtitle: "Downloadable result, comprehensive analysis, and digital certificate.",
     features: [
       "In-depth breakdown of all cognitive and behavioral dimensions",
       "Identification of blind spots under pressure",
@@ -90,9 +94,11 @@ const checkoutTranslations: Record<
     acceptedMethodsTitle: "Accepted payment methods",
     pixBadge: "Instant Local Transfer",
     cardBadge: "Credit Card (Visa, Mastercard, Amex)",
+    walletBadge: "Google Pay and other wallets",
+    methodsAvailability: "Stripe displays the methods eligible for your region and device.",
     payButton: "Proceed to Payment",
     preparingPayment: "Preparing secure checkout…",
-    trustFooter: "Transaction protected by end-to-end encryption.",
+    trustFooter: "Payment processed securely by Stripe.",
     bundleDiscover: "Discovery Bundle (3 Quizzes)",
     bundleLife: "Life & Career Bundle (3 Quizzes)",
     bundleAllAccess: "All-Access Pass (All 7 Quizzes)",
@@ -101,9 +107,9 @@ const checkoutTranslations: Record<
   },
   es: {
     back: "Volver",
-    secureCheckoutBadge: "Checkout Seguro de Alta Criptografía",
+    secureCheckoutBadge: "Checkout seguro",
     orderSummaryTitle: "Resumen del Pedido",
-    orderSubtitle: "Acceso de por vida, análisis completo y certificado digital.",
+    orderSubtitle: "Resultado descargable, análisis completo y certificado digital.",
     features: [
       "Detalle en profundidad de todas las dimensiones",
       "Identificación de puntos ciegos bajo presión",
@@ -121,9 +127,11 @@ const checkoutTranslations: Record<
     acceptedMethodsTitle: "Métodos aceptados",
     pixBadge: "Transferencia Inmediata",
     cardBadge: "Tarjeta de Crédito",
+    walletBadge: "Google Pay y otras carteras",
+    methodsAvailability: "Stripe mostrará los métodos disponibles para tu región y dispositivo.",
     payButton: "Continuar al Pago",
     preparingPayment: "Preparando pago seguro…",
-    trustFooter: "Transacción protegida por cifrado de extremo a extremo.",
+    trustFooter: "Pago procesado de forma segura por Stripe.",
     bundleDiscover: "Paquete Descubrimiento (3 Tests)",
     bundleLife: "Paquete Vida y Carrera (3 Tests)",
     bundleAllAccess: "Pase Acceso Total (Los 7 Tests)",
@@ -132,9 +140,9 @@ const checkoutTranslations: Record<
   },
   fr: {
     back: "Retour",
-    secureCheckoutBadge: "Paiement Sécurisé Haut Chiffrement",
+    secureCheckoutBadge: "Paiement sécurisé",
     orderSummaryTitle: "Résumé de la Commande",
-    orderSubtitle: "Accès à vie, analyse complète et certificat numérique.",
+    orderSubtitle: "Résultat téléchargeable, analyse complète et certificat numérique.",
     features: [
       "Analyse détaillée et approfondie de toutes les dimensions",
       "Identification des points d'ombre sous tension",
@@ -151,9 +159,11 @@ const checkoutTranslations: Record<
     acceptedMethodsTitle: "Moyens de paiement acceptés",
     pixBadge: "Virement Instantané",
     cardBadge: "Carte Bancaire",
+    walletBadge: "Google Pay et autres portefeuilles",
+    methodsAvailability: "Stripe affiche les moyens éligibles pour votre région et votre appareil.",
     payButton: "Procéder au Paiement",
     preparingPayment: "Préparation du paiement sécurisé…",
-    trustFooter: "Transaction protégée par un chiffrement de bout en bout.",
+    trustFooter: "Paiement traité de manière sécurisée par Stripe.",
     bundleDiscover: "Pack Découverte (3 Tests)",
     bundleLife: "Pack Vie & Carrière (3 Tests)",
     bundleAllAccess: "Pass Accès Total (Les 7 Tests)",
@@ -177,8 +187,36 @@ function CheckoutContent() {
   const [customerEmail, setCustomerEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [sessionMarket, setSessionMarket] = useState<{
+    sessionId: string;
+    market: Market;
+  } | null>(null);
 
-  const marketContext = resolveMarketContext({ locale });
+  useEffect(() => {
+    if (!sessionId) return;
+    const loadSessionMarket = async () => {
+      try {
+        const response = await fetch(`/api/sessions?sessionId=${encodeURIComponent(sessionId)}`, {
+          cache: "no-store",
+        });
+        const data = (await response.json()) as { session?: { market?: string } };
+        if (!response.ok || !isMarket(data.session?.market)) {
+          throw new Error(t.sessionMissingError);
+        }
+        setSessionMarket({ sessionId, market: data.session.market });
+      } catch (marketError) {
+        setError(marketError instanceof Error ? marketError.message : t.sessionMissingError);
+      }
+    };
+    void loadSessionMarket();
+  }, [sessionId, t.sessionMissingError]);
+
+  const activeSessionMarket = sessionMarket?.sessionId === sessionId ? sessionMarket.market : null;
+  const marketReady = !sessionId || activeSessionMarket !== null;
+  const marketContext = resolveMarketContext({
+    locale,
+    market: activeSessionMarket ?? undefined,
+  });
   const amount = isBundleProduct(productCode)
     ? (getBundlePrice(productCode, marketContext.market) ?? 1990)
     : brainRankPrice(marketContext.market);
@@ -239,10 +277,12 @@ function CheckoutContent() {
 
       if (data.checkoutUrl) {
         window.location.href = data.checkoutUrl;
-      } else {
+      } else if (data.alreadyPaid && data.order?.id && data.lookupToken) {
         router.push(
-          `/${locale}/checkout/success?session=${sessionId}&order=${data.order?.orderNumber ?? ""}`,
+          `/${locale}/checkout/success?order=${encodeURIComponent(data.order.id)}&token=${encodeURIComponent(data.lookupToken)}`,
         );
+      } else {
+        throw new Error("Payment provider did not return a checkout URL.");
       }
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Error processing checkout.");
@@ -256,6 +296,9 @@ function CheckoutContent() {
         <Link href={`/${locale}`} className="back-link">
           <ArrowLeft size={16} />
           <span>{t.back}</span>
+        </Link>
+        <Link href={`/${locale}`} className="checkout-brand" aria-label="Meqyro">
+          MEQ<span>Y</span>RO
         </Link>
         <div className="checkout-badge">
           <Lock size={16} className="text-emerald-700" />
@@ -321,20 +364,16 @@ function CheckoutContent() {
                 {t.acceptedMethodsTitle}
               </span>
               <div className="payment-badges">
-                {marketContext.market === "BR" ? (
-                  <>
-                    <span className="badge">{t.pixBadge}</span>
-                    <span className="badge">{t.cardBadge}</span>
-                  </>
-                ) : (
-                  <span className="badge">{t.cardBadge}</span>
-                )}
+                {marketContext.market === "BR" ? <span className="badge">{t.pixBadge}</span> : null}
+                <span className="badge">{t.cardBadge}</span>
+                <span className="badge">{t.walletBadge}</span>
               </div>
+              <p className="mt-2 text-xs text-slate-500">{t.methodsAvailability}</p>
             </div>
 
             <Button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || !marketReady || Boolean(error && !activeSessionMarket)}
               className="checkout-pay-btn button--primary"
             >
               {isSubmitting ? (
@@ -354,6 +393,9 @@ function CheckoutContent() {
               <ShieldCheck size={16} className="text-emerald-700" />
               <small>{t.trustFooter}</small>
             </div>
+            <Link href={`/${locale}/reports/access`} className="text-sm text-forest underline">
+              {locale === "pt" ? "Acessar meus relatórios" : "Access my reports"}
+            </Link>
           </form>
         </section>
       </div>

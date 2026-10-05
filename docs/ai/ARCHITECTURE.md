@@ -30,7 +30,6 @@ Next.js App Router (src/app/)
          │    meqyro schema + RLS policies
          │
          ├── Stripe API  (external)
-         ├── InfinitePay API  (external)
          └── Resend API  (external)
 ```
 
@@ -43,7 +42,7 @@ src/
 ├── features/              Domain feature modules — ALL server-only
 │   ├── analytics/         Funnel event recording
 │   ├── commerce/          Orders, payments, fulfillment, webhooks
-│   │   └── adapters/      StripeAdapter, InfinitePayAdapter
+│   │   └── adapters/      StripeAdapter
 │   ├── couple/            CoupleDNA bilateral flow
 │   ├── email/             Transactional email via Resend
 │   ├── experiments/       Feature flags, A/B experiment buckets
@@ -86,7 +85,7 @@ app/  →  features/  →  lib/
 
 - `src/features/quiz-engine/contracts.ts` — shared types used by both server features and client components (`PublicQuiz`, `PublicQuestion`, `ActiveSession`, `PartialResultSummary`).
 - `src/features/scoring/*.ts` — each exports a `*ScoringV1` object implementing `ScoringContract<TItem, TResult>`.
-- `src/features/commerce/contracts.ts` — `PaymentProvider` interface implemented by `StripeAdapter` and `InfinitePayAdapter`.
+- `src/features/commerce/contracts.ts` — `PaymentProvider` interface implemented by `StripeAdapter`.
 - `src/lib/domain/states.ts` — state machine definitions for sessions, orders, and grants.
 
 ## Scoring architecture (critical)
@@ -115,6 +114,7 @@ Postgres via Supabase. Custom schema `meqyro` (not `public`). Row-Level Security
 ## Stateless sessions (no auth)
 
 There is no user authentication system. Sessions are identified by:
+
 - A 256-bit random token stored in an `HttpOnly` cookie (`meqyro_session`).
 - The SHA-256 hash of that token stored in the `quiz_sessions.access_token_hash` column.
 - All sensitive endpoints compare the cookie token against the stored hash using `timingSafeEqual`.

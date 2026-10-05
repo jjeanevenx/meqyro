@@ -7,4 +7,3 @@ process.env.SUPABASE_SECRET_KEY =
 process.env.ADMIN_API_SECRET = "admin-super-secure-secret-token-meqyro-v1";
 process.env.TOKEN_SECURITY_SECRET = "your-production-token-security-secret-32-chars-long";
 process.env.STRIPE_WEBHOOK_SECRET = "whsec_mock_stripe_webhook_secret_98765";
-process.env.INFINITEPAY_WEBHOOK_SECRET = "ip_whsec_mock_secret_98765";

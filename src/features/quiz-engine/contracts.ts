@@ -88,9 +88,22 @@ export type PublicQuestion = Readonly<{
   position: number;
   kind: QuestionKind;
   prompt: string;
+  memoryRecall?: { id: string; cue: string };
+  memoryCue?: { id: string; text: string };
   accessibilityText?: string | null;
   clue?: string | null;
-  visualType?: "VISUAL_PATTERN" | "VISUAL_SEQUENCE" | "SPATIAL" | "ROTATION" | "REFLECTION" | "SYMMETRY" | "MATRIX" | "COUNTING" | "DIRECTION" | "MIXED" | null;
+  visualType?:
+    | "VISUAL_PATTERN"
+    | "VISUAL_SEQUENCE"
+    | "SPATIAL"
+    | "ROTATION"
+    | "REFLECTION"
+    | "SYMMETRY"
+    | "MATRIX"
+    | "COUNTING"
+    | "DIRECTION"
+    | "MIXED"
+    | null;
   stimulus?: VisualStimulus | null;
   options: readonly PublicOption[];
 }>;
@@ -115,6 +128,7 @@ export type ActiveSession = Readonly<{
   market: string;
   status: "CREATED" | "IN_PROGRESS" | "COMPLETED" | "EXPIRED";
   currentPosition: number;
+  memorySeen?: readonly string[];
   expiresAt: string;
   answers: Readonly<
     Record<string, { optionId?: string; numericValue?: number; durationMs?: number }>

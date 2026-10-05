@@ -262,7 +262,7 @@ function FreeResult({ flow }: { flow: FlowControls }) {
           Ver análise completa · R$ 12,90 <ArrowRightIcon />
         </button>
         <p className="trust-note">
-          <LockClosedIcon /> Pagamento seguro via InfinitePay
+          <LockClosedIcon /> Pagamento seguro via Stripe
         </p>
       </main>
     </MobileScroll>
@@ -286,7 +286,7 @@ function Payment({ flow }: { flow: FlowControls }) {
               <span>BrainRank Premium</span>
               <strong>R$ 12,90</strong>
             </div>
-            <p>Escolha Pix ou cartão no ambiente seguro da InfinitePay.</p>
+            <p>Escolha Pix, cartão ou uma carteira elegível no ambiente seguro da Stripe.</p>
             <button className="primary-button" onClick={() => setPending(true)}>
               Ir para pagamento <ArrowRightIcon />
             </button>

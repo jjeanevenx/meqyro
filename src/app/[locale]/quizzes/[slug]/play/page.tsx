@@ -1,19 +1,18 @@
 import { notFound, redirect } from "next/navigation";
-import { cookies } from "next/headers";
+import type { Metadata } from "next";
+import { buildPageMetadata } from "@/features/seo/metadata-builder";
+import { getDictionary } from "@/lib/i18n/dictionaries";
+import { cookies, headers } from "next/headers";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { resolveMarketContext } from "@/lib/market/market-context";
 import { QuizRunner } from "@/components/patterns/quiz-runner";
 import type { ActiveSession, PublicQuiz } from "@/features/quiz-engine/contracts";
 import {
-  validateAndRecoverSession,
   getActiveSessionByToken,
   getSessionQuestions,
 } from "@/features/quiz-engine/session-service";
-import {
-  anonymousSessionCookie,
-  anonymousSessionTtlSeconds,
-} from "@/lib/security/anonymous-session";
+import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 
 export const dynamic = "force-dynamic";
 
@@ -47,6 +46,19 @@ type PlayPageProps = {
   searchParams?: Promise<{ session?: string; recover?: string; invite?: string; ref?: string }>;
 };
 
+export async function generateMetadata({ params }: PlayPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  if (!isLocale(locale) || !isValidSlug(slug)) return {};
+  const dict = getDictionary(locale);
+  return buildPageMetadata({
+    locale,
+    path: `/quizzes/${slug}/play`,
+    title: dict.quizzes[slug].name,
+    description: dict.quizzes[slug].tagline,
+    isPrivate: true,
+  });
+}
+
 export default async function QuizPlayPage({ params, searchParams }: PlayPageProps) {
   const { locale, slug } = await params;
   const query = searchParams ? await searchParams : {};
@@ -54,48 +66,33 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
   if (!isLocale(locale)) notFound();
   if (!isValidSlug(slug)) notFound();
 
+  if (query.session && query.recover) {
+    const recoveryQuery = new URLSearchParams({
+      session: query.session,
+      recover: query.recover,
+      slug,
+      locale,
+    });
+    redirect(`/api/sessions/recover?${recoveryQuery}`);
+  }
+
   const quiz = await getPublicQuiz(slug, locale as Locale);
   if (!quiz) notFound();
 
   const cookieStore = await cookies();
+  const requestHeaders = await headers();
   const marketCookie = cookieStore.get("meqyro_market")?.value;
+  const country =
+    requestHeaders.get("x-vercel-ip-country") ?? requestHeaders.get("cf-ipcountry") ?? undefined;
 
   const market = resolveMarketContext({
     locale,
+    country,
     market: marketCookie,
-    source: marketCookie ? "user" : "locale-fallback",
+    source: marketCookie ? "user" : country ? "edge" : "locale-fallback",
   });
 
   let initialSession: ActiveSession | null = null;
-
-  // 1. Real session recovery flow from URL tokens
-  if (query.session && query.recover) {
-    try {
-      const recovered = await validateAndRecoverSession({
-        sessionId: query.session,
-        recoveryToken: query.recover,
-        quizSlug: slug,
-      });
-
-      if (recovered.status === "COMPLETED") {
-        redirect(recovered.resultRedirectUrl);
-      }
-
-      initialSession = recovered.session;
-
-      // Authenticate subsequent requests via HttpOnly cookie
-      cookieStore.set(anonymousSessionCookie, recovered.token, {
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
-        sameSite: "lax",
-        path: "/",
-        maxAge: anonymousSessionTtlSeconds,
-      });
-    } catch {
-      // Fail-closed without disclosing session state; proceed as standard fresh session
-      initialSession = null;
-    }
-  }
 
   // 2. Resume active attempt from cookie (handles reload/F5, back, reopen)
   if (!initialSession) {

@@ -2,14 +2,15 @@ import "server-only";
 
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { logEvent } from "@/lib/observability/logger";
-import { assertTransition, orderTransitions, type OrderState } from "@/lib/domain/states";
 import { recordReferralConversion } from "@/features/referrals/referral-service";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
 import { expandProductCodes } from "@/lib/market/prices";
+import { assertTransition, orderTransitions, type OrderState } from "@/lib/domain/states";
 
 export async function fulfillOrder(
   orderId: string,
   providerEventId?: string,
+  providerPaymentId?: string,
 ): Promise<{ success: boolean; alreadyFulfilled: boolean }> {
   const supabase = createSupabaseSecretClient();
 
@@ -26,12 +27,7 @@ export async function fulfillOrder(
     throw new Error(`Pedido não encontrado: ${orderId}`);
   }
 
-  // Idempotency: if already fulfilled, do nothing
-  if (order.status === "FULFILLED") {
-    return { success: true, alreadyFulfilled: true };
-  }
-
-  // 2. Fetch order items
+  // 2. Resolve every product covered by this purchase before entering the DB transaction.
   const { data: items } = await supabase
     .from("order_items")
     .select("product_code")
@@ -42,50 +38,39 @@ export async function fulfillOrder(
   // Expand bundle if present
   const expandedProductCodes = expandProductCodes(rawProductCodes);
 
-  // 3. Grant premium access in result_access_grants
-  for (const productCode of expandedProductCodes) {
-    // Check if grant already exists
-    const { data: existingGrant } = await supabase
-      .from("result_access_grants")
-      .select("id")
-      .eq("session_id", order.session_id)
-      .eq("product_code", productCode)
-      .eq("grant_type", "PREMIUM_REPORT")
-      .single();
-
-    if (!existingGrant) {
-      await supabase.from("result_access_grants").insert({
-        session_id: order.session_id,
-        lead_id: order.lead_id,
-        product_code: productCode,
-        grant_type: "PREMIUM_REPORT",
-      });
-    }
-  }
-
-  // 4. State transition: current -> PAID -> FULFILLED
+  // 3. Mark the order paid and grant access in one Postgres transaction.
+  if (order.status !== "FULFILLED")
+    assertTransition("order", order.status as OrderState, "FULFILLED", orderTransitions);
   const now = new Date().toISOString();
-  if (order.status !== "PAID") {
-    assertTransition("order", order.status as OrderState, "PAID", orderTransitions);
+  const { data: completionRows, error: completionError } = await supabase.rpc("complete_payment", {
+    p_order_id: orderId,
+    p_provider_payment_id: providerPaymentId ?? null,
+    p_product_codes: expandedProductCodes,
+    p_paid_at: now,
+  });
+
+  if (completionError) {
+    throw new Error(`Atomic payment fulfillment failed: ${completionError.message}`);
   }
 
-  // Update order as FULFILLED (and PAID if not yet set)
-  await supabase
-    .from("orders")
-    .update({
-      status: "FULFILLED",
-      paid_at: now,
-      fulfilled_at: now,
-      updated_at: now,
-    })
-    .eq("id", orderId);
+  const completion = Array.isArray(completionRows) ? completionRows[0] : completionRows;
+  const alreadyFulfilled = Boolean(
+    completion &&
+    typeof completion === "object" &&
+    "already_fulfilled" in completion &&
+    completion.already_fulfilled,
+  );
 
-  // 5. Attribution: If referral code exists, record conversion
+  if (alreadyFulfilled) {
+    return { success: true, alreadyFulfilled: true };
+  }
+
+  // 4. Attribution: If referral code exists, record conversion
   if (order.referral_code) {
     await recordReferralConversion(order.referral_code).catch(() => {});
   }
 
-  // 6. Funnel analytics tracking
+  // 5. Funnel analytics tracking
   await recordFunnelEvent({
     eventName: "checkout_completed",
     sessionId: order.session_id,
@@ -104,7 +89,7 @@ export async function fulfillOrder(
     providerEventId,
   });
 
-  return { success: true, alreadyFulfilled: false };
+  return { success: true, alreadyFulfilled };
 }
 
 export async function refundOrder(
@@ -127,13 +112,14 @@ export async function refundOrder(
   if (order.status === "REFUNDED") {
     return { success: true };
   }
+  assertTransition("order", order.status as OrderState, "REFUNDED", orderTransitions);
 
   // Revoke premium access grants
   await supabase
     .from("result_access_grants")
     .delete()
-    .eq("session_id", order.session_id)
-    .eq("grant_type", "PREMIUM_REPORT");
+    .eq("order_id", orderId)
+    .in("grant_type", ["PREMIUM_REPORT", "PREMIUM_BUNDLE"]);
 
   // Record refund
   await supabase.from("refunds").insert({

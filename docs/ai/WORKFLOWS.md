@@ -163,18 +163,16 @@ For production, use `pnpm supabase db push` (requires Supabase project credentia
 
 ## Environment variable checklist
 
-| Variable | Required for | Server/Client |
-|---|---|---|
-| `NEXT_PUBLIC_SUPABASE_URL` | All DB operations | Client (browser-safe) |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Anon DB client | Client (browser-safe) |
-| `NEXT_PUBLIC_SITE_URL` | Email links, SEO canonical | Client (browser-safe) |
-| `SUPABASE_SECRET_KEY` | All server mutations | Server only |
-| `TOKEN_SECURITY_SECRET` | Token HMAC, IP hashing | Server only |
-| `STRIPE_SECRET_KEY` | Stripe checkout | Server only |
-| `STRIPE_WEBHOOK_SECRET` | Stripe webhook verification | Server only |
-| `INFINITEPAY_API_KEY` | InfinitePay checkout | Server only |
-| `INFINITEPAY_WEBHOOK_SECRET` | InfinitePay webhook verification | Server only |
-| `RESEND_API_KEY` | Email sending | Server only |
-| `EMAIL_FROM` | Email sender address | Server only |
-| `ADMIN_API_SECRET` | Admin routes | Server only |
-| `CRON_SECRET` | Cron routes | Server only |
+| Variable                               | Required for                | Server/Client         |
+| -------------------------------------- | --------------------------- | --------------------- |
+| `NEXT_PUBLIC_SUPABASE_URL`             | All DB operations           | Client (browser-safe) |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Anon DB client              | Client (browser-safe) |
+| `NEXT_PUBLIC_SITE_URL`                 | Email links, SEO canonical  | Client (browser-safe) |
+| `SUPABASE_SECRET_KEY`                  | All server mutations        | Server only           |
+| `TOKEN_SECURITY_SECRET`                | Token HMAC, IP hashing      | Server only           |
+| `STRIPE_SECRET_KEY`                    | Stripe checkout             | Server only           |
+| `STRIPE_WEBHOOK_SECRET`                | Stripe webhook verification | Server only           |
+| `RESEND_API_KEY`                       | Email sending               | Server only           |
+| `EMAIL_FROM`                           | Email sender address        | Server only           |
+| `ADMIN_API_SECRET`                     | Admin routes                | Server only           |
+| `CRON_SECRET`                          | Cron routes                 | Server only           |

@@ -1,0 +1,38 @@
+{
+  "date": "2026-10-04",
+  "environment": "local production build, port 3006, local Supabase",
+  "locale": "pt",
+  "viewport": "desktop",
+  "method": "Browser UI: answer each question, complete, skip optional lead capture, observe preliminary result and paid offer",
+  "quizzes": [
+    {
+      "slug": "brainrank",
+      "questions": 24,
+      "completion": "PASS",
+      "neutralTimedMemoryObservations": 3
+    },
+    { "slug": "personality-map", "questions": 40, "completion": "PASS" },
+    { "slug": "careerfit", "questions": 24, "completion": "PASS" },
+    { "slug": "moneydna", "questions": 20, "completion": "PASS" },
+    {
+      "slug": "focusstyle",
+      "questions": 20,
+      "completion": "PASS",
+      "neutralTimedMemoryObservations": 3
+    },
+    { "slug": "decisiondna", "questions": 4, "completion": "PASS" },
+    {
+      "slug": "coupledna",
+      "questions": 20,
+      "completion": "PASS",
+      "productGap": "Individual result and comparative paid offer, without invite or partner comparison controls"
+    }
+  ],
+  "notExecuted": [
+    "Browser payment through real Stripe",
+    "External email receipt",
+    "Mobile layout",
+    "Browser layout in en/es/fr",
+    "Remote deployment acceptance"
+  ]
+}

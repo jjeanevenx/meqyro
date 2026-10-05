@@ -1,4 +1,7 @@
-import { describe, it, expect } from "vitest";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { createOrder, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
+import { fulfillOrder } from "@/features/commerce/fulfillment-service";
+import { ControlledPaymentProvider } from "./controlled-payment-provider";
 import { startQuizSession } from "@/features/quiz-engine/session-service";
 import {
   createCoupleInvite,
@@ -9,6 +12,8 @@ import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { isSupabaseAvailable } from "./db-check";
 
 const isOnline = await isSupabaseAvailable();
+beforeAll(() => setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name)));
+afterAll(() => setPaymentProviderFactoryForTests(null));
 
 describe.skipIf(!isOnline)("Phase 6 — CoupleDNA Bilateral Consent & Comparison Lifecycle", () => {
   it("enforces bilateral consent and blocks unilateral results leak", async () => {
@@ -22,7 +27,7 @@ describe.skipIf(!isOnline)("Phase 6 — CoupleDNA Bilateral Consent & Comparison
     });
 
     // 2. Person A creates couple invite
-    const inviteData = await createCoupleInvite(sessionA.id, tokenA, "pt");
+    const inviteData = await createCoupleInvite(sessionA.id, tokenA, "pt", true);
     expect(inviteData).not.toBeNull();
     expect(inviteData?.inviteCode).toMatch(/^CP-[A-F0-9]{8}$/);
 
@@ -39,7 +44,12 @@ describe.skipIf(!isOnline)("Phase 6 — CoupleDNA Bilateral Consent & Comparison
     });
 
     // 5. Person B accepts invite
-    const acceptResult = await acceptCoupleInvite(inviteData!.inviteCode, sessionB.id, tokenB);
+    const acceptResult = await acceptCoupleInvite(
+      inviteData!.inviteCode,
+      sessionB.id,
+      tokenB,
+      true,
+    );
     expect(acceptResult?.success).toBe(true);
 
     // 6. Complete results for both in results table
@@ -78,7 +88,24 @@ describe.skipIf(!isOnline)("Phase 6 — CoupleDNA Bilateral Consent & Comparison
       },
     ]);
 
-    // 7. With both completed and bilateral consents registered, comparison unlocks!
+    const finished = await supabase
+      .from("quiz_sessions")
+      .update({ status: "COMPLETED", completed_at: new Date().toISOString() })
+      .in("id", [sessionA.id, sessionB.id]);
+    expect(finished.error).toBeNull();
+    expect(
+      (await getCoupleComparison(inviteData!.inviteCode, sessionA.id, tokenA))?.bilateralUnlocked,
+    ).toBe(false);
+    const { order } = await createOrder({
+      sessionId: sessionA.id,
+      sessionToken: tokenA,
+      productCode: "COUPLEDNA",
+      customerEmail: "couple-local-test@example.com",
+      market: "BR",
+      locale: "pt",
+    });
+    await fulfillOrder(order.id, "controlled-couple-test");
+    // 7. Completed assessments, bilateral consent and confirmed purchase unlock comparison.
     const comparisonUnlocked = await getCoupleComparison(
       inviteData!.inviteCode,
       sessionA.id,

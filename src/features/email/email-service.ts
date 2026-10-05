@@ -8,6 +8,7 @@ import type {
   DataRequestEmailInput,
   PurchaseConfirmationEmailInput,
   RefundEmailInput,
+  ReportAccessEmailInput,
   CoupleInviteEmailInput,
   CoupleUnlockedEmailInput,
   EmailResult,
@@ -26,6 +27,7 @@ async function sendViaResend(options: {
   subject: string;
   text: string;
   html?: string;
+  idempotencyKey?: string;
 }): Promise<EmailResult> {
   const resendApiKey = process.env.RESEND_API_KEY;
   const isProduction = process.env.NODE_ENV === "production";
@@ -49,6 +51,7 @@ async function sendViaResend(options: {
       headers: {
         Authorization: `Bearer ${resendApiKey}`,
         "Content-Type": "application/json",
+        ...(options.idempotencyKey ? { "Idempotency-Key": options.idempotencyKey } : {}),
       },
       body: JSON.stringify({
         from,
@@ -172,7 +175,9 @@ export async function sendPurchaseConfirmationEmail(
   input: PurchaseConfirmationEmailInput,
 ): Promise<EmailResult> {
   const siteUrl = getSiteUrl();
-  const accessUrl = `${siteUrl}/${input.locale}/checkout/success?session=${input.sessionId}&order=${input.orderNumber}`;
+  const accessUrl = input.resultToken
+    ? `${siteUrl}/${input.locale}/results/${input.resultToken}`
+    : `${siteUrl}/${input.locale}`;
 
   const subjects: Record<string, string> = {
     pt: `Confirmação de compra do seu relatório Meqyro (#${input.orderNumber})`,
@@ -192,6 +197,7 @@ export async function sendPurchaseConfirmationEmail(
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
+    idempotencyKey: `purchase-${input.orderNumber}`,
   });
 }
 
@@ -214,6 +220,28 @@ export async function sendRefundEmail(input: RefundEmailInput): Promise<EmailRes
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
+  });
+}
+
+export async function sendReportAccessEmail(input: ReportAccessEmailInput): Promise<EmailResult> {
+  const subjects: Record<string, string> = {
+    pt: "Acesse seus relatórios Meqyro",
+    en: "Access your Meqyro reports",
+    es: "Accede a tus informes Meqyro",
+    fr: "Accédez à vos rapports Meqyro",
+  };
+  const intro: Record<string, string> = {
+    pt: "Use os links seguros abaixo para acessar seus relatórios comprados:",
+    en: "Use the secure links below to access your purchased reports:",
+    es: "Utiliza los enlaces seguros para acceder a tus informes comprados:",
+    fr: "Utilisez les liens sécurisés ci-dessous pour accéder à vos rapports achetés :",
+  };
+  const links = input.reportUrls.map((url, index) => `${index + 1}. ${url}`).join("\n");
+
+  return sendViaResend({
+    to: input.recipientEmail,
+    subject: subjects[input.locale] ?? subjects.pt,
+    text: `${intro[input.locale] ?? intro.pt}\n\n${links}\n\nThese links expire in 30 days.`,
   });
 }
 

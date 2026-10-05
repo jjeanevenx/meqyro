@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createHmac, timingSafeEqual } from "node:crypto";
+import Stripe from "stripe";
 import type {
   PaymentProvider,
   PaymentProviderName,
@@ -12,238 +12,251 @@ import type {
   VerifiedPaymentEvent,
 } from "../contracts";
 
-const MAX_TIMESTAMP_TOLERANCE_SECONDS = 300; // 5 minutes
+function requireEnv(name: "STRIPE_SECRET_KEY" | "STRIPE_WEBHOOK_SECRET"): string {
+  const value = process.env[name]?.trim();
+  if (!value) throw new Error(`${name} is not configured on server.`);
+  return value;
+}
+
+function createStripeClient(): Stripe {
+  return new Stripe(requireEnv("STRIPE_SECRET_KEY"), {
+    appInfo: { name: "Meqyro", version: "0.1.0" },
+  });
+}
+
+function metadataFromObject(object: Stripe.Event.Data.Object): Record<string, string> {
+  if ("metadata" in object && object.metadata) {
+    return object.metadata as Record<string, string>;
+  }
+  return {};
+}
+
+const stripeLocaleByLocale: Record<string, Stripe.Checkout.SessionCreateParams.Locale> = {
+  pt: "pt-BR",
+  en: "en",
+  es: "es",
+  fr: "fr",
+};
+
+const checkoutCopyByLocale: Record<
+  string,
+  { product: string; description: string; submit: string }
+> = {
+  pt: {
+    product: "Meqyro — Relatório BrainRank",
+    description: "Relatório completo para download após confirmação do pagamento.",
+    submit: "Pagamento seguro. Seu relatório será liberado no e-mail informado.",
+  },
+  en: {
+    product: "Meqyro — BrainRank Report",
+    description: "Complete report to download after payment confirmation.",
+    submit: "Secure payment. Your report will be delivered to the email provided.",
+  },
+  es: {
+    product: "Meqyro — Informe BrainRank",
+    description: "Informe completo descargable tras confirmar el pago.",
+    submit: "Pago seguro. Recibirás tu informe en el correo indicado.",
+  },
+  fr: {
+    product: "Meqyro — Rapport BrainRank",
+    description: "Rapport analytique complet, téléchargeable et envoyé par e-mail.",
+    submit: "Paiement sécurisé. Votre rapport sera envoyé à l’adresse indiquée.",
+  },
+};
+
+function checkoutCopy(locale: string, productCode: string) {
+  const copy = checkoutCopyByLocale[locale] ?? checkoutCopyByLocale.pt;
+  if (productCode.toUpperCase() === "BRAINRANK") return copy;
+
+  return {
+    ...copy,
+    product: `Meqyro — ${productCode}`,
+  };
+}
 
 export class StripeAdapter implements PaymentProvider {
   public readonly name: PaymentProviderName = "stripe";
 
-  private get apiKey(): string | undefined {
-    return process.env.STRIPE_SECRET_KEY;
-  }
-
-  private get webhookSecret(): string | undefined {
-    return process.env.STRIPE_WEBHOOK_SECRET;
-  }
-
   async createCheckout(input: CheckoutInput): Promise<CheckoutResult> {
-    if (!this.apiKey) {
-      if (process.env.NODE_ENV === "production") {
-        throw new Error("Stripe secret key is not configured in production environment.");
-      }
+    const stripe = createStripeClient();
+    const copy = checkoutCopy(input.locale, input.productCode);
+    const brandIconFile = process.env.STRIPE_BRAND_ICON_FILE_ID?.trim();
+    const metadata = {
+      order_id: input.orderId,
+      order_number: input.orderNumber,
+      product_code: input.productCode,
+    };
 
-      // Test/development simulated checkout session only
-      const mockAttemptId = `cs_test_${input.orderNumber}`;
-      const mockCheckoutUrl = `${input.successUrl}${
-        input.successUrl.includes("?") ? "&" : "?"
-      }session_id=${mockAttemptId}&order=${input.orderNumber}`;
-
-      return {
-        provider: "stripe",
-        providerAttemptId: mockAttemptId,
-        checkoutUrl: mockCheckoutUrl,
-        rawResponse: { simulated: true },
-      };
-    }
-
-    const params = new URLSearchParams();
-    params.append("mode", "payment");
-    params.append("success_url", input.successUrl);
-    params.append("cancel_url", input.cancelUrl);
-    params.append("customer_email", input.customerEmail);
-    params.append("client_reference_id", input.orderId);
-    params.append("metadata[order_number]", input.orderNumber);
-    params.append("metadata[order_id]", input.orderId);
-    params.append("metadata[product_code]", input.productCode);
-    params.append("line_items[0][price_data][currency]", input.currency.toLowerCase());
-    params.append("line_items[0][price_data][unit_amount]", String(input.amount));
-    params.append("line_items[0][price_data][product_data][name]", `Meqyro - ${input.productCode}`);
-    params.append("line_items[0][quantity]", "1");
-
-    const response = await fetch("https://api.stripe.com/v1/checkout/sessions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${this.apiKey}`,
-        "Content-Type": "application/x-www-form-urlencoded",
+    const session = await stripe.checkout.sessions.create(
+      {
+        ui_mode: "hosted_page",
+        mode: "payment",
+        billing_address_collection: "auto",
+        phone_number_collection: { enabled: false },
+        automatic_tax: { enabled: false },
+        allow_promotion_codes: false,
+        submit_type: "auto",
+        integration_identifier: "hosted_web_0001",
+        origin_context: "web",
+        success_url: input.successUrl,
+        cancel_url: input.cancelUrl,
+        customer_email: input.customerEmail,
+        client_reference_id: input.orderId,
+        locale: stripeLocaleByLocale[input.locale] ?? "auto",
+        branding_settings: {
+          display_name: "Meqyro",
+          background_color: "#F5F8FC",
+          button_color: "#123FC4",
+          border_style: "rounded",
+          font_family: "inter",
+          ...(brandIconFile ? { icon: { type: "file" as const, file: brandIconFile } } : {}),
+        },
+        custom_text: {
+          submit: { message: copy.submit },
+        },
+        metadata,
+        payment_intent_data: { metadata },
+        line_items: [
+          {
+            price_data: {
+              currency: input.currency.toLowerCase(),
+              unit_amount: input.amount,
+              product_data: {
+                name: copy.product,
+                description: copy.description,
+              },
+            },
+            quantity: 1,
+          },
+        ],
       },
-      body: params.toString(),
-    });
+      { idempotencyKey: input.idempotencyKey },
+    );
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      throw new Error(`Stripe Checkout Session error: ${response.status} ${errorText}`);
-    }
+    if (!session.url) throw new Error("Stripe Checkout Session did not return a redirect URL.");
 
-    const data = await response.json();
     return {
       provider: "stripe",
-      providerAttemptId: data.id,
-      checkoutUrl: data.url,
-      rawResponse: data,
+      providerAttemptId: session.id,
+      checkoutUrl: session.url,
+      expiresAt: new Date(session.expires_at * 1000).toISOString(),
     };
   }
 
   async getPaymentStatus(input: PaymentLookup): Promise<PaymentStatus> {
-    if (!this.apiKey) {
-      if (process.env.NODE_ENV === "production") {
-        throw new Error("Stripe secret key is not configured in production environment.");
-      }
+    const session = await createStripeClient().checkout.sessions.retrieve(input.providerAttemptId);
 
-      return {
-        status: "PENDING",
-      };
-    }
-
-    const response = await fetch(
-      `https://api.stripe.com/v1/checkout/sessions/${input.providerAttemptId}`,
-      {
-        headers: { Authorization: `Bearer ${this.apiKey}` },
-      },
-    );
-
-    if (!response.ok) {
-      return { status: "FAILED" };
-    }
-
-    const data = await response.json();
-    if (data.payment_status === "paid") {
+    if (session.payment_status === "paid") {
       return {
         status: "CONFIRMED",
-        paidAt: new Date().toISOString(),
-        transactionId: data.payment_intent,
+        transactionId:
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id,
       };
     }
-
-    if (data.status === "expired") {
-      return { status: "EXPIRED" };
-    }
-
+    if (session.status === "expired") return { status: "EXPIRED" };
     return { status: "PENDING" };
   }
 
   async verifyWebhook(input: RawWebhookInput): Promise<VerifiedPaymentEvent> {
-    const rawBody =
-      typeof input.payload === "string" ? input.payload : JSON.stringify(input.payload);
-
-    // 1. Fail-closed check for secret
-    if (!this.webhookSecret) {
-      throw new Error("STRIPE_WEBHOOK_SECRET is not configured on server.");
+    if (typeof input.payload !== "string") {
+      throw new Error("Stripe webhook verification requires the untouched raw request body.");
     }
 
-    // 2. Fail-closed check for signature
-    const headerSig =
-      (input.headers?.["stripe-signature"] as string | undefined) ??
-      (input.headers?.["Stripe-Signature"] as string | undefined);
-    const signature = input.signature ?? headerSig;
+    const signature = input.signature ?? (input.headers["stripe-signature"] as string | undefined);
+    if (!signature) throw new Error("Missing stripe-signature header.");
 
-    if (!signature) {
-      throw new Error("Missing stripe-signature header.");
-    }
+    const stripe = createStripeClient();
+    const event = stripe.webhooks.constructEvent(
+      input.payload,
+      signature,
+      requireEnv("STRIPE_WEBHOOK_SECRET"),
+      300,
+    );
 
-    // 3. Format validation
-    const parts = signature.split(",");
-    const timestampPart = parts.find((p) => p.startsWith("t="))?.replace("t=", "");
-    const sigPart = parts.find((p) => p.startsWith("v1="))?.replace("v1=", "");
+    const object = event.data.object;
+    const metadata = metadataFromObject(object);
 
-    if (!timestampPart || !sigPart) {
-      throw new Error(
-        "Invalid Stripe webhook signature format. Expected t=<timestamp>,v1=<signature>",
-      );
-    }
-
-    // 4. Timestamp tolerance check
-    const timestampSec = parseInt(timestampPart, 10);
-    if (isNaN(timestampSec)) {
-      throw new Error("Invalid Stripe webhook timestamp format.");
-    }
-
-    const nowSec = Math.floor(Date.now() / 1000);
-    const diffSec = nowSec - timestampSec;
-
-    // Tolerance window: reject if older than 300s or more than 60s in future
-    if (diffSec > MAX_TIMESTAMP_TOLERANCE_SECONDS || diffSec < -60) {
-      throw new Error(
-        `Stripe webhook timestamp out of tolerance: ${diffSec}s difference (max ${MAX_TIMESTAMP_TOLERANCE_SECONDS}s allowed).`,
-      );
-    }
-
-    // 5. Constant-time cryptographic HMAC verification
-    const signedPayload = `${timestampPart}.${rawBody}`;
-    const expectedHmac = createHmac("sha256", this.webhookSecret)
-      .update(signedPayload, "utf8")
-      .digest("hex");
-
-    const actualBuf = Buffer.from(sigPart, "hex");
-    const expectedBuf = Buffer.from(expectedHmac, "hex");
-
-    if (actualBuf.length !== expectedBuf.length || !timingSafeEqual(actualBuf, expectedBuf)) {
-      throw new Error("Stripe webhook signature mismatch.");
-    }
-
-    // 6. Payload parsing and event extraction
-    let event: Record<string, unknown>;
-    try {
-      event = typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload;
-    } catch {
-      throw new Error("Malformed JSON payload in Stripe webhook.");
-    }
-
-    const eventId = typeof event.id === "string" && event.id.length > 0 ? event.id : null;
-    if (!eventId) {
-      throw new Error("Stripe webhook missing required stable provider event ID.");
-    }
-
-    const eventType = typeof event.type === "string" ? event.type : "unknown";
-    const dataObj = (event.data as Record<string, unknown> | undefined)?.object as
-      Record<string, unknown> | undefined;
-    const sessionObj = dataObj ?? {};
-    const metadata = (sessionObj.metadata as Record<string, string> | undefined) ?? {};
-
-    if (eventType === "checkout.session.completed") {
-      const orderId =
-        typeof sessionObj.client_reference_id === "string"
-          ? sessionObj.client_reference_id
-          : metadata.order_id;
-      const orderNumber = metadata.order_number;
+    if (
+      event.type === "checkout.session.completed" ||
+      event.type === "checkout.session.async_payment_succeeded"
+    ) {
+      const session = object as Stripe.Checkout.Session;
+      if (session.payment_status !== "paid") {
+        return {
+          provider: "stripe",
+          providerEventId: event.id,
+          eventType: event.type,
+          status: "IGNORED",
+        };
+      }
 
       return {
         provider: "stripe",
-        providerEventId: eventId,
-        eventType,
-        orderId,
-        orderNumber,
+        providerEventId: event.id,
+        eventType: event.type,
+        orderId: session.client_reference_id ?? metadata.order_id,
+        orderNumber: metadata.order_number,
+        providerPaymentId:
+          typeof session.payment_intent === "string"
+            ? session.payment_intent
+            : session.payment_intent?.id,
+        productCode: metadata.product_code,
         status: "CONFIRMED",
-        amount: typeof sessionObj.amount_total === "number" ? sessionObj.amount_total : undefined,
-        currency:
-          typeof sessionObj.currency === "string" ? sessionObj.currency.toUpperCase() : undefined,
+        amount: session.amount_total ?? undefined,
+        currency: session.currency?.toUpperCase(),
       };
     }
 
-    if (eventType === "charge.refunded") {
+    if (event.type === "checkout.session.async_payment_failed") {
+      const session = object as Stripe.Checkout.Session;
       return {
         provider: "stripe",
-        providerEventId: eventId,
-        eventType,
-        orderId: metadata.order_id,
+        providerEventId: event.id,
+        eventType: event.type,
+        orderId: session.client_reference_id ?? metadata.order_id,
         orderNumber: metadata.order_number,
-        status: "REFUNDED",
+        status: "FAILED",
       };
     }
 
-    if (eventType === "charge.dispute.created") {
+    if (event.type === "charge.refunded" || event.type === "charge.dispute.created") {
+      let charge: Stripe.Charge;
+      if (event.type === "charge.refunded") {
+        charge = object as Stripe.Charge;
+      } else {
+        const dispute = object as Stripe.Dispute;
+        charge =
+          typeof dispute.charge === "string"
+            ? await stripe.charges.retrieve(dispute.charge)
+            : dispute.charge;
+      }
+
+      const providerPaymentId =
+        typeof charge.payment_intent === "string"
+          ? charge.payment_intent
+          : charge.payment_intent?.id;
+      let chargeMetadata = metadataFromObject(charge);
+      if (!chargeMetadata.order_id && providerPaymentId) {
+        const paymentIntent = await stripe.paymentIntents.retrieve(providerPaymentId);
+        chargeMetadata = paymentIntent.metadata;
+      }
       return {
         provider: "stripe",
-        providerEventId: eventId,
-        eventType,
-        orderId: metadata.order_id,
-        orderNumber: metadata.order_number,
-        status: "CHARGEBACK",
+        providerEventId: event.id,
+        eventType: event.type,
+        orderId: chargeMetadata.order_id,
+        orderNumber: chargeMetadata.order_number,
+        providerPaymentId,
+        status: event.type === "charge.refunded" ? "REFUNDED" : "CHARGEBACK",
       };
     }
 
     return {
       provider: "stripe",
-      providerEventId: eventId,
-      eventType,
+      providerEventId: event.id,
+      eventType: event.type,
       status: "IGNORED",
     };
   }

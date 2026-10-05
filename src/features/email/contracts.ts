@@ -40,6 +40,12 @@ export type RefundEmailInput = {
   currency: string;
 };
 
+export type ReportAccessEmailInput = {
+  recipientEmail: string;
+  locale: string;
+  reportUrls: string[];
+};
+
 export type CoupleInviteEmailInput = {
   recipientEmail: string;
   locale: string;

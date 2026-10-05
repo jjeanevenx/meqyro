@@ -3,25 +3,22 @@
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import {
-  CheckCircle2,
-  Lock,
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  Info,
-  Loader2,
-} from "lucide-react";
+import { CheckCircle2, Lock, Sparkles, ArrowRight, ShieldCheck, Info, Loader2 } from "lucide-react";
 import type { PartialResultSummary } from "@/features/quiz-engine/contracts";
 import type { PaywallOffer, ComprehensiveReport, AccessLevel } from "@/features/results/contracts";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
+import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
+import { CoupleResultPanel } from "./couple-result-panel";
+import type { ProtectedResultResponse } from "@/features/results/contracts";
 
 type ResultViewProps = {
   summary: PartialResultSummary;
   accessLevel: AccessLevel;
   paywall?: PaywallOffer;
   premiumReport?: ComprehensiveReport;
+  couple?: ProtectedResultResponse["couple"];
+  includedQuizzes?: string[];
   locale: string;
   ctaVariant?: "unlock_report" | "complete_analysis";
 };
@@ -31,6 +28,8 @@ export function ResultView({
   accessLevel,
   paywall,
   premiumReport,
+  couple,
+  includedQuizzes,
   locale,
   ctaVariant = "unlock_report",
 }: ResultViewProps) {
@@ -148,7 +147,10 @@ export function ResultView({
       fr: "Rapport Analytique Complet",
     }[safeLocale],
     oneTimePayment: dict.resultView.oneTimePayment,
-    instantAccess: dict.resultView.instantAccess,
+    instantAccess:
+      summary.quizSlug === "coupledna"
+        ? dict.coupleFlow.accessConditions
+        : dict.resultView.instantAccess,
     moneyBackGuarantee: dict.resultView.moneyBackGuarantee,
     securePayment: dict.resultView.securePayment,
     unlockCta:
@@ -181,6 +183,26 @@ export function ResultView({
       <h1 className="result-title text-2xl md:text-3xl font-serif font-bold text-stone-900">
         {quizInfo.name}
       </h1>
+      {summary.quizSlug === "coupledna" ? (
+        <CoupleResultPanel
+          sessionId={summary.sessionId}
+          locale={safeLocale}
+          initialState={couple}
+          paid={isPremium}
+        />
+      ) : null}
+      {includedQuizzes && includedQuizzes.length > 1 ? (
+        <section className="rounded-2xl border border-stone-200 p-5 space-y-3">
+          <h2 className="font-semibold">{dict.includedPurchasesTitle}</h2>
+          <div className="flex flex-wrap gap-3">
+            {includedQuizzes.map((slug) => (
+              <Link className="underline" key={slug} href={`/${safeLocale}/quizzes/${slug}/play`}>
+                {dict.quizzes[slug]?.name ?? slug}
+              </Link>
+            ))}
+          </div>
+        </section>
+      ) : null}
 
       {/* 2. Score Hero (when numeric overall score is present) */}
       {summary.overallScore !== undefined ? (
@@ -199,7 +221,7 @@ export function ResultView({
             {labels.strongestLabel}
           </small>
           <h2 className="text-xl font-bold text-stone-900 capitalize">
-            {summary.strongestDimension.replace(/_/g, " ").toLowerCase()}
+            {getDimensionLabel(summary.strongestDimension, safeLocale)}
           </h2>
           {summary.strongestDimensionDescription ? (
             <p className="text-sm text-stone-600">{summary.strongestDimensionDescription}</p>
@@ -208,12 +230,9 @@ export function ResultView({
       ) : null}
 
       {/* 4. Quick Jump for Already-Unlocked Premium Users */}
-      {isPremium ? (
+      {isPremium && premiumReport ? (
         <div className="pt-2">
-          <a
-            href="#premium-report"
-            className="paywall-cta-btn"
-          >
+          <a href="#premium-report" className="paywall-cta-btn">
             <span>{labels.viewUnlockedReport}</span>
             <ArrowRight size={20} aria-hidden="true" />
           </a>
@@ -231,7 +250,7 @@ export function ResultView({
                 className="dimension-row flex items-center justify-between text-sm py-1.5 border-b border-stone-100"
               >
                 <span className="dimension-row__name capitalize text-stone-700">
-                  {key.replace(/_/g, " ").toLowerCase()}
+                  {getDimensionLabel(key, safeLocale)}
                 </span>
                 <span className="dimension-row__val font-mono font-medium text-stone-900">
                   {val}%
@@ -244,8 +263,24 @@ export function ResultView({
 
       {/* 6. Premium Unlocked Content (When user already purchased) */}
       {isPremium && premiumReport ? (
-        <section id="premium-report" className="premium-report-content space-y-6 pt-4 border-t border-stone-200">
+        <section
+          id="premium-report"
+          className="premium-report-content space-y-6 pt-4 border-t border-stone-200"
+        >
           <div className="premium-summary-card bg-amber-50/50 border border-amber-200/60 p-5 rounded-2xl space-y-2">
+            <a
+              href={`/api/sessions/${summary.sessionId}/report?locale=${safeLocale}`}
+              className="button button--primary"
+              download
+            >
+              {safeLocale === "pt"
+                ? "Baixar resultado completo"
+                : safeLocale === "es"
+                  ? "Descargar resultado completo"
+                  : safeLocale === "fr"
+                    ? "Télécharger le résultat complet"
+                    : "Download full result"}
+            </a>
             <h3 className="text-lg font-bold text-amber-950">{labels.executiveSummary}</h3>
             <p className="text-sm text-amber-900 leading-relaxed">
               {premiumReport.executiveSummary}
@@ -300,9 +335,7 @@ export function ResultView({
           </div>
 
           {/* Offer Title */}
-          <h2 className="paywall-title">
-            {paywall.headline}
-          </h2>
+          <h2 className="paywall-title">{paywall.headline}</h2>
 
           {/* 6 Concrete Benefits */}
           <ul className="paywall-features">

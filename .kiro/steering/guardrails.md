@@ -51,5 +51,6 @@ Critical rules every agent must respect. Full lists in `docs/ai/DO_NOT_DO.md` an
 - DO NOT install Stripe SDK, Resend SDK, Prisma, Drizzle, shadcn/ui, or any i18n library.
 
 ## Full documentation
+
 → `docs/ai/DO_NOT_DO.md`
 → `docs/ai/SECURITY.md`

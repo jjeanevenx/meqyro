@@ -1,8 +1,9 @@
 # Meqyro
 
+> Checkout como único provedor, com Pix, cartões e carteiras elegíveis via métodos dinâmicos.
+
 **Domínio principal:** `meqyro.com`  
 **Produto:** plataforma internacional de quizzes, desafios e experiências de autoconhecimento com resultados gratuitos parciais e relatórios premium.  
-**Stack:** Next.js + TypeScript + Supabase + InfinitePay + Stripe + Resend  
 **Mercados iniciais:** Brasil + internacional  
 **Idiomas:** Português, Inglês, Espanhol e Francês  
 **Estratégia:** mobile-first, sem cadastro obrigatório, baixa fricção e monetização desde a primeira versão.
@@ -515,8 +516,6 @@ A pessoa deve conseguir cancelar comunicações promocionais com um clique.
 
 Gateway:
 
-**InfinitePay**
-
 Métodos prioritários:
 
 ```text
@@ -642,7 +641,6 @@ Regra:
 
 ```text
 country == BR
-→ InfinitePay
 → BRL
 
 country != BR
@@ -672,7 +670,6 @@ Permitir trocar país manualmente.
              ┌───────────────┼────────────────┐
              │               │                │
              ▼               ▼                ▼
-         Supabase       InfinitePay         Stripe
         PostgreSQL        🇧🇷 BR            🌎 INTL
              │
              │
@@ -725,7 +722,6 @@ src/
 │       ├── leads/
 │       ├── checkout/
 │       ├── webhooks/
-│       │   ├── infinitepay/
 │       │   ├── stripe/
 │       │   └── resend/
 │       └── unsubscribe/
@@ -975,7 +971,6 @@ interface PaymentProvider {
 Implementações:
 
 ```text
-InfinitePayProvider
 StripeProvider
 ```
 
@@ -989,8 +984,6 @@ Isso evita espalhar `if country === BR` pela aplicação.
 
 ---
 
-# 23. InfinitePay
-
 Fluxo:
 
 ```text
@@ -1000,7 +993,6 @@ server busca preço
       ↓
 cria order PENDING
       ↓
-InfinitePay create link
       ↓
 redirect
       ↓
@@ -1820,7 +1812,6 @@ Pagamentos:
 Stripe test
 Stripe live
 
-InfinitePay ambiente/testes disponíveis
 → pagamentos reais controlados antes do lançamento
 ```
 
@@ -2040,7 +2031,6 @@ result retrieval
 ## Incremento 5 — Payments
 
 ```text
-InfinitePay
 Stripe
 webhooks
 idempotency
@@ -2255,7 +2245,6 @@ referrals
 
 ```text
 Supabase
-InfinitePay
 Stripe
 Resend
 Vercel
@@ -2275,7 +2264,6 @@ FR
 **Pagamentos**
 
 ```text
-Brasil → InfinitePay
 Exterior → Stripe
 ```
 
@@ -2312,7 +2300,6 @@ painel administrativo complexo
         │                  │                    │
    PostgreSQL       ┌──────┴──────┐        Email flows
    RLS              │             │
-   Storage      InfinitePay     Stripe
                 Brazil          Global
                     │             │
                     └──────┬──────┘

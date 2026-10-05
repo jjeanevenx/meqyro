@@ -62,9 +62,7 @@ export function buildPageMetadata({
       type: "website",
       images: [
         {
-          url: `${SITE_URL}/og-default.png`,
-          width: 1200,
-          height: 630,
+          url: `${SITE_URL}/images/brainrank-cognitive-field.png`,
           alt: "Meqyro — Avaliações e Insights Editoriais",
         },
       ],
@@ -73,7 +71,7 @@ export function buildPageMetadata({
       card: "summary_large_image",
       title,
       description,
-      images: [`${SITE_URL}/og-default.png`],
+      images: [`${SITE_URL}/images/brainrank-cognitive-field.png`],
     },
     robots: {
       index: true,

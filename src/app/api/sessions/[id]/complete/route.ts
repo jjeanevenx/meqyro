@@ -1,4 +1,5 @@
-import { NextResponse, type NextRequest } from "next/server";
+import { NextResponse, after, type NextRequest } from "next/server";
+import { deliverCompletedReports } from "@/features/email/completed-report-delivery";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { completeQuizSession } from "@/features/quiz-engine/session-service";
 import { createRequestId } from "@/lib/observability/request-id";
@@ -30,6 +31,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       strongestDimension: result.strongestDimension,
     });
 
+    after(async () => {
+      await deliverCompletedReports(5, sessionId).catch((error: unknown) => {
+        logEvent("warn", "completed_report_delivery_failed", {
+          sessionId,
+          error: error instanceof Error ? error.message : "Unknown",
+        });
+      });
+    });
     return NextResponse.json({ result }, { status: 200, headers: { "x-request-id": requestId } });
   } catch (error: unknown) {
     const errMessage = error instanceof Error ? error.message : String(error);

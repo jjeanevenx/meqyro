@@ -12,24 +12,24 @@ import { assertVisualQuestion, isVisualScene, isVisualStimulus } from "./visual-
  */
 function hasEncodingCorruption(text: string | null | undefined): boolean {
   if (!text || typeof text !== "string") return false;
-  
+
   // Check for common corruption patterns
   // "??" appearing where accented characters should be (replacement character)
   if (text.includes("??") && /[áàâãéêíóôõúçÁÀÂÃÉÊÍÓÔÕÚÇ]/.test(text)) {
     return true;
   }
-  
+
   // Mojibake patterns: UTF-8 bytes interpreted as Latin-1
   // Examples: Ã¡, Ã , Ã©, Ã, ãƒ
   if (/[Ã][àáâãèéêìíòóõùúçÃ]/u.test(text)) {
     return true;
   }
-  
+
   // Unicode replacement character
   if (text.includes("\uFFFD")) {
     return true;
   }
-  
+
   return false;
 }
 
@@ -40,7 +40,9 @@ function hasEncodingCorruption(text: string | null | undefined): boolean {
 function validateQuizContent(quiz: PublicQuiz): boolean {
   for (const question of quiz.questions) {
     if (hasEncodingCorruption(question.prompt)) {
-      console.warn(`[encoding] Corrupted prompt in question ${question.stableKey}: ${question.prompt}`);
+      console.warn(
+        `[encoding] Corrupted prompt in question ${question.stableKey}: ${question.prompt}`,
+      );
       return false;
     }
     if (hasEncodingCorruption(question.clue)) {
@@ -64,6 +66,8 @@ import { decisionDnaScenarios } from "@/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "@/content/quizzes/coupledna";
 import { getSessionQuestions } from "./session-service";
 import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
+import { attachMemoryCues, distributeMemoryItems } from "./delayed-memory";
+import { memoryExercises } from "@/content/quizzes/memory-exercises";
 
 export async function getPublicQuiz(
   slug: string,
@@ -202,6 +206,14 @@ export async function getPublicQuiz(
       prompt: translation?.prompt ?? q.stable_key,
       accessibilityText: translation?.accessibility_text ?? null,
       clue,
+      ...(q.metadata?.memoryCue && typeof q.metadata.memoryCue === "object"
+        ? {
+            memoryRecall: {
+              id: q.stable_key,
+              cue: String((q.metadata.memoryCue as Record<string, unknown>)[locale] ?? ""),
+            },
+          }
+        : {}),
       visualType:
         typeof q.metadata?.visualType === "string"
           ? (q.metadata.visualType as PublicQuestion["visualType"])
@@ -214,7 +226,11 @@ export async function getPublicQuiz(
   });
 
   const maxQuestions = ASSESSMENT_SELECTION_CONFIGS[slug]?.totalQuestions ?? 24;
-  const slicedQuestions = publicQuestions.slice(0, maxQuestions);
+  const ordinary = publicQuestions.filter((q) => !q.memoryRecall).slice(0, maxQuestions);
+  const recall = publicQuestions.filter((q) => q.memoryRecall);
+  const slicedQuestions = recall.length
+    ? attachMemoryCues(distributeMemoryItems(ordinary, recall))
+    : ordinary;
 
   const quizContent: PublicQuiz = {
     id: activeVersion.id,
@@ -228,7 +244,9 @@ export async function getPublicQuiz(
 
   // Validate encoding - if corrupted, fallback to in-memory content
   if (!validateQuizContent(quizContent)) {
-    console.warn(`[encoding] Detected corruption in DB quiz "${slug}" for locale "${locale}". Using fallback.`);
+    console.warn(
+      `[encoding] Detected corruption in DB quiz "${slug}" for locale "${locale}". Using fallback.`,
+    );
     return getFallbackPublicQuiz(slug, locale);
   }
 
@@ -268,7 +286,7 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       version: "1.0",
       scoringVersion: "1.0",
       totalQuestions: 24,
-      questions,
+      questions: withFallbackMemory(questions, locale),
     };
   }
 
@@ -360,7 +378,7 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       version: "1.0",
       scoringVersion: "1.0",
       totalQuestions: 20,
-      questions,
+      questions: withFallbackMemory(questions, locale),
     };
   }
 
@@ -417,4 +435,25 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
   }
 
   return null;
+}
+
+function withFallbackMemory(questions: PublicQuestion[], locale: Locale): PublicQuestion[] {
+  const recall: PublicQuestion[] = memoryExercises.map((exercise) => ({
+    id: exercise.key,
+    stableKey: exercise.key,
+    position: 0,
+    kind: "SINGLE_CHOICE",
+    prompt: exercise.prompt[locale],
+    memoryRecall: { id: exercise.key, cue: exercise.cue[locale] },
+    options: exercise.options.map((labels, index) => ({
+      id: `${exercise.key}-${index}`,
+      stableKey: String.fromCharCode(65 + index),
+      position: index + 1,
+      label: labels[locale],
+    })),
+  }));
+  return attachMemoryCues(distributeMemoryItems(questions, recall)).map((q, index) => ({
+    ...q,
+    position: index + 1,
+  }));
 }

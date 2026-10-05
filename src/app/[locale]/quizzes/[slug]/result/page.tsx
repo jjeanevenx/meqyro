@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import Link from "next/link";
-import { ArrowLeft, Share2, Copy, Sparkles, MessageCircle } from "lucide-react";
+import { ArrowLeft, Share2, Sparkles, MessageCircle } from "lucide-react";
+import { CopyLinkButton } from "@/components/patterns/copy-link-button";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { resolveMarketContext } from "@/lib/market/market-context";
@@ -42,8 +43,8 @@ export async function generateMetadata({
   return buildPageMetadata({
     locale,
     path: `/quizzes/${slug}/result`,
-    title: `Resultado — ${slug.toUpperCase()} | Meqyro`,
-    description: "Confira seu resultado detalhado e desbloqueie sua análise completa.",
+    title: `${getDictionary(locale).common.viewResult} — ${getDictionary(locale).quizzes[slug].name}`,
+    description: getDictionary(locale).quizzes[slug].tagline,
     isPrivate: true,
   });
 }
@@ -70,15 +71,19 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
   const dict = getDictionary(safeLocale);
 
   const cookieStore = await cookies();
+  const requestHeaders = await headers();
   const tokenFromCookie = cookieStore.get(anonymousSessionCookie)?.value;
   const sessionToken = query.token ?? tokenFromCookie;
   const sessionId = query.session;
 
   const marketCookie = cookieStore.get("meqyro_market")?.value;
+  const country =
+    requestHeaders.get("x-vercel-ip-country") ?? requestHeaders.get("cf-ipcountry") ?? undefined;
   const market = resolveMarketContext({
     locale,
+    country,
     market: marketCookie,
-    source: marketCookie ? "user" : "locale-fallback",
+    source: marketCookie ? "user" : country ? "edge" : "locale-fallback",
   });
 
   const quizInfo = dict.quizzes[slug] ?? dict.quizzes.brainrank;
@@ -138,6 +143,8 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
       ? "complete_analysis"
       : "unlock_report";
 
+  if (resultData.quizSlug !== slug) notFound();
+
   const siteUrl = getSiteUrl();
   const shareText = {
     pt: `Fiz o desafio ${quizInfo.name} no Meqyro! Descubra também seus pontos fortes:`,
@@ -149,9 +156,9 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
   const shareUrl = `${siteUrl}/${locale}/quizzes/${slug}?ref=${sessionId.slice(0, 8)}`;
 
   return (
-    <main className="min-h-screen bg-stone-50 py-12 px-4 sm:px-6">
-      <div className="max-w-2xl mx-auto space-y-8">
-        <div className="flex items-center justify-between border-b border-stone-200 pb-4">
+    <main className="quiz-result-page">
+      <div className="quiz-result-page__container">
+        <div className="quiz-result-page__header">
           <Link
             href={`/${locale}/quizzes/${slug}`}
             className="text-xs text-stone-500 hover:text-stone-900 inline-flex items-center gap-1 transition-colors"
@@ -159,7 +166,7 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
             <ArrowLeft size={14} /> {dict.common.back}
           </Link>
           <span className="text-xs font-medium text-stone-500 uppercase tracking-wider">
-            Meqyro Results
+            {dict.common.viewResult} · MEQYRO
           </span>
         </div>
 
@@ -168,12 +175,14 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
           accessLevel={resultData.accessLevel}
           paywall={resultData.paywall}
           premiumReport={resultData.premiumReport}
+          couple={resultData.couple}
+          includedQuizzes={resultData.includedQuizzes}
           locale={locale}
           ctaVariant={ctaVariant}
         />
 
         {/* Social Share & Referral Bar */}
-        <section className="bg-white border border-stone-200 rounded-xl p-6 shadow-sm space-y-4">
+        <section className="quiz-result-page__share">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-sm font-semibold text-stone-900">{dict.resultView.shareTitle}</h2>
@@ -182,12 +191,12 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
             <Share2 size={18} className="text-stone-400" />
           </div>
 
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <div className="result-share-grid">
             <a
               href={`https://api.whatsapp.com/send?text=${encodeURIComponent(`${shareText} ${shareUrl}`)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-medium text-stone-700 transition-colors"
+              className="result-share-link"
             >
               <MessageCircle size={15} className="text-emerald-600" /> WhatsApp
             </a>
@@ -195,7 +204,7 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
               href={`https://twitter.com/intent/tweet?text=${encodeURIComponent(shareText)}&url=${encodeURIComponent(shareUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-medium text-stone-700 transition-colors"
+              className="result-share-link"
             >
               <span className="font-bold text-stone-900">X</span> Twitter
             </a>
@@ -203,21 +212,21 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
               href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-medium text-stone-700 transition-colors"
+              className="result-share-link"
             >
               <span className="font-bold text-blue-600">f</span> Facebook
             </a>
-            <a
-              href={shareUrl}
-              className="flex items-center justify-center gap-2 py-2.5 px-3 rounded-lg border border-stone-200 hover:bg-stone-50 text-xs font-medium text-stone-700 transition-colors"
-            >
-              <Copy size={14} /> {dict.common.copyLink}
-            </a>
+            <CopyLinkButton
+              url={shareUrl}
+              label={dict.common.copyLink}
+              copiedLabel={dict.common.linkCopied}
+              errorLabel={dict.common.error}
+            />
           </div>
         </section>
 
         {/* Post-Purchase Cross-Sell / Discovery Link */}
-        <section className="bg-amber-50/60 border border-amber-200/80 rounded-xl p-6 text-center space-y-4">
+        <section className="quiz-result-page__discover">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-medium">
             <Sparkles size={14} /> {dict.nav.discover}
           </div>

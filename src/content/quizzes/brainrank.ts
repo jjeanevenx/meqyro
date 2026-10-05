@@ -7,7 +7,17 @@ export type BrainRankQuestionDef = {
   dimension: BrainRankDimension;
   difficulty: BrainRankDifficulty;
   kind?: QuestionKind;
-  visualType?: "VISUAL_PATTERN" | "VISUAL_SEQUENCE" | "SPATIAL" | "ROTATION" | "REFLECTION" | "SYMMETRY" | "MATRIX" | "COUNTING" | "DIRECTION" | "MIXED";
+  visualType?:
+    | "VISUAL_PATTERN"
+    | "VISUAL_SEQUENCE"
+    | "SPATIAL"
+    | "ROTATION"
+    | "REFLECTION"
+    | "SYMMETRY"
+    | "MATRIX"
+    | "COUNTING"
+    | "DIRECTION"
+    | "MIXED";
   stimulus?: VisualStimulus;
   clue?: {
     pt: string;
@@ -1241,10 +1251,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "3 · 7 · 11 · 15 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "17", en: "17", es: "17", fr: "17" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "18", en: "18", es: "18", fr: "18" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "19", en: "19", es: "19", fr: "19" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "17", en: "17", es: "17", fr: "17" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "18", en: "18", es: "18", fr: "18" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "19", en: "19", es: "19", fr: "19" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "20", en: "20", es: "20", fr: "20" },
+      },
     ],
   },
   {
@@ -1265,10 +1295,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "1 · 4 · 9 · 16 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "25", en: "25", es: "25", fr: "25" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "27", en: "27", es: "27", fr: "27" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "30", en: "30", es: "30", fr: "30" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "20", en: "20", es: "20", fr: "20" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "25", en: "25", es: "25", fr: "25" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "27", en: "27", es: "27", fr: "27" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "30", en: "30", es: "30", fr: "30" },
+      },
     ],
   },
   {
@@ -1289,10 +1339,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "3 · 6 · 11 · 18 · 27 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "36", en: "36", es: "36", fr: "36" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "38", en: "38", es: "38", fr: "38" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "39", en: "39", es: "39", fr: "39" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "42", en: "42", es: "42", fr: "42" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "36", en: "36", es: "36", fr: "36" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "38", en: "38", es: "38", fr: "38" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "39", en: "39", es: "39", fr: "39" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "42", en: "42", es: "42", fr: "42" },
+      },
     ],
   },
   {
@@ -1313,10 +1383,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "5 · 10 · 20 · 40 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "60", en: "60", es: "60", fr: "60" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "70", en: "70", es: "70", fr: "70" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "80", en: "80", es: "80", fr: "80" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "90", en: "90", es: "90", fr: "90" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "60", en: "60", es: "60", fr: "60" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "70", en: "70", es: "70", fr: "70" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "80", en: "80", es: "80", fr: "80" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "90", en: "90", es: "90", fr: "90" },
+      },
     ],
   },
   {
@@ -1337,10 +1427,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "8 · 27 · 64 · 125 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "216", en: "216", es: "216", fr: "216" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "243", en: "243", es: "243", fr: "243" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "256", en: "256", es: "256", fr: "256" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "343", en: "343", es: "343", fr: "343" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: true,
+        label: { pt: "216", en: "216", es: "216", fr: "216" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "243", en: "243", es: "243", fr: "243" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "256", en: "256", es: "256", fr: "256" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "343", en: "343", es: "343", fr: "343" },
+      },
     ],
   },
   {
@@ -1361,10 +1471,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "2 · 3 · 7 · 16 · 32 · ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "52", en: "52", es: "52", fr: "52" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "55", en: "55", es: "55", fr: "55" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "57", en: "57", es: "57", fr: "57" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "64", en: "64", es: "64", fr: "64" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "52", en: "52", es: "52", fr: "52" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "55", en: "55", es: "55", fr: "55" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "57", en: "57", es: "57", fr: "57" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "64", en: "64", es: "64", fr: "64" },
+      },
     ],
   },
 
@@ -1381,10 +1511,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Si tous les chats sont des mammifères et que Mia est un chat, que conclut-on nécessairement ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "Mia é um mamífero", en: "Mia is a mammal", es: "Mía es un mamífero", fr: "Mia est un mammifère" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "Mia tem quatro patas", en: "Mia has four legs", es: "Mía tiene cuatro patas", fr: "Mia a quatre pattes" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os mamíferos são gatos", en: "All mammals are cats", es: "Todos los mamíferos son gatos", fr: "Tous les mammifères sont des chats" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Mia é um felino selvagem", en: "Mia is a wild feline", es: "Mía es un felino salvaje", fr: "Mia est un félin sauvage" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: true,
+        label: {
+          pt: "Mia é um mamífero",
+          en: "Mia is a mammal",
+          es: "Mía es un mamífero",
+          fr: "Mia est un mammifère",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: {
+          pt: "Mia tem quatro patas",
+          en: "Mia has four legs",
+          es: "Mía tiene cuatro patas",
+          fr: "Mia a quatre pattes",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: {
+          pt: "Todos os mamíferos são gatos",
+          en: "All mammals are cats",
+          es: "Todos los mamíferos son gatos",
+          fr: "Tous les mammifères sont des chats",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "Mia é um felino selvagem",
+          en: "Mia is a wild feline",
+          es: "Mía es un felino salvaje",
+          fr: "Mia est un félin sauvage",
+        },
+      },
     ],
   },
   {
@@ -1399,10 +1569,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "S'il pleut, la circulation est ralentie. Il a plu. Donc :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Não houve atraso", en: "There was no delay", es: "No hubo retraso", fr: "Il n'y a pas eu de retard" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "O trânsito atrasou", en: "Traffic was delayed", es: "El tráfico se retrasó", fr: "La circulation a été ralentie" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "O trânsito fluiu melhor", en: "Traffic flowed faster", es: "El tráfico fluyó mejor", fr: "La circulation s'est améliorée" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "A chuva parou rápido", en: "The rain stopped quickly", es: "La lluvia paró rápido", fr: "La pluie s'est arrêtée vite" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: {
+          pt: "Não houve atraso",
+          en: "There was no delay",
+          es: "No hubo retraso",
+          fr: "Il n'y a pas eu de retard",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: {
+          pt: "O trânsito atrasou",
+          en: "Traffic was delayed",
+          es: "El tráfico se retrasó",
+          fr: "La circulation a été ralentie",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: {
+          pt: "O trânsito fluiu melhor",
+          en: "Traffic flowed faster",
+          es: "El tráfico fluyó mejor",
+          fr: "La circulation s'est améliorée",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "A chuva parou rápido",
+          en: "The rain stopped quickly",
+          es: "La lluvia paró rápido",
+          fr: "La pluie s'est arrêtée vite",
+        },
+      },
     ],
   },
   {
@@ -1417,10 +1627,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Lucas est plus âgé que Pierre, et Pierre est plus âgé que Mathieu. Donc :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Mateus é o mais velho", en: "Mateo is the oldest", es: "Mateo es el mayor", fr: "Mathieu est le plus âgé" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "Lucas é mais novo que Mateus", en: "Lucas is younger than Mateo", es: "Lucas es menor que Mateo", fr: "Lucas est plus jeune que Mathieu" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "Lucas é mais velho que Mateus", en: "Lucas is older than Mateo", es: "Lucas es mayor que Mateo", fr: "Lucas est plus âgé que Mathieu" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Pedro é o mais velho", en: "Pedro is the oldest", es: "Pedro es el mayor", fr: "Pierre est le plus âgé" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: {
+          pt: "Mateus é o mais velho",
+          en: "Mateo is the oldest",
+          es: "Mateo es el mayor",
+          fr: "Mathieu est le plus âgé",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: {
+          pt: "Lucas é mais novo que Mateus",
+          en: "Lucas is younger than Mateo",
+          es: "Lucas es menor que Mateo",
+          fr: "Lucas est plus jeune que Mathieu",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: {
+          pt: "Lucas é mais velho que Mateus",
+          en: "Lucas is older than Mateo",
+          es: "Lucas es mayor que Mateo",
+          fr: "Lucas est plus âgé que Mathieu",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "Pedro é o mais velho",
+          en: "Pedro is the oldest",
+          es: "Pedro es el mayor",
+          fr: "Pierre est le plus âgé",
+        },
+      },
     ],
   },
   {
@@ -1435,10 +1685,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Dans un groupe de 40 personnes, 25 aiment le café et 20 le thé. Tous aiment au moins l'un des deux. Combien aiment les deux ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3", en: "3", es: "3", fr: "3" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "5", en: "5", es: "5", fr: "5" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "10", en: "10", es: "10", fr: "10" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "3", en: "3", es: "3", fr: "3" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "5", en: "5", es: "5", fr: "5" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "7", en: "7", es: "7", fr: "7" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "10", en: "10", es: "10", fr: "10" },
+      },
     ],
   },
   {
@@ -1453,10 +1723,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Aucun reptile n'a de poils. Tous les alligators sont des reptiles. Certains animaux de zoo ont des poils. Donc :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Alguns jacarés têm pelos", en: "Some alligators have fur", es: "Algunos caimanes tienen pelo", fr: "Certains alligators ont des poils" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "Nenhum jacaré tem pelos", en: "No alligator has fur", es: "Ningún caimán tiene pelo", fr: "Aucun alligator n'a de poils" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os animais do zoológico são répteis", en: "All zoo animals are reptiles", es: "Todos los animales del zoológico son reptiles", fr: "Tous les animaux du zoo sont des reptiles" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "Nenhum réptil está no zoológico", en: "No reptiles are in the zoo", es: "Ningún reptil está en el zoológico", fr: "Aucun reptile n'est dans le zoo" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: {
+          pt: "Alguns jacarés têm pelos",
+          en: "Some alligators have fur",
+          es: "Algunos caimanes tienen pelo",
+          fr: "Certains alligators ont des poils",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: {
+          pt: "Nenhum jacaré tem pelos",
+          en: "No alligator has fur",
+          es: "Ningún caimán tiene pelo",
+          fr: "Aucun alligator n'a de poils",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: {
+          pt: "Todos os animais do zoológico são répteis",
+          en: "All zoo animals are reptiles",
+          es: "Todos los animales del zoológico son reptiles",
+          fr: "Tous les animaux du zoo sont des reptiles",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "Nenhum réptil está no zoológico",
+          en: "No reptiles are in the zoo",
+          es: "Ningún reptil está en el zoológico",
+          fr: "Aucun reptile n'est dans le zoo",
+        },
+      },
     ],
   },
   {
@@ -1471,10 +1781,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Si l'affirmation 'Tous les oiseaux ne volent pas' est vraie, laquelle est logiquement équivalente ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "Nenhum pássaro voa", en: "No birds fly", es: "Ningún pájaro vuela", fr: "Aucun oiseau ne vole" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "Existe pelo menos um pássaro que não voa", en: "There is at least one bird that does not fly", es: "Existe al menos un pájaro que no vuela", fr: "Il existe au moins un oiseau qui ne vole pas" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "Todos os pássaros voam", en: "All birds fly", es: "Todos los pájaros vuelan", fr: "Tous les oiseaux volent" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "A maioria dos pássaros voa", en: "Most birds fly", es: "La mayoría de los pájaros vuela", fr: "La plupart des oiseaux volent" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: {
+          pt: "Nenhum pássaro voa",
+          en: "No birds fly",
+          es: "Ningún pájaro vuela",
+          fr: "Aucun oiseau ne vole",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: {
+          pt: "Existe pelo menos um pássaro que não voa",
+          en: "There is at least one bird that does not fly",
+          es: "Existe al menos un pájaro que no vuela",
+          fr: "Il existe au moins un oiseau qui ne vole pas",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: {
+          pt: "Todos os pássaros voam",
+          en: "All birds fly",
+          es: "Todos los pájaros vuelan",
+          fr: "Tous les oiseaux volent",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "A maioria dos pássaros voa",
+          en: "Most birds fly",
+          es: "La mayoría de los pájaros vuela",
+          fr: "La plupart des oiseaux volent",
+        },
+      },
     ],
   },
 
@@ -1491,10 +1841,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Si 4 pommes coûtent 12,00 €, combien coûtent 7 pommes ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 18,00", en: "$18.00", es: "18,00 €", fr: "18,00 €" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 21,00", en: "$21.00", es: "21,00 €", fr: "21,00 €" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 24,00", en: "$24.00", es: "24,00 €", fr: "24,00 €" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 28,00", en: "$28.00", es: "28,00 €", fr: "28,00 €" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "R$ 18,00", en: "$18.00", es: "18,00 €", fr: "18,00 €" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "R$ 21,00", en: "$21.00", es: "21,00 €", fr: "21,00 €" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "R$ 24,00", en: "$24.00", es: "24,00 €", fr: "24,00 €" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "R$ 28,00", en: "$28.00", es: "28,00 €", fr: "28,00 €" },
+      },
     ],
   },
   {
@@ -1509,10 +1879,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Combien font 25 % de 240 ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "50", en: "50", es: "50", fr: "50" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "60", en: "60", es: "60", fr: "60" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "70", en: "70", es: "70", fr: "70" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "80", en: "80", es: "80", fr: "80" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "50", en: "50", es: "50", fr: "50" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "60", en: "60", es: "60", fr: "60" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "70", en: "70", es: "70", fr: "70" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "80", en: "80", es: "80", fr: "80" },
+      },
     ],
   },
   {
@@ -1527,10 +1917,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Une voiture parcourt 180 km à 60 km/h et revient à 90 km/h. Quelle est la vitesse moyenne sur l'aller-retour ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "72 km/h", en: "72 km/h", es: "72 km/h", fr: "72 km/h" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "75 km/h", en: "75 km/h", es: "75 km/h", fr: "75 km/h" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "78 km/h", en: "78 km/h", es: "78 km/h", fr: "78 km/h" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "80 km/h", en: "80 km/h", es: "80 km/h", fr: "80 km/h" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: true,
+        label: { pt: "72 km/h", en: "72 km/h", es: "72 km/h", fr: "72 km/h" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "75 km/h", en: "75 km/h", es: "75 km/h", fr: "75 km/h" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "78 km/h", en: "78 km/h", es: "78 km/h", fr: "78 km/h" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "80 km/h", en: "80 km/h", es: "80 km/h", fr: "80 km/h" },
+      },
     ],
   },
   {
@@ -1545,10 +1955,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Un article à 200 € augmente de 20 % puis bénéficie d'une réduction de 20 %. Quel est son prix final ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 200", en: "$200", es: "200 €", fr: "200 €" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 192", en: "$192", es: "192 €", fr: "192 €" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 190", en: "$190", es: "190 €", fr: "190 €" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 188", en: "$188", es: "188 €", fr: "188 €" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "R$ 200", en: "$200", es: "200 €", fr: "200 €" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "R$ 192", en: "$192", es: "192 €", fr: "192 €" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "R$ 190", en: "$190", es: "190 €", fr: "190 €" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "R$ 188", en: "$188", es: "188 €", fr: "188 €" },
+      },
     ],
   },
   {
@@ -1563,10 +1993,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "La somme de deux nombres est 70 et leur différence est 14. Quel est leur produit ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "1126", en: "1126", es: "1126", fr: "1126" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "1176", en: "1176", es: "1176", fr: "1176" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "1200", en: "1200", es: "1200", fr: "1200" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "1244", en: "1244", es: "1244", fr: "1244" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "1126", en: "1126", es: "1126", fr: "1126" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "1176", en: "1176", es: "1176", fr: "1176" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "1200", en: "1200", es: "1200", fr: "1200" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "1244", en: "1244", es: "1244", fr: "1244" },
+      },
     ],
   },
   {
@@ -1581,10 +2031,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Un robinet remplit un réservoir en 3 heures et un autre en 6 heures. Ensemble, en combien d'heures rempliront-ils le réservoir ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "1,5 hora", en: "1.5 hours", es: "1,5 horas", fr: "1,5 heure" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "2,0 horas", en: "2.0 hours", es: "2,0 horas", fr: "2,0 heures" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "2,5 horas", en: "2.5 hours", es: "2,5 horas", fr: "2,5 heures" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "4,5 horas", en: "4.5 hours", es: "4,5 horas", fr: "4,5 heures" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "1,5 hora", en: "1.5 hours", es: "1,5 horas", fr: "1,5 heure" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "2,0 horas", en: "2.0 hours", es: "2,0 horas", fr: "2,0 heures" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "2,5 horas", en: "2.5 hours", es: "2,5 horas", fr: "2,5 heures" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "4,5 horas", en: "4.5 hours", es: "4,5 horas", fr: "4,5 heures" },
+      },
     ],
   },
 
@@ -1601,10 +2071,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Combien de lettres 'T' apparaissent dans la suite : T L T F T E T L T ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "4", en: "4", es: "4", fr: "4" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "5", en: "5", es: "5", fr: "5" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "6", en: "6", es: "6", fr: "6" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "4", en: "4", es: "4", fr: "4" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "5", en: "5", es: "5", fr: "5" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "6", en: "6", es: "6", fr: "6" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "7", en: "7", es: "7", fr: "7" },
+      },
     ],
   },
   {
@@ -1619,10 +2109,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Quelle option est parfaitement identique au mot de référence : ÉLÉPHANTIASIS",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "ELEFANTIASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ELEPHANTIASIS" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "ELEFANTÍASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ÉLÉPHANTIASIS" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "ELEFANTÍASI", en: "ELEPHANTIASS", es: "ELEFANTIASS", fr: "ÉLÉPHANTIASS" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "ELEFONTÍASE", en: "ELEPHONTASIS", es: "ELEFONTÍASIS", fr: "ÉLÉPHONTIASIS" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "ELEFANTIASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ELEPHANTIASIS" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "ELEFANTÍASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ÉLÉPHANTIASIS" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "ELEFANTÍASI", en: "ELEPHANTIASS", es: "ELEFANTIASS", fr: "ÉLÉPHANTIASS" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "ELEFONTÍASE", en: "ELEPHONTASIS", es: "ELEFONTÍASIS", fr: "ÉLÉPHONTIASIS" },
+      },
     ],
   },
   {
@@ -1637,10 +2147,50 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Identifiez la seule paire de codes qui n'est PAS identique :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "9834-X7B / 9834-X7B", en: "9834-X7B / 9834-X7B", es: "9834-X7B / 9834-X7B", fr: "9834-X7B / 9834-X7B" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "4521-M9Q / 4521-M9Q", en: "4521-M9Q / 4521-M9Q", es: "4521-M9Q / 4521-M9Q", fr: "4521-M9Q / 4521-M9Q" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "7319-K2W / 7319-K2V", en: "7319-K2W / 7319-K2V", es: "7319-K2W / 7319-K2V", fr: "7319-K2W / 7319-K2V" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "6108-P4Z / 6108-P4Z", en: "6108-P4Z / 6108-P4Z", es: "6108-P4Z / 6108-P4Z", fr: "6108-P4Z / 6108-P4Z" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: {
+          pt: "9834-X7B / 9834-X7B",
+          en: "9834-X7B / 9834-X7B",
+          es: "9834-X7B / 9834-X7B",
+          fr: "9834-X7B / 9834-X7B",
+        },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: {
+          pt: "4521-M9Q / 4521-M9Q",
+          en: "4521-M9Q / 4521-M9Q",
+          es: "4521-M9Q / 4521-M9Q",
+          fr: "4521-M9Q / 4521-M9Q",
+        },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: {
+          pt: "7319-K2W / 7319-K2V",
+          en: "7319-K2W / 7319-K2V",
+          es: "7319-K2W / 7319-K2V",
+          fr: "7319-K2W / 7319-K2V",
+        },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: {
+          pt: "6108-P4Z / 6108-P4Z",
+          en: "6108-P4Z / 6108-P4Z",
+          es: "6108-P4Z / 6108-P4Z",
+          fr: "6108-P4Z / 6108-P4Z",
+        },
+      },
     ],
   },
   {
@@ -1655,10 +2205,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Combien de nombres pairs se trouvent dans la liste : 13, 22, 37, 48, 55, 64, 71, 86, 99 ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3", en: "3", es: "3", fr: "3" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "4", en: "4", es: "4", fr: "4" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "5", en: "5", es: "5", fr: "5" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "6", en: "6", es: "6", fr: "6" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "3", en: "3", es: "3", fr: "3" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "4", en: "4", es: "4", fr: "4" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "5", en: "5", es: "5", fr: "5" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "6", en: "6", es: "6", fr: "6" },
+      },
     ],
   },
   {
@@ -1673,10 +2243,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Quelle ligne contient exactement 4 occurrences du symbole '#' :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "##--#--#--", en: "##--#--#--", es: "##--#--#--", fr: "##--#--#--" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "#-#-#-#-#", en: "#-#-#-#-#", es: "#-#-#-#-#", fr: "#-#-#-#-#" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "#--#--#--#", en: "#--#--#--#", es: "#--#--#--#", fr: "#--#--#--#" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "##--##--#", en: "##--##--#", es: "##--##--#", fr: "##--##--#" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "##--#--#--", en: "##--#--#--", es: "##--#--#--", fr: "##--#--#--" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "#-#-#-#-#", en: "#-#-#-#-#", es: "#-#-#-#-#", fr: "#-#-#-#-#" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "#--#--#--#", en: "#--#--#--#", es: "#--#--#--#", fr: "#--#--#--#" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "##--##--#", en: "##--##--#", es: "##--##--#", fr: "##--##--#" },
+      },
     ],
   },
   {
@@ -1691,10 +2281,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Trouvez la paire de mots à l'orthographe exactement inversée (palindrome mutuel) :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: true, label: { pt: "ROMA / AMOR", en: "ROMA / AMOR", es: "ROMA / AMOR", fr: "ROMA / AMOR" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "LIVRO / ORVIL", en: "BOOK / KOOB", es: "LIBRO / ORBIL", fr: "LIVRE / ERVIL" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "CASA / ASAC", en: "HOME / EMOH", es: "CASA / ASAC", fr: "MAISON / NOSIAM" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "MESA / ASEM", en: "TABLE / ELBAT", es: "MESA / ASEM", fr: "TABLE / ELBAT" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: true,
+        label: { pt: "ROMA / AMOR", en: "ROMA / AMOR", es: "ROMA / AMOR", fr: "ROMA / AMOR" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "LIVRO / ORVIL", en: "BOOK / KOOB", es: "LIBRO / ORBIL", fr: "LIVRE / ERVIL" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "CASA / ASAC", en: "HOME / EMOH", es: "CASA / ASAC", fr: "MAISON / NOSIAM" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "MESA / ASEM", en: "TABLE / ELBAT", es: "MESA / ASEM", fr: "TABLE / ELBAT" },
+      },
     ],
   },
 
@@ -1711,10 +2321,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Trois amis partagent une facture de 150 € en parts égales. L'un paie avec un billet de 100 €. Combien de monnaie doit-il recevoir ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "R$ 40", en: "$40", es: "40 €", fr: "40 €" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "R$ 50", en: "$50", es: "50 €", fr: "50 €" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "R$ 60", en: "$60", es: "60 €", fr: "60 €" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "R$ 70", en: "$70", es: "70 €", fr: "70 €" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "R$ 40", en: "$40", es: "40 €", fr: "40 €" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "R$ 50", en: "$50", es: "50 €", fr: "50 €" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "R$ 60", en: "$60", es: "60 €", fr: "60 €" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "R$ 70", en: "$70", es: "70 €", fr: "70 €" },
+      },
     ],
   },
   {
@@ -1729,10 +2359,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Un ascenseur supporte jusqu'à 600 kg. Si 5 personnes pèsent ensemble 420 kg, quelle charge supplémentaire est encore autorisée ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "160 kg", en: "160 kg", es: "160 kg", fr: "160 kg" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "180 kg", en: "180 kg", es: "180 kg", fr: "180 kg" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "200 kg", en: "200 kg", es: "200 kg", fr: "200 kg" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "220 kg", en: "220 kg", es: "220 kg", fr: "220 kg" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "160 kg", en: "160 kg", es: "160 kg", fr: "160 kg" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "180 kg", en: "180 kg", es: "180 kg", fr: "180 kg" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "200 kg", en: "200 kg", es: "200 kg", fr: "200 kg" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "220 kg", en: "220 kg", es: "220 kg", fr: "220 kg" },
+      },
     ],
   },
   {
@@ -1747,10 +2397,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Vous devez transporter 100 cartons dans des camionnettes d'une capacité maximale de 18 cartons chacune. Quel est le nombre minimum de camionnettes requises ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "5", en: "5", es: "5", fr: "5" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "6", en: "6", es: "6", fr: "6" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "7", en: "7", es: "7", fr: "7" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "8", en: "8", es: "8", fr: "8" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "5", en: "5", es: "5", fr: "5" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "6", en: "6", es: "6", fr: "6" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "7", en: "7", es: "7", fr: "7" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "8", en: "8", es: "8", fr: "8" },
+      },
     ],
   },
   {
@@ -1765,10 +2435,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Lors d'un test de 20 questions, chaque bonne réponse rapporte 5 points et chaque erreur retire 2 points. Si un candidat a obtenu 72 points en répondant à tout, combien de bonnes réponses a-t-il eues ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "14", en: "14", es: "14", fr: "14" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "16", en: "16", es: "16", fr: "16" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "17", en: "17", es: "17", fr: "17" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "18", en: "18", es: "18", fr: "18" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "14", en: "14", es: "14", fr: "14" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "16", en: "16", es: "16", fr: "16" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "17", en: "17", es: "17", fr: "17" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "18", en: "18", es: "18", fr: "18" },
+      },
     ],
   },
   {
@@ -1783,10 +2473,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Cinq personnes participent à une réunion et se serrent toutes la main exactement une fois. Combien de poignées de main ont eu lieu ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "8", en: "8", es: "8", fr: "8" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "10", en: "10", es: "10", fr: "10" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "15", en: "15", es: "15", fr: "15" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20", en: "20", es: "20", fr: "20" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "8", en: "8", es: "8", fr: "8" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "10", en: "10", es: "10", fr: "10" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "15", en: "15", es: "15", fr: "15" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "20", en: "20", es: "20", fr: "20" },
+      },
     ],
   },
   {
@@ -1801,10 +2511,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Une montre avance de 2 minutes toutes les 3 heures. De combien de minutes aura-t-elle avancé au bout de 24 heures ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "12 minutos", en: "12 minutes", es: "12 minutos", fr: "12 minutes" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "16 minutos", en: "16 minutes", es: "16 minutos", fr: "16 minutes" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "18 minutos", en: "18 minutes", es: "18 minutes", fr: "18 minutes" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "20 minutos", en: "20 minutes", es: "20 minutes", fr: "20 minutes" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "12 minutos", en: "12 minutes", es: "12 minutos", fr: "12 minutes" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "16 minutos", en: "16 minutes", es: "16 minutos", fr: "16 minutes" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "18 minutos", en: "18 minutes", es: "18 minutes", fr: "18 minutes" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "20 minutos", en: "20 minutes", es: "20 minutes", fr: "20 minutes" },
+      },
     ],
   },
 
@@ -1821,10 +2551,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Quel est le résultat rapide de : 15 × 6 ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "80", en: "80", es: "80", fr: "80" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "85", en: "85", es: "85", fr: "85" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "90", en: "90", es: "90", fr: "90" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "95", en: "95", es: "95", fr: "95" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "80", en: "80", es: "80", fr: "80" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "85", en: "85", es: "85", fr: "85" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "90", en: "90", es: "90", fr: "90" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "95", en: "95", es: "95", fr: "95" },
+      },
     ],
   },
   {
@@ -1839,10 +2589,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Quel nombre est le double de 47 ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "84", en: "84", es: "84", fr: "84" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "92", en: "92", es: "92", fr: "92" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "94", en: "94", es: "94", fr: "94" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "96", en: "96", es: "96", fr: "96" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "84", en: "84", es: "84", fr: "84" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "92", en: "92", es: "92", fr: "92" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "94", en: "94", es: "94", fr: "94" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "96", en: "96", es: "96", fr: "96" },
+      },
     ],
   },
   {
@@ -1857,10 +2627,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Résolvez rapidement : 250 - 87 = ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "153", en: "153", es: "153", fr: "153" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "163", en: "163", es: "163", fr: "163" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "173", en: "173", es: "173", fr: "173" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "183", en: "183", es: "183", fr: "183" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "153", en: "153", es: "153", fr: "153" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "163", en: "163", es: "163", fr: "163" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "173", en: "173", es: "173", fr: "173" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "183", en: "183", es: "183", fr: "183" },
+      },
     ],
   },
   {
@@ -1875,10 +2665,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Identifiez rapidement quelle fraction est supérieure à 1/2 :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "3/7", en: "3/7", es: "3/7", fr: "3/7" } },
-      { stableKey: "B", position: 2, isCorrect: false, label: { pt: "4/9", en: "4/9", es: "4/9", fr: "4/9" } },
-      { stableKey: "C", position: 3, isCorrect: true, label: { pt: "5/9", en: "5/9", es: "5/9", fr: "5/9" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "5/11", en: "5/11", es: "5/11", fr: "5/11" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "3/7", en: "3/7", es: "3/7", fr: "3/7" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: false,
+        label: { pt: "4/9", en: "4/9", es: "4/9", fr: "4/9" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: true,
+        label: { pt: "5/9", en: "5/9", es: "5/9", fr: "5/9" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "5/11", en: "5/11", es: "5/11", fr: "5/11" },
+      },
     ],
   },
   {
@@ -1893,10 +2703,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Calculez avec rapidité : 18 × 12 - 16 = ?",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "196", en: "196", es: "196", fr: "196" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "200", en: "200", es: "200", fr: "200" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "204", en: "204", es: "204", fr: "204" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "216", en: "216", es: "216", fr: "216" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "196", en: "196", es: "196", fr: "196" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "200", en: "200", es: "200", fr: "200" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "204", en: "204", es: "204", fr: "204" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "216", en: "216", es: "216", fr: "216" },
+      },
     ],
   },
   {
@@ -1911,10 +2741,30 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       fr: "Identifiez rapidement quel nombre ci-dessous est divisible par 7 et par 9 simultanément :",
     },
     options: [
-      { stableKey: "A", position: 1, isCorrect: false, label: { pt: "567", en: "567", es: "567", fr: "567" } },
-      { stableKey: "B", position: 2, isCorrect: true, label: { pt: "630", en: "630", es: "630", fr: "630" } },
-      { stableKey: "C", position: 3, isCorrect: false, label: { pt: "693", en: "693", es: "693", fr: "693" } },
-      { stableKey: "D", position: 4, isCorrect: false, label: { pt: "720", en: "720", es: "720", fr: "720" } },
+      {
+        stableKey: "A",
+        position: 1,
+        isCorrect: false,
+        label: { pt: "567", en: "567", es: "567", fr: "567" },
+      },
+      {
+        stableKey: "B",
+        position: 2,
+        isCorrect: true,
+        label: { pt: "630", en: "630", es: "630", fr: "630" },
+      },
+      {
+        stableKey: "C",
+        position: 3,
+        isCorrect: false,
+        label: { pt: "693", en: "693", es: "693", fr: "693" },
+      },
+      {
+        stableKey: "D",
+        position: 4,
+        isCorrect: false,
+        label: { pt: "720", en: "720", es: "720", fr: "720" },
+      },
     ],
   },
 ];

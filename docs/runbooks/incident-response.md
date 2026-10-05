@@ -27,10 +27,9 @@
      ```
 2. **Avaliar Integridade dos Provedores Externos:**
    - [Stripe Status Dashboard](https://status.stripe.com)
-   - [InfinitePay Status](https://status.infinitepay.io)
    - [Resend Status](https://status.resend.com)
 3. **Acionar Feature Flags de Contingência:**
-   - Se InfinitePay apresentar instabilidade no Brasil, alternar gateway provisório ou exibir mensagem explicativa de manutenção via `feature-flags.ts`.
+   - Se a Stripe apresentar instabilidade, interromper novos checkouts e preservar os pedidos pendentes para reconciliação.
 4. **Rollback de Deploy:**
    - Se o incidente decorrer de release recente:
      ```bash
@@ -45,6 +44,5 @@
 Se houver suspeita de comprometimento de chaves:
 
 1. **Stripe:** Gerar novo Webhook Secret no Dashboard Stripe (`whsec_...`) e atualizar `STRIPE_WEBHOOK_SECRET` na plataforma de hospedagem.
-2. **InfinitePay:** Atualizar segredo compartilhado de webhook e chave de API.
-3. **Supabase `service_role`:** Gerar novo Secret no dashboard Supabase e reiniciar aplicação Next.js.
-4. **Hash Salt:** Não alterar `SALT_PEPPER` sem migração prévia de dados anonimizados.
+2. **Supabase `service_role`:** Gerar novo Secret no dashboard Supabase e reiniciar aplicação Next.js.
+3. **Hash Salt:** Não alterar `SALT_PEPPER` sem migração prévia de dados anonimizados.

@@ -114,7 +114,9 @@ export function extractQuestionDimension(q: CandidateQuestion): string {
   );
 }
 
-export function extractQuestionDifficulty(q: CandidateQuestion): "EASY" | "MEDIUM" | "HARD" | "N/A" {
+export function extractQuestionDifficulty(
+  q: CandidateQuestion,
+): "EASY" | "MEDIUM" | "HARD" | "N/A" {
   const diff = ((q.scoringKey?.difficulty as string) ?? "").toUpperCase();
   if (diff === "EASY" || diff === "MEDIUM" || diff === "HARD") {
     return diff;
@@ -165,9 +167,7 @@ export function selectQuestionsForAttempt(
   for (const [dimKey, quota] of Object.entries(config.dimensions)) {
     // If quiz is decisiondna scenarios, dimension key in config is 'SCENARIOS'
     const candidatesInDim =
-      dimKey === "SCENARIOS"
-        ? [...eligible]
-        : (byDimension.get(dimKey) ?? []);
+      dimKey === "SCENARIOS" ? [...eligible] : (byDimension.get(dimKey) ?? []);
 
     if (candidatesInDim.length < quota.total) {
       throw new InsufficientQuestionPoolError(
@@ -294,7 +294,11 @@ export function selectQuestionsForAttempt(
           candidatesInDim.filter((q) => !selectedIds.has(q.id)),
           prng,
         );
-        while (selectedQuestions.filter((q) => extractQuestionDimension(q) === dimKey).length < quota.total && remaining.length > 0) {
+        while (
+          selectedQuestions.filter((q) => extractQuestionDimension(q) === dimKey).length <
+            quota.total &&
+          remaining.length > 0
+        ) {
           const nextQ = remaining.pop();
           if (nextQ && !selectedIds.has(nextQ.id)) {
             selectedQuestions.push(nextQ);
@@ -303,7 +307,9 @@ export function selectQuestionsForAttempt(
         }
       }
 
-      const totalInDim = selectedQuestions.filter((q) => extractQuestionDimension(q) === dimKey).length;
+      const totalInDim = selectedQuestions.filter(
+        (q) => extractQuestionDimension(q) === dimKey,
+      ).length;
       if (totalInDim < quota.total) {
         throw new InsufficientQuestionPoolError(
           `Failed to meet quota for quiz "${config.quizSlug}", dimension "${dimKey}": got ${totalInDim}, required ${quota.total}.`,
@@ -337,11 +343,7 @@ export function selectQuestionsForAttempt(
   }
 
   // 4. UX-Aware Ordering
-  const orderedQuestions = orderSelectedQuestions(
-    selectedQuestions,
-    config.orderingStrategy,
-    prng,
-  );
+  const orderedQuestions = orderSelectedQuestions(selectedQuestions, config.orderingStrategy, prng);
 
   // 5. Final validation: unique IDs and count
   if (orderedQuestions.length !== config.totalQuestions) {

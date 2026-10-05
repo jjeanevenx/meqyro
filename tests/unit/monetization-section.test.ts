@@ -63,7 +63,7 @@ describe("Monetization Section & Conversion UX (Unit Tests)", () => {
 
   it("ensures paywall features list provides the 6 concrete, non-inflated benefits", async () => {
     // Generate a mock result in English to verify features
-    const enResult = await getProtectedResult({
+    await getProtectedResult({
       sessionId: "mock-session-test",
       sessionToken: "test-token",
       locale: "en",
@@ -97,7 +97,7 @@ describe("Monetization Section & Conversion UX (Unit Tests)", () => {
       currency: "USD",
       market: "US",
       email: "victim@example.com", // PII to be stripped
-      user_full_name: "John Doe",  // PII to be stripped
+      user_full_name: "John Doe", // PII to be stripped
       credit_card: "411111111111", // PII to be stripped
     };
 

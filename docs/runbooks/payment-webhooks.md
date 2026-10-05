@@ -1,87 +1,54 @@
-# Runbook: Webhooks e Conciliação de Pagamentos
+# Runbook: Stripe Checkout, Webhooks e Conciliação
 
-**Versão:** 1.1  
-**Data:** 26/09/2026  
-**Status:** Produção e Homologação
+**Versão:** 3.0
 
----
+**Status:** Stripe-only; validação externa em modo de teste pendente
 
-## 1. Arquitetura de Ingestão e Segurança
+## Arquitetura e segurança
 
-Todos os webhooks de gateways de pagamento (Stripe e InfinitePay) são processados de forma **estritamente fail-closed**:
+- Endpoint: `POST /api/webhooks/stripe`.
+- O SDK oficial valida o corpo bruto com `Stripe-Signature` e `STRIPE_WEBHOOK_SECRET`.
+- O `client_reference_id` e os metadados `order_id`, `order_number` e `product_code` correlacionam a sessão ao pedido.
+- Valor, moeda, produto e provedor são conferidos antes do fulfillment.
+- `(provider, provider_event_id)` garante idempotência em `meqyro.payment_events`.
+- Redirects nunca liberam conteúdo; somente webhook autenticado ou reconciliação server-side concede grants.
 
-- Rejeição imediata (`HTTP 401 Unauthorized`) caso a assinatura do webhook esteja ausente, malformada ou o segredo do provedor não esteja configurado no servidor.
-- Validação temporal da assinatura: tolerância máxima de 300 segundos (5 minutos) para mitigar ataques de repetição (_replay attack_).
-- Comparação criptográfica em tempo constante (`timingSafeEqual`) de hashes HMAC-SHA256 para prevenir _timing attacks_.
-- Identificadores de evento extraídos unicamente do payload assinado pelo provedor (sem IDs pseudo-aleatórios ou baseados em `Date.now()`).
-- Deduplicação e idempotência através de chave primária composta `(provider, provider_event_id)` na tabela `meqyro.payment_events`.
-- Não liberação de conteúdo premium com base em redirect de navegador: **somente webhooks autenticados ou reconciliação server-side** concedem grants em `meqyro.result_access_grants`.
+## Eventos processados
 
----
+- `checkout.session.completed`: confirma somente quando `payment_status=paid`.
+- `checkout.session.async_payment_succeeded`: confirma pagamentos assíncronos, incluindo métodos elegíveis.
+- `checkout.session.async_payment_failed`: marca o pedido como falho.
+- `charge.refunded`: revoga grants e marca o pedido como reembolsado.
+- `charge.dispute.created`: revoga grants e registra chargeback.
 
-## 2. Contratos dos Provedores
+## Teste local
 
-### 2.1 Stripe
+1. Configure `STRIPE_SECRET_KEY=sk_test_...` em `.env.local`.
+2. Autentique a Stripe CLI e execute:
 
-- **Endpoint:** `POST /api/webhooks/stripe`
-- **Header:** `stripe-signature: t=<timestamp>,v1=<hmac_sha256>`
-- **Segredo no Ambiente:** `STRIPE_WEBHOOK_SECRET`
-- **Payload Assinado:** `<timestamp>.<raw_body_utf8>`
-- **Eventos Monitorados:**
-  - `checkout.session.completed`: Confirmação de pagamento (`CONFIRMED`). Valida `client_reference_id` (Order ID), `metadata.order_number`, `amount_total` e `currency`.
-  - `charge.refunded`: Estorno/Reembolso (`REFUNDED`). Revoga grants ativos e marca pedido como `REFUNDED`.
-  - `charge.dispute.created`: Chargeback/Disputa (`CHARGEBACK`). Revoga grants imediatamente e registra alerta de segurança.
+   ```bash
+   stripe listen \
+     --events checkout.session.completed,checkout.session.async_payment_succeeded,checkout.session.async_payment_failed,charge.refunded,charge.dispute.created \
+     --forward-to localhost:3000/api/webhooks/stripe
+   ```
 
-### 2.2 InfinitePay
+3. Copie o `whsec_...` exibido para `STRIPE_WEBHOOK_SECRET` e reinicie `pnpm dev`.
+4. Habilite Pix e cartões nos métodos de pagamento do Dashboard em modo de teste.
+5. Faça uma compra pelo fluxo real. Confira o pedido, `payment_events`, grant e acesso ao relatório.
 
-- **Endpoint:** `POST /api/webhooks/infinitepay`
-- **Header:** `x-infinitepay-signature: <hmac_sha256>`
-- **Segredo no Ambiente:** `INFINITEPAY_WEBHOOK_SECRET`
-- **Payload Assinado:** `<raw_body_utf8>`
-- **Eventos Monitorados:**
-  - `transaction.success`: Pagamento aprovado via PIX ou Cartão (`CONFIRMED`). Valida `order_id` / `order_number`, `amount` e `currency` (BRL).
-  - `transaction.refunded`: Reembolso (`REFUNDED`).
-  - `transaction.chargeback`: Chargeback (`CHARGEBACK`).
+## Diagnóstico
 
----
+### Assinatura 401
 
-## 3. Validação de Pedido e Anti-Tampering
+Confirme que o corpo chega sem transformação e que o `whsec_...` pertence ao listener ou endpoint do mesmo modo da chave usada.
 
-Antes do fulfillment do pedido, o `webhook-handler` executa:
+### Método não aparece
 
-1. **Verificação de Existência:** Consulta o pedido por ID ou número oficial do pedido (`MQ-BR-...`).
-2. **Isolamento de Provedor:** Um evento do Stripe não pode liberar um pedido originado pelo InfinitePay (e vice-versa).
-3. **Casamento Exato de Valor e Moeda:** Se o webhook declarar valor ou moeda divergentes do pedido registrado no banco, o evento é rejeitado com status `UNMATCHED_AMOUNT`, sem concessão de grant.
-4. **Idempotência Estrita:** Eventos duplicados retornam `{ handled: true, duplicate: true }` com `HTTP 200 OK`, sem duplicar grants.
+Checkout usa métodos dinâmicos. Confira habilitação no Dashboard, país da conta, país do cliente,
+moeda, valor, navegador e dispositivo. Pix exige cliente no Brasil e apresentação em BRL. Carteiras
+como Google Pay só aparecem quando o dispositivo e a configuração são elegíveis.
 
----
+### Pedido pago ainda pendente
 
-## 4. Diagnóstico de Falhas e Procedimento Operacional
-
-### 4.1 Erro 401: Assinatura Ausente ou Malformada
-
-- **Causa:** O payload foi enviado sem o header de assinatura correto ou o segredo correspondente não está definido no ambiente.
-- **Ação:** Verificar as variáveis `STRIPE_WEBHOOK_SECRET` e `INFINITEPAY_WEBHOOK_SECRET` no arquivo `.env.production` ou nas configurações do host (Vercel/Cloudflare).
-
-### 4.2 Pedido Pago mas com Status Pendente (`PAID` sem `FULFILLED`)
-
-- **Causa:** Interrupção de rede temporária durante a finalização do grant.
-- **Ação:** Executar a rotina de reconciliação automática chamando o endpoint de cron:
-  ```bash
-  curl -X POST https://meqyro.com/api/cron/reconcile \
-    -H "Authorization: Bearer <CRON_SECRET>"
-  ```
-  Ou manualmente via script operacional:
-  ```ts
-  import { reconcileUnfulfilledPaidOrders } from "@/features/commerce/reconciliation-service";
-  const { repairedCount } = await reconcileUnfulfilledPaidOrders();
-  ```
-
-### 4.3 Procedimento de Estorno / Reembolso
-
-- Quando o reembolso é disparado pelo painel do Stripe ou InfinitePay, o webhook processa a revogação automaticamente.
-- Se necessário estorno manual de emergência:
-  ```ts
-  import { refundOrder } from "@/features/commerce/fulfillment-service";
-  await refundOrder(orderId, "Solicitação de cancelamento em conformidade com o CDC");
-  ```
+Consulte a entrega do evento no Workbench. A rotina `POST /api/cron/reconcile`, autenticada com
+`CRON_SECRET`, também consulta sessões Stripe pendentes e repara fulfillment interrompido.

@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import { useSearchParams, useParams } from "next/navigation";
 import Link from "next/link";
 import { XCircle, RefreshCw, Loader2, ArrowLeft } from "lucide-react";
@@ -62,10 +62,39 @@ function FailedContent() {
   const locale: Locale = typeof rawLocale === "string" && isLocale(rawLocale) ? rawLocale : "pt";
   const t = failedTranslations[locale];
 
-  const sessionId = searchParams.get("session");
-  const orderNumber = searchParams.get("order");
+  const orderId = searchParams.get("order");
+  const lookupToken = searchParams.get("token");
+  const [sessionId, setSessionId] = useState<string | null>(null);
+  const [orderNumber, setOrderNumber] = useState<string | null>(null);
 
-  const retryUrl = sessionId ? `/${locale}/checkout?session=${sessionId}` : `/${locale}`;
+  useEffect(() => {
+    if (!orderId || !lookupToken) return;
+    const cancelOrder = async () => {
+      const response = await fetch(
+        `/api/orders/${encodeURIComponent(orderId)}?token=${encodeURIComponent(lookupToken)}`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ action: "cancel" }),
+          cache: "no-store",
+        },
+      );
+      if (!response.ok) return;
+      const data = (await response.json()) as {
+        order?: { sessionId?: string; orderNumber?: string };
+      };
+      setSessionId(data.order?.sessionId ?? null);
+      setOrderNumber(data.order?.orderNumber ?? null);
+    };
+    void cancelOrder();
+  }, [lookupToken, orderId]);
+
+  const retryUrl = sessionId
+    ? `/${locale}/checkout?session=${encodeURIComponent(sessionId)}&product=BRAINRANK`
+    : `/${locale}`;
+  const resultUrl = sessionId
+    ? `/${locale}/quizzes/brainrank/result?session=${encodeURIComponent(sessionId)}`
+    : `/${locale}`;
 
   return (
     <div className="checkout-return-card">
@@ -89,7 +118,7 @@ function FailedContent() {
           <span>{t.tryAgainButton}</span>
         </Link>
 
-        <Link href={`/${locale}`} className="button button--secondary">
+        <Link href={resultUrl} className="button button--secondary">
           <ArrowLeft size={18} />
           <span>{t.backToHomeButton}</span>
         </Link>

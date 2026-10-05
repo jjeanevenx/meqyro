@@ -38,7 +38,7 @@ export function SingleChoiceRenderer({
   };
 
   return (
-    <div className="single-choice-group" role="radiogroup" aria-label="Opções de resposta">
+    <div className="single-choice-group" role="radiogroup" aria-labelledby="quiz-question-heading">
       {options.map((option, index) => {
         const isSelected = selectedOptionId === option.id;
         const letter = String.fromCharCode(65 + index);

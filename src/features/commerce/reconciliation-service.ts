@@ -1,10 +1,11 @@
 import "server-only";
+import { deliverCompletedReports } from "@/features/email/completed-report-delivery";
 
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { getPaymentProvider } from "./order-service";
 import { fulfillOrder } from "./fulfillment-service";
-import type { PaymentProviderName } from "./contracts";
 import { logEvent } from "@/lib/observability/logger";
+import { sendPurchaseConfirmationForOrder } from "./webhook-handler";
 
 export interface ReconciliationReport {
   success: boolean;
@@ -100,9 +101,10 @@ export async function reconcilePendingOrders(): Promise<{
   const { data: pendingOrders } = await supabase
     .from("orders")
     .select(
-      "id, order_number, payment_provider, created_at, payment_attempts(id, provider_attempt_id, status)",
+      "id, order_number, payment_provider, provider_payment_id, created_at, payment_attempts(id, provider_attempt_id, status, created_at)",
     )
     .eq("status", "PENDING")
+    .eq("payment_provider", "stripe")
     .lt("created_at", fifteenMinutesAgo)
     .limit(20);
 
@@ -122,16 +124,18 @@ export async function reconcilePendingOrders(): Promise<{
 
     if (!latestAttempt?.provider_attempt_id || !order.payment_provider) continue;
 
-    const provider = getPaymentProvider(order.payment_provider as PaymentProviderName);
+    const provider = getPaymentProvider("stripe");
 
     try {
       const statusCheck = await provider.getPaymentStatus({
         orderId: order.id,
         providerAttemptId: latestAttempt.provider_attempt_id,
+        orderNumber: order.order_number,
+        providerPaymentId: order.provider_payment_id ?? undefined,
       });
 
       if (statusCheck.status === "CONFIRMED") {
-        await fulfillOrder(order.id, "reconciliation_poll");
+        await fulfillOrder(order.id, "reconciliation_poll", statusCheck.transactionId);
         confirmedCount += 1;
       } else if (statusCheck.status === "EXPIRED") {
         await supabase
@@ -229,6 +233,27 @@ export async function runFullReconciliationSuite(
     const pending = await reconcilePendingOrders();
     const sessions = await expireStaleSessions();
     const tokens = await cleanupExpiredTokens();
+    const db = createSupabaseSecretClient();
+    const { data: undelivered, error: deliveryQueryError } = await db
+      .from("orders")
+      .select("id")
+      .eq("status", "FULFILLED")
+      .is("confirmation_email_sent_at", null)
+      .or(
+        `report_delivery_last_attempt_at.is.null,report_delivery_last_attempt_at.lt.${new Date(Date.now() - 5 * 60_000).toISOString()}`,
+      )
+      .order("report_delivery_last_attempt_at", { ascending: true, nullsFirst: true })
+      .limit(5);
+    if (deliveryQueryError) throw deliveryQueryError;
+    for (const order of undelivered ?? []) {
+      await sendPurchaseConfirmationForOrder(order.id).catch((error: unknown) => {
+        logEvent("error", "paid_report_retry_failed", {
+          orderId: order.id,
+          error: error instanceof Error ? error.message : "Unknown",
+        });
+      });
+    }
+    await deliverCompletedReports();
 
     const durationMs = Date.now() - startTime;
 

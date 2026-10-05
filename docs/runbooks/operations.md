@@ -111,6 +111,6 @@ GET /[locale]/privacy/data-request/confirm?token=<SECURE_TOKEN>
 | Component           | Local Verification                 | Production Deployment                  |
 | ------------------- | ---------------------------------- | -------------------------------------- |
 | **Database**        | Local Supabase (`127.0.0.1:54321`) | Supabase Cloud (Managed PostgreSQL)    |
-| **Payments**        | Deterministic adapter signatures   | Live Stripe & InfinitePay accounts     |
+| **Payments**        | Deterministic adapter signatures   | Stripe test/live account and webhooks  |
 | **Email**           | Local log emission                 | Resend API (`RESEND_API_KEY`)          |
 | **Cron Scheduling** | Manual curl / Vitest integration   | Vercel Cron or GitHub Actions workflow |

@@ -8,7 +8,10 @@ on:
 jobs:
   quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 15
+    env:
+      REQUIRE_INTEGRATION_DB: "true"
+      NEXT_PUBLIC_SITE_URL: "https://meqyro.com"
+    timeout-minutes: 25
     steps:
       - uses: actions/checkout@v5
       - uses: pnpm/action-setup@v4
@@ -22,6 +25,21 @@ jobs:
       - run: pnpm format:check
       - run: pnpm lint
       - run: pnpm typecheck
+      - name: Start local Supabase and apply migrations and seed
+        run: pnpm exec supabase start
+      - name: Require integration database
+        run: curl --fail --retry 10 --retry-delay 2 http://127.0.0.1:54321/auth/v1/health
+      - name: Configure application against the local test database
+        run: |
+          pnpm exec supabase status --output env > "$RUNNER_TEMP/supabase.env"
+          source "$RUNNER_TEMP/supabase.env"
+          echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL" >> "$GITHUB_ENV"
+          echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$ANON_KEY" >> "$GITHUB_ENV"
+          echo "SUPABASE_SECRET_KEY=$SERVICE_ROLE_KEY" >> "$GITHUB_ENV"
+          echo "TOKEN_SECURITY_SECRET=local-ci-only-token-security-secret-32chars" >> "$GITHUB_ENV"
       - run: pnpm test
       - run: pnpm build
       - run: pnpm smoke
+      - name: Stop local Supabase
+        if: always()
+        run: pnpm exec supabase stop --no-backup

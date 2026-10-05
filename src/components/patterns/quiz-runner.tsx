@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import Link from "next/link";
 import { ArrowLeft, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import type {
   PublicQuiz,
@@ -9,6 +10,7 @@ import type {
   PartialResultSummary,
 } from "@/features/quiz-engine/contracts";
 import type { ProtectedResultResponse } from "@/features/results/contracts";
+import { MemoryObservation } from "./memory-observation";
 import { QuestionRenderer } from "./question-renderers";
 import { ProgressBar } from "@/components/ui/progress-bar";
 import { Button } from "@/components/ui/button";
@@ -53,11 +55,13 @@ export function QuizRunner({
   >(() => initialSession?.answers ?? {});
 
   const [isInitializing, setIsInitializing] = useState(!initialSession);
+  const [initAttempt, setInitAttempt] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
   const [isCompleting, setIsCompleting] = useState(false);
   const [result, setResult] = useState<PartialResultSummary | null>(null);
   const [protectedResult, setProtectedResult] = useState<ProtectedResultResponse | null>(null);
   const [showLeadCapture, setShowLeadCapture] = useState(true);
+  const [comparisonConsent, setComparisonConsent] = useState(false);
 
   // Distinct error channels
   const [validationError, setValidationError] = useState<string | null>(null);
@@ -65,13 +69,17 @@ export function QuizRunner({
 
   // Double-click lock & timing refs
   const saveLockRef = useRef<boolean>(false);
-  const sessionInitPromiseRef = useRef<Promise<{ session: ActiveSession; questions?: PublicQuestion[] }> | null>(null);
+  const sessionInitPromiseRef = useRef<Promise<{
+    session: ActiveSession;
+    questions?: PublicQuestion[];
+  }> | null>(null);
   const questionStartTimeRef = useRef<number>(0);
   const cardRef = useRef<HTMLElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
 
   // Initialize session if not provided by server
   useEffect(() => {
-    if (session) {
+    if (session || (initialInviteCode && !comparisonConsent)) {
       return;
     }
 
@@ -88,13 +96,17 @@ export function QuizRunner({
             market,
             referralCode: initialReferralCode,
             inviteCode: initialInviteCode,
+            comparisonConsent,
           }),
         }).then(async (response) => {
           if (!response.ok) {
             throw new Error(dict.quizRunner.initError);
           }
 
-          const data = (await response.json()) as { session: ActiveSession; questions?: PublicQuestion[] };
+          const data = (await response.json()) as {
+            session: ActiveSession;
+            questions?: PublicQuestion[];
+          };
           return data;
         });
 
@@ -102,7 +114,8 @@ export function QuizRunner({
         const activeSession = data.session;
         if (isMounted) {
           setSession(activeSession);
-          const currentQs = data.questions && data.questions.length > 0 ? data.questions : questions;
+          const currentQs =
+            data.questions && data.questions.length > 0 ? data.questions : questions;
           if (data.questions && data.questions.length > 0) {
             setQuestions(data.questions);
           }
@@ -136,13 +149,16 @@ export function QuizRunner({
     questions,
     initialReferralCode,
     initialInviteCode,
+    comparisonConsent,
     dict.quizRunner.initError,
+    initAttempt,
   ]);
 
   // Reset timer on question change
   useEffect(() => {
     questionStartTimeRef.current = Date.now();
-  }, [currentIndex]);
+    if (!isInitializing && session) headingRef.current?.focus({ preventScroll: true });
+  }, [currentIndex, isInitializing, session]);
 
   const currentQuestion = questions[currentIndex];
   const currentAnswer = currentQuestion ? answers[currentQuestion.id] : undefined;
@@ -238,7 +254,10 @@ export function QuizRunner({
         // Smooth scroll to top of card on question advance
         if (typeof window !== "undefined") {
           const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-          cardRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+          cardRef.current?.scrollIntoView({
+            behavior: reduceMotion ? "auto" : "smooth",
+            block: "start",
+          });
         }
         return;
       }
@@ -257,6 +276,11 @@ export function QuizRunner({
 
       const completeData = await completeResponse.json();
       setResult(completeData.result);
+      window.history.replaceState(
+        null,
+        "",
+        `/${locale}/quizzes/${quiz.slug}/result?session=${encodeURIComponent(activeSession.id)}`,
+      );
 
       // Fetch protected result & paywall details
       try {
@@ -290,17 +314,53 @@ export function QuizRunner({
 
       if (typeof window !== "undefined") {
         const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-        cardRef.current?.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "start" });
+        cardRef.current?.scrollIntoView({
+          behavior: reduceMotion ? "auto" : "smooth",
+          block: "start",
+        });
       }
     }
   };
 
   // 1. Initial loading state
+  if (initialInviteCode && !session && !comparisonConsent) {
+    const consentCopy = dict.coupleInviteStart;
+    return (
+      <main className="result-preview-shell">
+        <section className="result-preview-card space-y-4">
+          <h1>{consentCopy[0]}</h1>
+          <p>{consentCopy[1]}</p>
+          <Button onClick={() => setComparisonConsent(true)}>{consentCopy[2]}</Button>
+          <Link href={`/${safeLocale}/quizzes/coupledna`}>{dict.common.back}</Link>
+        </section>
+      </main>
+    );
+  }
   if (isInitializing) {
     return (
       <main className="quiz-runner quiz-runner--loading flex flex-col items-center justify-center p-12 min-h-screen">
         <Loader2 className="animate-spin text-stone-700" size={32} aria-hidden="true" />
         <p className="mt-4 text-sm text-stone-600 font-medium">{dict.common.loading}</p>
+      </main>
+    );
+  }
+
+  if (!session) {
+    return (
+      <main className="quiz-runner quiz-runner--loading">
+        <h1>{dict.common.error}</h1>
+        <p role="alert">{systemError ?? dict.quizRunner.initError}</p>
+        <Button
+          type="button"
+          onClick={() => {
+            setSystemError(null);
+            setIsInitializing(true);
+            setInitAttempt((attempt) => attempt + 1);
+          }}
+        >
+          {dict.common.retry}
+        </Button>
+        <Link href={`/${locale}/quizzes/${quiz.slug}`}>{dict.common.back}</Link>
       </main>
     );
   }
@@ -328,6 +388,8 @@ export function QuizRunner({
           accessLevel={protectedResult?.accessLevel ?? "FREE_PARTIAL"}
           paywall={protectedResult?.paywall}
           premiumReport={protectedResult?.premiumReport}
+          couple={protectedResult?.couple}
+          includedQuizzes={protectedResult?.includedQuizzes}
           locale={locale}
         />
       </main>
@@ -337,6 +399,23 @@ export function QuizRunner({
   // 3. Question Runner screen
   const questionKicker = `${dict.common.question.toUpperCase()} ${String(currentIndex + 1).padStart(2, "0")}`;
   const activeError = validationError || systemError;
+
+  const memoryCue = currentQuestion?.memoryCue;
+  if (memoryCue && session && !session.memorySeen?.includes(memoryCue.id)) {
+    return (
+      <MemoryObservation
+        key={memoryCue.id}
+        sessionId={session.id}
+        cueId={memoryCue.id}
+        text={memoryCue.text}
+        locale={safeLocale}
+        onComplete={(memorySeen) => {
+          setSession((previous) => (previous ? { ...previous, memorySeen } : previous));
+          questionStartTimeRef.current = Date.now();
+        }}
+      />
+    );
+  }
 
   return (
     <main className="quiz-runner" ref={cardRef}>
@@ -353,7 +432,13 @@ export function QuizRunner({
           <span>{dict.common.back}</span>
         </button>
 
-        <span className="quiz-runner__wordmark">MEQYRO</span>
+        <Link
+          href={`/${locale}/quizzes/${quiz.slug}`}
+          className="quiz-runner__wordmark"
+          aria-label={`${dict.common.back} — ${dict.quizzes[quiz.slug]?.name ?? "MEQYRO"}`}
+        >
+          MEQYRO
+        </Link>
 
         <span className="quiz-runner__counter">
           {currentIndex + 1} / {totalQuestions}
@@ -367,7 +452,10 @@ export function QuizRunner({
 
       {/* Question Content */}
       {currentQuestion ? (
-        <section className={`quiz-question-card ${currentQuestion.kind === "VISUAL_CHOICE" ? "quiz-question-card--visual" : ""}`} aria-labelledby="quiz-question-heading">
+        <section
+          className={`quiz-question-card ${currentQuestion.kind === "VISUAL_CHOICE" ? "quiz-question-card--visual" : ""}`}
+          aria-labelledby="quiz-question-heading"
+        >
           <div className="quiz-question-meta">
             <span className="quiz-question-kicker">{questionKicker}</span>
             {currentQuestion.clue ? (
@@ -375,7 +463,12 @@ export function QuizRunner({
             ) : null}
           </div>
 
-          <h1 id="quiz-question-heading" className="quiz-question-title">
+          <h1
+            id="quiz-question-heading"
+            className="quiz-question-title"
+            ref={headingRef}
+            tabIndex={-1}
+          >
             {currentQuestion.prompt}
           </h1>
 
@@ -392,6 +485,7 @@ export function QuizRunner({
 
           <div className="quiz-options-wrapper">
             <QuestionRenderer
+              key={currentQuestion.id}
               question={currentQuestion}
               selectedOptionId={currentAnswer?.optionId}
               selectedValue={currentAnswer?.numericValue}

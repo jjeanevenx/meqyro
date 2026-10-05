@@ -13,18 +13,18 @@ Detailed project knowledge is in `/docs/ai/`. Always prefer existing project pat
 
 ## Source of truth by topic
 
-| Topic | Document |
-|---|---|
-| Architecture & module boundaries | `docs/ai/ARCHITECTURE.md` |
-| Folder structure & placement rules | `docs/ai/STRUCTURE.md` |
-| Libraries & versions | `docs/ai/TECH_STACK.md` |
+| Topic                                  | Document                  |
+| -------------------------------------- | ------------------------- |
+| Architecture & module boundaries       | `docs/ai/ARCHITECTURE.md` |
+| Folder structure & placement rules     | `docs/ai/STRUCTURE.md`    |
+| Libraries & versions                   | `docs/ai/TECH_STACK.md`   |
 | Business/domain rules, scoring, states | `docs/ai/DOMAIN_RULES.md` |
-| Code style & patterns | `docs/ai/CONVENTIONS.md` |
-| Build, test & migration commands | `docs/ai/WORKFLOWS.md` |
-| Test structure & conventions | `docs/ai/TESTING.md` |
-| Auth, tokens, payments, PII | `docs/ai/SECURITY.md` |
-| What never to do | `docs/ai/DO_NOT_DO.md` |
-| Why decisions were made | `docs/ai/DECISIONS.md` |
+| Code style & patterns                  | `docs/ai/CONVENTIONS.md`  |
+| Build, test & migration commands       | `docs/ai/WORKFLOWS.md`    |
+| Test structure & conventions           | `docs/ai/TESTING.md`      |
+| Auth, tokens, payments, PII            | `docs/ai/SECURITY.md`     |
+| What never to do                       | `docs/ai/DO_NOT_DO.md`    |
+| Why decisions were made                | `docs/ai/DECISIONS.md`    |
 
 ## Most critical rules (non-negotiable)
 

@@ -63,7 +63,7 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       howItWorks: "Como funciona:",
       footer: "Meqyro CoupleDNA • Sem cadastro ou criação de senha necessária",
       steps: [
-        "Você responde a 25 perguntas rápidas (6 min).",
+        "Você responde a 20 afirmações (6–9 min).",
         "Ambos confirmam o consentimento mútuo de compartilhamento.",
         "O relatório conjunto revela onde vocês combinam e tópicos para conversar.",
       ],
@@ -78,7 +78,7 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       howItWorks: "How it works:",
       footer: "Meqyro CoupleDNA • No account or password required",
       steps: [
-        "Answer 25 quick prompts (around 6 min).",
+        "Answer 20 statements (6–9 min).",
         "Both partners confirm mutual consent.",
         "The joint report reveals synergy areas and talking points.",
       ],
@@ -93,7 +93,7 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       howItWorks: "Cómo funciona:",
       footer: "Meqyro CoupleDNA • Sin registro ni contraseña requerida",
       steps: [
-        "Responde 25 preguntas ágiles (6 min).",
+        "Responde 20 afirmaciones (6–9 min).",
         "Ambos confirman el consentimiento mutuo.",
         "El informe conjunto muestra dónde coinciden y temas de diálogo.",
       ],
@@ -108,7 +108,7 @@ export default async function CoupleInvitePage({ params }: CoupleInvitePageProps
       howItWorks: "Comment ça fonctionne :",
       footer: "Meqyro CoupleDNA • Aucune inscription ni mot de passe requis",
       steps: [
-        "Répondez à 25 affirmations simples (6 min).",
+        "Répondez à 20 affirmations (6–9 min).",
         "Chacun confirme son accord bilatéral.",
         "Le rapport mutuel met en lumière vos forces et pistes d'échange.",
       ],

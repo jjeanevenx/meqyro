@@ -1,5 +1,7 @@
 # Meqyro v1 — Plano de Implementação
 
+> Plano histórico. A implementação vigente usa exclusivamente Stripe Checkout; referências a
+
 **Base analisada:** `Meqyro — Especificação do Produto, Arquitetura e Lançamento v1.md`  
 **Objetivo:** lançar e validar um funil mobile-first de quizzes com resultado parcial gratuito, relatório premium e aquisição orgânica/paga.  
 **Data do plano:** 25/09/2026
@@ -12,7 +14,6 @@ A especificação define corretamente o produto real: o quiz é o mecanismo de a
 
 A principal recomendação é **não implementar os sete quizzes em paralelo**. A v1 deve ser construída como um motor único e validada primeiro com um corte vertical completo:
 
-1. **BrainRank em PT-BR**, com sessão anônima, scoring, resultado gratuito, InfinitePay, desbloqueio premium, e-mail e analytics.
 2. **Personality Map em inglês**, reutilizando o mesmo motor e validando Stripe, localização e SEO internacional.
 3. Completar os quatro idiomas e os demais cinco quizzes em ondas, sempre usando o mesmo checklist de publicação.
 
@@ -26,7 +27,6 @@ Isso preserva o escopo final de sete produtos e quatro idiomas, mas evita descob
 | Frontend                | Server Components por padrão; Client Components apenas para interação do quiz                      |
 | Banco                   | Supabase Postgres; acesso público mínimo; dados sensíveis via servidor                             |
 | Sessão                  | Sessão anônima com token opaco em cookie HttpOnly; nunca usar `session_id` sozinho como credencial |
-| Pagamento BR            | InfinitePay, com confirmação server-to-server antes de liberar                                     |
 | Pagamento internacional | Stripe Checkout hospedado, via Checkout Sessions                                                   |
 | Conteúdo                | Versionado no banco e publicado por estado; traduções validadas antes da ativação                  |
 | Analytics               | Eventos próprios first-party no Postgres + analytics de tráfego sem respostas pessoais             |
@@ -44,7 +44,6 @@ Isso preserva o escopo final de sete produtos e quatro idiomas, mas evita descob
 - Sessões anônimas e retomada por link seguro.
 - Resultados gratuito e premium.
 - Captura de e-mail e consentimentos separados.
-- Pagamentos InfinitePay e Stripe.
 - Relatórios, e-mails transacionais e recuperação consentida.
 - Compartilhamento, referral básico e cross-sell.
 - PT, EN, ES e FR.
@@ -85,7 +84,6 @@ Landing BrainRank PT-BR
 → scoring no servidor
 → capturar e-mail
 → mostrar resultado parcial
-→ pagar com InfinitePay
 → receber webhook/confirmar pagamento
 → liberar relatório
 → enviar e-mail
@@ -99,7 +97,6 @@ Após estabilizar esse fluxo, implementar Personality Map EN com Stripe prova qu
 | Onda | Produtos                             | Objetivo                                            |
 | ---- | ------------------------------------ | --------------------------------------------------- |
 | 0    | Protótipo de fluxo                   | Validar linguagem visual e fricção em mobile        |
-| 1    | BrainRank PT-BR                      | Validar o funil completo e InfinitePay              |
 | 2    | Personality Map EN                   | Validar escala Likert, internacionalização e Stripe |
 | 3    | BrainRank + Personality em 4 idiomas | Validar operação editorial e SEO multilíngue        |
 | 4    | CareerFit, MoneyDNA, FocusStyle      | Ampliar valor prático e cross-sell                  |
@@ -160,7 +157,6 @@ src/
 │   │   ├── sessions/[id]/complete/route.ts
 │   │   ├── leads/route.ts
 │   │   ├── checkout/route.ts
-│   │   ├── webhooks/{stripe,infinitepay,resend}/route.ts
 │   │   ├── results/[token]/route.ts
 │   │   └── unsubscribe/route.ts
 │   ├── robots.ts
@@ -275,7 +271,6 @@ Toda transição precisa ter origem, timestamp, request/correlation ID e, nas tr
 - O servidor seleciona produto, preço, moeda e gateway.
 - Redirect/success URL nunca libera acesso.
 - Stripe: Checkout Sessions hospedado; assinatura validada usando corpo bruto do webhook.
-- InfinitePay: validar webhook e consultar a transação no provedor antes de confirmar.
 - Conferir valor, moeda, `order_nsu`/metadata e status antes de marcar como pago.
 - Processamento idempotente e reconciliador periódico para pedidos pagos não entregues.
 - Manter payload mínimo ou hash; evitar persistir dados desnecessários do cartão/pagador.
@@ -317,8 +312,6 @@ Além dessa interface, criar serviços separados:
 - Tratar ao menos conclusão, expiração e reembolso/chargeback relevantes.
 - Fixar a versão da API/SDK usada pelo projeto e atualizar deliberadamente.
 
-### InfinitePay
-
 - Fazer uma prova técnica na primeira semana: ambiente, API disponível, criação de link, assinatura/validação do webhook, consulta de pagamento e política de reembolso.
 - Caso a API não ofereça todos os sinais esperados, encapsular a diferença no adaptador, não no fluxo de negócio.
 - Fazer pagamentos reais de baixo valor em staging controlado antes do lançamento.
@@ -339,7 +332,6 @@ type MarketContext = {
   country: string;
   market: string;
   currency: string;
-  paymentProvider: "infinitepay" | "stripe";
   source: "user" | "edge" | "locale-fallback";
 };
 ```
@@ -521,7 +513,6 @@ Evitar fila dedicada no MVP. Quando uma tarefa assíncrona precisar confiabilida
 | Nível       | Cobertura                                                                |
 | ----------- | ------------------------------------------------------------------------ |
 | Unitário    | scoring, mercado, preços, versões, transições, tokens e consentimento    |
-| Contrato    | payloads Stripe/InfinitePay/Resend e adaptadores                         |
 | Integração  | banco, RLS, sessão, conclusão, webhook, grant, e-mail                    |
 | E2E         | fluxos mobile/desktop e quatro locales                                   |
 | Visual/a11y | componentes críticos, contraste, foco, overflow, redução de movimento    |
@@ -555,7 +546,6 @@ Estimativa para uma equipe enxuta de **2 engenheiros full-stack, 1 designer/prod
 
 ### Fase 0 — Descoberta técnica e protótipo (1 semana)
 
-- Confirmar APIs, webhooks, testes e reembolso do InfinitePay.
 - Confirmar conta Stripe, moedas e política comercial/fiscal.
 - Fechar fluxos, wireframes e direção visual.
 - Definir scoring v1 de BrainRank e Personality Map.
@@ -599,7 +589,6 @@ Estimativa para uma equipe enxuta de **2 engenheiros full-stack, 1 designer/prod
 ### Fase 4 — Comércio e fulfillment (2 semanas)
 
 - Pricing, orders, items, attempts, events e grants.
-- InfinitePay e Stripe por adapters.
 - Webhooks assinados/idempotentes.
 - Return pages para pendente, sucesso e falha.
 - Fulfillment, e-mail de compra e reconciliador.
@@ -732,7 +721,6 @@ Prazo real depende mais da prontidão e validação do conteúdo multilíngue do
 | Risco                                           | Impacto | Mitigação                                                           |
 | ----------------------------------------------- | ------- | ------------------------------------------------------------------- |
 | Sete quizzes × quatro idiomas atrasam a entrega | Alto    | lançamento em ondas e pipeline editorial com gates                  |
-| InfinitePay tem limitações de API/teste         | Alto    | spike na semana 1 e adaptador isolado                               |
 | Claims soam científicos/diagnósticos            | Alto    | revisão editorial/metodológica e disclaimers por produto            |
 | Resultado premium vazado por URL/API            | Alto    | token com hash/expiração + grant server-side + testes de enumeração |
 | Webhook duplicado ou fora de ordem              | Alto    | tabela de eventos única, transações e state machine                 |
@@ -746,7 +734,6 @@ Prazo real depende mais da prontidão e validação do conteúdo multilíngue do
 
 ## 18. Primeiras 20 tarefas
 
-1. Validar o contrato da API e webhook do InfinitePay.
 2. Definir matriz de conteúdo/owner/status para 7 × 4 locales.
 3. Congelar scoring v1 e fixtures do BrainRank.
 4. Criar mapa dos oito fluxos essenciais e protótipo mobile.

@@ -1,4 +1,8 @@
-import { describe, it, expect } from "vitest";
+import { acknowledgeMemory } from "./memory-helper";
+import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { createOrder, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
+import { fulfillOrder } from "@/features/commerce/fulfillment-service";
+import { ControlledPaymentProvider } from "./controlled-payment-provider";
 import {
   startQuizSession,
   saveAnswer,
@@ -10,6 +14,8 @@ import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { isSupabaseAvailable } from "./db-check";
 
 const isOnline = await isSupabaseAvailable();
+beforeAll(() => setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name)));
+afterAll(() => setPaymentProviderFactoryForTests(null));
 
 describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration Tests", () => {
   it("enforces free partial view and blocks premium content until grant is acquired", async () => {
@@ -26,6 +32,7 @@ describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration T
     // Answer all questions
     for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
       const q = quiz!.questions[i]!;
+      await acknowledgeMemory(q, session.id, token);
       const optId = q.options[0]?.id;
       await saveAnswer({
         sessionId: session.id,
@@ -66,6 +73,26 @@ describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration T
       grant_type: "PREMIUM_REPORT",
     });
 
+    // A detached grant cannot stand in for confirmed payment.
+    expect(
+      (
+        await getProtectedResult({
+          sessionId: session.id,
+          sessionToken: token,
+          locale: "pt",
+          market: "BR",
+        })
+      ).accessLevel,
+    ).toBe("FREE_PARTIAL");
+    const { order } = await createOrder({
+      sessionId: session.id,
+      sessionToken: token,
+      productCode: "BRAINRANK",
+      customerEmail: "protected-local-test@example.com",
+      market: "BR",
+      locale: "pt",
+    });
+    await fulfillOrder(order.id, "controlled-protected-test");
     // 4. Query protected result again as a paid user
     const paidResult = await getProtectedResult({
       sessionId: session.id,
@@ -76,7 +103,7 @@ describe.skipIf(!isOnline)("Protected Result & Paywall Service — Integration T
 
     expect(paidResult.accessLevel).toBe("PREMIUM_UNLOCKED");
     expect(paidResult.paywall).toBeUndefined();
-    expect(paidResult.premiumReport?.percentileRank).toBeGreaterThanOrEqual(0);
+    expect(paidResult.premiumReport?.percentileRank).toBeUndefined();
     expect(paidResult.premiumReport?.sections.length).toBeGreaterThan(0);
     expect(paidResult.premiumReport?.executiveSummary).toBeDefined();
     expect(paidResult.premiumReport?.comparativeBenchmark).toBeDefined();

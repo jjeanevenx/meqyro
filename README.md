@@ -47,17 +47,17 @@ pnpm dev
 
 Copie `.env.example` para `.env.local` e configure:
 
-| Variável                               | Descrição                                      | Padrão Local                  |
-| :------------------------------------- | :--------------------------------------------- | :---------------------------- |
-| `NEXT_PUBLIC_SITE_URL`                 | URL canônica pública                           | `http://localhost:3000`       |
-| `NEXT_PUBLIC_SUPABASE_URL`             | URL da API do Supabase                         | `http://127.0.0.1:54321`      |
-| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave anônima pública                          | Chave local de demo           |
-| `SUPABASE_SECRET_KEY`                  | Chave service_role (apenas servidor)           | Chave local de demo           |
-| `ADMIN_API_SECRET`                     | Token de autenticação do Admin                 | Segredo de 32+ caracteres     |
-| `CRON_SECRET`                          | Token do endpoint de reconciliação             | Segredo de 32+ caracteres     |
-| `TOKEN_SECURITY_SECRET`                | Segredo para HMAC de tokens sensíveis          | Segredo de 32+ caracteres     |
-| `STRIPE_WEBHOOK_SECRET`                | Segredo de assinatura dos webhooks Stripe      | `whsec_...`                   |
-| `INFINITEPAY_WEBHOOK_SECRET`           | Segredo de assinatura dos webhooks InfinitePay | Segredo cadastrado no gateway |
+| Variável                               | Descrição                                    | Padrão Local              |
+| :------------------------------------- | :------------------------------------------- | :------------------------ |
+| `NEXT_PUBLIC_SITE_URL`                 | URL canônica pública                         | `http://localhost:3000`   |
+| `NEXT_PUBLIC_SUPABASE_URL`             | URL da API do Supabase                       | `http://127.0.0.1:54321`  |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | Chave anônima pública                        | Chave local de demo       |
+| `SUPABASE_SECRET_KEY`                  | Chave service_role (apenas servidor)         | Chave local de demo       |
+| `ADMIN_API_SECRET`                     | Token de autenticação do Admin               | Segredo de 32+ caracteres |
+| `CRON_SECRET`                          | Token do endpoint de reconciliação           | Segredo de 32+ caracteres |
+| `TOKEN_SECURITY_SECRET`                | Segredo para HMAC de tokens sensíveis        | Segredo de 32+ caracteres |
+| `STRIPE_SECRET_KEY`                    | Chave secreta da Stripe, somente no servidor | `sk_test_...`             |
+| `STRIPE_WEBHOOK_SECRET`                | Segredo do listener/endpoint Stripe          | `whsec_...`               |
 
 ---
 
@@ -111,9 +111,10 @@ pnpm smoke
 
 ## 6. Instruções de Deploy para Produção
 
-1. Configure as variáveis de ambiente de produção (especialmente secrets criptográficos e chaves reais dos gateways).
+1. Configure as variáveis de ambiente de produção (especialmente secrets criptográficos e chaves reais da Stripe).
 2. Certifique-se de que `NODE_ENV=production` esteja definido para ativar o modo estritamente fail-closed.
 3. Configure uma cron job agendada (ex.: a cada 5 ou 10 minutos) chamando `POST /api/cron/reconcile` com o header `Authorization: Bearer <CRON_SECRET>`.
-4. Os webhooks de produção devem apontar para:
-   - Stripe: `https://meqyro.com/api/webhooks/stripe`
-   - InfinitePay: `https://meqyro.com/api/webhooks/infinitepay`
+4. O webhook de produção deve apontar para `https://meqyro.com/api/webhooks/stripe`.
+5. No Dashboard da Stripe, habilite os métodos dinâmicos desejados. Pix só é elegível para clientes
+   no Brasil e transações apresentadas em BRL; cartões e carteiras aparecem conforme conta,
+   dispositivo, navegador e região do cliente.

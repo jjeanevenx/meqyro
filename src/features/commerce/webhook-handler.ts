@@ -5,7 +5,11 @@ import { getPaymentProvider } from "./order-service";
 import { fulfillOrder, refundOrder } from "./fulfillment-service";
 import type { PaymentProviderName, RawWebhookInput } from "./contracts";
 import { logEvent } from "@/lib/observability/logger";
-import { sendPurchaseConfirmationEmail, sendRefundEmail } from "@/features/email/email-service";
+import { sendRefundEmail } from "@/features/email/email-service";
+import { deliverPaidReport } from "@/features/email/paid-report-delivery";
+import { createHmac } from "node:crypto";
+import { getTokenSecuritySecret, getSiteUrl } from "@/lib/config/env";
+import { hashToken } from "@/features/privacy/consent-service";
 
 export interface WebhookHandlingResult {
   handled: boolean;
@@ -13,6 +17,98 @@ export interface WebhookHandlingResult {
   orderId?: string;
   orderNumber?: string;
   error?: string;
+}
+
+function paymentAuditPayload(payload: string | Record<string, unknown>): Record<string, unknown> {
+  let value: Record<string, unknown>;
+  try {
+    value = typeof payload === "string" ? JSON.parse(payload) : payload;
+  } catch {
+    return { malformed: true };
+  }
+
+  const object = (value.data as Record<string, unknown> | undefined)?.object as
+    Record<string, unknown> | undefined;
+  return {
+    id: value.id,
+    type: value.type ?? value.event,
+    order_nsu: value.order_nsu,
+    transaction_nsu: value.transaction_nsu,
+    invoice_slug: value.invoice_slug ?? value.slug,
+    amount: value.amount ?? object?.amount_total,
+    currency: value.currency ?? object?.currency,
+    payment_status: object?.payment_status,
+  };
+}
+
+async function sendPurchaseConfirmationOnce(
+  order: {
+    id: string;
+    customer_email: string | null;
+    order_number: string;
+    amount: number;
+    currency: string;
+    session_id: string;
+    market: string;
+    confirmation_email_sent_at?: string | null;
+    quiz_sessions?: { locale?: string } | Array<{ locale?: string }> | null;
+  },
+  targetSessionId?: string,
+): Promise<void> {
+  if (!order.customer_email) return;
+  const sessionId = targetSessionId ?? order.session_id;
+
+  const supabase = createSupabaseSecretClient();
+  const resultToken = createHmac("sha256", getTokenSecuritySecret())
+    .update(
+      targetSessionId
+        ? `purchase-recovery:${order.id}:${sessionId}`
+        : `purchase-recovery:${order.id}`,
+      "utf8",
+    )
+    .digest("base64url");
+  const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
+
+  await supabase.from("recovery_tokens").upsert(
+    {
+      session_id: sessionId,
+      token_hash: hashToken(resultToken),
+      expires_at: expiresAt,
+      usage_count: 0,
+      max_uses: 10,
+    },
+    { onConflict: "token_hash", ignoreDuplicates: true },
+  );
+
+  const sessionRelation = Array.isArray(order.quiz_sessions)
+    ? order.quiz_sessions[0]
+    : order.quiz_sessions;
+  const { data: target } = targetSessionId
+    ? await supabase.from("quiz_sessions").select("locale").eq("id", sessionId).single()
+    : { data: null };
+  const locale = target?.locale ?? sessionRelation?.locale ?? (order.market === "BR" ? "pt" : "en");
+  await deliverPaidReport(
+    order.id,
+    locale,
+    `${getSiteUrl()}/${locale}/results/${resultToken}`,
+    sessionId,
+  );
+}
+
+export async function sendPurchaseConfirmationForOrder(
+  orderId: string,
+  sessionId?: string,
+): Promise<void> {
+  const supabase = createSupabaseSecretClient();
+  const { data: order, error } = await supabase
+    .from("orders")
+    .select(
+      "id, order_number, amount, currency, customer_email, session_id, market, confirmation_email_sent_at, quiz_sessions!orders_session_id_fkey(locale)",
+    )
+    .eq("id", orderId)
+    .single();
+  if (error || !order) throw new Error(`Order email lookup failed: ${error?.message}`);
+  await sendPurchaseConfirmationOnce(order, sessionId);
 }
 
 export async function handleWebhook(
@@ -38,7 +134,7 @@ export async function handleWebhook(
   let orderQuery = supabase
     .from("orders")
     .select(
-      "id, order_number, amount, currency, status, payment_provider, customer_email, session_id, market",
+      "id, order_number, product_code, amount, currency, status, payment_provider, customer_email, session_id, market, confirmation_email_sent_at, quiz_sessions!orders_session_id_fkey(locale)",
     );
 
   if (verifiedEvent.orderId) {
@@ -70,7 +166,7 @@ export async function handleWebhook(
       event_type: verifiedEvent.eventType,
       order_id: null,
       status: "UNMATCHED_ORDER",
-      payload: typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload,
+      payload: paymentAuditPayload(input.payload),
     });
 
     return { handled: false, error: "Referenced order not found" };
@@ -88,6 +184,10 @@ export async function handleWebhook(
 
   // 4. Amount and currency verification for CONFIRMED events
   if (verifiedEvent.status === "CONFIRMED") {
+    if (typeof verifiedEvent.amount !== "number" || !verifiedEvent.currency) {
+      throw new Error("Confirmed payment event is missing provider-verified amount or currency.");
+    }
+
     if (typeof verifiedEvent.amount === "number" && verifiedEvent.amount !== order.amount) {
       logEvent("error", "webhook_amount_mismatch", {
         orderId: order.id,
@@ -101,7 +201,7 @@ export async function handleWebhook(
         event_type: verifiedEvent.eventType,
         order_id: order.id,
         status: "REJECTED_AMOUNT_MISMATCH",
-        payload: typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload,
+        payload: paymentAuditPayload(input.payload),
       });
 
       throw new Error(
@@ -125,12 +225,16 @@ export async function handleWebhook(
         event_type: verifiedEvent.eventType,
         order_id: order.id,
         status: "REJECTED_CURRENCY_MISMATCH",
-        payload: typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload,
+        payload: paymentAuditPayload(input.payload),
       });
 
       throw new Error(
         `Webhook payment currency (${verifiedEvent.currency}) diverges from recorded order currency (${order.currency}).`,
       );
+    }
+
+    if (verifiedEvent.productCode && verifiedEvent.productCode !== order.product_code) {
+      throw new Error("Webhook product metadata diverges from the recorded order product.");
     }
   }
 
@@ -141,7 +245,7 @@ export async function handleWebhook(
     event_type: verifiedEvent.eventType,
     order_id: order.id,
     status: "RECEIVED",
-    payload: typeof input.payload === "string" ? JSON.parse(input.payload) : input.payload,
+    payload: paymentAuditPayload(input.payload),
   });
 
   if (insertError) {
@@ -152,6 +256,29 @@ export async function handleWebhook(
         providerEventId: verifiedEvent.providerEventId,
         orderId: order.id,
       });
+      if (verifiedEvent.status === "CONFIRMED" && order.status !== "FULFILLED") {
+        await fulfillOrder(
+          order.id,
+          verifiedEvent.providerEventId,
+          verifiedEvent.providerPaymentId,
+        );
+      }
+      if (
+        (order.status === "FULFILLED" || verifiedEvent.status === "CONFIRMED") &&
+        !order.confirmation_email_sent_at
+      ) {
+        await sendPurchaseConfirmationOnce(order).catch((emailErr) => {
+          logEvent("warn", "purchase_email_retry_failed", {
+            orderId: order.id,
+            error: emailErr instanceof Error ? emailErr.message : String(emailErr),
+          });
+        });
+      }
+      await supabase
+        .from("payment_events")
+        .update({ status: "PROCESSED" })
+        .eq("provider", providerName)
+        .eq("provider_event_id", verifiedEvent.providerEventId);
       return { handled: true, duplicate: true, orderId: order.id, orderNumber: order.order_number };
     }
     throw new Error(`Failed to log payment event: ${insertError.message}`);
@@ -159,24 +286,15 @@ export async function handleWebhook(
 
   // 6. Execute fulfillment / refund / dispute state transitions
   if (verifiedEvent.status === "CONFIRMED") {
-    await fulfillOrder(order.id, verifiedEvent.providerEventId);
+    await fulfillOrder(order.id, verifiedEvent.providerEventId, verifiedEvent.providerPaymentId);
 
     // Dispatch post-purchase transactional email
-    if (order.customer_email) {
-      await sendPurchaseConfirmationEmail({
-        recipientEmail: order.customer_email,
-        orderNumber: order.order_number,
-        amount: order.amount,
-        currency: order.currency,
-        sessionId: order.session_id,
-        locale: order.market === "BR" ? "pt" : "en",
-      }).catch((emailErr) => {
-        logEvent("warn", "purchase_email_dispatch_failed", {
-          orderId: order.id,
-          error: emailErr instanceof Error ? emailErr.message : String(emailErr),
-        });
+    await sendPurchaseConfirmationOnce(order).catch((emailErr) => {
+      logEvent("warn", "purchase_email_dispatch_failed", {
+        orderId: order.id,
+        error: emailErr instanceof Error ? emailErr.message : String(emailErr),
       });
-    }
+    });
 
     await supabase
       .from("payment_events")
@@ -209,6 +327,12 @@ export async function handleWebhook(
       .update({ status: "PROCESSED" })
       .eq("provider", providerName)
       .eq("provider_event_id", verifiedEvent.providerEventId);
+  } else if (verifiedEvent.status === "FAILED") {
+    await supabase
+      .from("orders")
+      .update({ status: "FAILED", updated_at: new Date().toISOString() })
+      .eq("id", order.id)
+      .in("status", ["CREATED", "PROCESSING", "PENDING"]);
   }
 
   return { handled: true, orderId: order.id, orderNumber: order.order_number };

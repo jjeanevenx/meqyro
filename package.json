@@ -14,8 +14,10 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "typecheck": "tsc --noEmit",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run --config vitest.config.mts",
+    "test:unit": "vitest run --config vitest.config.mts tests/unit",
+    "test:integration": "vitest run --config vitest.config.mts tests/integration",
+    "test:watch": "vitest --config vitest.config.mts",
     "smoke": "node scripts/smoke.mjs",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build"
   },

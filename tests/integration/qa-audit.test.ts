@@ -1,5 +1,5 @@
-import { describe, it, expect } from "vitest";
-import { createHmac } from "node:crypto";
+import { acknowledgeMemory } from "./memory-helper";
+import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { createClient } from "@supabase/supabase-js";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import {
@@ -10,12 +10,21 @@ import {
 import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { recordLeadAndConsents, unsubscribeByToken } from "@/features/privacy/consent-service";
 import { getProtectedResult } from "@/features/results/result-service";
-import { createOrder } from "@/features/commerce/order-service";
+import { createOrder, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
 import { createCoupleInvite, getCoupleComparison } from "@/features/couple/couple-service";
 import { isSupabaseAvailable } from "./db-check";
+import { ControlledPaymentProvider } from "./controlled-payment-provider";
 
 const isOnline = await isSupabaseAvailable();
+
+beforeAll(() => {
+  setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name));
+});
+
+afterAll(() => {
+  setPaymentProviderFactoryForTests(null);
+});
 
 describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", () => {
   const secretSupabase = createSupabaseSecretClient();
@@ -164,6 +173,7 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
 
       for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
         const q = quiz!.questions[i]!;
+        await acknowledgeMemory(q, session.id, token);
         const optId = q.options[0]?.id;
         await saveAnswer({
           sessionId: session.id,
@@ -206,7 +216,7 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
         market: "BR",
       });
 
-      const invite = await createCoupleInvite(sessA.id, tokenA, "pt");
+      const invite = await createCoupleInvite(sessA.id, tokenA, "pt", true);
       expect(invite).not.toBeNull();
 
       const initialComparison = await getCoupleComparison(invite!.inviteCode, sessA.id, tokenA);
@@ -237,6 +247,7 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
 
       for (let i = 0; i < (quiz?.questions?.length ?? 0); i++) {
         const q = quiz!.questions[i]!;
+        await acknowledgeMemory(q, session.id, token);
         const optId = q.options[0]?.id;
         await saveAnswer({
           sessionId: session.id,
@@ -280,22 +291,20 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
 
       const webhookEventId = `evt_order_${Date.now()}`;
       const webhookPayload = {
-        event_id: webhookEventId,
-        event_type: "transaction.success",
+        id: webhookEventId,
+        type: "checkout.session.completed",
         data: {
-          order_id: orderResult.order.id,
-          order_number: orderResult.order.orderNumber,
-          amount: 1290,
-          currency: "BRL",
+          object: {
+            client_reference_id: orderResult.order.id,
+            metadata: { order_number: orderResult.order.orderNumber },
+            amount_total: 1290,
+            currency: "brl",
+          },
         },
       };
-      const rawBody = JSON.stringify(webhookPayload);
-      const secret = process.env.INFINITEPAY_WEBHOOK_SECRET || "ip_whsec_mock_secret_98765";
-      const sig = createHmac("sha256", secret).update(rawBody, "utf8").digest("hex");
-
-      await handleWebhook("infinitepay", {
+      await handleWebhook("stripe", {
         payload: webhookPayload,
-        headers: { "x-infinitepay-signature": sig },
+        headers: {},
       });
 
       const updatedOrder = await secretSupabase

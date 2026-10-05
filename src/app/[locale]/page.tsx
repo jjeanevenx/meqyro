@@ -1,17 +1,26 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { cookies } from "next/headers";
 import { notFound } from "next/navigation";
-import { ArrowRight, CheckCircle2, Compass, FileText, ShieldCheck, Sparkles } from "lucide-react";
-import { BrainRankHero } from "@/components/patterns/brainrank-hero";
+import {
+  ArrowRight,
+  CheckCircle2,
+  Compass,
+  FileText,
+  ShieldCheck,
+  Plus,
+  Brain,
+  Briefcase,
+  Target,
+  Fingerprint,
+} from "lucide-react";
 import { SiteHeader } from "@/components/patterns/site-header";
 import { ButtonLink } from "@/components/ui/button-link";
-import { featuredExperience } from "@/content/experiences";
+import { experiences } from "@/content/experiences";
+import { homeConversionCopy } from "@/content/home-conversion";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
 import { generateOrganizationJsonLd } from "@/features/seo/json-ld";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
-import { resolveMarketContext } from "@/lib/market/market-context";
 
 type PageProps = { params: Promise<{ locale: string }> };
 type HomeCopy = {
@@ -45,6 +54,10 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     faqTitle: "Perguntas frequentes",
     faqs: [
       [
+        "É grátis? Preciso pagar para ver o resultado?",
+        "O resultado inicial é gratuito. O relatório premium é opcional e pago; você só compra se quiser aprofundar sua leitura.",
+      ],
+      [
         "Preciso criar uma conta?",
         "Não. Você pode começar e ver o resultado inicial sem cadastro obrigatório.",
       ],
@@ -73,6 +86,10 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     faqTitle: "Frequently asked questions",
     faqs: [
       [
+        "Is it free? Do I have to pay to see my result?",
+        "Your initial result is free. The paid premium report is optional, if you want to explore further.",
+      ],
+      [
         "Do I need an account?",
         "No. You can start and see your initial result without creating one.",
       ],
@@ -100,6 +117,10 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     premiumBody: "El informe premium añade dimensiones, contexto y recomendaciones prácticas.",
     faqTitle: "Preguntas frecuentes",
     faqs: [
+      [
+        "¿Es gratis? ¿Tengo que pagar para ver el resultado?",
+        "El resultado inicial es gratis. El informe premium es opcional y de pago, si quieres profundizar.",
+      ],
       [
         "¿Necesito crear una cuenta?",
         "No. Puedes comenzar y ver el resultado inicial sin registro.",
@@ -131,6 +152,10 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     faqTitle: "Questions fréquentes",
     faqs: [
       [
+        "Est-ce gratuit ? Faut-il payer pour voir le résultat ?",
+        "Le premier résultat est gratuit. Le rapport premium est facultatif et payant, si vous souhaitez approfondir.",
+      ],
+      [
         "Faut-il créer un compte ?",
         "Non. Vous pouvez commencer et voir le premier résultat sans inscription.",
       ],
@@ -152,12 +177,12 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: PageProps): Promise<Metadata> {
   const { locale } = await params;
   if (!isLocale(locale)) return {};
-  const dictionary = getDictionary(locale);
+  const copy = homeConversionCopy[locale];
   return buildPageMetadata({
     locale,
     path: "",
-    title: `Meqyro — ${dictionary.hero.title}`,
-    description: dictionary.hero.body,
+    title: copy.title,
+    description: copy.body,
   });
 }
 
@@ -167,14 +192,12 @@ export default async function LocalizedHome({ params }: PageProps) {
   const locale = localeParam as Locale;
   const dictionary = getDictionary(locale);
   const copy = HOME_COPY[locale];
-  const cookieStore = await cookies();
-  const market = resolveMarketContext({
-    locale,
-    market: cookieStore.get("meqyro_market")?.value,
-    source: cookieStore.has("meqyro_market") ? "user" : "locale-fallback",
-  });
+  const conversion = homeConversionCopy[locale];
+  const goals = ["personality-map", "careerfit", "focusstyle"] as const;
+  const goalIcons = [Fingerprint, Briefcase, Target];
+  const startHref = `/${locale}/quizzes/brainrank/play?source=home_hero`;
   return (
-    <main className="home-page">
+    <main className="home-page conversion-home">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationJsonLd()) }}
@@ -186,39 +209,105 @@ export default async function LocalizedHome({ params }: PageProps) {
         howLabel={dictionary.nav.about}
         current="home"
       />
-      <section className="intro" id="about">
-        <div className="intro__content">
-          <h1>{dictionary.hero.title}</h1>
-          <p>{dictionary.hero.body}</p>
-          <div className="intro__cta-group">
-            <div className="intro__cta-row">
-              <ButtonLink href={`/${locale}/discover`}>{dictionary.hero.cta}</ButtonLink>
-            </div>
-            <small>
-              <CheckCircle2 aria-hidden="true" />
-              {dictionary.hero.note}
-            </small>
+      <section className="conversion-hero" id="about" aria-labelledby="home-title">
+        <div className="conversion-hero__copy">
+          <p className="conversion-eyebrow">
+            <span />
+            {conversion.eyebrow}
+          </p>
+          <h1 id="home-title">
+            {conversion.title} <span>{conversion.accent}</span>
+          </h1>
+          <p className="conversion-hero__body">{conversion.body}</p>
+          <div className="conversion-hero__actions">
+            <ButtonLink href={startHref}>{conversion.cta}</ButtonLink>
+            <Link className="conversion-text-link" href="#experiences">
+              {conversion.secondary}
+              <ArrowRight aria-hidden="true" size={17} />
+            </Link>
           </div>
+          <ul className="conversion-trust">
+            {conversion.trust.map((label) => (
+              <li key={label}>
+                <CheckCircle2 aria-hidden="true" size={16} />
+                {label}
+              </li>
+            ))}
+          </ul>
         </div>
-        <div className="intro__mark" aria-hidden="true">
-          <span>ME</span>
-          <span>QY</span>
-          <span>RO</span>
+        <div className="conversion-preview">
+          <div className="conversion-preview__top">
+            <Brain aria-hidden="true" size={22} />
+            <span>{conversion.featured}</span>
+            <span aria-hidden="true">↗</span>
+          </div>
+          <div className="conversion-preview__art" aria-hidden="true">
+            <div className="conversion-orbit conversion-orbit--outer" />
+            <div className="conversion-orbit conversion-orbit--inner" />
+            <Brain size={88} strokeWidth={1.2} />
+            <span className="conversion-node conversion-node--one" />
+            <span className="conversion-node conversion-node--two" />
+            <span className="conversion-node conversion-node--three" />
+          </div>
+          <h2>{conversion.challenge}</h2>
+          <p>{conversion.challengeBody}</p>
+          <div className="conversion-dimensions">
+            {conversion.dimensions.map((label) => (
+              <span key={label}>{label}</span>
+            ))}
+          </div>
+          <div className="conversion-preview__result">
+            <Compass aria-hidden="true" size={22} />
+            <div>
+              <strong>{conversion.result}</strong>
+              <p>{conversion.resultBody}</p>
+            </div>
+          </div>
+          <Link className="conversion-text-link" href={`/${locale}/quizzes/brainrank`}>
+            {dictionary.brainrank.label}
+            <ArrowRight aria-hidden="true" size={17} />
+          </Link>
         </div>
       </section>
-      <BrainRankHero
-        locale={locale}
-        dictionary={dictionary}
-        market={market}
-        experience={featuredExperience}
-      />
-      <div className="home-catalog-link">
-        <Link href={`/${locale}/discover`}>
+      <section
+        className="home-section conversion-goals"
+        id="experiences"
+        aria-labelledby="goals-title"
+      >
+        <p className="conversion-eyebrow">
+          MEQYRO · {experiences.length} {conversion.catalog}
+        </p>
+        <h2 id="goals-title">{conversion.goalsTitle}</h2>
+        <p>{conversion.goalsBody}</p>
+        <div className="conversion-goals__grid">
+          {goals.map((slug, index) => {
+            const experience = experiences.find((item) => item.slug === slug)!;
+            const Icon = goalIcons[index];
+            return (
+              <Link
+                className="conversion-goal"
+                key={slug}
+                href={`/${locale}/quizzes/${slug}?source=home_goal`}
+              >
+                <div className="conversion-goal__top">
+                  <Icon aria-hidden="true" size={24} />
+                  <span>{experience.duration}</span>
+                </div>
+                <h3>{conversion.goals[index]}</h3>
+                <p>{experience.description[locale]}</p>
+                <span className="conversion-goal__cta">
+                  {conversion.goalCta}
+                  <ArrowRight aria-hidden="true" size={18} />
+                </span>
+              </Link>
+            );
+          })}
+        </div>
+        <Link className="conversion-text-link" href={`/${locale}/discover`}>
           {copy.explore}
-          <ArrowRight aria-hidden="true" />
+          <ArrowRight aria-hidden="true" size={18} />
         </Link>
-        <span>7</span>
-      </div>
+      </section>
       <section className="home-section" id="how-it-works">
         <div className="home-section__heading">
           <span>01</span>
@@ -248,11 +337,31 @@ export default async function LocalizedHome({ params }: PageProps) {
           <Compass aria-hidden="true" />
           <h2>{copy.freeTitle}</h2>
           <p>{copy.freeBody}</p>
+          <ul className="conversion-checklist">
+            {conversion.freeItems.map((item) => (
+              <li key={item}>
+                <CheckCircle2 aria-hidden="true" size={18} />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_free`}>
+            {conversion.cta}
+          </ButtonLink>
         </article>
         <article>
           <FileText aria-hidden="true" />
           <h2>{copy.premiumTitle}</h2>
           <p>{copy.premiumBody}</p>
+          <ul className="conversion-checklist">
+            {conversion.premiumItems.map((item) => (
+              <li key={item}>
+                <CheckCircle2 aria-hidden="true" size={18} />
+                {item}
+              </li>
+            ))}
+          </ul>
+          <small>{conversion.premiumNote}</small>
         </article>
       </section>
       <section className="home-section home-faq">
@@ -264,21 +373,29 @@ export default async function LocalizedHome({ params }: PageProps) {
           <details key={question}>
             <summary>
               {question}
-              <Sparkles aria-hidden="true" />
+              <Plus aria-hidden="true" />
             </summary>
             <p>{answer}</p>
           </details>
         ))}
       </section>
       <section className="home-final">
-        <h2>{dictionary.hero.title}</h2>
-        <ButtonLink href={`/${locale}/discover`}>{copy.explore}</ButtonLink>
+        <h2>{conversion.finalTitle}</h2>
+        <p>{conversion.finalBody}</p>
+        <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_final`}>
+          {conversion.cta}
+        </ButtonLink>
+        <small>{dictionary.hero.note}</small>
       </section>
       <footer className="site-footer">
         <Link className="brand" href={`/${locale}`}>
           MEQ<span>Y</span>RO
         </Link>
         <p>© {new Date().getFullYear()} Meqyro</p>
+        <div className="conversion-footer-links">
+          <Link href={`/${locale}/privacy`}>{conversion.privacy}</Link>
+          <Link href={`/${locale}/terms`}>{conversion.terms}</Link>
+        </div>
       </footer>
     </main>
   );

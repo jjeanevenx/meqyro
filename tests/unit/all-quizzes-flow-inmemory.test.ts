@@ -51,22 +51,28 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
         const quiz = getFallbackPublicQuiz(slug, "pt")!;
 
         if (slug === "brainrank") {
-          const items = quiz.questions.map((q) => ({
-            id: q.id,
-            dimension: "PATTERN_RECOGNITION" as const,
-            difficulty: "MEDIUM" as const,
-            correctOptionId: q.options[0].id,
-          }));
+          const items = quiz.questions
+            .filter((q) => !q.memoryRecall)
+            .map((q) => ({
+              id: q.id,
+              dimension: "PATTERN_RECOGNITION" as const,
+              difficulty: "MEDIUM" as const,
+              correctOptionId: q.options[0].id,
+            }));
           const answers = items.map((item) => ({
             questionId: item.id,
             optionId: item.correctOptionId,
             durationMs: 3500,
           }));
           const result = brainRankScoringV1.score(items, answers);
-          expect(result.rawCorrect).toBe(24);
+          expect(result.rawCorrect).toBe(21);
           expect(result.overallScore).toBe(1000);
 
-          const report = buildComprehensiveReport(slug, result as unknown as Record<string, unknown>, "pt");
+          const report = buildComprehensiveReport(
+            slug,
+            result as unknown as Record<string, unknown>,
+            "pt",
+          );
           expect(report.executiveSummary).toBeDefined();
           expect(report.sections.length).toBeGreaterThan(0);
         } else if (slug === "personality-map") {
@@ -92,7 +98,9 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
             dimension: "TECHNICAL" as const,
           }));
           const answers: Record<string, number> = {};
-          items.forEach((item) => { answers[item.id] = 4; });
+          items.forEach((item) => {
+            answers[item.id] = 4;
+          });
           const result = careerFitScoringV1.score(items, answers);
           expect(result.primaryAnchor).toBeDefined();
           expect(result.dimensionScores.TECHNICAL).toBe(75);
@@ -103,7 +111,9 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
             archetype: "BUILDER" as const,
           }));
           const answers: Record<string, number> = {};
-          items.forEach((item) => { answers[item.id] = 5; });
+          items.forEach((item) => {
+            answers[item.id] = 5;
+          });
           const result = moneyDnaScoringV1.score(items, answers);
           expect(result.dominantArchetype).toBe("BUILDER");
           expect(result.archetypeScores.BUILDER).toBe(100);
@@ -114,7 +124,9 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
             style: "IMMERSIVE_HYPERFOCUS" as const,
           }));
           const answers: Record<string, number> = {};
-          items.forEach((item) => { answers[item.id] = 5; });
+          items.forEach((item) => {
+            answers[item.id] = 5;
+          });
           const result = focusStyleScoringV1.score(items, answers);
           expect(result.primaryStyle).toBe("IMMERSIVE_HYPERFOCUS");
           expect(result.styleScores.IMMERSIVE_HYPERFOCUS).toBe(100);
@@ -127,7 +139,9 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
             },
           }));
           const answers: Record<string, string> = {};
-          quiz.questions.forEach((q) => { answers[q.id] = q.options[0].id; });
+          quiz.questions.forEach((q) => {
+            answers[q.id] = q.options[0].id;
+          });
           const result = decisionDnaScoringV1.score(items, answers);
           expect(result.dominantStyle).toBe("ANALYTICAL");
           expect(result.styleDistribution.ANALYTICAL).toBe(100);
@@ -138,11 +152,17 @@ describe("All 7 Quizzes — Complete in-memory end-to-end flow", () => {
             dimension: "COMMUNICATION" as const,
           }));
           const answers: Record<string, number> = {};
-          items.forEach((item) => { answers[item.id] = 4; });
+          items.forEach((item) => {
+            answers[item.id] = 4;
+          });
           const individualScore = coupleDnaScoringV1.scoreIndividual(items, answers);
           expect(individualScore.dimensionScores.COMMUNICATION).toBe(75);
 
-          const comparison = coupleDnaScoringV1.compareBilateral(individualScore, individualScore, true);
+          const comparison = coupleDnaScoringV1.compareBilateral(
+            individualScore,
+            individualScore,
+            true,
+          );
           expect(comparison.overallAlignmentPercentage).toBe(100);
         }
       });
