@@ -19,6 +19,9 @@ importers:
       next:
         specifier: 16.3.6
         version: 16.3.6(@babel/core@7.29.7(supports-color@7.2.0))(@types/node@26.6.2)(react-dom@19.3.0(react@19.3.0))(react@19.3.0)
+      nodemailer:
+        specifier: 10.0.16
+        version: 10.0.16
       react:
         specifier: 19.3.0
         version: 19.3.0
@@ -38,6 +41,9 @@ importers:
       "@types/node":
         specifier: 26.6.2
         version: 26.6.2
+      "@types/nodemailer":
+        specifier: 8.0.2
+        version: 8.0.2
       "@types/react":
         specifier: 19.3.0
         version: 19.3.0
@@ -1076,6 +1082,12 @@ packages:
     resolution:
       {
         integrity: sha512-X1P21scMv4zGKLYqjdGjaKa7COa0RKVYYZZN/NfvLQ1JegxFhdhpZG/Lyn8AXx6CDUavKAd11v6BvfpkDByK8g==,
+      }
+
+  "@types/nodemailer@8.0.2":
+    resolution:
+      {
+        integrity: sha512-c7M5ox8p0nEOfbJ2E9Qcmt8/QCu/VzsiAhzBiZbvky2PhKZDHpKB3sQHBM5MEZNkCfBOaS6S9//AGPRTNB7IaA==,
       }
 
   "@types/react-dom@19.3.0":
@@ -2907,6 +2919,13 @@ packages:
       }
     engines: { node: ">=18" }
 
+  nodemailer@10.0.16:
+    resolution:
+      {
+        integrity: sha512-VL9xKErxN+el77o8eBOuYKUPMyEx7F9hfnDCuiUKJRp9v3wnWMOudYgP/SWbwSHy8rUL4cylobuXtki1LpQS7A==,
+      }
+    engines: { node: ">=20.0.0" }
+
   object-assign@4.1.1:
     resolution:
       {
@@ -4266,6 +4285,10 @@ snapshots:
     dependencies:
       undici-types: 8.9.0
 
+  "@types/nodemailer@8.0.2":
+    dependencies:
+      "@types/node": 26.6.2
+
   "@types/react-dom@19.3.0(@types/react@19.3.0)":
     dependencies:
       "@types/react": 19.3.0
@@ -5487,6 +5510,8 @@ snapshots:
       semver: 6.3.1
 
   node-releases@2.0.57: {}
+
+  nodemailer@10.0.16: {}
 
   object-assign@4.1.1: {}
 

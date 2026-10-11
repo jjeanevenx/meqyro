@@ -112,5 +112,5 @@ GET /[locale]/privacy/data-request/confirm?token=<SECURE_TOKEN>
 | ------------------- | ---------------------------------- | -------------------------------------- |
 | **Database**        | Local Supabase (`127.0.0.1:54321`) | Supabase Cloud (Managed PostgreSQL)    |
 | **Payments**        | Deterministic adapter signatures   | Stripe test/live account and webhooks  |
-| **Email**           | Local log emission                 | Resend API (`RESEND_API_KEY`)          |
+| **Email**           | Local log emission                 | Hostinger SMTP (`SMTP_PASSWORD`)       |
 | **Cron Scheduling** | Manual curl / Vitest integration   | Vercel Cron or GitHub Actions workflow |

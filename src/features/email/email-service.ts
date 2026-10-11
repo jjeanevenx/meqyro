@@ -1,5 +1,7 @@
 import "server-only";
 
+import nodemailer from "nodemailer";
+
 import { logEvent } from "@/lib/observability/logger";
 import { getSiteUrl } from "@/lib/config/env";
 import type {
@@ -22,57 +24,59 @@ function maskEmailForLog(email: string): string {
   return `${local[0]}***@${domain}`;
 }
 
-async function sendViaResend(options: {
+async function sendViaSmtp(options: {
   to: string;
   subject: string;
   text: string;
   html?: string;
-  idempotencyKey?: string;
 }): Promise<EmailResult> {
-  const resendApiKey = process.env.RESEND_API_KEY;
+  const host = process.env.SMTP_HOST || "smtp.hostinger.com";
+  const port = Number(process.env.SMTP_PORT || "465");
+  const user = process.env.SMTP_USER;
+  const password = process.env.SMTP_PASSWORD;
   const isProduction = process.env.NODE_ENV === "production";
   const from = process.env.EMAIL_FROM || "Meqyro <noreply@meqyro.com>";
 
-  if (!resendApiKey) {
+  if (!user || !password || port !== 465) {
     if (isProduction) {
-      logEvent("error", "resend_missing_api_key_in_production", {
+      logEvent("error", "smtp_missing_configuration", {
         recipientMasked: maskEmailForLog(options.to),
       });
-      return { success: false, error: "Email provider API key is not configured in production." };
+      return { success: false, error: "Email SMTP configuration is missing or invalid." };
     }
 
     // In dev / test only: return simulated message
     return { success: true, messageId: `mock-${Date.now()}` };
   }
 
+  const transport = nodemailer.createTransport({
+    host,
+    port,
+    secure: true,
+    auth: { user, pass: password },
+    connectionTimeout: 15_000,
+    greetingTimeout: 15_000,
+    socketTimeout: 30_000,
+    disableFileAccess: true,
+    disableUrlAccess: true,
+    tls: { minVersion: "TLSv1.2", rejectUnauthorized: true },
+  });
   try {
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${resendApiKey}`,
-        "Content-Type": "application/json",
-        ...(options.idempotencyKey ? { "Idempotency-Key": options.idempotencyKey } : {}),
-      },
-      body: JSON.stringify({
-        from,
-        to: options.to,
-        subject: options.subject,
-        text: options.text,
-      }),
+    const sent = await transport.sendMail({
+      from,
+      to: options.to,
+      subject: options.subject,
+      text: options.text,
+      html: options.html,
     });
-
-    if (!response.ok) {
-      const errorText = await response.text();
-      logEvent("warn", "resend_api_error", { status: response.status, errorText });
-      return { success: false, error: `Resend error: ${response.status}` };
-    }
-
-    const data = await response.json();
-    return { success: true, messageId: data.id };
-  } catch (err: unknown) {
-    const errorMsg = err instanceof Error ? err.message : String(err);
-    logEvent("error", "resend_dispatch_failed", { error: errorMsg });
-    return { success: false, error: errorMsg };
+    if (sent.rejected.length || !sent.accepted.length)
+      return { success: false, error: "SMTP recipient rejected." };
+    return { success: true, messageId: sent.messageId };
+  } catch {
+    logEvent("error", "smtp_dispatch_failed", { recipientMasked: maskEmailForLog(options.to) });
+    return { success: false, error: "Email delivery failed." };
+  } finally {
+    transport.close();
   }
 }
 
@@ -116,7 +120,7 @@ export async function sendResultDeliveryEmail(
     quizSlug: input.quizSlug,
   });
 
-  return sendViaResend({ to: input.recipientEmail, subject, text });
+  return sendViaSmtp({ to: input.recipientEmail, subject, text });
 }
 
 export async function sendSessionRecoveryEmail(
@@ -139,7 +143,7 @@ export async function sendSessionRecoveryEmail(
     fr: `Bonjour,\n\nNous avons reçu une demande pour reprendre votre quiz. Cliquez sur le lien pour continuer là où vous vous êtes arrêté :\n\n${recoveryUrl}\n\nCe lien est valable 30 jours.`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -164,7 +168,7 @@ export async function sendDataRequestEmail(input: DataRequestEmailInput): Promis
     fr: `Bonjour,\n\nNous avons reçu une demande de ${input.requestType} concernant les données associées à cette adresse e-mail.\n\nPour confirmer cette demande, veuillez cliquer sur le lien suivant sous 48 heures :\n\n${confirmUrl}`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -193,11 +197,10 @@ export async function sendPurchaseConfirmationEmail(
     fr: `Bonjour,\n\nVotre paiement de ${(input.amount / 100).toFixed(2)} ${input.currency} a été confirmé avec succès !\n\nVotre rapport premium est disponible :\n\n${accessUrl}\n\nNuméro de commande : ${input.orderNumber}`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
-    idempotencyKey: `purchase-${input.orderNumber}`,
   });
 }
 
@@ -216,7 +219,7 @@ export async function sendRefundEmail(input: RefundEmailInput): Promise<EmailRes
     fr: `Bonjour,\n\nNous vous informons que le remboursement de ${(input.amount / 100).toFixed(2)} ${input.currency} pour la commande #${input.orderNumber} a été traité.`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -238,7 +241,7 @@ export async function sendReportAccessEmail(input: ReportAccessEmailInput): Prom
   };
   const links = input.reportUrls.map((url, index) => `${index + 1}. ${url}`).join("\n");
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: `${intro[input.locale] ?? intro.pt}\n\n${links}\n\nThese links expire in 30 days.`,
@@ -263,7 +266,7 @@ export async function sendCoupleInviteEmail(input: CoupleInviteEmailInput): Prom
     fr: `Bonjour,\n\nVous avez été invité(e) à participer à l'expérience CoupleDNA sur Meqyro !\n\nPour répondre à vos questions et débloquer la comparaison bilatérale, visitez :\n\n${inviteUrl}\n\nCode d'invitation : ${input.inviteCode}`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -287,7 +290,7 @@ export async function sendCoupleUnlockedEmail(
     fr: `Bonjour,\n\nLes deux partenaires ont complété leurs questions et accordé leur consentement. Votre rapport comparatif est désormais disponible :\n\n${input.comparisonUrl}`,
   };
 
-  return sendViaResend({
+  return sendViaSmtp({
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,

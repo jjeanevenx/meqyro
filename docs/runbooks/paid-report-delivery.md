@@ -6,7 +6,7 @@ Implementado em 02/10/2026; validado no Supabase local. Publicação e envio rea
 
 - Relatório com indicadores das respostas, explicações humanas e ações práticas, sem percentis populacionais inventados.
 - Após pagamento confirmado e fulfillment: download de HTML independente, sem scripts ou arquivos externos. Pode ser guardado offline ou impresso em PDF pelo navegador. Inclui uma declaração digital de conclusão.
-- A Supabase Function `deliver-report` envia o resultado completo no corpo e anexa o mesmo HTML. Resend é o provedor de envio dentro da função.
+- A Supabase Function `deliver-report` envia o resultado completo no corpo e anexa o mesmo HTML. Hostinger SMTP é o provedor de envio dentro da função.
 - Destinatário e pagamento são consultados no banco. A função autentica a chamada com segredo exclusivo de servidor de pelo menos 32 caracteres. Não envia para pedidos pendentes ou sem grant.
 - O envio confirmado é persistido no pedido, com idempotência no provedor. A reconciliação repete entregas pendentes em lotes de cinco, priorizando pedidos não tentados e respeitando cinco minutos entre tentativas. Monitorar `paid_report_retry_failed`.
 - Acesso online mantém o prazo existente de 24 meses a partir do grant. O arquivo baixado permanece com o comprador. Removida a promessa de acesso vitalício.
@@ -23,7 +23,7 @@ Memória mantém pontuação separada, de zero a três acertos. O BrainRank norm
 
 1. Aplicar as migrações versionadas no projeto correto, incluindo `20261002120759_delayed_memory_exercises.sql`, `20261002123610_report_delivery_retry.sql` e `20261004215319_neutral_memory_observations.sql`. A última atualiza os estímulos para linguagem neutra nas versões aprovadas/publicadas. Novas versões devem usar o seed atualizado.
 2. Configurar `REPORT_DELIVERY_SECRET` no servidor Next.js e o URL do Supabase correto. Nunca expor esse segredo com prefixo `NEXT_PUBLIC_`.
-3. Nos secrets da função, configurar o mesmo `REPORT_DELIVERY_SECRET`, `RESEND_API_KEY` e `EMAIL_FROM` de remetente/domínio verificado. O ambiente Supabase fornece `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`.
+3. Nos secrets da função, configurar o mesmo `REPORT_DELIVERY_SECRET`, `SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `SMTP_PASSWORD` e `EMAIL_FROM` (ver configuração em `hostinger-email.md`). O ambiente Supabase fornece `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY`.
 4. Com CLI autenticado e projeto confirmado:
 
 ```powershell

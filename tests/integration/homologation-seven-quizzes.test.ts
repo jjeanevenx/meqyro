@@ -55,23 +55,29 @@ beforeAll(async () => {
   setPaymentProviderFactoryForTests((name) => new ControlledPaymentProvider(name));
   const denoEnv: Record<string, string> = {
     REPORT_DELIVERY_SECRET: secret,
-    RESEND_API_KEY: "fake-local-provider",
+    SMTP_USER: "test-sender@example.com",
+    SMTP_PASSWORD: "fake-local-provider",
     SUPABASE_URL: process.env.NEXT_PUBLIC_SUPABASE_URL!,
     SUPABASE_SERVICE_ROLE_KEY: process.env.SUPABASE_SECRET_KEY!,
   };
-  const providerFetch: typeof fetch = async (input, init) => {
-    expect(String(input)).toBe("https://api.resend.com/emails");
-    messages.push(JSON.parse(String(init?.body)) as Mail);
-    return Response.json({ id: `local-email-${randomUUID()}` });
+  const providerSend = async (message: Mail) => {
+    messages.push({
+      ...message,
+      attachments: message.attachments.map((attachment) => ({
+        ...attachment,
+        content: Buffer.from(attachment.content, "utf8").toString("base64"),
+      })),
+    });
+    return { messageId: `local-email-${randomUUID()}`, accepted: [message.to], rejected: [] };
   };
   const source = readFileSync("supabase/functions/deliver-report/index.ts", "utf8").replace(
-    /^import .*;\r?\n/,
+    /^import .*;\r?\n/gm,
     "",
   );
   new Function(
     "Deno",
     "createClient",
-    "fetch",
+    "nodemailer",
     transpileModule(source, { compilerOptions: { module: ModuleKind.None } }).outputText,
   )(
     {
@@ -81,7 +87,7 @@ beforeAll(async () => {
       },
     },
     createClient,
-    providerFetch,
+    { createTransport: () => ({ sendMail: providerSend, close: () => {} }) },
   );
   vi.stubGlobal("fetch", ((input: RequestInfo | URL, init?: RequestInit) => {
     const url = input instanceof Request ? input.url : String(input);

@@ -1,4 +1,5 @@
 import { createClient } from "npm:@supabase/supabase-js@2.117.1";
+import nodemailer from "npm:nodemailer@10.0.16";
 
 // Server-to-server only. Authenticate before parsing; payment and recipient come from DB.
 async function secureEqual(left: string, right: string): Promise<boolean> {
@@ -40,24 +41,36 @@ Deno.serve(async (request: Request) => {
       const { data: completed } = await db.from("quiz_sessions").select("id").in("id", [pair.initiator_session_id, pair.partner_session_id]).eq("status", "COMPLETED");
       if (completed?.length !== 2) return Response.json({ error: "Both results required" }, { status: 403 });
     }
-    const apiKey = Deno.env.get("RESEND_API_KEY");
-    if (!apiKey) return Response.json({ error: "Email not configured" }, { status: 503 });
+    const smtpUser = Deno.env.get("SMTP_USER");
+    const smtpPassword = Deno.env.get("SMTP_PASSWORD");
+    const smtpPort = Number(Deno.env.get("SMTP_PORT") ?? "465");
+    if (!smtpUser || !smtpPassword || smtpPort !== 465) return Response.json({ error: "Email not configured" }, { status: 503 });
+    const { data: claimed, error: claimError } = await db.rpc("claim_report_delivery", { p_order_id: body.orderId, p_session_id: sessionId });
+    if (claimError) return Response.json({ error: "Unable to reserve delivery" }, { status: 503 });
+    if (!claimed) return Response.json({ error: "Delivery already in progress" }, { status: 409 });
     const subject = ({ pt: "Seu resultado Meqyro está pronto", en: "Your Meqyro result is ready", es: "Tu resultado Meqyro está listo", fr: "Votre résultat Meqyro est prêt" } as Record<string, string>)[body.locale] ?? "Seu resultado Meqyro está pronto";
-    const bytes = new TextEncoder().encode(body.html);
-    const attachment = btoa(Array.from(bytes, (byte) => String.fromCharCode(byte)).join(""));
-    const response = await fetch("https://api.resend.com/emails", {
-      method: "POST", headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json", "Idempotency-Key": `paid-report-${body.orderId}-${sessionId}` },
-      body: JSON.stringify({ from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
-        text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
-        attachments: [{ filename: body.filename, content: attachment }],
-      }), signal: AbortSignal.timeout(15_000),
+    const transport = nodemailer.createTransport({
+      host: Deno.env.get("SMTP_HOST") ?? "smtp.hostinger.com", port: smtpPort, secure: true,
+      auth: { user: smtpUser, pass: smtpPassword },
+      connectionTimeout: 15_000, greetingTimeout: 15_000, socketTimeout: 30_000,
+      disableFileAccess: true, disableUrlAccess: true,
+      tls: { minVersion: "TLSv1.2", rejectUnauthorized: true },
     });
-    if (!response.ok) return Response.json({ error: "Email provider failed" }, { status: 502 });
-    const sent = await response.json();
+    let messageId: string;
+    try {
+      const sent = await transport.sendMail({
+        from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
+        text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
+        attachments: [{ filename: body.filename, content: body.html, contentType: "text/html; charset=utf-8" }],
+      });
+      if (sent.rejected.length || !sent.accepted.length) return Response.json({ error: "Email recipient rejected" }, { status: 502 });
+      messageId = sent.messageId;
+    } catch { return Response.json({ error: "SMTP delivery failed" }, { status: 502 }); }
+    finally { transport.close(); }
     const sentAt = new Date().toISOString();
-    const { error: saveError } = await db.from("report_deliveries").upsert({ order_id: body.orderId, session_id: sessionId, sent_at: sentAt, message_id: sent.id }, { onConflict: "order_id,session_id" });
+    const { error: saveError } = await db.from("report_deliveries").upsert({ order_id: body.orderId, session_id: sessionId, sent_at: sentAt, message_id: messageId }, { onConflict: "order_id,session_id" });
     if (saveError) return Response.json({ error: "Unable to record delivery" }, { status: 500 });
-    if (sessionId === order.session_id) await db.from("orders").update({ confirmation_email_sent_at: sentAt, confirmation_email_message_id: sent.id }).eq("id", body.orderId).is("confirmation_email_sent_at", null);
-    return Response.json({ messageId: sent.id });
+    if (sessionId === order.session_id) await db.from("orders").update({ confirmation_email_sent_at: sentAt, confirmation_email_message_id: messageId }).eq("id", body.orderId).is("confirmation_email_sent_at", null);
+    return Response.json({ messageId });
   } catch { return Response.json({ error: "Report delivery failed" }, { status: 500 }); }
 });

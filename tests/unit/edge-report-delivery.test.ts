@@ -2,12 +2,17 @@ import { readFileSync } from "node:fs";
 import { transpileModule, ModuleKind } from "typescript";
 import { describe, expect, it, vi } from "vitest";
 
-function harness(status = "FULFILLED", alreadySent = false) {
-  const send = vi.fn(async (url: string, init: RequestInit) => {
-    expect(url).toBe("https://api.resend.com/emails");
-    expect(init.method).toBe("POST");
-    return Response.json({ id: "email-123" });
+type SmtpMessage = {
+  to: string;
+  text: string;
+  attachments: { content: string; contentType: string }[];
+};
+function harness(status = "FULFILLED", alreadySent = false, claim = true) {
+  const send = vi.fn(async (message: SmtpMessage) => {
+    return { messageId: "email-123", accepted: [message.to], rejected: [] };
   });
+  const close = vi.fn();
+  const createTransport = vi.fn(() => ({ sendMail: send, close }));
   const update = vi.fn();
   const order = {
     status,
@@ -17,6 +22,7 @@ function harness(status = "FULFILLED", alreadySent = false) {
     confirmation_email_sent_at: alreadySent ? "2026-10-01" : null,
   };
   const db = {
+    rpc: vi.fn(async () => ({ data: claim, error: null })),
     from: (table: string) => {
       const value =
         table === "orders"
@@ -50,7 +56,7 @@ function harness(status = "FULFILLED", alreadySent = false) {
   };
   let handler!: (request: Request) => Promise<Response>;
   const source = readFileSync("supabase/functions/deliver-report/index.ts", "utf8").replace(
-    /^import .*;\r?\n/,
+    /^import .*;\r?\n/gm,
     "",
   );
   const compiled = transpileModule(source, {
@@ -59,11 +65,12 @@ function harness(status = "FULFILLED", alreadySent = false) {
   const secret = "test-only-secret-at-least-32-characters";
   const env: Record<string, string> = {
     REPORT_DELIVERY_SECRET: secret,
-    RESEND_API_KEY: "test",
+    SMTP_USER: "sender@example.com",
+    SMTP_PASSWORD: "test-only-password",
     SUPABASE_URL: "http://localhost",
     SUPABASE_SERVICE_ROLE_KEY: "test",
   };
-  new Function("Deno", "createClient", "fetch", compiled)(
+  new Function("Deno", "createClient", "nodemailer", compiled)(
     {
       env: { get: (key: string) => env[key] },
       serve: (fn: typeof handler) => {
@@ -71,7 +78,7 @@ function harness(status = "FULFILLED", alreadySent = false) {
       },
     },
     () => db,
-    send,
+    { createTransport },
   );
   const request = (authenticated = true) =>
     new Request("http://localhost/deliver-report", {
@@ -88,7 +95,7 @@ function harness(status = "FULFILLED", alreadySent = false) {
         customer_email: "attacker@example.com",
       }),
     });
-  return { handler, request, send, update };
+  return { handler, request, send, update, createTransport, close };
 }
 
 describe("Supabase report delivery handler", () => {
@@ -103,13 +110,21 @@ describe("Supabase report delivery handler", () => {
   it("uses the purchased recipient and attaches the complete UTF-8 result", async () => {
     const test = harness();
     expect((await test.handler(test.request())).status).toBe(200);
-    const init = test.send.mock.calls[0][1] as RequestInit;
-    const payload = JSON.parse(init.body as string);
+    const payload = test.send.mock.calls[0][0];
     expect(payload.to).toBe("buyer@example.com");
     expect(payload.text).toContain("Seu resultado: atenção");
-    expect(Buffer.from(payload.attachments[0].content, "base64").toString("utf8")).toBe(
-      "<h1>Árvore e atenção</h1>",
+    expect(payload.attachments[0].content).toBe("<h1>Árvore e atenção</h1>");
+    expect(payload.attachments[0].contentType).toBe("text/html; charset=utf-8");
+    expect(test.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        host: "smtp.hostinger.com",
+        port: 465,
+        secure: true,
+        disableFileAccess: true,
+        disableUrlAccess: true,
+      }),
     );
+    expect(test.close).toHaveBeenCalled();
     expect(test.update).toHaveBeenCalledWith(
       expect.objectContaining({ confirmation_email_message_id: "email-123" }),
     );
@@ -118,5 +133,17 @@ describe("Supabase report delivery handler", () => {
     const test = harness("FULFILLED", true);
     expect((await test.handler(test.request())).status).toBe(200);
     expect(test.send).not.toHaveBeenCalled();
+  });
+  it("does not send when another worker has reserved the delivery", async () => {
+    const test = harness("FULFILLED", false, false);
+    expect((await test.handler(test.request())).status).toBe(409);
+    expect(test.send).not.toHaveBeenCalled();
+  });
+  it("records no sent timestamp when SMTP fails and closes the connection", async () => {
+    const test = harness();
+    test.send.mockRejectedValueOnce(new Error("SMTP unavailable"));
+    expect((await test.handler(test.request())).status).toBe(502);
+    expect(test.update).not.toHaveBeenCalled();
+    expect(test.close).toHaveBeenCalled();
   });
 });

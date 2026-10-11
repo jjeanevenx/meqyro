@@ -30,7 +30,7 @@ Next.js App Router (src/app/)
          │    meqyro schema + RLS policies
          │
          ├── Stripe API  (external)
-         └── Resend API  (external)
+         └── Hostinger SMTP  (external)
 ```
 
 ## Module map
@@ -44,7 +44,7 @@ src/
 │   ├── commerce/          Orders, payments, fulfillment, webhooks
 │   │   └── adapters/      StripeAdapter
 │   ├── couple/            CoupleDNA bilateral flow
-│   ├── email/             Transactional email via Resend
+│   ├── email/             Transactional email via Hostinger SMTP
 │   ├── experiments/       Feature flags, A/B experiment buckets
 │   ├── privacy/           Consent, lead capture, data requests, LGPD/GDPR
 │   ├── quiz-engine/       Session lifecycle, answer persistence, scoring dispatch

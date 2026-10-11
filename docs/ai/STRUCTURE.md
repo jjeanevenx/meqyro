@@ -88,7 +88,7 @@ src/features/
 ├── commerce/              Payment flow: orders, fulfillment, webhooks, reconciliation
 │   └── adapters/          StripeAdapter (implement PaymentProvider)
 ├── couple/                CoupleDNA invite creation, partner linking, bilateral comparison
-├── email/                 All transactional emails via Resend API
+├── email/                 All transactional emails via Hostinger SMTP
 ├── experiments/           Feature flags, deterministic A/B bucketing
 ├── privacy/               Lead capture, consent, data requests, unsubscribe, LGPD/GDPR
 ├── quiz-engine/           Session start/resume, answer persistence, score dispatch, recovery

@@ -27,7 +27,7 @@
      ```
 2. **Avaliar Integridade dos Provedores Externos:**
    - [Stripe Status Dashboard](https://status.stripe.com)
-   - [Resend Status](https://status.resend.com)
+   - [Hostinger Status](https://statuspage.hostinger.com)
 3. **Acionar Feature Flags de Contingência:**
    - Se a Stripe apresentar instabilidade, interromper novos checkouts e preservar os pedidos pendentes para reconciliação.
 4. **Rollback de Deploy:**

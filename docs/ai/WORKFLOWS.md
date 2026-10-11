@@ -172,7 +172,7 @@ For production, use `pnpm supabase db push` (requires Supabase project credentia
 | `TOKEN_SECURITY_SECRET`                | Token HMAC, IP hashing      | Server only           |
 | `STRIPE_SECRET_KEY`                    | Stripe checkout             | Server only           |
 | `STRIPE_WEBHOOK_SECRET`                | Stripe webhook verification | Server only           |
-| `RESEND_API_KEY`                       | Email sending               | Server only           |
+| `SMTP_PASSWORD`                        | Email sending               | Server only           |
 | `EMAIL_FROM`                           | Email sender address        | Server only           |
 | `ADMIN_API_SECRET`                     | Admin routes                | Server only           |
 | `CRON_SECRET`                          | Cron routes                 | Server only           |

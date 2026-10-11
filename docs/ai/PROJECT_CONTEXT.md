@@ -74,7 +74,7 @@ Person A starts the quiz → gets an invite link/code → shares with Person B �
 
 ## Email
 
-Sent via Resend API. Emails include: result delivery (with recovery link), session recovery, purchase confirmation, refund notification, data request verification, couple invite, couple unlock. All emails are text-only (no HTML body currently).
+Sent via Hostinger SMTP using Nodemailer and TLS on port 465. Recovery, consent, purchase and couple messages are sent by the Next.js server. Paid reports are sent by the Supabase Function `deliver-report`, with the complete text and an HTML attachment. SMTP credentials are server-only.
 
 ## Admin / operations
 
