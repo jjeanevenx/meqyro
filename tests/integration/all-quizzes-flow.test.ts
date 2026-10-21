@@ -17,10 +17,10 @@ describe.skipIf(!isOnline)(
       { slug: "brainrank", type: "SINGLE_CHOICE" },
       { slug: "personality-map", type: "LIKERT" },
       { slug: "careerfit", type: "LIKERT" },
-      { slug: "moneydna", type: "LIKERT" },
+      { slug: "moneydna", type: "SCENARIO" },
       { slug: "focusstyle", type: "LIKERT" },
       { slug: "decisiondna", type: "SINGLE_CHOICE" },
-      { slug: "coupledna", type: "LIKERT" },
+      { slug: "coupledna", type: "SCENARIO" },
     ] as const;
 
     for (const { slug, type } of quizzes) {

@@ -1,3 +1,5 @@
+import "server-only";
+
 export type CoupleDimension =
   "COMMUNICATION" | "LIFE_VALUES" | "CONFLICT_MANAGEMENT" | "FINANCES" | "FUTURE_PLANS";
 
@@ -13,6 +15,7 @@ export interface IndividualCoupleScore {
 }
 
 export interface BilateralCoupleComparison {
+  instrumentVersion?: string;
   bilateralUnlocked: boolean;
   overallAlignmentPercentage: number;
   dimensionAlignments: Record<CoupleDimension, number>; // 0 to 100

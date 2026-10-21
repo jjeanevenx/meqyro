@@ -1,6 +1,8 @@
 import Link from "next/link";
 import type { Locale } from "@/lib/i18n/config";
 import { LocaleMarketSelector } from "@/components/patterns/locale-market-selector";
+import { SiteNavigation } from "@/components/patterns/site-navigation";
+import { getDictionary } from "@/lib/i18n/dictionaries";
 
 export function SiteHeader({
   locale,
@@ -15,20 +17,20 @@ export function SiteHeader({
   howLabel?: string;
   current?: "home" | "discover";
 }) {
+  const { nav } = getDictionary(locale);
   return (
     <header className="site-header">
-      <Link className="brand" href={`/${locale}`} aria-label="Meqyro home">
+      <Link className="brand" href={`/${locale}`} aria-label={nav.home}>
         MEQ<span>Y</span>RO
       </Link>
-      <nav aria-label="Primary">
-        <Link
-          href={`/${locale}/discover`}
-          aria-current={current === "discover" ? "page" : undefined}
-        >
-          {discoverLabel}
-        </Link>
-        {howLabel ? <Link href={`/${locale}#how-it-works`}>{howLabel}</Link> : null}
-      </nav>
+      <SiteNavigation
+        locale={locale}
+        discoverLabel={discoverLabel}
+        howLabel={howLabel}
+        current={current}
+        menuLabel={nav.menu}
+        primaryLabel={nav.primary}
+      />
       <LocaleMarketSelector locale={locale} languageLabel={languageLabel} />
     </header>
   );

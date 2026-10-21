@@ -1,0 +1,112 @@
+{
+  "date": "2026-10-18",
+  "timezone": "America/Sao_Paulo",
+  "buildId": "X720Ptk6zZUPa1aIOXGA8",
+  "launchDecision": "NOT_APPROVED",
+  "packageManager": {
+    "requested": "pnpm 11.19.0",
+    "executed": "bundled pnpm 11.25.0 with automatic version installation disabled; no lockfile changes"
+  },
+  "checks": {
+    "typecheck": {
+      "command": "pnpm typecheck",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "unit": {
+      "command": "pnpm test:unit",
+      "status": "PASS",
+      "exitCode": 0,
+      "filesPassed": 39,
+      "testsPassed": 269
+    },
+    "lint": {
+      "command": "pnpm lint",
+      "status": "PASS",
+      "exitCode": 0
+    },
+    "build": {
+      "command": "pnpm build",
+      "status": "PASS",
+      "exitCode": 0,
+      "staticPagesGenerated": 165
+    },
+    "fullSuite": {
+      "command": "pnpm test",
+      "status": "BLOCKED_BY_DATABASE",
+      "filesFailed": 3,
+      "filesPassed": 36,
+      "filesSkipped": 10,
+      "testsFailed": 1,
+      "testsPassed": 237,
+      "testsSkipped": 72,
+      "scope": "Full suite attempt before final additional unit tests; not a financial validation",
+      "reason": "Local Supabase unavailable; Docker daemon not running. No database migrations applied."
+    },
+    "smoke": {
+      "command": "pnpm smoke",
+      "status": "PASS",
+      "exitCode": 0,
+      "checksPassed": 38,
+      "limitation": "HTTP rendering and auth gate only; authenticated metrics returned database-unavailable fallback, not actual commercial data"
+    },
+    "browser": {
+      "status": "PASS_WITH_KNOWN_DATABASE_LIMITATION",
+      "engine": "Playwright Edge headless",
+      "browserPlugin": "not available",
+      "catalogPages": 8,
+      "locales": ["pt", "en", "es", "fr"],
+      "viewports": [
+        {
+          "width": 1440,
+          "height": 1000
+        },
+        {
+          "width": 390,
+          "height": 844
+        }
+      ],
+      "pageExceptions": 0,
+      "analyticsHttp422": 2,
+      "forgedPaymentEventHttpStatus": 403,
+      "evidence": "browser.json"
+    },
+    "publicBundleScan": {
+      "status": "NO_MATCHES",
+      "patterns": [
+        "BR_PAT_01",
+        "correctOptionId",
+        "SUPABASE_SECRET_KEY",
+        "STRIPE_SECRET_KEY",
+        "STRIPE_WEBHOOK_SECRET"
+      ],
+      "scope": ".next/static; static search is not a comprehensive secret scanner"
+    },
+    "diffWhitespace": {
+      "command": "git diff --check",
+      "status": "PASS"
+    },
+    "format": {
+      "command": "pnpm format:check",
+      "status": "PASS",
+      "exitCode": 0
+    }
+  },
+  "notExecuted": [
+    "Migration execution against Postgres",
+    "RLS/advisors on deployed Supabase",
+    "External Stripe test payment",
+    "External SMTP email delivery",
+    "Live payment",
+    "Production deploy",
+    "Complete persisted commercial funnel",
+    "Load test"
+  ],
+  "requiredBeforePublishing": [
+    "Apply and validate migration 20261018231842_commercial_payment_safety.sql in isolated homologation",
+    "Pass persisted integration and external payment/email acceptance",
+    "Resolve legal/privacy/support blockers in audit",
+    "Confirm official domain and hosting target",
+    "Obtain authorization for critical production publication and any live charge"
+  ]
+}

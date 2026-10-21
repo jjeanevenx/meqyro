@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { cookies, headers } from "next/headers";
 import Link from "next/link";
 import { ArrowLeft, Share2, Sparkles, MessageCircle } from "lucide-react";
@@ -83,7 +83,7 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
     locale,
     country,
     market: marketCookie,
-    source: marketCookie ? "user" : country ? "edge" : "locale-fallback",
+    source: marketCookie ? "user" : country ? "edge" : "default",
   });
 
   const quizInfo = dict.quizzes[slug] ?? dict.quizzes.brainrank;
@@ -143,7 +143,11 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
       ? "complete_analysis"
       : "unlock_report";
 
-  if (resultData.quizSlug !== slug) notFound();
+  if (resultData.quizSlug !== slug) {
+    const canonicalQuery = new URLSearchParams({ session: sessionId });
+    if (query.token) canonicalQuery.set("token", query.token);
+    redirect(`/${locale}/quizzes/${resultData.quizSlug}/result?${canonicalQuery}`);
+  }
 
   const siteUrl = getSiteUrl();
   const shareText = {

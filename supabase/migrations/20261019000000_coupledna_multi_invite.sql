@@ -117,6 +117,21 @@ create unique index orders_invite_slot_active_unique
     and status in ('CREATED', 'PROCESSING', 'PENDING', 'PAID', 'FULFILLED');
 
 -- ============================================================
+-- Part 4b: Patch orders_active_purchase_unique to allow multiple COUPLEDNA_INVITE rows
+-- The existing index ON (session_id, product_code) would block a second
+-- COUPLEDNA_INVITE order for the same session. We recreate it excluding
+-- COUPLEDNA_INVITE (which is guarded instead by orders_invite_slot_active_unique).
+-- ============================================================
+
+drop index if exists meqyro.orders_active_purchase_unique;
+
+create unique index orders_active_purchase_unique
+  on meqyro.orders (session_id, product_code)
+  where product_code is not null
+    and product_code <> 'COUPLEDNA_INVITE'
+    and status in ('CREATED', 'PROCESSING', 'PENDING', 'PAID', 'FULFILLED');
+
+-- ============================================================
 -- Part 5: Drop couple_invites_active_initiator_unique
 -- D-001, P0-DB-03: Remove constraint that prevented >1 active invite per
 -- initiator_session_id. couple_invite_slots now owns capacity enforcement.
@@ -147,13 +162,13 @@ create index couple_consents_slot_idx
 -- ============================================================
 
 insert into meqyro.quizzes (slug, product_code, active)
-values ('coupledna_invite', 'COUPLEDNA_INVITE', true)
+values ('coupledna-invite', 'COUPLEDNA_INVITE', true)
 on conflict (slug) do update set product_code = excluded.product_code, active = true;
 
 insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
 select id, 'v1.0.0', 'v1', 'PUBLISHED', now()
 from meqyro.quizzes
-where slug = 'coupledna_invite'
+where slug = 'coupledna-invite'
 on conflict (quiz_id, version) do update set status = 'PUBLISHED';
 
 insert into meqyro.product_prices (quiz_id, market, currency, amount, active)
@@ -166,5 +181,5 @@ cross join (
     ('EU', 'EUR', 399),
     ('GB', 'GBP', 349)
 ) as m(market, currency, amount)
-where q.slug = 'coupledna_invite'
+where q.slug = 'coupledna-invite'
 on conflict (quiz_id, market, currency) do nothing;

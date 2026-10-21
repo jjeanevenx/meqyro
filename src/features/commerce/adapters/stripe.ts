@@ -19,7 +19,11 @@ function requireEnv(name: "STRIPE_SECRET_KEY" | "STRIPE_WEBHOOK_SECRET"): string
 }
 
 function createStripeClient(): Stripe {
-  return new Stripe(requireEnv("STRIPE_SECRET_KEY"), {
+  const key = requireEnv("STRIPE_SECRET_KEY");
+  if (process.env.VERCEL_ENV === "preview" && !/^(sk|rk)_test_/.test(key)) {
+    throw new Error("Stripe preview deployments require a test-mode key.");
+  }
+  return new Stripe(key, {
     appInfo: { name: "Meqyro", version: "0.1.0" },
   });
 }
@@ -147,6 +151,17 @@ export class StripeAdapter implements PaymentProvider {
     const session = await createStripeClient().checkout.sessions.retrieve(input.providerAttemptId);
 
     if (session.payment_status === "paid") {
+      if (
+        session.client_reference_id !== input.orderId ||
+        session.metadata?.order_id !== input.orderId ||
+        (input.orderNumber && session.metadata?.order_number !== input.orderNumber) ||
+        (input.expectedAmount !== undefined && session.amount_total !== input.expectedAmount) ||
+        (input.expectedCurrency &&
+          session.currency?.toUpperCase() !== input.expectedCurrency.toUpperCase()) ||
+        (input.expectedProductCode && session.metadata?.product_code !== input.expectedProductCode)
+      ) {
+        throw new Error("Stripe payment does not match the persisted order.");
+      }
       return {
         status: "CONFIRMED",
         transactionId:
@@ -218,6 +233,19 @@ export class StripeAdapter implements PaymentProvider {
         orderId: session.client_reference_id ?? metadata.order_id,
         orderNumber: metadata.order_number,
         status: "FAILED",
+      };
+    }
+
+    if (event.type === "checkout.session.expired") {
+      const session = object as Stripe.Checkout.Session;
+      return {
+        provider: "stripe",
+        providerEventId: event.id,
+        eventType: event.type,
+        orderId: session.client_reference_id ?? metadata.order_id,
+        orderNumber: metadata.order_number,
+        status: "EXPIRED",
+        providerAttemptId: session.id,
       };
     }
 

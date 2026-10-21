@@ -1,3 +1,4 @@
+import "server-only";
 import {
   indexUniqueAnswers,
   InvalidQuizSubmissionError,
@@ -57,7 +58,10 @@ function scoreBrainRank(
 
   const itemIds = new Set(items.map((item) => item.id));
   for (const answer of answers.values()) {
-    if (!itemIds.has(answer.questionId) || !answer.optionId) {
+    if (
+      !itemIds.has(answer.questionId) ||
+      (!answer.optionId && answer.answerStatus !== "TIMEOUT")
+    ) {
       throw new InvalidQuizSubmissionError(`Unrecognized answer for ${answer.questionId}`);
     }
   }
@@ -73,7 +77,8 @@ function scoreBrainRank(
   let rawCorrect = 0;
   for (const item of items) {
     const answer = answers.get(item.id);
-    if (!answer || answer.optionId !== item.correctOptionId) continue;
+    if (!answer || answer.answerStatus === "TIMEOUT" || answer.optionId !== item.correctOptionId)
+      continue;
     rawCorrect += 1;
     correctByDimension[item.dimension] += 1;
     if (item.difficulty === "HARD") hardCorrectByDimension[item.dimension] += 1;

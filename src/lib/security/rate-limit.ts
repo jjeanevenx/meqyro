@@ -1,4 +1,5 @@
 export type RateLimitTier =
+  | "analytics"
   | "session_start"
   | "session_answers"
   | "session_complete"
@@ -27,6 +28,7 @@ export interface RateLimitResult {
 }
 
 export const TIER_CONFIGS: Record<RateLimitTier, RateLimitOptions> = {
+  analytics: { windowMs: 60 * 1000, maxRequests: 120, keyPrefix: "rl_analytics" },
   session_start: { windowMs: 60 * 1000, maxRequests: 15, keyPrefix: "rl_session_start" },
   session_answers: { windowMs: 60 * 1000, maxRequests: 80, keyPrefix: "rl_answers" },
   session_complete: { windowMs: 60 * 1000, maxRequests: 10, keyPrefix: "rl_complete" },

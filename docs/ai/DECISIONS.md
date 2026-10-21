@@ -160,3 +160,37 @@
 Usar identidade anônima de comprador herdada de sessão autenticada para grants de pacotes. Exigir conclusão, consentimentos bilaterais e pagamento na comparação CoupleDNA. Registrar entrega por pedido/sessão para abranger testes concluídos depois da compra, selecionando o grant mais recente antes de filtrar entregas pendentes.
 
 Permitir PROCESSING para FULFILLED quando o pagamento verificado chega antes de persistir o checkout; atualizações subsequentes usam estado esperado para não regredir pedido confirmado. Scoring continua exclusivamente no servidor.
+
+## ADR — lançamento comercial de três produtos (2026-10-18)
+
+Separar catálogo comercial (BrainRank, MoneyDNA e CoupleDNA) do catálogo técnico de sete quizzes. Bloquear novos checkouts de produtos retirados e bundles no serviço, preservando grants históricos. Exigir sessão concluída para nova compra. Idioma não altera mercado, inclusive no fallback US; preços exibidos vêm da oferta protegida do banco.
+
+Preparar revogação por reembolso como transação com lock de pedido e retry idempotente de eventos. Registrar conversão financeira na transação do pedido e agregar métricas em SQL sobre todos os pedidos. Rejeitar eventos financeiros enviados ao endpoint público de analytics. Usar limite atômico de banco em produção para início de sessão e checkout, com chave HMAC sem IP bruto.
+
+Não foram alterados scorers, gabaritos ou versões de scoring. A migração e o funil Stripe/SMTP precisam de homologação persistida antes da publicação. Ver auditoria e runbook comercial de 18/10/2026.
+
+## ADR — BrainRank: prazos individuais (2026-10-19)
+
+A versão temporal `brainrank-deadline-1.0` fixa dificuldade e limite em `quiz_session_questions` durante a seleção. Prioridade: `questions.metadata.timeLimitSeconds` inteiro positivo até 3600, padrão EASY=30/MEDIUM=45/HARD=60/VERY_HARD=90, fallback 45 segundos. `StartQuizSessionInput.timeMultiplier` permite acomodação confiável no servidor (1–4); o navegador não pode alterar os limites já fixados.
+
+Iniciar e submeter usam RPC restrita a service_role, SECURITY INVOKER e lock da sessão. O banco mede chegada e duração. A primeira resposta confirmada é definitiva e tentativas repetidas retornam o registro existente. Resposta recebida no prazo exato ou depois recebe TIMEOUT, sem alternativa nem acerto; respostas incorretas não têm bônus. Não há pausa ao mudar de aba, fechar ou recarregar. A próxima pergunta começa somente quando a interface solicita seu prazo, depois da etapa informativa.
+
+A fórmula histórica de acertos e os desempates do scorer 1.0 permanecem: o tempo serve apenas ao desempate entre acertos. TIMEOUT conta como erro, sem segunda penalização. Auditoria temporal e métricas premium são armazenadas em `score.timing`, com versão própria; resultados históricos não são recalculados. Não há diagnóstico clínico ou inferência de memória a partir apenas de rapidez.
+
+A política de rede é estrita e explícita: vale a chegada ao banco, antes da espera pelo lock. Não há tolerância baseada em horário informado pelo cliente. Falha de rede exige tentar novamente, sempre recuperando o mesmo prazo. A API de relógio não retorna gabarito ou pontuação.
+
+## ADR — correções BrainRank 1.1 e acesso premium (2026-10-19)
+
+Criar conteúdo BrainRank 1.1 com scoring_version 1.1 para corrigir ambiguidades e distratores de oito itens (incluindo o valor correto de BR_NUM_01, de 41 para 43). Manter as perguntas, respostas e resultados 1.0 intactos; arquivar sua versão apenas para impedir novas seleções. A fórmula cognitiva não muda, e a recuperação tardia permanece indicador exploratório separado.
+
+Centralizar o plano de 24 questões: informações antes de 1/13/20 e recuperações em 8/18/24. Preservar os blocos de tentativas antigas pela ordem persistida. Informações aguardam Continuar, sem timer; uma interrupção antes da confirmação permite retomar a leitura. Registrar situações e intervalos nos novos resultados, sem recalcular resultados finalizados.
+
+Resolver o destino pós-compra pelo quiz da sessão autenticada; garantir que o grant da própria tentativa seja consultado mesmo sem buyer_id. Manter pagamento e consentimento bilateral para CoupleDNA. Remover certificados do checkout e do documento entregue. Evidências e limitações em docs/audits/quiz-premium-corrections-2026-10-19.md.
+
+## ADR — instrumentos comportamentais MoneyDNA/CoupleDNA v2 (2026-10-19)
+
+Publicar novos cenários em v2.0.0 / behavioral-v2, mantendo 20 questões, cinco grupos, quatro idiomas e as versões Likert anteriores intactas. Reutilizar SCENARIO e scoring_value JSONB, sem nova tabela. Selecionar a versão publicada mais recente apenas para novas tentativas destes dois quizzes; tentativas e convites existentes mantêm versão e conjunto fixados.
+
+MoneyDNA passa a índices descritivos por prioridade escolhida, normalizados pela quantidade de oportunidades em que essa prioridade aparece. CoupleDNA usa preferências bipolares de processamento individual a elaboração conjunta por tema, sem converter pontuação alta em qualidade da relação. Pesos iguais por cenário; dificuldade e duração não afetam índices. Registrar evidências de alternativas, empates e variação contextual. Rejeitar entradas incompletas, alternativas externas ou pesos divergentes da versão canônica.
+
+Comparação bilateral v2 usa concordância das alternativas nos mesmos cenários, evitando cancelamento de diferenças em médias iguais. Continuam obrigatórios pagamento, conclusão e consentimento dos dois. Relatórios acrescentam evidências e ações do próprio participante, sem revelar respostas individuais da outra pessoa. Nenhum resultado anterior é recalculado. Reexecução da migração é no-op para conteúdo já existente. Modelo editorial exploratório, sem alegação de validação psicométrica. Detalhes, cobertura e limitações em docs/audits/behavioral-redesign-2026-10-19.md.

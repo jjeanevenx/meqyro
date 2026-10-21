@@ -8,8 +8,10 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { getDictionary } from "@/lib/i18n/dictionaries";
-import { isMarket, resolveMarketContext, type Market } from "@/lib/market/market-context";
-import { brainRankPrice, getBundlePrice, isBundleProduct, formatMoney } from "@/lib/market/prices";
+import { isMarket, resolveMarketContext } from "@/lib/market/market-context";
+import { formatMoney } from "@/lib/market/prices";
+import type { PaywallOffer } from "@/features/results/contracts";
+import { isCommercialProduct } from "@/content/commercial-catalog";
 
 const checkoutTranslations: Record<
   Locale,
@@ -45,7 +47,7 @@ const checkoutTranslations: Record<
     back: "Voltar",
     secureCheckoutBadge: "Checkout seguro",
     orderSummaryTitle: "Resumo do Pedido",
-    orderSubtitle: "Download do resultado, análise completa e certificado digital.",
+    orderSubtitle: "Relatório detalhado com análise completa para download.",
     features: [
       "Detalhamento aprofundado de todas as dimensões",
       "Identificação de pontos cegos sob pressão",
@@ -77,7 +79,7 @@ const checkoutTranslations: Record<
     back: "Back",
     secureCheckoutBadge: "Secure checkout",
     orderSummaryTitle: "Order Summary",
-    orderSubtitle: "Downloadable result, comprehensive analysis, and digital certificate.",
+    orderSubtitle: "Detailed downloadable report with comprehensive analysis.",
     features: [
       "In-depth breakdown of all cognitive and behavioral dimensions",
       "Identification of blind spots under pressure",
@@ -109,7 +111,7 @@ const checkoutTranslations: Record<
     back: "Volver",
     secureCheckoutBadge: "Checkout seguro",
     orderSummaryTitle: "Resumen del Pedido",
-    orderSubtitle: "Resultado descargable, análisis completo y certificado digital.",
+    orderSubtitle: "Informe detallado descargable con análisis completo.",
     features: [
       "Detalle en profundidad de todas las dimensiones",
       "Identificación de puntos ciegos bajo presión",
@@ -142,7 +144,7 @@ const checkoutTranslations: Record<
     back: "Retour",
     secureCheckoutBadge: "Paiement sécurisé",
     orderSummaryTitle: "Résumé de la Commande",
-    orderSubtitle: "Résultat téléchargeable, analyse complète et certificat numérique.",
+    orderSubtitle: "Rapport détaillé téléchargeable avec analyse complète.",
     features: [
       "Analyse détaillée et approfondie de toutes les dimensions",
       "Identification des points d'ombre sous tension",
@@ -187,41 +189,61 @@ function CheckoutContent() {
   const [customerEmail, setCustomerEmail] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [sessionMarket, setSessionMarket] = useState<{
-    sessionId: string;
-    market: Market;
-  } | null>(null);
+  const [offer, setOffer] = useState<{ sessionId: string; paywall: PaywallOffer } | null>(null);
 
   useEffect(() => {
-    if (!sessionId) return;
-    const loadSessionMarket = async () => {
+    if (!sessionId || !isCommercialProduct(productCode)) return;
+    let cancelled = false;
+    const loadOffer = async () => {
       try {
-        const response = await fetch(`/api/sessions?sessionId=${encodeURIComponent(sessionId)}`, {
-          cache: "no-store",
-        });
-        const data = (await response.json()) as { session?: { market?: string } };
-        if (!response.ok || !isMarket(data.session?.market)) {
+        const response = await fetch(
+          `/api/sessions/${encodeURIComponent(sessionId)}/result?locale=${locale}`,
+          { cache: "no-store" },
+        );
+        const data = (await response.json()) as {
+          result?: { paywall?: PaywallOffer; accessLevel?: string; quizSlug?: string };
+        };
+        if (
+          response.ok &&
+          data.result?.accessLevel === "PREMIUM_UNLOCKED" &&
+          data.result.quizSlug
+        ) {
+          if (!cancelled)
+            router.replace(
+              `/${locale}/quizzes/${encodeURIComponent(data.result.quizSlug)}/result?session=${encodeURIComponent(sessionId)}`,
+            );
+          return;
+        }
+        const paywall = data.result?.paywall;
+        if (
+          !response.ok ||
+          !paywall ||
+          paywall.productCode !== productCode ||
+          !isMarket(paywall.market)
+        ) {
           throw new Error(t.sessionMissingError);
         }
-        setSessionMarket({ sessionId, market: data.session.market });
-      } catch (marketError) {
-        setError(marketError instanceof Error ? marketError.message : t.sessionMissingError);
+        if (!cancelled) setOffer({ sessionId, paywall });
+      } catch (offerError) {
+        if (!cancelled)
+          setError(offerError instanceof Error ? offerError.message : t.sessionMissingError);
       }
     };
-    void loadSessionMarket();
-  }, [sessionId, t.sessionMissingError]);
+    void loadOffer();
+    return () => {
+      cancelled = true;
+    };
+  }, [sessionId, productCode, locale, t.sessionMissingError, router]);
 
-  const activeSessionMarket = sessionMarket?.sessionId === sessionId ? sessionMarket.market : null;
-  const marketReady = !sessionId || activeSessionMarket !== null;
-  const marketContext = resolveMarketContext({
-    locale,
-    market: activeSessionMarket ?? undefined,
-  });
-  const amount = isBundleProduct(productCode)
-    ? (getBundlePrice(productCode, marketContext.market) ?? 1990)
-    : brainRankPrice(marketContext.market);
-
-  const formattedPrice = formatMoney(amount, marketContext.currency, locale);
+  const activeOffer =
+    offer?.sessionId === sessionId && offer.paywall.productCode === productCode
+      ? offer.paywall
+      : null;
+  const marketReady = activeOffer !== null;
+  const marketContext = resolveMarketContext({ locale, market: activeOffer?.market });
+  const formattedPrice = activeOffer
+    ? formatMoney(activeOffer.amount, activeOffer.currency, locale)
+    : "—";
 
   let productName = t.defaultReportName;
   if (productCode === "BUNDLE_DISCOVER") productName = t.bundleDiscover;
@@ -249,7 +271,7 @@ function CheckoutContent() {
       return;
     }
 
-    if (!sessionId) {
+    if (!sessionId || !activeOffer || !isCommercialProduct(productCode)) {
       setError(t.sessionMissingError);
       return;
     }
@@ -373,7 +395,7 @@ function CheckoutContent() {
 
             <Button
               type="submit"
-              disabled={isSubmitting || !marketReady || Boolean(error && !activeSessionMarket)}
+              disabled={isSubmitting || !marketReady || Boolean(error && !activeOffer)}
               className="checkout-pay-btn button--primary"
             >
               {isSubmitting ? (

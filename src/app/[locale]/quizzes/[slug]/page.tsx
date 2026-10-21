@@ -1,3 +1,4 @@
+import { FunnelView } from "@/components/patterns/funnel-view";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
@@ -443,6 +444,7 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
 
   return (
     <main className="quiz-landing-container">
+      <FunnelView locale={locale} quizSlug={slug} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}

@@ -1,0 +1,26 @@
+{
+  "date": "2026-10-20",
+  "scope": ["moneydna", "coupledna"],
+  "instrumentVersion": "v2.0.0",
+  "scoringVersion": "behavioral-v2",
+  "typecheck": "PASS",
+  "build": "PASS",
+  "newModuleLint": "PASS",
+  "fullSuite": { "files": 59, "passed": 397, "failed": 2, "total": 399 },
+  "serialFullSuite": { "files": 59, "passed": 398, "failed": 1, "total": 399 },
+  "isolatedFailedFilesRecheck": { "passed": 6, "failed": 0 },
+  "remainingFailure": {
+    "file": "tests/integration/brainrank-timing.test.ts",
+    "line": 111,
+    "metric": "completedInTimePercent",
+    "expected": 100,
+    "observedInSerialSuite": 96,
+    "status": "INTERMITTENT_UNRESOLVED"
+  },
+  "behavioralAndCommercialTests": "PASS",
+  "browserEvidence": "browser.json",
+  "localMigration": { "applications": 2, "historicalResultDigestUnchanged": true },
+  "realStripePurchase": false,
+  "remoteDeployment": false,
+  "psychometricValidation": false
+}

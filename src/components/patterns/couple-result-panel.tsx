@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
@@ -23,6 +23,19 @@ export function CoupleResultPanel({
   const [error, setError] = useState(false);
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
   const state = initialState?.state ?? "NO_INVITE";
+  useEffect(() => {
+    if (!paid || !["WAITING_PARTNER", "WAITING_RESULTS", "CONSENT_REQUIRED"].includes(state))
+      return;
+    let checks = 0;
+    const timer = window.setInterval(() => {
+      if (document.visibilityState === "visible") {
+        router.refresh();
+        checks += 1;
+      }
+      if (checks >= 30) window.clearInterval(timer);
+    }, 10_000);
+    return () => window.clearInterval(timer);
+  }, [paid, state, router]);
   const invite = state === "NO_INVITE" || state === "EXPIRED";
   const url =
     inviteUrl ??

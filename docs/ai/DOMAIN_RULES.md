@@ -30,9 +30,10 @@ CREATED → IN_PROGRESS → COMPLETED
 
 ### Answer (`answers` table)
 
-- One row per question per session; upserted (not inserted) to allow answer changes.
+- One row per question per session. Untimed answers are upserted to allow changes. Timed BrainRank answers are final: the first submission is retained and retries return the same answer.
 - Stores `option_id` (for SINGLE_CHOICE/SCENARIO) or `numeric_value` (1–5 for LIKERT).
-- Never stores which answer is "correct" — that mapping lives in `questions.scoring_value` and is only read server-side at completion time.
+- A timed `TIMEOUT` has neither option nor numeric value, consumes the full assigned limit and receives no credit. Its deadline and duration are validated by the database.
+- Never stores which answer is "correct" — that mapping lives in `options.scoring_value` (with dimension/difficulty in `questions.scoring_key`) and is only read server-side at completion time.
 
 ### Result (`results` table)
 
@@ -82,11 +83,12 @@ PENDING → ACTIVE → REVOKED (terminal)
 
 ### BrainRank
 
-- 24 items across 6 dimensions (4 items each): `PATTERN_RECOGNITION`, `LOGICAL_REASONING`, `NUMERICAL_REASONING`, `ATTENTION`, `PROBLEM_SOLVING`, `SPEED`.
-- `overallScore = round(1000 × rawCorrect / 24)` — scale of 0–1000.
-- `dimensionScores[dim] = round(100 × correct_in_dim / 4)` — scale of 0–100.
+- The original blueprint selects 24 items across 6 dimensions (4 each): `PATTERN_RECOGNITION`, `LOGICAL_REASONING`, `NUMERICAL_REASONING`, `ATTENTION`, `PROBLEM_SOLVING`, `SPEED`. Attempts with delayed recall replace three selected items, retaining 24 evaluative questions: 21 core items plus 3 separately scored recall exercises. Informational memory steps do not increase this count.
+- `overallScore = round(1000 × rawCorrect / coreItemCount)` — scale of 0–1000; `coreItemCount` is 21 with recall or 24 for original attempts.
+- `dimensionScores[dim] = round(100 × correct_in_dim / coreItemsInDimension)` — scale of 0–100, using the actual assigned core items.
 - `strongestDimension` ties are broken by: 1) most HARD correct, 2) fastest median response time (≥2000ms samples only), 3) blueprint order.
-- Requires exactly 24 unique answers with no duplicates.
+- Completion requires all 24 assigned answers, including terminal timeouts. The core scorer requires 21 or 24 unique answers to match its items, with recall processed separately.
+- Timed attempts freeze difficulty, limit and rule version at selection; default limits are EASY 30s, MEDIUM 45s, HARD 60s and VERY_HARD 90s, with a valid question override taking priority and a 45s fallback. Time does not change the accuracy score; it remains a tie-breaker among correct answers. Separate premium timing metrics do not recalculate historical results.
 
 ### Personality Map (Big Five)
 
@@ -103,8 +105,9 @@ PENDING → ACTIVE → REVOKED (terminal)
 
 ### MoneyDNA
 
-- 20 items across 5 archetypes: `BUILDER`, `GUARDIAN`, `STRATEGIST`, `ADVENTURER`, `BALANCER`.
-- Same normalization as CareerFit: `round(((mean − 1) / 4) × 100)`.
+- 20 items across 5 dimensions/archetypes: `BUILDER`, `GUARDIAN`, `STRATEGIST`, `ADVENTURER`, `BALANCER`.
+- **v2 (`v2.0.0`, `scoring_version = "behavioral-v2"`, `SCENARIO`):** 4 plausible options per scenario, ordered via `SCENARIO_RAMP` (`EASY` → `MEDIUM` → `HARD`). Each option maps to `{ [dimension]: 1 }`; dimension score is normalized by total exposure `round((chosen[d] / available[d]) × 100)`. The current blueprint offers BUILDER in 15 scenarios, GUARDIAN in 16, STRATEGIST in 18, ADVENTURER in 13 and BALANCER in 18. Records `observations`, `contextDependentDimensions`, `tiedDimensions`, and `evidence`.
+- **v1 (`v1.0.0`, `scoring_version = "v1"`, `LIKERT` legacy):** Same normalization as CareerFit: `round(((mean − 1) / 4) × 100)`.
 - `dominantArchetype` + `secondaryArchetype` are top two.
 
 ### FocusStyle
@@ -121,12 +124,14 @@ PENDING → ACTIVE → REVOKED (terminal)
 ### CoupleDNA (individual)
 
 - 20 items across 5 dimensions: `COMMUNICATION`, `LIFE_VALUES`, `CONFLICT_MANAGEMENT`, `FINANCES`, `FUTURE_PLANS`.
-- Same normalization as CareerFit.
+- **v2 (`v2.0.0`, `scoring_version = "behavioral-v2"`, `SCENARIO`):** 4 options per scenario along a descriptive bipolar continuum (`0..3` from individual reflection/autonomy to joint elaboration). Dimension score is `round((sum(weight) / (4 × 3)) × 100)`. Records `contextDependentDimensions`, `tiedDimensions`, and `evidence`.
+- **v1 (`v1.0.0`, `scoring_version = "v1"`, `LIKERT` legacy):** Same normalization as CareerFit.
 
 ### CoupleDNA (bilateral comparison)
 
 - Requires both partners to have completed their individual sessions AND given `consentsGiven = true`.
-- `dimensionAlignment[dim] = max(0, 100 − abs(scoreA[dim] − scoreB[dim]))`.
+- **v2 (`behavioral-v2`):** `dimensionAlignments[dim] = round(100 × identical option choices / 4)` across the four shared scenarios in that topic. Different choices never cancel each other out through equal individual averages. This describes exact response agreement, not relationship quality. Reports append only the requesting participant's own choice evidence (`buildParticipantCoupleReport`).
+- **v1 (`v1` legacy):** `dimensionAlignment[dim] = max(0, 100 − abs(scoreA[dim] − scoreB[dim]))`.
 - `overallAlignmentPercentage = round(sum(alignments) / 5)`.
 - `strongestAlignment` = highest-aligning dimension; `growthDialogueArea` = lowest.
 

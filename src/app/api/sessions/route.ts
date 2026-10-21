@@ -13,11 +13,13 @@ import { createRequestId } from "@/lib/observability/request-id";
 import { logEvent } from "@/lib/observability/logger";
 import type { Locale } from "@/lib/i18n/config";
 import { isMarket, marketForCountry } from "@/lib/market/market-context";
+import { getClientIp } from "@/lib/security/rate-limit";
+import { checkServerRateLimit } from "@/lib/security/server-rate-limit";
 
 const createSessionSchema = z.object({
   quizSlug: z.string().min(1),
   locale: z.enum(["pt", "en", "es", "fr"]).default("pt"),
-  market: z.enum(["BR", "US", "EU", "GB"]).default("BR"),
+  market: z.enum(["BR", "US", "EU", "GB"]).default("US"),
   referralCode: z.string().optional(),
   inviteCode: z.string().optional(),
   comparisonConsent: z.boolean().optional(),
@@ -27,6 +29,12 @@ export async function POST(request: NextRequest) {
   const requestId = request.headers.get("x-request-id") ?? createRequestId();
 
   try {
+    const limit = await checkServerRateLimit(getClientIp(request), "session_start");
+    if (!limit.allowed)
+      return NextResponse.json(
+        { error: "Too many assessments. Please try again later." },
+        { status: 429, headers: limit.headers },
+      );
     const body = await request.json();
     const parsed = createSessionSchema.safeParse(body);
 

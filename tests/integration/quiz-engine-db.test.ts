@@ -42,6 +42,7 @@ describe.skipIf(!isOnline)(
       const firstQ = quiz!.questions[0];
       const firstOpt = firstQ.options[0];
 
+      await acknowledgeMemory(firstQ, session.id, token);
       // Save answer
       const saveResult = await saveAnswer({
         sessionId: session.id,

@@ -1,0 +1,114 @@
+{
+  "buildId": "X720Ptk6zZUPa1aIOXGA8",
+  "recordedAt": "2026-10-18T23:31:55.308Z",
+  "browser": "Playwright / Edge; Browser plugin not available",
+  "baseUrl": "http://localhost:3100",
+  "pages": [
+    {
+      "locale": "pt",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "http://localhost:3100/pt/discover",
+      "title": "Descobrir — 3 experiências de autoconhecimento | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "pt",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "http://localhost:3100/pt/discover",
+      "title": "Descobrir — 3 experiências de autoconhecimento | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "en",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "http://localhost:3100/en/discover",
+      "title": "Discover — 3 self-discovery experiences | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "en",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "http://localhost:3100/en/discover",
+      "title": "Discover — 3 self-discovery experiences | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "http://localhost:3100/es/discover",
+      "title": "Descubrir — 3 experiencias de autoconocimiento | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "es",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "http://localhost:3100/es/discover",
+      "title": "Descubrir — 3 experiencias de autoconocimiento | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "fr",
+      "viewport": {
+        "width": 1440,
+        "height": 1000
+      },
+      "url": "http://localhost:3100/fr/discover",
+      "title": "Découvrir — 3 expériences de connaissance de soi | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    },
+    {
+      "locale": "fr",
+      "viewport": {
+        "width": 390,
+        "height": 844
+      },
+      "url": "http://localhost:3100/fr/discover",
+      "title": "Découvrir — 3 expériences de connaissance de soi | Meqyro · Meqyro",
+      "brands": ["01BrainRank", "02MoneyDNA", "03CoupleDNA"],
+      "overflow": false
+    }
+  ],
+  "console": [
+    "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)",
+    "Failed to load resource: the server responded with a status of 422 (Unprocessable Entity)"
+  ],
+  "pageErrors": [],
+  "homeCatalogLinks": [
+    "/pt/quizzes/brainrank?source=home_goal",
+    "/pt/quizzes/moneydna?source=home_goal",
+    "/pt/quizzes/coupledna?source=home_goal",
+    "/pt/discover"
+  ],
+  "interaction": {
+    "action": "MoneyDNA details click",
+    "url": "http://localhost:3100/pt/quizzes/moneydna",
+    "title": "MoneyDNA — Psicologia e Comportamento Financeiro · Meqyro",
+    "heading": "MoneyDNA"
+  },
+  "forgedPaymentEventStatus": 403
+}

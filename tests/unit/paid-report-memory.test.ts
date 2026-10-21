@@ -57,12 +57,12 @@ describe("Paid reports and delayed recall", () => {
     const recalls = questions.flatMap((q, index) => (q.memoryRecall ? [index] : []));
     const cues = questions.flatMap((q, index) => (q.memoryCue ? [index] : []));
     expect(questions).toHaveLength(count);
-    expect(recalls).toEqual(count === 24 ? [7, 15, 23] : [6, 13, 19]);
-    expect(cues).toEqual(count === 24 ? [0, 8, 16] : [0, 7, 14]);
+    expect(recalls).toEqual(count === 24 ? [7, 17, 23] : [7, 14, 19]);
+    expect(cues).toEqual(count === 24 ? [0, 12, 19] : [0, 9, 15]);
     expect(new Set(questions.map((q) => q.id)).size).toBe(count);
     recalls.forEach((index) => expect(questions[index].memoryCue).toBeUndefined());
   });
-  it("produces an offline document with escaped content and the promised certificate", () => {
+  it("produces an offline document with escaped content and no certificate", () => {
     const report = buildHumanReport(
       "brainrank",
       { overallScore: 500, dimensionScores: { ATTENTION: 50 } },
@@ -71,7 +71,7 @@ describe("Paid reports and delayed recall", () => {
     report.executiveSummary = '<script>alert("x")</script>';
     const html = reportHtml(report, "brainrank", "pt");
     expect(html).toContain('charset="utf-8"');
-    expect(html).toContain("Certificado digital de conclusão");
+    expect(html).not.toMatch(/certific/i);
     expect(html).toContain("&lt;script&gt;");
     expect(html).not.toContain("<script>");
   });

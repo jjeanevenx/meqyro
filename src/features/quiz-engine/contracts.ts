@@ -3,6 +3,7 @@ export const questionKinds = ["SINGLE_CHOICE", "VISUAL_CHOICE", "LIKERT", "SCENA
 export type QuestionKind = (typeof questionKinds)[number];
 
 export type ScoringAnswer = Readonly<{
+  answerStatus?: "ANSWERED" | "TIMEOUT";
   questionId: string;
   optionId?: string;
   value?: number;
@@ -131,7 +132,15 @@ export type ActiveSession = Readonly<{
   memorySeen?: readonly string[];
   expiresAt: string;
   answers: Readonly<
-    Record<string, { optionId?: string; numericValue?: number; durationMs?: number }>
+    Record<
+      string,
+      {
+        optionId?: string;
+        numericValue?: number;
+        durationMs?: number;
+        answerStatus?: "ANSWERED" | "TIMEOUT";
+      }
+    >
   >;
 }>;
 

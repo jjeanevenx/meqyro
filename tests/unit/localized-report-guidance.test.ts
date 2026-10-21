@@ -5,6 +5,13 @@ import { localizedDimensionGuidance } from "@/features/results/dimension-guidanc
 import { locales } from "@/lib/i18n/config";
 
 describe("Paid report interpretation in each offered language", () => {
+  it.each(locales)("frames MoneyDNA as financial education in %s", (locale) => {
+    const report = buildHumanReport("moneydna", { archetypeScores: { BUILDER: 80 } }, locale);
+    expect(report.comparativeBenchmark.description).toMatch(
+      /aconselhamento financeiro|financial advice|asesoramiento financiero|conseil financier/,
+    );
+    expect(report.sections[0].paragraphs).toContain(report.comparativeBenchmark.description);
+  });
   it("explains every dimension and provides a distinct practical action in all four languages", () => {
     const keys = Object.keys(dimensionGuidance);
     for (const locale of locales) {

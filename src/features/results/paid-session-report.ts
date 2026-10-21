@@ -1,7 +1,7 @@
 import "server-only";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { buildHumanReport } from "@/features/results/human-report";
-import { buildCoupleReport } from "@/features/results/couple-report";
+import { buildParticipantCoupleReport } from "@/features/results/behavioral-couple-report";
 import { getCoupleState } from "@/features/couple/couple-service";
 import type { ComprehensiveReport } from "@/features/results/contracts";
 
@@ -23,7 +23,7 @@ export async function buildPaidSessionReport(
   if (slug === "coupledna") {
     const state = await getCoupleState(sessionId);
     return state.state === "READY"
-      ? { slug, report: buildCoupleReport(state.comparison, locale) }
+      ? { slug, report: buildParticipantCoupleReport(state.comparison, row.score, locale) }
       : null;
   }
   return { slug, report: buildHumanReport(slug, row.score, locale) };

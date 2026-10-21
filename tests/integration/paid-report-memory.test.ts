@@ -1,3 +1,4 @@
+import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
 import {
@@ -8,7 +9,7 @@ import {
   completeQuizSession,
 } from "@/features/quiz-engine/session-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
-import { createOrder, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
+import { setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { GET } from "@/app/api/sessions/[id]/report/route";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
@@ -104,7 +105,7 @@ describe("Persisted memory, payment and downloadable result", () => {
       expect(download.headers.get("Cache-Control")).toContain("no-store");
       const html = await download.text();
       expect(html).toContain("3/3 acertos");
-      expect(html).toContain("Certificado digital de conclusão");
+      expect(html).not.toMatch(/certific/i);
       const expiredGrant = await db
         .from("result_access_grants")
         .update({ created_at: "2023-01-01T00:00:00Z" })

@@ -1,10 +1,9 @@
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
-import { startQuizSession } from "@/features/quiz-engine/session-service";
 import {
-  createOrder,
-  getOrderById,
-  setPaymentProviderFactoryForTests,
-} from "@/features/commerce/order-service";
+  startCompletedCommerceSession as startQuizSession,
+  createOrderOrHistoricalFixture as createOrder,
+} from "./commerce-fixtures";
+import { getOrderById, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
 import { reconcileUnfulfilledPaidOrders } from "@/features/commerce/reconciliation-service";

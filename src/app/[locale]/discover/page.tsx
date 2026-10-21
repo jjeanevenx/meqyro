@@ -14,7 +14,8 @@ import {
   Wallet,
 } from "lucide-react";
 import { SiteHeader } from "@/components/patterns/site-header";
-import { experiences, type Experience, type ExperienceSlug } from "@/content/experiences";
+import type { Experience, ExperienceSlug } from "@/content/experiences";
+import { commercialExperiences } from "@/content/commercial-catalog";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { isLocale, locales, type Locale } from "@/lib/i18n/config";
@@ -24,24 +25,24 @@ export function generateStaticParams() {
 }
 const META: Record<Locale, { title: string; description: string }> = {
   pt: {
-    title: "Descobrir — 7 experiências de autoconhecimento | Meqyro",
+    title: "Descobrir — 3 experiências de autoconhecimento | Meqyro",
     description:
-      "Compare e escolha entre as sete experiências Meqyro, com resultado inicial grátis e sem cadastro obrigatório.",
+      "Compare e escolha entre as três experiências Meqyro, com resultado inicial grátis e sem cadastro obrigatório.",
   },
   en: {
-    title: "Discover — 7 self-discovery experiences | Meqyro",
+    title: "Discover — 3 self-discovery experiences | Meqyro",
     description:
-      "Compare and choose among seven Meqyro experiences, with a free initial result and no account required.",
+      "Compare and choose among three Meqyro experiences, with a free initial result and no account required.",
   },
   es: {
-    title: "Descubrir — 7 experiencias de autoconocimiento | Meqyro",
+    title: "Descubrir — 3 experiencias de autoconocimiento | Meqyro",
     description:
-      "Compara y elige entre siete experiencias Meqyro, con resultado inicial gratis y sin registro.",
+      "Compara y elige entre tres experiencias Meqyro, con resultado inicial gratis y sin registro.",
   },
   fr: {
-    title: "Découvrir — 7 expériences de connaissance de soi | Meqyro",
+    title: "Découvrir — 3 expériences de connaissance de soi | Meqyro",
     description:
-      "Comparez et choisissez parmi sept expériences Meqyro, avec un premier résultat gratuit et sans inscription.",
+      "Comparez et choisissez parmi trois expériences Meqyro, avec un premier résultat gratuit et sans inscription.",
   },
 };
 export async function generateMetadata({
@@ -68,7 +69,7 @@ const COPY: Record<Locale, Copy> = {
   pt: {
     title: "Escolha uma experiência",
     subtitle: "Explore diferentes aspectos de como você pensa, decide, trabalha e se relaciona.",
-    count: "7 experiências",
+    count: "3 experiências",
     free: "Resultados iniciais grátis",
     noAccount: "Sem cadastro obrigatório",
     freeTag: "Resultado grátis",
@@ -78,7 +79,7 @@ const COPY: Record<Locale, Copy> = {
   en: {
     title: "Choose an experience",
     subtitle: "Explore different aspects of how you think, decide, work, and connect.",
-    count: "7 experiences",
+    count: "3 experiences",
     free: "Free initial results",
     noAccount: "No account required",
     freeTag: "Free result",
@@ -88,7 +89,7 @@ const COPY: Record<Locale, Copy> = {
   es: {
     title: "Elige una experiencia",
     subtitle: "Explora distintos aspectos de cómo piensas, decides, trabajas y te relacionas.",
-    count: "7 experiencias",
+    count: "3 experiencias",
     free: "Resultados iniciales gratis",
     noAccount: "Sin registro obligatorio",
     freeTag: "Resultado gratis",
@@ -99,7 +100,7 @@ const COPY: Record<Locale, Copy> = {
     title: "Choisissez une expérience",
     subtitle:
       "Explorez différents aspects de votre façon de penser, décider, travailler et interagir.",
-    count: "7 expériences",
+    count: "3 expériences",
     free: "Premiers résultats gratuits",
     noAccount: "Sans inscription obligatoire",
     freeTag: "Résultat gratuit",
@@ -200,7 +201,7 @@ export default async function DiscoverPage({ params }: { params: Promise<{ local
         </div>
       </header>
       <section className="discover__grid" aria-label={copy.title}>
-        {experiences.map((experience, index) => (
+        {commercialExperiences.map((experience, index) => (
           <ExperienceCard
             key={experience.slug}
             experience={experience}

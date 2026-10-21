@@ -72,19 +72,20 @@ export async function GET(request: Request) {
       .order("created_at", { ascending: false })
       .limit(50);
 
-    const totalOrders = orders?.length ?? 0;
-    const paidOrders = orders?.filter((o) => o.status === "PAID" || o.status === "FULFILLED") ?? [];
-    const paidCount = paidOrders.length;
-
-    const conversionRate =
-      totalSessions && totalSessions > 0
-        ? Number(((paidCount / totalSessions) * 100).toFixed(2))
-        : 0;
-
-    const revenueByCurrency: Record<string, number> = {};
-    for (const order of paidOrders) {
-      revenueByCurrency[order.currency] = (revenueByCurrency[order.currency] ?? 0) + order.amount;
-    }
+    const { data: aggregate, error: aggregateError } = await supabase.rpc("commercial_metrics");
+    if (aggregateError || !aggregate) throw new Error("Commercial metrics unavailable");
+    const totals = aggregate as {
+      totalOrders: number;
+      paidOrdersCount: number;
+      revenueByCurrency: Record<string, number>;
+      byQuiz: unknown[];
+    };
+    const totalOrders = totals.totalOrders;
+    const paidCount = totals.paidOrdersCount;
+    const revenueByCurrency = totals.revenueByCurrency;
+    const conversionRate = totalSessions
+      ? Number(((paidCount / totalSessions) * 100).toFixed(2))
+      : 0;
 
     // Recent orders WITHOUT leaking customer emails
     const recentOrders = (orders ?? []).slice(0, 20).map((o) => ({
@@ -107,6 +108,7 @@ export async function GET(request: Request) {
         paidOrdersCount: paidCount,
         conversionRatePercent: conversionRate,
         revenueByCurrency,
+        byQuiz: totals.byQuiz,
       },
       quizzes: quizzes ?? [],
       prices: prices ?? [],

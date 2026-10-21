@@ -1,4 +1,5 @@
 import { acknowledgeMemory } from "./memory-helper";
+import { startCompletedCommerceSession } from "./commerce-fixtures";
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
 import { createClient } from "@supabase/supabase-js";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
@@ -102,7 +103,7 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
     });
 
     it("Pricing Tampering Defense: rejects nonexistent products and refuses client-side price modification", async () => {
-      const { session, token } = await startQuizSession({
+      const { session, token } = await startCompletedCommerceSession({
         quizSlug: "brainrank",
         locale: "pt",
         market: "BR",
@@ -117,7 +118,7 @@ describe.skipIf(!isOnline)("QA Comprehensive Audit & Adversarial Verification", 
           market: "BR",
           locale: "pt",
         }),
-      ).rejects.toThrow(/Produto não encontrado/i);
+      ).rejects.toThrow("Product unavailable for new purchases.");
 
       const legitimateOrder = await createOrder({
         sessionId: session.id,

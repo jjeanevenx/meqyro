@@ -99,6 +99,9 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       orderNumber: order.orderNumber,
       providerAttemptId: attempt.provider_attempt_id,
       providerPaymentId: transactionNsu,
+      expectedAmount: order.amount,
+      expectedCurrency: order.currency,
+      expectedProductCode: order.productCode,
     });
 
     if (providerStatus.status === "CONFIRMED") {

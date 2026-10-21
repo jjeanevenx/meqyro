@@ -14,15 +14,15 @@ Meqyro is a self-discovery assessment platform. Anonymous users take short psych
 
 ## The seven assessments
 
-| Slug              | Name            | Model                    | Questions | Type          |
-| ----------------- | --------------- | ------------------------ | --------- | ------------- |
-| `brainrank`       | BrainRank       | Cognitive dimensions (6) | 24        | SINGLE_CHOICE |
-| `personality-map` | Personality Map | Big Five (O/C/E/A/ES)    | 40        | LIKERT        |
-| `careerfit`       | CareerFit       | Career anchors (6)       | 24        | LIKERT        |
-| `moneydna`        | MoneyDNA        | Financial archetypes (5) | 20        | LIKERT        |
-| `coupledna`       | CoupleDNA       | Couple dimensions (5)    | 20        | LIKERT        |
-| `decisiondna`     | DecisionDNA     | Decision styles (4)      | 4         | SCENARIO      |
-| `focusstyle`      | FocusStyle      | Focus styles (4)         | 20        | LIKERT        |
+| Slug              | Name            | Model                    | Questions | Type                        |
+| ----------------- | --------------- | ------------------------ | --------- | --------------------------- |
+| `brainrank`       | BrainRank       | Cognitive dimensions (6) | 24        | SINGLE_CHOICE               |
+| `personality-map` | Personality Map | Big Five (O/C/E/A/ES)    | 40        | LIKERT                      |
+| `careerfit`       | CareerFit       | Career anchors (6)       | 24        | LIKERT                      |
+| `moneydna`        | MoneyDNA        | Financial archetypes (5) | 20        | SCENARIO (v2) / LIKERT (v1) |
+| `coupledna`       | CoupleDNA       | Couple dimensions (5)    | 20        | SCENARIO (v2) / LIKERT (v1) |
+| `decisiondna`     | DecisionDNA     | Decision styles (4)      | 4         | SCENARIO                    |
+| `focusstyle`      | FocusStyle      | Focus styles (4)         | 20        | LIKERT                      |
 
 ## Languages
 
@@ -34,7 +34,7 @@ Portuguese (pt), English (en), Spanish (es), French (fr). All four must be prese
 / (root)
   → locale detection → /[locale]
   → Home (/[locale])
-  → Discover (/[locale]/discover) — all 7 quizzes displayed
+  → Discover (/[locale]/discover) — BrainRank, MoneyDNA and CoupleDNA offered commercially
   → Quiz landing (/[locale]/quizzes/[slug])
   → Quiz play (/[locale]/quizzes/[slug]/play)
       → Session created (anonymous, cookie-bound)

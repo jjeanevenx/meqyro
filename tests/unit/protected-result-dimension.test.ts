@@ -33,7 +33,7 @@ describe("Protected result uses the assessment's own dimensions", () => {
     db.results.length = 0;
     db.filters.length = 0;
   });
-  it("prices an old US session in BRL on the Portuguese result page", async () => {
+  it("preserves US pricing when the result language is Portuguese", async () => {
     db.results.push(
       {
         data: {
@@ -46,7 +46,7 @@ describe("Protected result uses the assessment's own dimensions", () => {
         },
       },
       { data: { score: { overallScore: 458 } } },
-      { data: { amount: 1290, currency: "BRL" } },
+      { data: { amount: 299, currency: "USD" } },
     );
     const result = await getProtectedResult({
       sessionId: "session",
@@ -54,10 +54,10 @@ describe("Protected result uses the assessment's own dimensions", () => {
       locale: "pt",
       market: "US",
     });
-    expect(db.filters).toContainEqual(["market", "BR"]);
-    expect(db.filters).not.toContainEqual(["market", "US"]);
-    expect(result.paywall).toMatchObject({ market: "BR", currency: "BRL", amount: 1290 });
-    expect(result.paywall?.formattedPrice).toMatch(/R\$\s*12,90/);
+    expect(db.filters).toContainEqual(["market", "US"]);
+    expect(db.filters).not.toContainEqual(["market", "BR"]);
+    expect(result.paywall).toMatchObject({ market: "US", currency: "USD", amount: 299 });
+    expect(result.paywall?.formattedPrice).toMatch(/2,99/);
   });
   it.each([
     ["personality-map", { OPENNESS: 20, EXTRAVERSION: 80 }, "EXTRAVERSION"],

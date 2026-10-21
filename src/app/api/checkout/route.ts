@@ -2,9 +2,20 @@ import { NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 import { createOrder } from "@/features/commerce/order-service";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
-import { checkRateLimit, getClientIp } from "@/lib/security/rate-limit";
+import { getClientIp } from "@/lib/security/rate-limit";
+import { checkServerRateLimit } from "@/lib/security/server-rate-limit";
 import type { Market } from "@/lib/market/market-context";
 import { z } from "zod";
+import { logEvent } from "@/lib/observability/logger";
+import { createRequestId } from "@/lib/observability/request-id";
+import type { Locale } from "@/lib/i18n/config";
+
+const checkoutUnavailable: Record<Locale, string> = {
+  pt: "Checkout indisponível. Tente novamente.",
+  en: "Checkout unavailable. Please try again.",
+  es: "Pago no disponible. Inténtalo de nuevo.",
+  fr: "Paiement indisponible. Veuillez réessayer.",
+};
 
 const checkoutSchema = z.object({
   sessionId: z.string().uuid(),
@@ -21,13 +32,11 @@ const checkoutSchema = z.object({
 });
 
 export async function POST(req: NextRequest) {
+  const requestId = createRequestId();
+  let responseLocale: Locale = "en";
   try {
     const clientIp = getClientIp(req);
-    const rl = checkRateLimit(clientIp, {
-      windowMs: 60 * 1000,
-      maxRequests: 20,
-      keyPrefix: "checkout",
-    });
+    const rl = await checkServerRateLimit(clientIp, "checkout");
 
     if (!rl.allowed) {
       return NextResponse.json(
@@ -41,6 +50,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Dados de checkout inválidos." }, { status: 400 });
     }
     const { sessionId, productCode, customerEmail, locale, market, referralCode } = parsed.data;
+    responseLocale = locale;
 
     const cookieStore = await cookies();
     const sessionToken = parsed.data.sessionToken ?? cookieStore.get(anonymousSessionCookie)?.value;
@@ -65,7 +75,13 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json(result);
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Erro ao iniciar checkout.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    logEvent("error", "checkout_initialization_failed", {
+      requestId,
+      error: err instanceof Error ? err.message : "Unknown checkout failure",
+    });
+    return NextResponse.json(
+      { error: checkoutUnavailable[responseLocale], requestId },
+      { status: 400, headers: { "x-request-id": requestId } },
+    );
   }
 }

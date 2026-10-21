@@ -2,7 +2,8 @@ import "server-only";
 import { buildHumanReport as buildComprehensiveReport } from "./human-report";
 import { findPaidEntitlement } from "@/features/commerce/entitlement-service";
 import { getCoupleState } from "@/features/couple/couple-service";
-import { buildCoupleReport } from "./couple-report";
+import { buildParticipantCoupleReport } from "./behavioral-couple-report";
+import { isCommercialProduct } from "@/content/commercial-catalog";
 
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { matchesAnonymousSessionToken } from "@/lib/security/anonymous-session";
@@ -140,7 +141,7 @@ export async function getProtectedResult(input: {
       );
     const premiumReport = coupleState
       ? coupleState.state === "READY"
-        ? buildCoupleReport(coupleState.comparison, input.locale)
+        ? buildParticipantCoupleReport(coupleState.comparison, score, input.locale)
         : undefined
       : buildComprehensiveReport(quizSlug, score, input.locale);
     return {
@@ -155,6 +156,9 @@ export async function getProtectedResult(input: {
   }
 
   // 6. Otherwise build paywall offer and omit premium payload completely
+  if (!isCommercialProduct(productCode)) {
+    return { sessionId: input.sessionId, quizSlug, accessLevel, summary, couple };
+  }
   const { data: priceRecord } = await supabase
     .from("product_prices")
     .select("amount, currency")
@@ -210,10 +214,10 @@ function getPaywallHeadline(quizSlug: string, locale: string): string {
       fr: "Débloquez votre Guide des Ancres Professionnelles",
     },
     moneydna: {
-      pt: "Desbloqueie seu Diagnóstico de Arquétipo Financeiro",
+      pt: "Explore seu Perfil de Hábitos Financeiros",
       en: "Unlock your Financial Archetype Breakdown",
-      es: "Desbloquea tu Diagnóstico de Arquetipo Financiero",
-      fr: "Débloquez votre Diagnostic d'Archétype Financier",
+      es: "Explora tu Perfil de Hábitos Financieros",
+      fr: "Explorez votre Profil d’Habitudes Financières",
     },
     focusstyle: {
       pt: "Desbloqueie seu Manual de Estilo de Foco & Produtividade",

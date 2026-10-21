@@ -1,5 +1,6 @@
 import type { NextRequest } from "next/server";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
+import { getSessionQuestions } from "@/features/quiz-engine/session-service";
 import {
   anonymousSessionCookie,
   matchesAnonymousSessionToken,
@@ -16,7 +17,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     const db = createSupabaseSecretClient();
     const { data: session } = await db
       .from("quiz_sessions")
-      .select("access_token_hash,status,expires_at,memory_exposures")
+      .select("access_token_hash,status,expires_at,memory_exposures,current_position")
       .eq("id", id)
       .single();
     if (
@@ -33,6 +34,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       .eq("session_id", id)
       .eq("questions.stable_key", cueId);
     if (!assigned?.length) return Response.json({ error: "Unassigned exercise" }, { status: 400 });
+    const questions = await getSessionQuestions(id, "en");
+    if (
+      questions.find((question) => question.position === session.current_position)?.memoryCue
+        ?.id !== cueId
+    ) {
+      return Response.json({ error: "Unexpected information step" }, { status: 409 });
+    }
     const memorySeen = [...new Set([...(session.memory_exposures ?? []), cueId])];
     const { error } = await db
       .from("quiz_sessions")

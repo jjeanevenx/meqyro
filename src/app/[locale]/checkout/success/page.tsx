@@ -7,6 +7,7 @@ import { ArrowRight, CheckCircle2, Clock, Loader2, RefreshCw, XCircle } from "lu
 import { isLocale, type Locale } from "@/lib/i18n/config";
 
 type OrderStatus = {
+  quizSlug?: string;
   id: string;
   orderNumber: string;
   sessionId: string;
@@ -35,7 +36,8 @@ const copy: Record<
     pendingBody:
       "A confirmação ainda não chegou. Você não precisa pagar novamente; esta página continuará consultando o status real do provedor.",
     confirmed: "Pagamento confirmado!",
-    confirmedBody: "Seu acesso foi liberado e o relatório completo já está disponível.",
+    confirmedBody:
+      "Sua compra foi confirmada. Abra o resultado para acessar o relatório e verificar eventuais etapas pendentes.",
     error: "Não foi possível confirmar o pagamento agora.",
     retry: "Verificar novamente",
     view: "Ver relatório completo",
@@ -47,7 +49,8 @@ const copy: Record<
     pendingBody:
       "Confirmation has not arrived yet. You do not need to pay again; this page checks the provider's real status.",
     confirmed: "Payment confirmed!",
-    confirmedBody: "Access has been granted and your full report is ready.",
+    confirmedBody:
+      "Your purchase is confirmed. Open your result to access the report and check any remaining steps.",
     error: "We could not confirm the payment right now.",
     retry: "Check again",
     view: "View full report",
@@ -59,7 +62,8 @@ const copy: Record<
     pendingBody:
       "La confirmación aún no ha llegado. No necesitas pagar otra vez; esta página consulta el estado real del proveedor.",
     confirmed: "¡Pago confirmado!",
-    confirmedBody: "El acceso fue concedido y tu informe completo ya está disponible.",
+    confirmedBody:
+      "Tu compra está confirmada. Abre el resultado para acceder al informe y consultar los pasos pendientes.",
     error: "No pudimos confirmar el pago ahora.",
     retry: "Verificar de nuevo",
     view: "Ver informe completo",
@@ -71,7 +75,8 @@ const copy: Record<
     pendingBody:
       "La confirmation n'est pas encore arrivée. Ne payez pas une seconde fois ; cette page vérifie le statut réel du prestataire.",
     confirmed: "Paiement confirmé !",
-    confirmedBody: "L'accès est accordé et votre rapport complet est disponible.",
+    confirmedBody:
+      "Votre achat est confirmé. Ouvrez le résultat pour accéder au rapport et vérifier les étapes restantes.",
     error: "Impossible de confirmer le paiement pour le moment.",
     retry: "Vérifier à nouveau",
     view: "Voir le rapport complet",
@@ -150,9 +155,10 @@ function SuccessContent() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [statusUrl, transactionNsu]);
 
-  const resultUrl = order?.sessionId
-    ? `/${locale}/quizzes/brainrank/result?session=${encodeURIComponent(order.sessionId)}`
-    : `/${locale}`;
+  const resultUrl =
+    order?.sessionId && order.quizSlug
+      ? `/${locale}/quizzes/${encodeURIComponent(order.quizSlug)}/result?session=${encodeURIComponent(order.sessionId)}`
+      : `/${locale}`;
 
   return (
     <div className="checkout-return-card">

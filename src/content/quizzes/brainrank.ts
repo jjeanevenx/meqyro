@@ -381,10 +381,10 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "LOGICAL_REASONING",
     difficulty: "MEDIUM",
     prompt: {
-      pt: "Quatro caixas rotuladas: apenas uma diz a verdade. Caixa 1: 'O ouro está aqui'. Caixa 2: 'O ouro não está aqui'. Caixa 3: 'O ouro está na Caixa 2'. Onde está o ouro se Caixa 1 e 3 mentem?",
-      en: "Four boxes labeled: only one tells the truth. Box 1: 'Gold is here'. Box 2: 'Gold is not here'. Box 3: 'Gold is in Box 2'. Where is the gold if Box 1 and 3 lie?",
-      es: "Cuatro cajas con etiquetas: solo una dice la verdad. Caja 1: 'El oro está aquí'. Caja 2: 'El oro no está aquí'. Caja 3: 'El oro está en Caja 2'. ¿Dónde está el oro si Caja 1 y 3 mienten?",
-      fr: "Quatre boîtes étiquetées : une seule dit la vérité. Boîte 1 : 'L'or est ici'. Boîte 2 : 'L'or n'est pas ici'. Boîte 3 : 'L'or est dans la boîte 2'. Où est l'or si 1 et 3 mentent ?",
+      pt: 'Há ouro em exatamente uma de quatro caixas. As afirmações "O ouro está na caixa 1", "O ouro está na caixa 2" e "O ouro está na caixa 3" são todas falsas. Onde está o ouro?',
+      en: 'Gold is in exactly one of four boxes. The statements "Gold is in box 1", "Gold is in box 2" and "Gold is in box 3" are all false. Where is the gold?',
+      es: 'Hay oro en exactamente una de cuatro cajas. Las afirmaciones "El oro está en la caja 1", "El oro está en la caja 2" y "El oro está en la caja 3" son todas falsas. ¿Dónde está el oro?',
+      fr: "De l’or se trouve dans exactement une de quatre boîtes. Les affirmations « L’or est dans la boîte 1 », « L’or est dans la boîte 2 » et « L’or est dans la boîte 3 » sont toutes fausses. Où est l’or ?",
     },
     options: [
       {
@@ -484,10 +484,10 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "NUMERICAL_REASONING",
     difficulty: "EASY",
     prompt: {
-      pt: "Qual valor preenche a interrogação? 3 × 4 = 21, 4 × 5 = 31, 5 × 6 = ?",
-      en: "Which value replaces the question mark? 3 × 4 = 21, 4 × 5 = 31, 5 × 6 = ?",
-      es: "¿Qué valor sustituye la interrogación? 3 × 4 = 21, 4 × 5 = 31, 5 × 6 = ?",
-      fr: "Quelle valeur remplace le point d'interrogation ? 3 × 4 = 21, 4 × 5 = 31, 5 × 6 = ?",
+      pt: "Uma operação é definida por a ◇ b = a × b + a + b + 2. Quanto vale 5 ◇ 6?",
+      en: "An operation is defined by a ◇ b = a × b + a + b + 2. What is 5 ◇ 6?",
+      es: "Una operación se define como a ◇ b = a × b + a + b + 2. ¿Cuánto vale 5 ◇ 6?",
+      fr: "Une opération est définie par a ◇ b = a × b + a + b + 2. Que vaut 5 ◇ 6 ?",
     },
     options: [
       {
@@ -500,7 +500,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "B",
         position: 2,
         isCorrect: true,
-        label: { pt: "41", en: "41", es: "41", fr: "41" },
+        label: { pt: "43", en: "43", es: "43", fr: "43" },
       },
       {
         stableKey: "C",
@@ -843,10 +843,10 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "PROBLEM_SOLVING",
     difficulty: "EASY",
     prompt: {
-      pt: "Três lâmpadas no teto são controladas por 3 interruptores na sala ao lado. Você pode entrar na sala das lâmpadas apenas uma vez. Como identificar qual interruptor controla qual lâmpada?",
-      en: "Three lamps in a room are controlled by 3 switches outside. You can enter the lamp room only once. How do you identify which switch controls which lamp?",
-      es: "Tres lámparas son controladas por 3 interruptores fuera. Puedes entrar a la habitación solo una vez. ¿Cómo identificar qué interruptor corresponde a cada lámpara?",
-      fr: "Trois lampes sont contrôlées par 3 interrupteurs extérieurs. Vous ne pouvez entrer dans la pièce qu'une fois. Comment identifier chaque interrupteur ?",
+      pt: "Três lâmpadas incandescentes, inicialmente apagadas e frias, são controladas por três interruptores na sala ao lado. As lâmpadas aquecem quando acesas e você pode verificar seu calor com segurança. Como associá-las aos interruptores entrando na sala apenas uma vez?",
+      en: "Three incandescent bulbs, initially off and cold, are controlled by three switches next door. Lit bulbs warm up and you can safely check their warmth. How can you match bulbs to switches with only one visit?",
+      es: "Tres bombillas incandescentes, inicialmente apagadas y frías, se controlan con tres interruptores de la sala contigua. Al encenderse se calientan y puedes comprobar su calor con seguridad. ¿Cómo asociarlas entrando una sola vez?",
+      fr: "Trois ampoules à incandescence, initialement éteintes et froides, sont commandées par trois interrupteurs dans la pièce voisine. Elles chauffent lorsqu’elles sont allumées et leur chaleur peut être vérifiée sans danger. Comment les associer en une seule visite ?",
     },
     options: [
       {
@@ -1141,35 +1141,35 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "SPEED",
     difficulty: "MEDIUM",
     prompt: {
-      pt: "Qual palavra é o anagrama direto de 'ROMA'?",
-      en: "Which word is an exact anagram of 'AMOR'?",
-      es: "¿Qué palabra es anagrama directo de 'ROMA'?",
-      fr: "Quel mot est un anagramme exact de 'AMOR' ?",
+      pt: 'Qual sequência contém exatamente as mesmas letras de "ROMA", uma vez cada?',
+      en: 'Which sequence contains exactly the same letters as "ROMA", once each?',
+      es: '¿Qué secuencia contiene exactamente las mismas letras de "ROMA", una vez cada una?',
+      fr: "Quelle suite contient exactement les mêmes lettres que « ROMA », une fois chacune ?",
     },
     options: [
       {
         stableKey: "A",
         position: 1,
         isCorrect: true,
-        label: { pt: "AMOR", en: "ROMA", es: "AMOR", fr: "RAMO" },
+        label: { pt: "AMOR", en: "AMOR", es: "AMOR", fr: "AMOR" },
       },
       {
         stableKey: "B",
         position: 2,
         isCorrect: false,
-        label: { pt: "MORA", en: "ROAM", es: "MORA", fr: "MORA" },
+        label: { pt: "MORO", en: "MORO", es: "MORO", fr: "MORO" },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "AROMA", en: "ARMOR", es: "AROMA", fr: "AROME" },
+        label: { pt: "AROMA", en: "AROMA", es: "AROMA", fr: "AROMA" },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: { pt: "RAMAL", en: "MORAL", es: "RAMAL", fr: "MORAL" },
+        label: { pt: "RAMAL", en: "RAMAL", es: "RAMAL", fr: "RAMAL" },
       },
     ],
   },
@@ -2113,7 +2113,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: { pt: "ELEFANTIASE", en: "ELEPHANTIASIS", es: "ELEFANTIASIS", fr: "ELEPHANTIASIS" },
+        label: { pt: "ELEFANTIASE", en: "ELEPHANTIASI", es: "ELEFANTIASI", fr: "ELEPHANTIASIS" },
       },
       {
         stableKey: "B",
@@ -2247,7 +2247,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: { pt: "##--#--#--", en: "##--#--#--", es: "##--#--#--", fr: "##--#--#--" },
+        label: { pt: "##--#-----", en: "##--#-----", es: "##--#-----", fr: "##--#-----" },
       },
       {
         stableKey: "B",
@@ -2275,10 +2275,10 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "ATTENTION",
     difficulty: "HARD",
     prompt: {
-      pt: "Encontre o par de palavras com grafia perfeitamente invertida (palíndromo mútuo):",
-      en: "Find the pair of words with perfectly mirrored spelling (mutual palindrome):",
-      es: "Encuentre el par de palabras con grafía perfectamente invertida:",
-      fr: "Trouvez la paire de mots à l'orthographe exactement inversée (palindrome mutuel) :",
+      pt: "Qual par apresenta a segunda sequência exatamente na ordem inversa da primeira?",
+      en: "Which pair has its second sequence in exactly the reverse order of the first?",
+      es: "¿Qué par presenta la segunda secuencia exactamente en el orden inverso de la primera?",
+      fr: "Dans quelle paire la seconde suite est-elle exactement l’inverse de la première ?",
     },
     options: [
       {
@@ -2291,19 +2291,24 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "B",
         position: 2,
         isCorrect: false,
-        label: { pt: "LIVRO / ORVIL", en: "BOOK / KOOB", es: "LIBRO / ORBIL", fr: "LIVRE / ERVIL" },
+        label: {
+          pt: "LIVRO / ORVLI",
+          en: "LIVRO / ORVLI",
+          es: "LIVRO / ORVLI",
+          fr: "LIVRO / ORVLI",
+        },
       },
       {
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "CASA / ASAC", en: "HOME / EMOH", es: "CASA / ASAC", fr: "MAISON / NOSIAM" },
+        label: { pt: "CASA / AASC", en: "CASA / AASC", es: "CASA / AASC", fr: "CASA / AASC" },
       },
       {
         stableKey: "D",
         position: 4,
         isCorrect: false,
-        label: { pt: "MESA / ASEM", en: "TABLE / ELBAT", es: "MESA / ASEM", fr: "TABLE / ELBAT" },
+        label: { pt: "MESA / AESM", en: "MESA / AESM", es: "MESA / AESM", fr: "MESA / AESM" },
       },
     ],
   },
@@ -2745,7 +2750,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "A",
         position: 1,
         isCorrect: false,
-        label: { pt: "567", en: "567", es: "567", fr: "567" },
+        label: { pt: "568", en: "568", es: "568", fr: "568" },
       },
       {
         stableKey: "B",
@@ -2757,7 +2762,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "C",
         position: 3,
         isCorrect: false,
-        label: { pt: "693", en: "693", es: "693", fr: "693" },
+        label: { pt: "694", en: "694", es: "694", fr: "694" },
       },
       {
         stableKey: "D",

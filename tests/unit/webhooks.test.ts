@@ -18,6 +18,14 @@ describe("payment provider verification", () => {
   describe("StripeAdapter", () => {
     const adapter = new StripeAdapter();
 
+    it("rejects live Stripe keys in preview before making a payment request", async () => {
+      process.env.VERCEL_ENV = "preview";
+      process.env.STRIPE_SECRET_KEY = "sk_live_not_a_real_key";
+      await expect(
+        adapter.getPaymentStatus({ orderId: "order", providerAttemptId: "cs_test" }),
+      ).rejects.toThrow("test-mode key");
+    });
+
     function signed(payload: string) {
       return Stripe.webhooks.generateTestHeaderString({
         payload,

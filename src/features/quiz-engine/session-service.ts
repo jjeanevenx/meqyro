@@ -11,6 +11,7 @@ import {
 } from "@/lib/security/anonymous-session";
 import { hashToken } from "@/features/privacy/consent-service";
 import type { ActiveSession, PartialResultSummary, ScoringAnswer } from "./contracts";
+import { buildBrainRankTimingAudit } from "@/features/scoring/brainrank-timing";
 import { brainRankScoringV1, type BrainRankItem } from "@/features/scoring/brainrank";
 import { personalityMapScoringV1, type PersonalityItem } from "@/features/scoring/personality-map";
 import { careerFitScoringV1, type CareerFitItem } from "@/features/scoring/careerfit";
@@ -22,6 +23,8 @@ import {
   type DecisionStyleType,
 } from "@/features/scoring/decisiondna";
 import { coupleDnaScoringV1, type CoupleDnaItem } from "@/features/scoring/coupledna";
+import { scoreBehavioralV2, behavioralScoringVersion } from "@/features/scoring/behavioral-v2";
+import { publishedVersion } from "./instrument-version";
 import { recordFunnelEvent } from "@/features/analytics/analytics-service";
 import { recordReferralClick } from "@/features/referrals/referral-service";
 import type { Locale } from "@/lib/i18n/config";
@@ -33,7 +36,8 @@ import {
   type SelectedQuestionItem,
 } from "./selection-engine";
 import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
-import { attachMemoryCues, distributeMemoryItems } from "./delayed-memory";
+import { resolveQuestionTiming } from "./question-timing";
+import { attachMemoryCues, distributeMemoryItems, memoryExecutionPlan } from "./delayed-memory";
 
 export class SessionNotFoundError extends Error {
   constructor(message = "Session not found or expired") {
@@ -65,6 +69,8 @@ export type StartQuizSessionInput = {
   comparisonConsent?: boolean;
   existingToken?: string;
   seed?: string;
+  /** Trusted server-side accommodation, frozen into each assigned limit. */
+  timeMultiplier?: number;
 };
 
 export async function startQuizSession(
@@ -136,7 +142,9 @@ export async function startQuizSession(
   const rawVersions = quiz.quiz_versions as unknown as VersionRecord | VersionRecord[];
   const versions = Array.isArray(rawVersions) ? rawVersions : [rawVersions];
   let activeVersion =
-    versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED") ?? versions[0];
+    input.quizSlug === "moneydna" || input.quizSlug === "coupledna"
+      ? publishedVersion(versions)
+      : versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED");
 
   if (!activeVersion) {
     throw new SessionNotFoundError(`No active version for ${input.quizSlug}`);
@@ -244,14 +252,18 @@ export async function startQuizSession(
     const { data: candidates } = await supabase
       .from("questions")
       .select(
-        "id, stable_key, position, kind, scoring_key, metadata, active, options(id, stable_key, position)",
+        "id, stable_key, position, kind, scoring_key, metadata, active, question_translations(locale,prompt), options(id, stable_key, position, option_translations(locale,label))",
       )
       .eq("quiz_version_id", activeVersion.id)
       .eq("active", true)
       .order("position", { ascending: true });
 
     if (candidates && candidates.length > 0) {
-      const config = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
+      const baseConfig = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
+      const config =
+        activeVersion.scoring_version === behavioralScoringVersion && baseConfig
+          ? { ...baseConfig, orderingStrategy: "SCENARIO_RAMP" as const }
+          : baseConfig;
       const candidateList: CandidateQuestion[] = candidates.map((c) => ({
         id: c.id,
         stableKey: c.stable_key,
@@ -259,11 +271,13 @@ export async function startQuizSession(
         scoringKey: (c.scoring_key as Record<string, unknown>) ?? {},
         metadata: c.metadata as Record<string, unknown> | null,
         active: c.active,
+        translations: c.question_translations,
         options: Array.isArray(c.options)
           ? c.options.map((opt) => ({
               id: opt.id,
               stableKey: opt.stable_key,
               position: opt.position,
+              translations: opt.option_translations,
             }))
           : [],
       }));
@@ -291,6 +305,7 @@ export async function startQuizSession(
               position: 0,
               dimension: "DELAYED_MEMORY",
             })),
+            input.quizSlug === "brainrank" ? "spaced" : "legacy",
           )
         : coreSelected;
 
@@ -298,6 +313,22 @@ export async function startQuizSession(
         session_id: session.id,
         question_id: q.questionId,
         position: idx + 1,
+        ...(input.quizSlug === "brainrank"
+          ? (() => {
+              const original = candidateList.find((c) => c.id === q.questionId);
+              const timing = resolveQuestionTiming(
+                original?.scoringKey.difficulty,
+                original?.metadata?.timeLimitSeconds,
+                undefined,
+                input.timeMultiplier,
+              );
+              return {
+                difficulty: timing.difficulty,
+                time_limit_seconds: timing.timeLimitSeconds,
+                timing_rules_version: timing.timingRulesVersion,
+              };
+            })()
+          : {}),
       }));
 
       const { error: insErr } = await supabase.from("quiz_session_questions").insert(rowsToInsert);
@@ -495,15 +526,21 @@ export async function getActiveSessionByToken(
 
   const { data: answersData } = await supabase
     .from("answers")
-    .select("question_id, option_id, numeric_value, duration_ms")
+    .select("question_id, option_id, numeric_value, duration_ms, answer_status")
     .eq("session_id", session.id);
 
   const answersMap: Record<
     string,
-    { optionId?: string; numericValue?: number; durationMs?: number }
+    {
+      optionId?: string;
+      numericValue?: number;
+      durationMs?: number;
+      answerStatus?: "ANSWERED" | "TIMEOUT";
+    }
   > = {};
   for (const ans of answersData ?? []) {
     answersMap[ans.question_id] = {
+      answerStatus: ans.answer_status as "ANSWERED" | "TIMEOUT",
       ...(ans.option_id ? { optionId: ans.option_id } : {}),
       ...(ans.numeric_value !== null ? { numericValue: ans.numeric_value } : {}),
       ...(ans.duration_ms !== null ? { durationMs: ans.duration_ms } : {}),
@@ -565,15 +602,21 @@ export async function getActiveSession(
 
   const { data: answersData } = await supabase
     .from("answers")
-    .select("question_id, option_id, numeric_value, duration_ms")
+    .select("question_id, option_id, numeric_value, duration_ms, answer_status")
     .eq("session_id", sessionId);
 
   const answersMap: Record<
     string,
-    { optionId?: string; numericValue?: number; durationMs?: number }
+    {
+      optionId?: string;
+      numericValue?: number;
+      durationMs?: number;
+      answerStatus?: "ANSWERED" | "TIMEOUT";
+    }
   > = {};
   for (const ans of answersData ?? []) {
     answersMap[ans.question_id] = {
+      answerStatus: ans.answer_status as "ANSWERED" | "TIMEOUT",
       ...(ans.option_id ? { optionId: ans.option_id } : {}),
       ...(ans.numeric_value !== null ? { numericValue: ans.numeric_value } : {}),
       ...(ans.duration_ms !== null ? { durationMs: ans.duration_ms } : {}),
@@ -626,6 +669,7 @@ export async function validateAndRecoverSession(input: {
     .from("recovery_tokens")
     .select("id, session_id, token_hash, expires_at, used_at, usage_count, max_uses, revoked_at")
     .eq("session_id", input.sessionId)
+    .eq("token_hash", tokenHash)
     .single();
 
   if (recoveryError || !recoveryRecord) {
@@ -727,15 +771,21 @@ export async function validateAndRecoverSession(input: {
   // 4. If session is active/in_progress, load answers
   const { data: answersData } = await supabase
     .from("answers")
-    .select("question_id, option_id, numeric_value, duration_ms")
+    .select("question_id, option_id, numeric_value, duration_ms, answer_status")
     .eq("session_id", session.id);
 
   const answersMap: Record<
     string,
-    { optionId?: string; numericValue?: number; durationMs?: number }
+    {
+      optionId?: string;
+      numericValue?: number;
+      durationMs?: number;
+      answerStatus?: "ANSWERED" | "TIMEOUT";
+    }
   > = {};
   for (const ans of answersData ?? []) {
     answersMap[ans.question_id] = {
+      answerStatus: ans.answer_status as "ANSWERED" | "TIMEOUT",
       ...(ans.option_id ? { optionId: ans.option_id } : {}),
       ...(ans.numeric_value !== null ? { numericValue: ans.numeric_value } : {}),
       ...(ans.duration_ms !== null ? { durationMs: ans.duration_ms } : {}),
@@ -770,7 +820,8 @@ export async function saveAnswer(input: {
   numericValue?: number;
   durationMs?: number;
   nextPosition?: number;
-}): Promise<{ success: boolean; currentPosition: number }> {
+  timeout?: boolean;
+}): Promise<{ success: boolean; currentPosition: number; answerStatus?: string }> {
   const supabase = createSupabaseSecretClient();
 
   const { data: session, error: sessionError } = await supabase
@@ -796,13 +847,14 @@ export async function saveAnswer(input: {
   }
 
   // Validate that question belongs to this attempt
-  const { data: sqRow } = await supabase
+  const { data: sqRow, error: assignedQuestionError } = await supabase
     .from("quiz_session_questions")
-    .select("question_id")
+    .select("question_id, time_limit_seconds")
     .eq("session_id", input.sessionId)
     .eq("question_id", input.questionId)
     .maybeSingle();
 
+  if (assignedQuestionError) throw new Error("Failed to validate assigned question");
   if (!sqRow) {
     const { count } = await supabase
       .from("quiz_session_questions")
@@ -813,6 +865,16 @@ export async function saveAnswer(input: {
       throw new Error("Question does not belong to this attempt");
     }
   }
+
+  if (sqRow?.time_limit_seconds) {
+    const result = await questionClock({ ...input, submit: true });
+    return {
+      success: true,
+      currentPosition: result.currentPosition ?? session.current_position,
+      answerStatus: result.answerStatus,
+    };
+  }
+  if (input.timeout) throw new Error("Timeout requires a timed question");
 
   // Upsert answer
   if (session.status !== "IN_PROGRESS") {
@@ -917,7 +979,7 @@ export async function completeQuizSession(input: {
   type OptionData = {
     id: string;
     stable_key: string;
-    scoring_value?: { isCorrect?: boolean } | null;
+    scoring_value?: { isCorrect?: boolean; signals?: unknown } | null;
   };
 
   type QuestionData = {
@@ -931,7 +993,7 @@ export async function completeQuizSession(input: {
   // Fetch attempt questions from quiz_session_questions
   const { data: sessionQuestions } = await supabase
     .from("quiz_session_questions")
-    .select("question_id, position")
+    .select("question_id, position, difficulty")
     .eq("session_id", input.sessionId)
     .order("position", { ascending: true });
 
@@ -957,7 +1019,10 @@ export async function completeQuizSession(input: {
           id: q.id,
           stable_key: q.stable_key,
           position: sq.position,
-          scoring_key: (q.scoring_key as Record<string, string> | null) ?? null,
+          scoring_key: {
+            ...((q.scoring_key as Record<string, string> | null) ?? {}),
+            ...(sq.difficulty && sq.difficulty !== "UNKNOWN" ? { difficulty: sq.difficulty } : {}),
+          },
           options: (q.options as OptionData[]) ?? [],
         });
       }
@@ -982,7 +1047,7 @@ export async function completeQuizSession(input: {
   // Fetch all submitted answers for active questions
   const { data: answers, error: aError } = await supabase
     .from("answers")
-    .select("question_id, option_id, numeric_value, duration_ms")
+    .select("question_id, option_id, numeric_value, duration_ms, answer_status")
     .eq("session_id", input.sessionId)
     .in("question_id", activeQuestionIds);
 
@@ -1004,13 +1069,31 @@ export async function completeQuizSession(input: {
     .map((a) => ({
       questionId: a.question_id,
       optionId: a.option_id ?? undefined,
+      answerStatus: a.answer_status as "ANSWERED" | "TIMEOUT",
       value: a.numeric_value ?? undefined,
       durationMs: a.duration_ms ?? undefined,
     }));
 
   let calculatedScore: Record<string, unknown>;
 
-  if (quizSlug === "brainrank") {
+  if (
+    (quizSlug === "moneydna" || quizSlug === "coupledna") &&
+    session.scoring_version === behavioralScoringVersion
+  ) {
+    calculatedScore = scoreBehavioralV2(
+      quizSlug,
+      rawQuestions.map((q) => ({
+        id: q.id,
+        stableKey: q.stable_key,
+        options: (q.options ?? []).map((o) => ({
+          id: o.id,
+          stableKey: o.stable_key,
+          signals: o.scoring_value?.signals,
+        })),
+      })),
+      scoringAnswers,
+    ) as unknown as Record<string, unknown>;
+  } else if (quizSlug === "brainrank") {
     const brainRankItems: BrainRankItem[] = rawQuestions.map((q) => {
       const options = Array.isArray(q.options) ? q.options : [];
       const correctOpt = options.find((opt) => opt.scoring_value?.isCorrect === true);
@@ -1128,7 +1211,44 @@ export async function completeQuizSession(input: {
     throw new Error(`Unsupported quiz for scoring: ${quizSlug}`);
   }
 
+  if (quizSlug === "brainrank") {
+    const { data: plan, error: planError } = await supabase
+      .from("quiz_session_questions")
+      .select(
+        "question_id,difficulty,time_limit_seconds,timing_rules_version,question_started_at,question_expires_at",
+      )
+      .eq("session_id", input.sessionId);
+    if (planError) throw new Error("Failed to load timing audit");
+    if (plan?.some((p) => p.time_limit_seconds)) {
+      const allQuestions = [...rawQuestions, ...memoryQuestions];
+      calculatedScore.timing = buildBrainRankTimingAudit(
+        allQuestions.map((q) => {
+          const p = plan.find((row) => row.question_id === q.id);
+          const a = answers.find((row) => row.question_id === q.id);
+          return {
+            questionId: q.id,
+            difficulty: p?.difficulty ?? "UNKNOWN",
+            timeLimitSeconds: p?.time_limit_seconds ?? 0,
+            questionStartedAt: p?.question_started_at,
+            questionExpiresAt: p?.question_expires_at,
+            responseTimeMs: a?.duration_ms ?? 0,
+            answerStatus: a?.answer_status ?? "ANSWERED",
+            optionId: a?.option_id ?? null,
+            isCorrect:
+              a?.answer_status !== "TIMEOUT" &&
+              !!q.options?.some((o) => o.id === a?.option_id && o.scoring_value?.isCorrect),
+            memoryRecall: q.scoring_key?.dimension === "DELAYED_MEMORY",
+            rulesVersion: p?.timing_rules_version ?? "legacy",
+          };
+        }),
+      );
+    }
+  }
   // Snapshot input
+  if (quizSlug === "brainrank") {
+    calculatedScore.quizVersion = session.quiz_version;
+    calculatedScore.scoringVersion = session.scoring_version;
+  }
   if (memoryQuestions.length) {
     const seen = (session.memory_exposures as string[] | null) ?? [];
     if (memoryQuestions.some((q) => !seen.includes(q.stable_key))) {
@@ -1136,6 +1256,26 @@ export async function completeQuizSession(input: {
     }
     calculatedScore.memoryRecall = {
       version: "1.0",
+      situationsPresented: seen.filter((key) => memoryQuestions.some((q) => q.stable_key === key))
+        .length,
+      dimension: "DELAYED_INFORMATION_RETRIEVAL",
+      intervals: memoryQuestions.map((q, index) => {
+        const plan = memoryExecutionPlan(rawQuestions.length + memoryQuestions.length);
+        const isCurrentPlan = memoryQuestions.every(
+          (item, i) => item.position === plan[i].recallPosition,
+        );
+        const cuePosition = isCurrentPlan
+          ? plan[index].cuePosition
+          : index === 0
+            ? 1
+            : memoryQuestions[index - 1].position + 1;
+        return {
+          cueId: q.stable_key,
+          cuePosition,
+          recallPosition: q.position,
+          interveningQuestions: q.position - cuePosition,
+        };
+      }),
       total: memoryQuestions.length,
       correct: memoryQuestions.filter((q) => {
         const answer = answers.find((a) => a.question_id === q.id);
@@ -1578,4 +1718,45 @@ function formatPartialResult(
     dimensionScores: dimScores,
     qualityWarning,
   };
+}
+
+export type QuestionClock = {
+  questionStartedAt: string;
+  questionExpiresAt: string;
+  timeLimitSeconds: number;
+  serverNow: string;
+  answered: boolean;
+  answerStatus?: "ANSWERED" | "TIMEOUT";
+  currentPosition?: number;
+};
+export async function questionClock(input: {
+  sessionId: string;
+  token: string;
+  questionId: string;
+  submit?: boolean;
+  optionId?: string;
+  timeout?: boolean;
+}): Promise<QuestionClock> {
+  const session = await getActiveSession(input.sessionId, input.token);
+  if (!session || !["CREATED", "IN_PROGRESS"].includes(session.status))
+    throw new SessionNotFoundError();
+  const db = createSupabaseSecretClient();
+  if (session.status === "CREATED") {
+    assertTransition("session", session.status, "IN_PROGRESS", sessionTransitions);
+    const { error } = await db
+      .from("quiz_sessions")
+      .update({ status: "IN_PROGRESS" })
+      .eq("id", session.id)
+      .eq("status", "CREATED");
+    if (error) throw new Error("Failed to start session");
+  }
+  const { data, error } = await db.rpc("brainrank_question_clock", {
+    p_session_id: input.sessionId,
+    p_question_id: input.questionId,
+    p_submit: input.submit ?? false,
+    p_option_id: input.optionId ?? null,
+    p_timeout: input.timeout ?? false,
+  });
+  if (error || !data) throw new Error("Unable to synchronize question deadline");
+  return data as QuestionClock;
 }

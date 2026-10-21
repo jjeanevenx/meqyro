@@ -19,6 +19,8 @@ import { isBundleProduct, getBundlePrice } from "@/lib/market/prices";
 import { isMarket, resolveMarketContext, type Market } from "@/lib/market/market-context";
 import { isLocale, type Locale } from "@/lib/i18n/config";
 import { fulfillOrder } from "./fulfillment-service";
+import { isCommercialProduct } from "@/content/commercial-catalog";
+import { attachCheckoutToSlot } from "@/features/couple/couple-invite-service";
 
 function createDefaultPaymentProvider(name: PaymentProviderName): PaymentProvider {
   void name;
@@ -58,6 +60,12 @@ export async function createOrder(input: CreateOrderInput): Promise<{
   lookupToken: string;
   alreadyPaid?: boolean;
 }> {
+  if (!isCommercialProduct(input.productCode)) {
+    throw new Error("Product unavailable for new purchases.");
+  }
+  if (input.productCode === "COUPLEDNA_INVITE" && !input.coupleInviteSlotId) {
+    throw new Error("coupleInviteSlotId is required for COUPLEDNA_INVITE purchases.");
+  }
   const supabase = createSupabaseSecretClient();
 
   // 1. Verify session
@@ -82,6 +90,10 @@ export async function createOrder(input: CreateOrderInput): Promise<{
 
   if (!matchesAnonymousSessionToken(input.sessionToken, session.access_token_hash)) {
     throw new Error("Token de sessão inválido.");
+  }
+
+  if (session.status !== "COMPLETED") {
+    throw new Error("Complete the assessment before purchasing its report.");
   }
 
   type SessionVersions = {
@@ -123,7 +135,8 @@ export async function createOrder(input: CreateOrderInput): Promise<{
   if (
     expectedProductCode &&
     normalizedInputCode !== expectedProductCode &&
-    !normalizedInputCode.startsWith("BUNDLE")
+    !normalizedInputCode.startsWith("BUNDLE") &&
+    normalizedInputCode !== "COUPLEDNA_INVITE"
   ) {
     throw new Error(
       `Produto não encontrado para o mercado ou incompatível com o quiz: ${input.productCode}`,
@@ -134,7 +147,23 @@ export async function createOrder(input: CreateOrderInput): Promise<{
   let amount: number;
   let currency: string;
 
-  if (isBundleProduct(input.productCode)) {
+  if (input.productCode === "COUPLEDNA_INVITE") {
+    // Price is already stored in the slot (set at slot creation time via calculateInvitePrice)
+    const { data: slotRecord, error: slotError } = await supabase
+      .from("couple_invite_slots")
+      .select("price_amount, price_currency")
+      .eq("id", input.coupleInviteSlotId!)
+      .eq("host_session_id", input.sessionId)
+      .eq("status", "PENDING_PAYMENT")
+      .single();
+
+    if (slotError || !slotRecord) {
+      throw new Error("Invite slot not found or not in PENDING_PAYMENT state.");
+    }
+
+    amount = slotRecord.price_amount as number;
+    currency = slotRecord.price_currency as string;
+  } else if (isBundleProduct(input.productCode)) {
     const bundlePrice = getBundlePrice(input.productCode, orderMarket);
     if (!bundlePrice) {
       throw new Error(`Preço de bundle não configurado para o mercado ${orderMarket}.`);
@@ -170,7 +199,7 @@ export async function createOrder(input: CreateOrderInput): Promise<{
     .single();
 
   // Reuse an active checkout and stop a second purchase after fulfillment.
-  const { data: existingOrder } = await supabase
+  let existingOrderQuery = supabase
     .from("orders")
     .select(
       "id, order_number, session_id, status, amount, currency, market, payment_provider, provider_payment_id, customer_email, payment_attempts(checkout_url, created_at)",
@@ -179,8 +208,13 @@ export async function createOrder(input: CreateOrderInput): Promise<{
     .eq("product_code", input.productCode)
     .eq("payment_provider", providerName)
     .in("status", ["CREATED", "PROCESSING", "PENDING", "PAID", "FULFILLED"])
-    .order("created_at", { referencedTable: "payment_attempts", ascending: false })
-    .maybeSingle();
+    .order("created_at", { referencedTable: "payment_attempts", ascending: false });
+
+  if (input.coupleInviteSlotId) {
+    existingOrderQuery = existingOrderQuery.eq("couple_invite_slot_id", input.coupleInviteSlotId);
+  }
+
+  const { data: existingOrder } = await existingOrderQuery.maybeSingle();
 
   if (existingOrder) {
     if (
@@ -244,6 +278,7 @@ export async function createOrder(input: CreateOrderInput): Promise<{
     payment_provider: providerName,
     customer_email: normalizedEmail,
     referral_code: input.referralCode ?? null,
+    couple_invite_slot_id: input.coupleInviteSlotId ?? null,
   };
 
   const orderResult = await supabase
@@ -344,6 +379,16 @@ export async function createOrder(input: CreateOrderInput): Promise<{
     throw new Error(`Erro ao ativar pedido pendente: ${pendingError.message}`);
   }
 
+  // Attach checkout session info to the invite slot (D-006)
+  if (input.coupleInviteSlotId) {
+    await attachCheckoutToSlot({
+      slotId: input.coupleInviteSlotId,
+      orderId: order.id,
+      stripeCheckoutSessionId: checkoutResult.providerAttemptId,
+      pendingExpiresAt: new Date(checkoutResult.expiresAt ?? Date.now() + 30 * 60 * 1000),
+    });
+  }
+
   // 9. Funnel tracking
   await recordFunnelEvent({
     eventName: "checkout_initiated",
@@ -401,7 +446,9 @@ export async function getOrderById(
       currency,
       market,
       payment_provider,
-      customer_email
+      customer_email,
+      product_code,
+      quiz_sessions!orders_session_id_fkey(quiz_versions!inner(quizzes!inner(slug)))
     `,
     )
     .eq("id", orderId)
@@ -452,6 +499,10 @@ export async function getOrderById(
 
   return {
     id: order.id,
+    quizSlug: (
+      order.quiz_sessions as unknown as { quiz_versions?: { quizzes?: { slug?: string } } } | null
+    )?.quiz_versions?.quizzes?.slug,
+    productCode: order.product_code,
     orderNumber: order.order_number,
     sessionId: order.session_id,
     status: order.status,

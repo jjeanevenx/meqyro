@@ -1,3 +1,4 @@
+import { FunnelView } from "@/components/patterns/funnel-view";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
@@ -9,13 +10,12 @@ import {
   ShieldCheck,
   Plus,
   Brain,
-  Briefcase,
-  Target,
-  Fingerprint,
+  Wallet,
+  Heart,
 } from "lucide-react";
 import { SiteHeader } from "@/components/patterns/site-header";
 import { ButtonLink } from "@/components/ui/button-link";
-import { experiences } from "@/content/experiences";
+import { commercialExperiences as experiences } from "@/content/commercial-catalog";
 import { homeConversionCopy } from "@/content/home-conversion";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
 import { generateOrganizationJsonLd } from "@/features/seo/json-ld";
@@ -46,11 +46,13 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     steps: ["Escolha o que quer explorar", "Responda perguntas objetivas", "Entenda seus padrões"],
     methodTitle: "Autoconhecimento com método",
     methodBody:
-      "Cada experiência transforma modelos reconhecidos em perguntas acessíveis, com privacidade e linguagem clara.",
+      "Perguntas estruturadas ajudam a explorar suas respostas e preferências. Os resultados apoiam sua reflexão e não substituem avaliação profissional.",
     freeTitle: "Resultado inicial grátis",
-    freeBody: "Veja seus principais padrões ao concluir, sem cadastro obrigatório.",
+    freeBody:
+      "Veja um resumo ao concluir. Não é preciso criar conta; informar um e-mail para recuperar o resultado é opcional.",
     premiumTitle: "Aprofunde quando quiser",
-    premiumBody: "O relatório premium adiciona dimensões, contexto e recomendações práticas.",
+    premiumBody:
+      "O relatório premium aprofunda a leitura dos indicadores com explicações e sugestões práticas.",
     faqTitle: "Perguntas frequentes",
     faqs: [
       [
@@ -59,7 +61,7 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "Preciso criar uma conta?",
-        "Não. Você pode começar e ver o resultado inicial sem cadastro obrigatório.",
+        "Não. Você pode começar e ver o resultado inicial sem conta. O e-mail para recuperar seu resultado é opcional.",
       ],
       [
         "Os testes são diagnósticos?",
@@ -67,7 +69,11 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "O que o relatório premium inclui?",
-        "Uma leitura mais detalhada, comparações e recomendações aplicáveis ao cotidiano.",
+        "Explicações dos indicadores avaliados, contexto para interpretar suas respostas e sugestões para o cotidiano. A oferta paga aparece após o resultado inicial.",
+      ],
+      [
+        "Como meus dados são tratados?",
+        "As respostas são usadas para gerar seu resultado. O consentimento para mensagens promocionais é separado. Consulte a Política de Privacidade para saber como solicitar acesso ou exclusão dos seus dados.",
       ],
     ],
   },
@@ -78,11 +84,13 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     steps: ["Choose what to explore", "Answer focused questions", "Understand your patterns"],
     methodTitle: "Self-knowledge with method",
     methodBody:
-      "Each experience turns established models into accessible questions, with privacy and clear language.",
+      "Structured questions help you explore your answers and preferences. Results support reflection and do not replace professional assessment.",
     freeTitle: "Free initial result",
-    freeBody: "See your main patterns when you finish, with no account required.",
+    freeBody:
+      "See a summary when you finish. No account is required; sharing an email to recover your result is optional.",
     premiumTitle: "Go deeper when you want",
-    premiumBody: "The premium report adds dimensions, context, and practical recommendations.",
+    premiumBody:
+      "The premium report explores your indicators in more detail, with explanations and practical suggestions.",
     faqTitle: "Frequently asked questions",
     faqs: [
       [
@@ -91,7 +99,7 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "Do I need an account?",
-        "No. You can start and see your initial result without creating one.",
+        "No. You can start and see your initial result without an account. An email for recovering your result is optional.",
       ],
       [
         "Are these diagnostic tests?",
@@ -99,7 +107,11 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "What is in the premium report?",
-        "A deeper reading, comparisons, and practical recommendations for everyday life.",
+        "Explanations of the indicators explored, context for interpreting your answers, and everyday suggestions. The paid offer appears after your initial result.",
+      ],
+      [
+        "How is my data handled?",
+        "Your answers are used to generate your result. Consent for promotional messages is separate. See the Privacy Policy for how to request access to or deletion of your data.",
       ],
     ],
   },
@@ -110,11 +122,13 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     steps: ["Elige qué explorar", "Responde preguntas objetivas", "Comprende tus patrones"],
     methodTitle: "Autoconocimiento con método",
     methodBody:
-      "Cada experiencia convierte modelos reconocidos en preguntas accesibles, con privacidad y lenguaje claro.",
+      "Las preguntas estructuradas te ayudan a explorar tus respuestas y preferencias. Los resultados apoyan la reflexión y no sustituyen una evaluación profesional.",
     freeTitle: "Resultado inicial gratis",
-    freeBody: "Conoce tus principales patrones al terminar, sin registro obligatorio.",
+    freeBody:
+      "Ve un resumen al terminar. No necesitas una cuenta; el correo para recuperar tu resultado es opcional.",
     premiumTitle: "Profundiza cuando quieras",
-    premiumBody: "El informe premium añade dimensiones, contexto y recomendaciones prácticas.",
+    premiumBody:
+      "El informe premium profundiza en tus indicadores con explicaciones y sugerencias prácticas.",
     faqTitle: "Preguntas frecuentes",
     faqs: [
       [
@@ -123,7 +137,7 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "¿Necesito crear una cuenta?",
-        "No. Puedes comenzar y ver el resultado inicial sin registro.",
+        "No. Puedes comenzar y ver el resultado inicial sin cuenta. El correo para recuperar tu resultado es opcional.",
       ],
       [
         "¿Son pruebas diagnósticas?",
@@ -131,7 +145,11 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "¿Qué incluye el informe premium?",
-        "Una lectura detallada, comparaciones y recomendaciones prácticas.",
+        "Explicaciones de los indicadores evaluados, contexto para interpretar tus respuestas y sugerencias cotidianas. La oferta de pago aparece después del resultado inicial.",
+      ],
+      [
+        "¿Cómo se tratan mis datos?",
+        "Tus respuestas se usan para generar tu resultado. El consentimiento para mensajes promocionales es independiente. Consulta la Política de Privacidad para solicitar acceso o eliminación de tus datos.",
       ],
     ],
   },
@@ -143,12 +161,13 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
     steps: ["Choisissez votre sujet", "Répondez à des questions ciblées", "Comprenez vos schémas"],
     methodTitle: "Une méthode au service de la connaissance de soi",
     methodBody:
-      "Chaque expérience rend des modèles reconnus accessibles, dans un langage clair et respectueux de votre vie privée.",
+      "Des questions structurées vous aident à explorer vos réponses et préférences. Les résultats favorisent la réflexion sans remplacer une évaluation professionnelle.",
     freeTitle: "Premier résultat gratuit",
-    freeBody: "Découvrez vos principaux schémas dès la fin, sans inscription obligatoire.",
+    freeBody:
+      "Consultez un résumé à la fin. Aucun compte n’est requis ; l’e-mail pour retrouver votre résultat est facultatif.",
     premiumTitle: "Approfondissez à votre rythme",
     premiumBody:
-      "Le rapport premium ajoute des dimensions, du contexte et des recommandations pratiques.",
+      "Le rapport premium approfondit vos indicateurs avec des explications et des suggestions pratiques.",
     faqTitle: "Questions fréquentes",
     faqs: [
       [
@@ -157,7 +176,7 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "Faut-il créer un compte ?",
-        "Non. Vous pouvez commencer et voir le premier résultat sans inscription.",
+        "Non. Vous pouvez commencer et voir le premier résultat sans compte. L’e-mail pour retrouver votre résultat est facultatif.",
       ],
       [
         "S’agit-il de diagnostics ?",
@@ -165,7 +184,11 @@ const HOME_COPY: Record<Locale, HomeCopy> = {
       ],
       [
         "Que contient le rapport premium ?",
-        "Une lecture détaillée, des comparaisons et des recommandations concrètes.",
+        "Des explications sur les indicateurs évalués, du contexte pour interpréter vos réponses et des suggestions au quotidien. L’offre payante apparaît après le premier résultat.",
+      ],
+      [
+        "Comment mes données sont-elles traitées ?",
+        "Vos réponses servent à générer votre résultat. Le consentement aux messages promotionnels est distinct. Consultez la Politique de Confidentialité pour demander l’accès ou la suppression de vos données.",
       ],
     ],
   },
@@ -193,11 +216,12 @@ export default async function LocalizedHome({ params }: PageProps) {
   const dictionary = getDictionary(locale);
   const copy = HOME_COPY[locale];
   const conversion = homeConversionCopy[locale];
-  const goals = ["personality-map", "careerfit", "focusstyle"] as const;
-  const goalIcons = [Fingerprint, Briefcase, Target];
+  const goals = ["brainrank", "moneydna", "coupledna"] as const;
+  const goalIcons = [Brain, Wallet, Heart];
   const startHref = `/${locale}/quizzes/brainrank/play?source=home_hero`;
   return (
     <main className="home-page conversion-home">
+      <FunnelView locale={locale} />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(generateOrganizationJsonLd()) }}
@@ -239,7 +263,6 @@ export default async function LocalizedHome({ params }: PageProps) {
           <div className="conversion-preview__top">
             <Brain aria-hidden="true" size={22} />
             <span>{conversion.featured}</span>
-            <span aria-hidden="true">↗</span>
           </div>
           <div className="conversion-preview__art" aria-hidden="true">
             <div className="conversion-orbit conversion-orbit--outer" />
@@ -294,9 +317,10 @@ export default async function LocalizedHome({ params }: PageProps) {
                   <span>{experience.duration}</span>
                 </div>
                 <h3>{conversion.goals[index]}</h3>
+                <span className="conversion-goal__brand">{experience.brand}</span>
                 <p>{experience.description[locale]}</p>
                 <span className="conversion-goal__cta">
-                  {conversion.goalCta}
+                  {conversion.goalCta.replace("{experience}", experience.brand)}
                   <ArrowRight aria-hidden="true" size={18} />
                 </span>
               </Link>
@@ -388,7 +412,7 @@ export default async function LocalizedHome({ params }: PageProps) {
         <small>{dictionary.hero.note}</small>
       </section>
       <footer className="site-footer">
-        <Link className="brand" href={`/${locale}`}>
+        <Link className="brand" href={`/${locale}`} aria-label="Meqyro">
           MEQ<span>Y</span>RO
         </Link>
         <p>© {new Date().getFullYear()} Meqyro</p>

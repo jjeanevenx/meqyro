@@ -89,6 +89,7 @@ describe.skipIf(!isOnline)(
       const initialQuestions = await getSessionQuestions(session.id, "pt");
       expect(initialQuestions).toHaveLength(24);
 
+      await acknowledgeMemory(initialQuestions[0]!, session.id, token);
       // Answer first 2 questions
       await saveAnswer({
         sessionId: session.id,
@@ -99,6 +100,7 @@ describe.skipIf(!isOnline)(
         nextPosition: 2,
       });
 
+      await acknowledgeMemory(initialQuestions[1]!, session.id, token);
       await saveAnswer({
         sessionId: session.id,
         token,

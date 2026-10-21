@@ -17,25 +17,26 @@ describe("resolveMarketContext", () => {
   it("maps a supported EU country to the EU market", () => {
     expect(resolveMarketContext({ locale: "es", country: "ES" }).market).toBe("EU");
   });
-  it("uses BRL for Portuguese when edge geolocation is unavailable", () => {
-    expect(resolveMarketContext({ locale: "pt" })).toMatchObject({
-      market: "BR",
-      currency: "BRL",
-      source: "locale-fallback",
+  it.each(["pt", "en", "es", "fr"] as const)("defaults %s to US without geography", (locale) => {
+    expect(resolveMarketContext({ locale })).toMatchObject({
+      market: "US",
+      currency: "USD",
+      source: "default",
     });
   });
-  it("keeps the Portuguese storefront in BRL despite foreign geolocation", () => {
+  it("respects foreign geolocation on Portuguese pages", () => {
     expect(resolveMarketContext({ locale: "pt", country: "US" })).toMatchObject({
-      market: "BR",
-      currency: "BRL",
-      source: "locale-fallback",
+      market: "US",
+      currency: "USD",
+      source: "edge",
     });
-    expect(resolveMarketContext({ locale: "fr" }).market).toBe("EU");
+    expect(resolveMarketContext({ locale: "pt", country: "PT" }).market).toBe("EU");
   });
-  it("ignores a stale US market preference on Portuguese pages", () => {
+  it("honors an explicit US market preference on Portuguese pages", () => {
     expect(resolveMarketContext({ locale: "pt", market: "US" })).toMatchObject({
-      market: "BR",
-      currency: "BRL",
+      market: "US",
+      currency: "USD",
+      source: "user",
     });
   });
 });

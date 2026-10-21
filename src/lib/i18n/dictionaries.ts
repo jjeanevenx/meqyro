@@ -1,5 +1,52 @@
 import type { Locale } from "./config";
 
+const authCopy = {
+  pt: {
+    login: "Entrar",
+    account: "Minha conta",
+    description: "Receba um link seguro por e-mail. Os testes continuam disponíveis sem conta.",
+    email: "E-mail",
+    send: "Enviar link de acesso",
+    sent: "Confira seu e-mail e abra o link neste navegador.",
+    error: "Não foi possível concluir. Tente novamente.",
+    signOut: "Sair",
+    reports: "Acessar meus relatórios",
+  },
+  en: {
+    login: "Sign in",
+    account: "My account",
+    description: "Receive a secure link by email. Assessments remain available without an account.",
+    email: "Email",
+    send: "Send sign-in link",
+    sent: "Check your email and open the link in this browser.",
+    error: "Unable to complete your request. Please try again.",
+    signOut: "Sign out",
+    reports: "Access my reports",
+  },
+  es: {
+    login: "Iniciar sesión",
+    account: "Mi cuenta",
+    description: "Recibe un enlace seguro por correo. Los tests siguen disponibles sin cuenta.",
+    email: "Correo electrónico",
+    send: "Enviar enlace de acceso",
+    sent: "Revisa tu correo y abre el enlace en este navegador.",
+    error: "No se pudo completar. Inténtalo de nuevo.",
+    signOut: "Cerrar sesión",
+    reports: "Acceder a mis informes",
+  },
+  fr: {
+    login: "Se connecter",
+    account: "Mon compte",
+    description: "Recevez un lien sécurisé par e-mail. Les tests restent disponibles sans compte.",
+    email: "E-mail",
+    send: "Envoyer le lien de connexion",
+    sent: "Consultez votre e-mail et ouvrez le lien dans ce navigateur.",
+    error: "Impossible de terminer. Veuillez réessayer.",
+    signOut: "Se déconnecter",
+    reports: "Accéder à mes rapports",
+  },
+};
+
 const coupleFlowCopy = {
   pt: {
     title: "Construam a comparação juntos",
@@ -118,10 +165,14 @@ const coupleInviteCopy = {
 } as const;
 
 export type Dictionary = {
+  auth: typeof authCopy.en;
   coupleFlow: typeof coupleFlowCopy.pt;
   coupleInviteStart: readonly [string, string, string];
   includedPurchasesTitle: string;
   nav: {
+    menu: string;
+    primary: string;
+    home: string;
     discover: string;
     about: string;
     language: string;
@@ -153,7 +204,9 @@ export type Dictionary = {
     linkCopied: string;
     viewResult: string;
   };
+  questionTimer: { normal: string; low: string; critical: string; expired: string; policy: string };
   quizRunner: {
+    scenarioHint: string;
     questionProgress: string;
     finishQuiz: string;
     saving: string;
@@ -173,6 +226,8 @@ export type Dictionary = {
     submitting: string;
   };
   resultView: {
+    behavioralPreference: string;
+    behavioralCaveat: string;
     freeTitle: string;
     overallScore: string;
     strongestDimension: string;
@@ -242,10 +297,14 @@ export type Dictionary = {
 
 export const dictionaries: Record<Locale, Dictionary> = {
   pt: {
+    auth: authCopy.pt,
     coupleFlow: coupleFlowCopy.pt,
     coupleInviteStart: coupleInviteCopy.pt,
     includedPurchasesTitle: "Quizzes incluídos na sua compra",
     nav: {
+      menu: "Menu",
+      primary: "Navegação principal",
+      home: "Página inicial Meqyro",
       discover: "Descobrir",
       about: "Como funciona",
       language: "Idioma",
@@ -277,7 +336,17 @@ export const dictionaries: Record<Locale, Dictionary> = {
       linkCopied: "Link copiado!",
       viewResult: "Ver Resultado",
     },
+    questionTimer: {
+      normal: "Tempo restante",
+      low: "Pouco tempo",
+      critical: "Tempo crítico",
+      expired: "Tempo esgotado. Avançando…",
+      policy:
+        "O tempo continua ao sair da aba. Confirme antes do prazo; respostas recebidas depois serão registradas como expiradas.",
+    },
     quizRunner: {
+      scenarioHint:
+        "Escolha o que mais se aproxima de como você agiria. Não há resposta certa; responda no seu ritmo.",
       questionProgress: "Pergunta {current} de {total}",
       finishQuiz: "Concluir Teste e Ver Resultado",
       saving: "Salvando...",
@@ -300,6 +369,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
       submitting: "Salvando...",
     },
     resultView: {
+      behavioralPreference: "Preferência mais presente nesta tentativa",
+      behavioralCaveat:
+        "Índices descritivos, sem validação clínica. Maior não significa melhor. No CoupleDNA, o eixo vai de reflexão individual a elaboração conjunta; diferenças não são incompatibilidade. Empates não definem um perfil único.",
       freeTitle: "Resultado Preliminar Gratuito",
       overallScore: "Pontuação Geral",
       strongestDimension: "Dimensão em Destaque",
@@ -405,11 +477,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   en: {
+    auth: authCopy.en,
     coupleFlow: coupleFlowCopy.en,
     coupleInviteStart: coupleInviteCopy.en,
     includedPurchasesTitle: "Assessments included in your purchase",
     nav: {
       discover: "Discover",
+      menu: "Menu",
+      primary: "Main navigation",
+      home: "Meqyro home",
       about: "How it works",
       language: "Language",
       market: "Market",
@@ -440,8 +516,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       linkCopied: "Link copied!",
       viewResult: "View Result",
     },
+    questionTimer: {
+      normal: "Time remaining",
+      low: "Time running low",
+      critical: "Critical time",
+      expired: "Time expired. Continuing…",
+      policy:
+        "Time continues outside this tab. Confirm before the deadline; responses received later are recorded as expired.",
+    },
     quizRunner: {
       questionProgress: "Question {current} of {total}",
+      scenarioHint:
+        "Choose what is closest to how you would act. There is no right answer; take your time.",
       finishQuiz: "Complete Quiz & View Results",
       saving: "Saving...",
       calculatingScore: "Calculating score on server...",
@@ -464,6 +550,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
     },
     resultView: {
       freeTitle: "Free Preliminary Result",
+      behavioralPreference: "Most present preference in this attempt",
+      behavioralCaveat:
+        "Descriptive indices without clinical validation. Higher does not mean better. In CoupleDNA, the axis runs from individual reflection to joint discussion; differences do not imply incompatibility. Ties do not define a single profile.",
       overallScore: "Overall Score",
       strongestDimension: "Highlighted Dimension",
       allDimensions: "Dimension Overview",
@@ -568,11 +657,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   es: {
+    auth: authCopy.es,
     coupleFlow: coupleFlowCopy.es,
     coupleInviteStart: coupleInviteCopy.es,
     includedPurchasesTitle: "Tests incluidos en tu compra",
     nav: {
       discover: "Descubrir",
+      menu: "Menú",
+      primary: "Navegación principal",
+      home: "Página de inicio Meqyro",
       about: "Cómo funciona",
       language: "Idioma",
       market: "Mercado",
@@ -603,8 +696,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       linkCopied: "¡Enlace copiado!",
       viewResult: "Ver Resultado",
     },
+    questionTimer: {
+      normal: "Tiempo restante",
+      low: "Queda poco tiempo",
+      critical: "Tiempo crítico",
+      expired: "Tiempo agotado. Continuando…",
+      policy:
+        "El tiempo continúa fuera de esta pestaña. Confirma antes del límite; las respuestas recibidas después se registran como expiradas.",
+    },
     quizRunner: {
       questionProgress: "Pregunta {current} de {total}",
+      scenarioHint:
+        "Elige lo más cercano a cómo actuarías. No hay respuesta correcta; responde a tu ritmo.",
       finishQuiz: "Completar Test y Ver Resultados",
       saving: "Guardando...",
       calculatingScore: "Calculando puntuación en el servidor...",
@@ -628,6 +731,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
     resultView: {
       freeTitle: "Resultado Preliminar Gratuito",
       overallScore: "Puntuación General",
+      behavioralPreference: "Preferencia más presente en este intento",
+      behavioralCaveat:
+        "Índices descriptivos sin validación clínica. Un valor mayor no significa mejor. En CoupleDNA, el eje va de reflexión individual a elaboración conjunta; las diferencias no implican incompatibilidad. Los empates no definen un perfil único.",
       strongestDimension: "Dimensión Destacada",
       allDimensions: "Mapeo de Dimensiones",
       unlockPremium: "Desbloquear mi informe completo",
@@ -731,11 +837,15 @@ export const dictionaries: Record<Locale, Dictionary> = {
   },
 
   fr: {
+    auth: authCopy.fr,
     coupleFlow: coupleFlowCopy.fr,
     coupleInviteStart: coupleInviteCopy.fr,
     includedPurchasesTitle: "Tests inclus dans votre achat",
     nav: {
       discover: "Découvrir",
+      menu: "Menu",
+      primary: "Navigation principale",
+      home: "Accueil Meqyro",
       about: "Comment ça marche",
       language: "Langue",
       market: "Marché",
@@ -766,8 +876,18 @@ export const dictionaries: Record<Locale, Dictionary> = {
       linkCopied: "Lien copié !",
       viewResult: "Voir le Résultat",
     },
+    questionTimer: {
+      normal: "Temps restant",
+      low: "Peu de temps",
+      critical: "Temps critique",
+      expired: "Temps écoulé. Suite…",
+      policy:
+        "Le temps continue hors de cet onglet. Confirmez avant la limite ; les réponses reçues ensuite sont enregistrées comme expirées.",
+    },
     quizRunner: {
       questionProgress: "Question {current} sur {total}",
+      scenarioHint:
+        "Choisissez ce qui correspond à votre réaction. Il n’y a pas de bonne réponse ; prenez votre temps.",
       finishQuiz: "Terminer le Quiz et Voir le Résultat",
       saving: "Enregistrement...",
       calculatingScore: "Calcul du score sur le serveur...",
@@ -790,6 +910,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
     },
     resultView: {
       freeTitle: "Résultat Préliminaire Gratuit",
+      behavioralPreference: "Préférence la plus présente dans cette tentative",
+      behavioralCaveat:
+        "Indices descriptifs sans validation clinique. Plus élevé ne signifie pas meilleur. Pour CoupleDNA, l’axe va de la réflexion individuelle à l’élaboration commune ; les différences ne signifient pas une incompatibilité. Une égalité ne définit pas un profil unique.",
       overallScore: "Score Global",
       strongestDimension: "Dimension Principale",
       allDimensions: "Aperçu des Dimensions",

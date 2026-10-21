@@ -3,7 +3,7 @@ import type { Locale } from "@/lib/i18n/config";
 export const markets = ["BR", "US", "EU", "GB"] as const;
 export type Market = (typeof markets)[number];
 export type PaymentProvider = "stripe";
-export type MarketSource = "user" | "edge" | "locale-fallback";
+export type MarketSource = "user" | "edge" | "default";
 
 export type MarketContext = {
   locale: Locale;
@@ -21,14 +21,35 @@ const marketDefinitions: Record<Market, Omit<MarketContext, "locale" | "country"
   GB: { market: "GB", currency: "GBP", paymentProvider: "stripe" },
 };
 
-const euCountries = new Set(["AT", "BE", "DE", "ES", "FR", "IE", "IT", "NL", "PT"]);
-
-const fallbackMarketByLocale: Record<Locale, Market> = {
-  pt: "BR",
-  en: "US",
-  es: "EU",
-  fr: "EU",
-};
+const euCountries = new Set([
+  "AT",
+  "BE",
+  "BG",
+  "HR",
+  "CY",
+  "CZ",
+  "DK",
+  "EE",
+  "FI",
+  "FR",
+  "DE",
+  "GR",
+  "HU",
+  "IE",
+  "IT",
+  "LV",
+  "LT",
+  "LU",
+  "MT",
+  "NL",
+  "PL",
+  "PT",
+  "RO",
+  "SK",
+  "SI",
+  "ES",
+  "SE",
+]);
 
 export function isMarket(value: string | undefined): value is Market {
   return markets.includes(value as Market);
@@ -48,16 +69,6 @@ export function resolveMarketContext(input: {
   market?: string;
   source?: MarketSource;
 }): MarketContext {
-  // The Portuguese storefront sells in BRL, including visits with stale
-  // market cookies or geolocation from another country.
-  if (input.locale === "pt") {
-    return {
-      locale: input.locale,
-      country: "BR",
-      source: "locale-fallback",
-      ...marketDefinitions.BR,
-    };
-  }
   // Se o usuário definiu explicitamente um market via cookie, usar esse
   if (input.market && isMarket(input.market)) {
     const country = input.country?.toUpperCase() ?? input.market;
@@ -81,14 +92,12 @@ export function resolveMarketContext(input: {
     };
   }
 
-  // Ambientes locais não recebem os cabeçalhos de geolocalização da edge.
-  // Nessa situação, o idioma fornece um fallback previsível; em produção,
-  // cookie explícito e país detectado continuam tendo precedência.
-  const market = fallbackMarketByLocale[input.locale];
+  // Language never determines currency, including in local development.
+  const market = "US";
   return {
     locale: input.locale,
     country: market,
-    source: "locale-fallback",
+    source: "default",
     ...marketDefinitions[market],
   };
 }

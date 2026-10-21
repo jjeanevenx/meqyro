@@ -1,3 +1,4 @@
+import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { transpileModule, ModuleKind } from "typescript";
@@ -13,7 +14,7 @@ import {
   validateAndRecoverSession,
 } from "@/features/quiz-engine/session-service";
 import { getProtectedResult } from "@/features/results/result-service";
-import { createOrder, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
+import { setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
@@ -165,7 +166,9 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
             sessionId: partner.session.id,
             token: partner.token,
             questionId: question.id,
-            numericValue: 1,
+            ...(question.kind === "LIKERT"
+              ? { numericValue: 1 }
+              : { optionId: question.options[question.options.length - 1].id }),
             nextPosition: index + 2,
           });
         }
@@ -328,7 +331,9 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
           sessionId: participant.session.id,
           token: participant.token,
           questionId: question.id,
-          numericValue: value,
+          ...(question.kind === "LIKERT"
+            ? { numericValue: value }
+            : { optionId: question.options[value === 5 ? 0 : question.options.length - 1].id }),
           nextPosition: index + 2,
         });
       }
@@ -366,7 +371,19 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
       locale: "pt",
       market: "BR",
     });
-    expect(partnerReport.premiumReport).toEqual(report.premiumReport);
+    // The authorized comparison is shared; the evidence must describe only the requesting participant.
+    expect(
+      partnerReport.premiumReport!.sections.filter((section) =>
+        section.id.startsWith("bilateral-"),
+      ),
+    ).toEqual(sections.filter((section) => section.id.startsWith("bilateral-")));
+    expect(
+      partnerReport.premiumReport!.sections.find(
+        (section) => section.id === "behavioral-communication",
+      )?.keyTakeaways,
+    ).not.toEqual(
+      sections.find((section) => section.id === "behavioral-communication")?.keyTakeaways,
+    );
     const download = (id: string, token: string) =>
       downloadReport(
         new NextRequest(`http://localhost/api/sessions/${id}/report?locale=pt`, {
@@ -413,7 +430,7 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
         sessionId: first.session.id,
         token: first.token,
         questionId: q.id,
-        numericValue: 5,
+        ...(q.kind === "LIKERT" ? { numericValue: 5 } : { optionId: q.options[0].id }),
         nextPosition: index + 2,
       });
     await completeQuizSession({ sessionId: first.session.id, token: first.token });
@@ -504,7 +521,9 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
         sessionId: partner.session.id,
         token: partner.token,
         questionId: q.id,
-        numericValue: 1,
+        ...(q.kind === "LIKERT"
+          ? { numericValue: 1 }
+          : { optionId: q.options[q.options.length - 1].id }),
         nextPosition: index + 2,
       });
     await completeQuizSession({ sessionId: partner.session.id, token: partner.token });
@@ -517,7 +536,9 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
       market: "BR",
     });
     expect(ready.couple?.state).toBe("READY");
-    expect(ready.premiumReport?.sections[0].summary).toBe("0/100");
+    expect(
+      ready.premiumReport?.sections.find((section) => section.id === "bilateral-overall")?.summary,
+    ).toBe("0/100");
     const outsider = await startQuizSession({ quizSlug: "coupledna", locale: "pt", market: "BR" });
     expect(
       await getCoupleComparison(fresh!.inviteCode, outsider.session.id, outsider.token),
@@ -602,7 +623,9 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
               sessionId: partner.session.id,
               token: partner.token,
               questionId: q.id,
-              numericValue: 1,
+              ...(q.kind === "LIKERT"
+                ? { numericValue: 1 }
+                : { optionId: q.options[q.options.length - 1].id }),
               nextPosition: index + 2,
             });
           await completeQuizSession({ sessionId: partner.session.id, token: partner.token });

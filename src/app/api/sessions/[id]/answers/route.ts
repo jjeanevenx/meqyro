@@ -10,6 +10,7 @@ const saveAnswerSchema = z.object({
   optionId: z.string().optional(),
   numericValue: z.number().int().min(1).max(5).optional(),
   durationMs: z.number().int().nonnegative().optional(),
+  timeout: z.boolean().optional(),
   nextPosition: z.number().int().positive().optional(),
 });
 
@@ -43,7 +44,11 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     });
 
     return NextResponse.json(
-      { success: result.success, currentPosition: result.currentPosition },
+      {
+        success: result.success,
+        currentPosition: result.currentPosition,
+        answerStatus: result.answerStatus,
+      },
       { status: 200, headers: { "x-request-id": requestId } },
     );
   } catch (error: unknown) {

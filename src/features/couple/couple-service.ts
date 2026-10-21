@@ -1,4 +1,5 @@
 import "server-only";
+import { compareBehavioralCouple, type BehavioralScore } from "@/features/scoring/behavioral-v2";
 import { randomBytes } from "node:crypto";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { matchesAnonymousSessionToken } from "@/lib/security/anonymous-session";
@@ -184,11 +185,19 @@ export async function getCoupleState(sessionId: string, code?: string): Promise<
     return { ...base, state: "WAITING_RESULTS" as const };
   if (!(await findPaidEntitlement(sessionId, "COUPLEDNA")))
     return { ...base, state: "PAYMENT_REQUIRED" as const };
-  const comparison = coupleDnaScoringV1.compareBilateral(
-    a.score as unknown as IndividualCoupleScore,
-    b.score as unknown as IndividualCoupleScore,
-    true,
-  );
+  const scoreA = a.score as Record<string, unknown>;
+  const scoreB = b.score as Record<string, unknown>;
+  const comparison =
+    scoreA.algorithmVersion === "behavioral-v2" || scoreB.algorithmVersion === "behavioral-v2"
+      ? compareBehavioralCouple(
+          scoreA as unknown as BehavioralScore,
+          scoreB as unknown as BehavioralScore,
+        )
+      : coupleDnaScoringV1.compareBilateral(
+          a.score as unknown as IndividualCoupleScore,
+          b.score as unknown as IndividualCoupleScore,
+          true,
+        );
   return { ...base, state: "READY" as const, comparison };
 }
 

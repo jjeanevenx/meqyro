@@ -1,11 +1,20 @@
 import "server-only";
+import { timingReportSection } from "./timing-report";
 import type { ComprehensiveReport } from "./contracts";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
 import type { Locale } from "@/lib/i18n/config";
 import { getDimensionGuidance } from "@/features/results/dimension-guidance-locales";
+import { buildBehavioralReport } from "./behavioral-report";
+import type { BehavioralScore } from "@/features/scoring/behavioral-v2";
 
 const copy = {
   pt: {
+    memoryPresented: "Informações apresentadas",
+    memoryIntervals: "Perguntas intermediárias por desafio",
+    memoryTaskCaveat:
+      "Indicador exploratório de recuperação nas tarefas realizadas. Apenas três perguntas, sem condições controladas: não mede memória geral, atenção sustentada ou capacidade de concentração, não possui validação psicométrica e não é um diagnóstico.",
+    financialCaveat:
+      "Conteúdo de educação financeira e reflexão sobre hábitos. Não constitui aconselhamento financeiro individualizado nem recomendação de investimentos.",
     title: "O que suas respostas mostram",
     high: "Foi um dos seus indicadores mais presentes neste teste.",
     mid: "Este indicador apareceu de forma moderada nas suas respostas.",
@@ -34,6 +43,12 @@ const copy = {
     missing: "Não há indicadores suficientes para interpretar este resultado com segurança.",
   },
   en: {
+    memoryPresented: "Information situations presented",
+    memoryIntervals: "Intervening questions per task",
+    memoryTaskCaveat:
+      "Exploratory recall indicator for these tasks. Only three questions under uncontrolled conditions: it does not measure general memory, sustained attention or concentration, has no psychometric validation and is not a diagnosis.",
+    financialCaveat:
+      "Financial education and reflection on habits. This is not individualized financial advice or an investment recommendation.",
     title: "What your answers show",
     high: "This was one of your more prominent indicators in this assessment.",
     mid: "This indicator appeared moderately in your answers.",
@@ -62,6 +77,12 @@ const copy = {
     missing: "There are not enough indicators to interpret this result reliably.",
   },
   es: {
+    memoryPresented: "Situaciones informativas presentadas",
+    memoryIntervals: "Preguntas intermedias por tarea",
+    memoryTaskCaveat:
+      "Indicador exploratorio de recuperación en estas tareas. Solo tres preguntas sin condiciones controladas: no mide memoria general, atención sostenida ni concentración, no tiene validación psicométrica y no es un diagnóstico.",
+    financialCaveat:
+      "Contenido de educación financiera y reflexión sobre hábitos. No constituye asesoramiento financiero individualizado ni una recomendación de inversión.",
     title: "Qué muestran tus respuestas",
     high: "Fue uno de tus indicadores más presentes.",
     mid: "Este indicador apareció de forma moderada.",
@@ -90,6 +111,12 @@ const copy = {
     missing: "No hay suficientes indicadores para interpretar este resultado.",
   },
   fr: {
+    memoryPresented: "Situations informatives présentées",
+    memoryIntervals: "Questions intermédiaires par exercice",
+    memoryTaskCaveat:
+      "Indicateur exploratoire du rappel dans ces tâches. Trois questions sans conditions contrôlées : il ne mesure ni la mémoire générale, ni l’attention soutenue, ni la concentration, n’a pas de validation psychométrique et ne constitue pas un diagnostic.",
+    financialCaveat:
+      "Contenu d’éducation financière et de réflexion sur les habitudes. Il ne constitue ni un conseil financier personnalisé ni une recommandation d’investissement.",
     title: "Ce que montrent vos réponses",
     high: "Cet indicateur était parmi les plus présents.",
     mid: "Cet indicateur était modérément présent.",
@@ -128,6 +155,9 @@ export function buildHumanReport(
   const locale: Locale =
     language === "en" || language === "es" || language === "fr" ? language : "pt";
   const t = copy[locale];
+  if ((slug === "moneydna" || slug === "coupledna") && score.algorithmVersion === "behavioral-v2") {
+    return buildBehavioralReport(slug, score as unknown as BehavioralScore, locale);
+  }
   const raw =
     score.dimensionScores ?? score.archetypeScores ?? score.styleScores ?? score.styleDistribution;
   const dimensions =
@@ -138,7 +168,11 @@ export function buildHumanReport(
         )
       : [];
   const cognitive = slug === "brainrank";
-  const explanation = cognitive ? t.caveat : t.profileCaveat;
+  const explanation = cognitive
+    ? t.caveat
+    : slug === "moneydna"
+      ? `${t.profileCaveat} ${t.financialCaveat}`
+      : t.profileCaveat;
   const sections = dimensions.map(([key, value]) => {
     const guidance = getDimensionGuidance(key, locale);
     const interpretation = cognitive
@@ -161,7 +195,14 @@ export function buildHumanReport(
       actionItems: [guidance ? guidance.try : cognitive ? t.practice : t.action],
     };
   });
-  const memory = score.memoryRecall as { correct?: number; total?: number } | undefined;
+  const memory = score.memoryRecall as
+    | {
+        correct?: number;
+        total?: number;
+        situationsPresented?: number;
+        intervals?: { interveningQuestions: number }[];
+      }
+    | undefined;
   if (
     memory &&
     typeof memory.correct === "number" &&
@@ -172,11 +213,26 @@ export function buildHumanReport(
       id: "delayed-memory",
       title: t.memory,
       summary: `${memory.correct}/${memory.total} ${t.correct}.`,
-      paragraphs: [t.memoryCaveat],
+      paragraphs: [
+        cognitive ? t.memoryTaskCaveat : t.memoryCaveat,
+        ...(typeof memory.situationsPresented === "number"
+          ? [t.memoryPresented + ": " + memory.situationsPresented + "."]
+          : []),
+        ...(Array.isArray(memory.intervals)
+          ? [
+              t.memoryIntervals +
+                ": " +
+                memory.intervals.map((interval) => interval.interveningQuestions).join(", ") +
+                ".",
+            ]
+          : []),
+      ],
       keyTakeaways: [],
       actionItems: [t.memoryAction],
     });
   }
+  const temporalSection = timingReportSection(score.timing, locale);
+  if (temporalSection) sections.push(temporalSection);
   const overall =
     typeof score.overallScore === "number" ? `${t.score} ${score.overallScore}/1000. ` : "";
   return {

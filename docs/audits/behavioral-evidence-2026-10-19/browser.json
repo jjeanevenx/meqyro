@@ -1,0 +1,24 @@
+[
+  {
+    "slug": "moneydna",
+    "desktop": "1440x1000",
+    "mobile": "390x844",
+    "optionCount": 4,
+    "noTimer": true,
+    "noOverflow": true,
+    "keyboardSelection": true,
+    "persistedResume": true,
+    "errors": []
+  },
+  {
+    "slug": "coupledna",
+    "desktop": "1440x1000",
+    "mobile": "390x844",
+    "optionCount": 4,
+    "noTimer": true,
+    "noOverflow": true,
+    "keyboardSelection": true,
+    "persistedResume": true,
+    "errors": []
+  }
+]

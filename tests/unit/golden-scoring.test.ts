@@ -14,6 +14,31 @@ import { moneyDnaScoringV1 } from "@/features/scoring/moneydna";
 import { focusStyleScoringV1 } from "@/features/scoring/focusstyle";
 import { decisionDnaScoringV1, type DecisionDnaItem } from "@/features/scoring/decisiondna";
 import { coupleDnaScoringV1 } from "@/features/scoring/coupledna";
+import { scoreBehavioralV2 } from "@/features/scoring/behavioral-v2";
+import { coupleDnaScenarios } from "@/content/quizzes/coupledna-v2";
+
+describe("CoupleDNA behavioral-v2 golden poles", () => {
+  for (const pole of [0, 3]) {
+    it(`normalizes the ${pole} preference pole without a correctness key`, () => {
+      const items = coupleDnaScenarios.map((q) => ({
+        id: q.stableKey,
+        stableKey: q.stableKey,
+        options: q.options.map((o) => ({
+          id: o.stableKey,
+          stableKey: o.stableKey,
+          signals: o.signals,
+        })),
+      }));
+      const answers = coupleDnaScenarios.map((q) => ({
+        questionId: q.stableKey,
+        optionId: q.options.find((o) => o.signals[q.dimension] === pole)!.stableKey,
+      }));
+      expect(Object.values(scoreBehavioralV2("coupledna", items, answers).dimensionScores)).toEqual(
+        Array(5).fill(pole === 0 ? 0 : 100),
+      );
+    });
+  }
+});
 
 describe("Golden Scoring Tests for All 7 Quizzes", () => {
   describe("1. BrainRank Cognitive Scoring Engine", () => {

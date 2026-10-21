@@ -1,0 +1,229 @@
+
+=== pnpm typecheck ===
+$ tsc --noEmit
+
+=== pnpm unit ===
+$ vitest run --config vitest.config.mts tests/unit
+
+ RUN  v5.0.1 C:/workspace-one/meqyro
+
+
+ Test Files  39 passed (39)
+      Tests  269 passed (269)
+   Start at  20:27:28
+   Duration  21.76s (import 54%, transform 25%, tests 14%, worker 4%, setup 2%)
+
+  Transform  transforming modules took 22.19s · 25% of tracked time, re-done on every run
+             persist transforms across runs with fsModuleCache: true
+             learn more: https://vitest.dev/guide/improving-performance#caching-between-reruns
+
+
+=== pnpm lint ===
+$ eslint .
+
+=== pnpm build ===
+$ next build
+▲ Next.js 16.3.6 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 84ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 4.0s
+  Running TypeScript ...
+  Finished TypeScript in 8.5s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/165) ...
+  Generating static pages using 7 workers (41/165) 
+  Generating static pages using 7 workers (82/165) 
+  Generating static pages using 7 workers (123/165) 
+✓ Generating static pages using 7 workers (165/165) in 6.8s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├   /[locale]
+│ ├ ● /pt
+│ ├ ● /en
+│ ├ ● /es
+│ └ ● /fr
+├ ƒ /[locale]/admin
+├   /[locale]/articles
+│ ├ ● /pt/articles
+│ ├ ● /en/articles
+│ ├ ● /es/articles
+│ └ ● /fr/articles
+├   /[locale]/articles/[slug]
+│ ├ ● /pt/articles/how-logical-reasoning-works
+│ ├ ● /pt/articles/what-are-big-five-personality-traits
+│ ├ ● /pt/articles/how-decision-style-affects-work
+│ └ ● [+9 more paths]
+├   /[locale]/checkout
+│ ├ ● /pt/checkout
+│ ├ ● /en/checkout
+│ ├ ● /es/checkout
+│ └ ● /fr/checkout
+├   /[locale]/checkout/failed
+│ ├ ● /pt/checkout/failed
+│ ├ ● /en/checkout/failed
+│ ├ ● /es/checkout/failed
+│ └ ● /fr/checkout/failed
+├   /[locale]/checkout/pending
+│ ├ ● /pt/checkout/pending
+│ ├ ● /en/checkout/pending
+│ ├ ● /es/checkout/pending
+│ └ ● /fr/checkout/pending
+├   /[locale]/checkout/success
+│ ├ ● /pt/checkout/success
+│ ├ ● /en/checkout/success
+│ ├ ● /es/checkout/success
+│ └ ● /fr/checkout/success
+├   /[locale]/contact
+│ ├ ● /pt/contact
+│ ├ ● /en/contact
+│ ├ ● /es/contact
+│ └ ● /fr/contact
+├   /[locale]/cookies
+│ ├ ● /pt/cookies
+│ ├ ● /en/cookies
+│ ├ ● /es/cookies
+│ └ ● /fr/cookies
+├ ƒ /[locale]/couple/[code]
+├   /[locale]/discover
+│ ├ ● /pt/discover
+│ ├ ● /en/discover
+│ ├ ● /es/discover
+│ └ ● /fr/discover
+├   /[locale]/legal/cookies
+│ ├ ● /pt/legal/cookies
+│ ├ ● /en/legal/cookies
+│ ├ ● /es/legal/cookies
+│ └ ● /fr/legal/cookies
+├   /[locale]/legal/privacy
+│ ├ ● /pt/legal/privacy
+│ ├ ● /en/legal/privacy
+│ ├ ● /es/legal/privacy
+│ └ ● /fr/legal/privacy
+├   /[locale]/legal/terms
+│ ├ ● /pt/legal/terms
+│ ├ ● /en/legal/terms
+│ ├ ● /es/legal/terms
+│ └ ● /fr/legal/terms
+├   /[locale]/privacy
+│ ├ ● /pt/privacy
+│ ├ ● /en/privacy
+│ ├ ● /es/privacy
+│ └ ● /fr/privacy
+├   /[locale]/privacy/data-request
+│ ├ ● /pt/privacy/data-request
+│ ├ ● /en/privacy/data-request
+│ ├ ● /es/privacy/data-request
+│ └ ● /fr/privacy/data-request
+├ ƒ /[locale]/privacy/data-request/confirm
+├   /[locale]/quizzes/[slug]
+│ ├ ● /pt/quizzes/brainrank
+│ ├ ● /pt/quizzes/personality-map
+│ ├ ● /pt/quizzes/careerfit
+│ └ ● [+25 more paths]
+├ ƒ /[locale]/quizzes/[slug]/play
+├ ƒ /[locale]/quizzes/[slug]/result
+├   /[locale]/quizzes/brainrank
+│ ├ ● /pt/quizzes/brainrank
+│ ├ ● /en/quizzes/brainrank
+│ ├ ● /es/quizzes/brainrank
+│ └ ● /fr/quizzes/brainrank
+├   /[locale]/reports/access
+│ ├ ● /pt/reports/access
+│ ├ ● /en/reports/access
+│ ├ ● /es/reports/access
+│ └ ● /fr/reports/access
+├ ƒ /[locale]/results/[token]
+├   /[locale]/terms
+│ ├ ● /pt/terms
+│ ├ ● /en/terms
+│ ├ ● /es/terms
+│ └ ● /fr/terms
+├   /[locale]/unsubscribe
+│ ├ ● /pt/unsubscribe
+│ ├ ● /en/unsubscribe
+│ ├ ● /es/unsubscribe
+│ └ ● /fr/unsubscribe
+├ ƒ /api/admin/metrics
+├ ƒ /api/analytics/events
+├ ƒ /api/checkout
+├ ƒ /api/couple/consent
+├ ƒ /api/couple/invite
+├ ƒ /api/couple/status/[code]
+├ ƒ /api/cron/reconcile
+├ ƒ /api/health
+├ ƒ /api/leads
+├ ƒ /api/orders/[id]
+├ ƒ /api/privacy/data-request
+├ ƒ /api/privacy/data-request/confirm
+├ ƒ /api/privacy/unsubscribe
+├ ƒ /api/referrals
+├ ƒ /api/reports/access
+├ ƒ /api/sessions
+├ ƒ /api/sessions/[id]/answers
+├ ƒ /api/sessions/[id]/complete
+├ ƒ /api/sessions/[id]/memory
+├ ƒ /api/sessions/[id]/report
+├ ƒ /api/sessions/[id]/result
+├ ƒ /api/sessions/recover
+├ ƒ /api/webhooks/stripe
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+
+
+=== pnpm smoke ===
+$ node scripts/smoke.mjs
+PASS /api/health (200)
+PASS /pt (200)
+PASS /en (200)
+PASS /es (200)
+PASS /fr (200)
+PASS /pt/discover (200)
+PASS /pt/quizzes/brainrank (200)
+PASS /en/quizzes/personality-map (200)
+PASS /pt/quizzes/careerfit (200)
+PASS /en/quizzes/moneydna (200)
+PASS /pt/quizzes/focusstyle (200)
+PASS /es/quizzes/decisiondna (200)
+PASS /pt/quizzes/coupledna (200)
+PASS /pt/quizzes/brainrank/play (200)
+PASS /pt/quizzes/personality-map/play (200)
+PASS /pt/quizzes/careerfit/play (200)
+PASS /pt/quizzes/moneydna/play (200)
+PASS /pt/quizzes/focusstyle/play (200)
+PASS /pt/quizzes/decisiondna/play (200)
+PASS /pt/quizzes/coupledna/play (200)
+PASS /pt/articles (200)
+PASS /pt/articles/how-logical-reasoning-works (200)
+PASS /pt/contact (200)
+PASS /pt/cookies (200)
+PASS /pt/legal/privacy (200)
+PASS /pt/legal/terms (200)
+PASS /pt/privacy/data-request (200)
+PASS /pt/unsubscribe (200)
+PASS /pt/checkout (200)
+PASS /pt/checkout/success (200)
+PASS /pt/checkout/pending (200)
+PASS /pt/checkout/failed (200)
+PASS /pt/admin (200)
+PASS /pt/admin (200)
+PASS /api/admin/metrics (401 Unauthorized Gate)
+PASS /api/admin/metrics (200)
+PASS /sitemap.xml (200)
+PASS /robots.txt (200)
+
+=== pnpm format:check ===
+$ prettier --check .
+Checking formatting...
+All matched files use Prettier code style!

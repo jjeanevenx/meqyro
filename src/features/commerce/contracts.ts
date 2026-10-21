@@ -28,6 +28,9 @@ export type PaymentLookup = {
   providerAttemptId: string;
   orderNumber?: string;
   providerPaymentId?: string;
+  expectedAmount?: number;
+  expectedCurrency?: string;
+  expectedProductCode?: string;
 };
 
 export type PaymentStatus = {
@@ -48,10 +51,11 @@ export type VerifiedPaymentEvent = {
   eventType: string;
   orderId?: string;
   orderNumber?: string;
-  status: "CONFIRMED" | "FAILED" | "REFUNDED" | "CHARGEBACK" | "IGNORED";
+  status: "CONFIRMED" | "FAILED" | "REFUNDED" | "CHARGEBACK" | "IGNORED" | "EXPIRED";
   amount?: number;
   currency?: string;
   providerPaymentId?: string;
+  providerAttemptId?: string;
   productCode?: string;
 };
 
@@ -70,9 +74,12 @@ export type CreateOrderInput = {
   market: Market;
   locale: string;
   referralCode?: string;
+  coupleInviteSlotId?: string;
 };
 
 export type OrderRecord = {
+  quizSlug?: string;
+  productCode?: string;
   id: string;
   orderNumber: string;
   sessionId: string;

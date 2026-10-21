@@ -8,6 +8,7 @@ export type SingleChoiceProps = {
   selectedOptionId?: string;
   onSelect: (optionId: string) => void;
   disabled?: boolean;
+  describedBy?: string;
 };
 
 export function SingleChoiceRenderer({
@@ -15,6 +16,7 @@ export function SingleChoiceRenderer({
   selectedOptionId,
   onSelect,
   disabled = false,
+  describedBy,
 }: SingleChoiceProps) {
   const handleKeyDown = (e: KeyboardEvent<HTMLButtonElement>, index: number) => {
     if (disabled) return;
@@ -38,7 +40,12 @@ export function SingleChoiceRenderer({
   };
 
   return (
-    <div className="single-choice-group" role="radiogroup" aria-labelledby="quiz-question-heading">
+    <div
+      className="single-choice-group"
+      role="radiogroup"
+      aria-labelledby="quiz-question-heading"
+      aria-describedby={describedBy}
+    >
       {options.map((option, index) => {
         const isSelected = selectedOptionId === option.id;
         const letter = String.fromCharCode(65 + index);

@@ -15,6 +15,8 @@ describe("Audit DB Questions", () => {
     expect(quizzes?.length).toBeGreaterThanOrEqual(7);
 
     for (const q of quizzes ?? []) {
+      // Commercial add-on catalog entry (prices only); it is not an assessment.
+      if (q.product_code === "COUPLEDNA_INVITE") continue;
       const v = q.quiz_versions[0];
       if (!v) continue;
       const { data: questions, error } = await supabase

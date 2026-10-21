@@ -15,6 +15,7 @@ export type QuestionRendererProps = {
   onSelectOption: (optionId: string) => void;
   onSelectValue: (value: number) => void;
   disabled?: boolean;
+  describedBy?: string;
 };
 
 export function QuestionRenderer({
@@ -25,6 +26,7 @@ export function QuestionRenderer({
   onSelectOption,
   onSelectValue,
   disabled = false,
+  describedBy,
 }: QuestionRendererProps) {
   if (question.kind === "LIKERT") {
     return (
@@ -57,6 +59,7 @@ export function QuestionRenderer({
       selectedOptionId={selectedOptionId}
       onSelect={onSelectOption}
       disabled={disabled}
+      describedBy={describedBy}
     />
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useId } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import type { Locale } from "@/lib/i18n/config";
 
@@ -20,6 +20,8 @@ export function LocaleMarketSelector({
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const menuId = useId();
   const pathname = usePathname();
   const router = useRouter();
 
@@ -30,41 +32,51 @@ export function LocaleMarketSelector({
     parts[1] = next;
     // eslint-disable-next-line react-hooks/immutability
     document.cookie = `meqyro_locale=${next}; Path=/; Max-Age=31536000; SameSite=Lax`;
-    router.push(parts.join("/") || `/${next}`);
+    router.push(`${parts.join("/") || `/${next}`}${window.location.search}${window.location.hash}`);
     setIsOpen(false);
   }
 
   // Close on escape
   useEffect(() => {
     function handleKeyDown(e: KeyboardEvent) {
-      if (e.key === "Escape") setIsOpen(false);
+      if (e.key === "Escape" && isOpen) {
+        setIsOpen(false);
+        triggerRef.current?.focus();
+      }
     }
     document.addEventListener("keydown", handleKeyDown);
     return () => document.removeEventListener("keydown", handleKeyDown);
-  }, []);
+  }, [isOpen]);
 
   // Close on click outside
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
+    function handleClickOutside(event: PointerEvent) {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsOpen(false);
       }
     }
     if (isOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => document.removeEventListener("mousedown", handleClickOutside);
+      document.addEventListener("pointerdown", handleClickOutside);
+      return () => document.removeEventListener("pointerdown", handleClickOutside);
     }
   }, [isOpen]);
 
   return (
-    <div className="locale-selector" ref={dropdownRef}>
+    <div
+      className="locale-selector"
+      ref={dropdownRef}
+      onBlur={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) setIsOpen(false);
+      }}
+    >
       <button
+        ref={triggerRef}
         type="button"
         className="locale-selector__trigger"
-        aria-label={languageLabel}
+        aria-label={`${languageLabel}: ${currentOption?.label}`}
         aria-expanded={isOpen}
-        aria-haspopup="listbox"
-        onClick={() => setIsOpen(!isOpen)}
+        aria-controls={menuId}
+        onClick={() => setIsOpen((open) => !open)}
       >
         <span className="locale-selector__current">{currentOption?.value.toUpperCase()}</span>
         <svg
@@ -82,11 +94,13 @@ export function LocaleMarketSelector({
       </button>
 
       {isOpen && (
-        <ul className="locale-selector__menu" role="listbox" aria-label={languageLabel}>
+        <ul id={menuId} className="locale-selector__menu" aria-label={languageLabel}>
           {localeOptions.map((option) => (
-            <li key={option.value} role="option" aria-selected={locale === option.value}>
+            <li key={option.value}>
               <button
                 type="button"
+                lang={option.value}
+                aria-current={locale === option.value ? "true" : undefined}
                 className={`locale-selector__option ${locale === option.value ? "locale-selector__option--active" : ""}`}
                 onClick={() => changeLocale(option.value)}
               >

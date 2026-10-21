@@ -12,6 +12,8 @@ export const FUNNEL_EVENTS = [
   "lead_submitted",
   "marketing_consent",
   "result_previewed",
+  "result_viewed",
+  "premium_report_viewed",
   "paywall_viewed",
   "checkout_started",
   "checkout_redirected",

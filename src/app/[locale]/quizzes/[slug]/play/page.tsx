@@ -89,7 +89,7 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
     locale,
     country,
     market: marketCookie,
-    source: marketCookie ? "user" : country ? "edge" : "locale-fallback",
+    source: marketCookie ? "user" : country ? "edge" : "default",
   });
 
   let initialSession: ActiveSession | null = null;

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/lib/i18n/config";
+import { commercialQuizSlugs } from "@/content/commercial-catalog";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
@@ -7,13 +8,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const publicPaths = [
     "",
     "/discover",
-    "/quizzes/brainrank",
-    "/quizzes/personality-map",
-    "/quizzes/careerfit",
-    "/quizzes/moneydna",
-    "/quizzes/focusstyle",
-    "/quizzes/decisiondna",
-    "/quizzes/coupledna",
+    ...commercialQuizSlugs.map((slug) => `/quizzes/${slug}`),
     "/articles",
     "/articles/how-logical-reasoning-works",
     "/contact",

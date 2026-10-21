@@ -6,6 +6,7 @@ import { getPaymentProvider } from "./order-service";
 import { fulfillOrder } from "./fulfillment-service";
 import { logEvent } from "@/lib/observability/logger";
 import { sendPurchaseConfirmationForOrder } from "./webhook-handler";
+import { assertTransition, orderTransitions } from "@/lib/domain/states";
 
 export interface ReconciliationReport {
   success: boolean;
@@ -101,7 +102,7 @@ export async function reconcilePendingOrders(): Promise<{
   const { data: pendingOrders } = await supabase
     .from("orders")
     .select(
-      "id, order_number, payment_provider, provider_payment_id, created_at, payment_attempts(id, provider_attempt_id, status, created_at)",
+      "id, order_number, amount, currency, product_code, payment_provider, provider_payment_id, created_at, payment_attempts(id, provider_attempt_id, status, created_at)",
     )
     .eq("status", "PENDING")
     .eq("payment_provider", "stripe")
@@ -132,16 +133,21 @@ export async function reconcilePendingOrders(): Promise<{
         providerAttemptId: latestAttempt.provider_attempt_id,
         orderNumber: order.order_number,
         providerPaymentId: order.provider_payment_id ?? undefined,
+        expectedAmount: order.amount,
+        expectedCurrency: order.currency,
+        expectedProductCode: order.product_code,
       });
 
       if (statusCheck.status === "CONFIRMED") {
         await fulfillOrder(order.id, "reconciliation_poll", statusCheck.transactionId);
         confirmedCount += 1;
       } else if (statusCheck.status === "EXPIRED") {
+        assertTransition("order", "PENDING", "EXPIRED", orderTransitions);
         await supabase
           .from("orders")
           .update({ status: "EXPIRED", updated_at: new Date().toISOString() })
-          .eq("id", order.id);
+          .eq("id", order.id)
+          .eq("status", "PENDING");
         expiredCount += 1;
       }
     } catch (err: unknown) {
@@ -182,6 +188,12 @@ export async function expireStaleSessions(): Promise<{ expiredCount: number }> {
 export async function cleanupExpiredTokens(): Promise<{ cleanedCount: number }> {
   const supabase = createSupabaseSecretClient();
   const now = new Date().toISOString();
+
+  const { error: rateCleanupError } = await supabase
+    .from("rate_limits")
+    .delete()
+    .lt("expires_at", now);
+  if (rateCleanupError) throw new Error("Unable to clean expired rate limits");
 
   // Reject expired pending data requests
   const { data: expiredRequests } = await supabase

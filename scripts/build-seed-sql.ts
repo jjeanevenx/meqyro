@@ -8,6 +8,7 @@ import { focusStyleQuestions } from "../src/content/quizzes/focusstyle";
 import { decisionDnaScenarios } from "../src/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "../src/content/quizzes/coupledna";
 import { memorySeedSql } from "./memory-seed";
+import { behavioralSeedSql } from "./behavioral-seed";
 
 function escapeSql(str: string): string {
   return str.replace(/'/g, "''");
@@ -25,12 +26,17 @@ export function generateSeedSql(): string {
     "",
     "-- 2. Quiz Versions",
     "insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)",
-    "select id, '1.0', '1.0', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug in ('brainrank', 'personality-map')",
+    "select id, '1.0', '1.0', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug = 'personality-map'",
     "on conflict (quiz_id, version) do update set status = 'APPROVED', scoring_version = '1.0';",
     "",
     "insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)",
     "select id, 'v1.0.0', 'v1', 'PUBLISHED'::meqyro.content_status, now() from meqyro.quizzes where slug in ('careerfit', 'moneydna', 'focusstyle', 'decisiondna', 'coupledna')",
     "on conflict (quiz_id, version) do update set status = 'PUBLISHED', scoring_version = 'v1';",
+    "",
+    "insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)",
+    "select id, '1.1', '1.1', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug = 'brainrank'",
+    "on conflict (quiz_id, version) do nothing;",
+    "update meqyro.quiz_versions set status = 'ARCHIVED' where quiz_id = (select id from meqyro.quizzes where slug = 'brainrank') and version = '1.0';",
     "",
     "-- 3. Product Prices",
     "insert into meqyro.product_prices (quiz_id, market, currency, amount, active)",
@@ -57,7 +63,7 @@ export function generateSeedSql(): string {
     "  select qv.id into v_quiz_version_id",
     "  from meqyro.quiz_versions qv",
     "  join meqyro.quizzes q on q.id = qv.quiz_id",
-    "  where q.slug = 'brainrank' and qv.version = '1.0';",
+    "  where q.slug = 'brainrank' and qv.version = '1.1';",
     "",
   ];
 
@@ -369,7 +375,7 @@ export function generateSeedSql(): string {
   lines.push("end $$;");
   lines.push("");
 
-  return lines.join("\n") + "\n" + memorySeedSql();
+  return lines.join("\n") + "\n" + memorySeedSql() + "\n" + behavioralSeedSql();
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

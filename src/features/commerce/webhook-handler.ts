@@ -10,6 +10,9 @@ import { deliverPaidReport } from "@/features/email/paid-report-delivery";
 import { createHmac } from "node:crypto";
 import { getTokenSecuritySecret, getSiteUrl } from "@/lib/config/env";
 import { hashToken } from "@/features/privacy/consent-service";
+import { isLocale } from "@/lib/i18n/config";
+import { assertTransition, orderTransitions, type OrderState } from "@/lib/domain/states";
+import { cancelInviteSlot } from "@/features/couple/couple-invite-service";
 
 export interface WebhookHandlingResult {
   handled: boolean;
@@ -69,7 +72,7 @@ async function sendPurchaseConfirmationOnce(
     .digest("base64url");
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString();
 
-  await supabase.from("recovery_tokens").upsert(
+  const { error: recoveryError } = await supabase.from("recovery_tokens").upsert(
     {
       session_id: sessionId,
       token_hash: hashToken(resultToken),
@@ -79,6 +82,7 @@ async function sendPurchaseConfirmationOnce(
     },
     { onConflict: "token_hash", ignoreDuplicates: true },
   );
+  if (recoveryError) throw new Error("Unable to persist purchase recovery link");
 
   const sessionRelation = Array.isArray(order.quiz_sessions)
     ? order.quiz_sessions[0]
@@ -191,8 +195,6 @@ export async function handleWebhook(
     if (typeof verifiedEvent.amount === "number" && verifiedEvent.amount !== order.amount) {
       logEvent("error", "webhook_amount_mismatch", {
         orderId: order.id,
-        expectedAmount: order.amount,
-        receivedAmount: verifiedEvent.amount,
       });
 
       await supabase.from("payment_events").insert({
@@ -204,9 +206,7 @@ export async function handleWebhook(
         payload: paymentAuditPayload(input.payload),
       });
 
-      throw new Error(
-        `Webhook payment amount (${verifiedEvent.amount}) diverges from recorded order amount (${order.amount}).`,
-      );
+      throw new Error("Webhook payment amount diverges from the recorded order.");
     }
 
     if (
@@ -248,44 +248,24 @@ export async function handleWebhook(
     payload: paymentAuditPayload(input.payload),
   });
 
+  let duplicate = false;
   if (insertError) {
     // Postgres unique constraint violation code (23505)
-    if (insertError.code === "23505" || insertError.message.includes("unique")) {
+    if (insertError.code === "23505") {
+      duplicate = true;
       logEvent("info", "webhook_duplicate_ignored", {
         provider: providerName,
         providerEventId: verifiedEvent.providerEventId,
         orderId: order.id,
       });
-      if (verifiedEvent.status === "CONFIRMED" && order.status !== "FULFILLED") {
-        await fulfillOrder(
-          order.id,
-          verifiedEvent.providerEventId,
-          verifiedEvent.providerPaymentId,
-        );
-      }
-      if (
-        (order.status === "FULFILLED" || verifiedEvent.status === "CONFIRMED") &&
-        !order.confirmation_email_sent_at
-      ) {
-        await sendPurchaseConfirmationOnce(order).catch((emailErr) => {
-          logEvent("warn", "purchase_email_retry_failed", {
-            orderId: order.id,
-            error: emailErr instanceof Error ? emailErr.message : String(emailErr),
-          });
-        });
-      }
-      await supabase
-        .from("payment_events")
-        .update({ status: "PROCESSED" })
-        .eq("provider", providerName)
-        .eq("provider_event_id", verifiedEvent.providerEventId);
-      return { handled: true, duplicate: true, orderId: order.id, orderNumber: order.order_number };
+    } else {
+      throw new Error(`Failed to log payment event: ${insertError.message}`);
     }
-    throw new Error(`Failed to log payment event: ${insertError.message}`);
   }
 
   // 6. Execute fulfillment / refund / dispute state transitions
   if (verifiedEvent.status === "CONFIRMED") {
+    if (order.status === "REFUNDED") return { handled: true, orderId: order.id };
     await fulfillOrder(order.id, verifiedEvent.providerEventId, verifiedEvent.providerPaymentId);
 
     // Dispatch post-purchase transactional email
@@ -304,13 +284,17 @@ export async function handleWebhook(
   } else if (verifiedEvent.status === "REFUNDED") {
     await refundOrder(order.id, "Gateway refund webhook", verifiedEvent.providerEventId);
 
-    if (order.customer_email) {
+    if (order.customer_email && order.status !== "REFUNDED") {
+      const session = Array.isArray(order.quiz_sessions)
+        ? order.quiz_sessions[0]
+        : order.quiz_sessions;
+      const locale = isLocale(session?.locale ?? "") ? session!.locale : "en";
       await sendRefundEmail({
         recipientEmail: order.customer_email,
         orderNumber: order.order_number,
         amount: order.amount,
         currency: order.currency,
-        locale: order.market === "BR" ? "pt" : "en",
+        locale,
       }).catch(() => {});
     }
 
@@ -328,12 +312,52 @@ export async function handleWebhook(
       .eq("provider", providerName)
       .eq("provider_event_id", verifiedEvent.providerEventId);
   } else if (verifiedEvent.status === "FAILED") {
-    await supabase
+    if (["CREATED", "PROCESSING", "PENDING"].includes(order.status)) {
+      assertTransition("order", order.status as OrderState, "FAILED", orderTransitions);
+      const { error: failureError } = await supabase
+        .from("orders")
+        .update({ status: "FAILED", updated_at: new Date().toISOString() })
+        .eq("id", order.id)
+        .in("status", ["CREATED", "PROCESSING", "PENDING"]);
+      if (failureError) throw new Error("Unable to persist failed payment");
+    }
+  } else if (verifiedEvent.status === "EXPIRED") {
+    // Handle checkout.session.expired — transition order and cancel associated invite slot (D-006)
+    if (["CREATED", "PROCESSING", "PENDING"].includes(order.status)) {
+      assertTransition("order", order.status as OrderState, "EXPIRED", orderTransitions);
+      await supabase
+        .from("orders")
+        .update({ status: "EXPIRED", updated_at: new Date().toISOString() })
+        .eq("id", order.id)
+        .in("status", ["CREATED", "PROCESSING", "PENDING"]);
+    }
+
+    // Cancel the associated invite slot if present
+    const { data: slotData } = await supabase
       .from("orders")
-      .update({ status: "FAILED", updated_at: new Date().toISOString() })
+      .select("couple_invite_slot_id")
       .eq("id", order.id)
-      .in("status", ["CREATED", "PROCESSING", "PENDING"]);
+      .single();
+
+    if (slotData && (slotData as Record<string, unknown>).couple_invite_slot_id) {
+      await cancelInviteSlot((slotData as Record<string, unknown>).couple_invite_slot_id as string);
+      logEvent("info", "invite_slot_cancelled_on_checkout_expired", {
+        orderId: order.id,
+        slotId: (slotData as Record<string, unknown>).couple_invite_slot_id,
+      });
+    }
+
+    await supabase
+      .from("payment_events")
+      .update({ status: "PROCESSED" })
+      .eq("provider", providerName)
+      .eq("provider_event_id", verifiedEvent.providerEventId);
   }
 
-  return { handled: true, orderId: order.id, orderNumber: order.order_number };
+  return {
+    handled: true,
+    duplicate: duplicate || undefined,
+    orderId: order.id,
+    orderNumber: order.order_number,
+  };
 }

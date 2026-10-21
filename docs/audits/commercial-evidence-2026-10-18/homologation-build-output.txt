@@ -1,0 +1,159 @@
+$ next build
+▲ Next.js 16.3.6 (Turbopack)
+- Environments: .env.local
+✓ Running next.config.ts took 1265ms
+
+  Creating an optimized production build ...
+✓ Compiled successfully in 36.5s
+  Running TypeScript ...
+  Finished TypeScript in 12.1s ...
+  Collecting page data using 7 workers ...
+  Generating static pages using 7 workers (0/165) ...
+  Generating static pages using 7 workers (41/165) 
+  Generating static pages using 7 workers (82/165) 
+  Generating static pages using 7 workers (123/165) 
+✓ Generating static pages using 7 workers (165/165) in 8.6s
+  Finalizing page optimization ...
+
+Route (app)
+┌ ƒ /
+├ ○ /_not-found
+├   /[locale]
+│ ├ ● /pt
+│ ├ ● /en
+│ ├ ● /es
+│ └ ● /fr
+├ ƒ /[locale]/admin
+├   /[locale]/articles
+│ ├ ● /pt/articles
+│ ├ ● /en/articles
+│ ├ ● /es/articles
+│ └ ● /fr/articles
+├   /[locale]/articles/[slug]
+│ ├ ● /pt/articles/how-logical-reasoning-works
+│ ├ ● /pt/articles/what-are-big-five-personality-traits
+│ ├ ● /pt/articles/how-decision-style-affects-work
+│ └ ● [+9 more paths]
+├   /[locale]/checkout
+│ ├ ● /pt/checkout
+│ ├ ● /en/checkout
+│ ├ ● /es/checkout
+│ └ ● /fr/checkout
+├   /[locale]/checkout/failed
+│ ├ ● /pt/checkout/failed
+│ ├ ● /en/checkout/failed
+│ ├ ● /es/checkout/failed
+│ └ ● /fr/checkout/failed
+├   /[locale]/checkout/pending
+│ ├ ● /pt/checkout/pending
+│ ├ ● /en/checkout/pending
+│ ├ ● /es/checkout/pending
+│ └ ● /fr/checkout/pending
+├   /[locale]/checkout/success
+│ ├ ● /pt/checkout/success
+│ ├ ● /en/checkout/success
+│ ├ ● /es/checkout/success
+│ └ ● /fr/checkout/success
+├   /[locale]/contact
+│ ├ ● /pt/contact
+│ ├ ● /en/contact
+│ ├ ● /es/contact
+│ └ ● /fr/contact
+├   /[locale]/cookies
+│ ├ ● /pt/cookies
+│ ├ ● /en/cookies
+│ ├ ● /es/cookies
+│ └ ● /fr/cookies
+├ ƒ /[locale]/couple/[code]
+├   /[locale]/discover
+│ ├ ● /pt/discover
+│ ├ ● /en/discover
+│ ├ ● /es/discover
+│ └ ● /fr/discover
+├   /[locale]/legal/cookies
+│ ├ ● /pt/legal/cookies
+│ ├ ● /en/legal/cookies
+│ ├ ● /es/legal/cookies
+│ └ ● /fr/legal/cookies
+├   /[locale]/legal/privacy
+│ ├ ● /pt/legal/privacy
+│ ├ ● /en/legal/privacy
+│ ├ ● /es/legal/privacy
+│ └ ● /fr/legal/privacy
+├   /[locale]/legal/terms
+│ ├ ● /pt/legal/terms
+│ ├ ● /en/legal/terms
+│ ├ ● /es/legal/terms
+│ └ ● /fr/legal/terms
+├   /[locale]/privacy
+│ ├ ● /pt/privacy
+│ ├ ● /en/privacy
+│ ├ ● /es/privacy
+│ └ ● /fr/privacy
+├   /[locale]/privacy/data-request
+│ ├ ● /pt/privacy/data-request
+│ ├ ● /en/privacy/data-request
+│ ├ ● /es/privacy/data-request
+│ └ ● /fr/privacy/data-request
+├ ƒ /[locale]/privacy/data-request/confirm
+├   /[locale]/quizzes/[slug]
+│ ├ ● /pt/quizzes/brainrank
+│ ├ ● /pt/quizzes/personality-map
+│ ├ ● /pt/quizzes/careerfit
+│ └ ● [+25 more paths]
+├ ƒ /[locale]/quizzes/[slug]/play
+├ ƒ /[locale]/quizzes/[slug]/result
+├   /[locale]/quizzes/brainrank
+│ ├ ● /pt/quizzes/brainrank
+│ ├ ● /en/quizzes/brainrank
+│ ├ ● /es/quizzes/brainrank
+│ └ ● /fr/quizzes/brainrank
+├   /[locale]/reports/access
+│ ├ ● /pt/reports/access
+│ ├ ● /en/reports/access
+│ ├ ● /es/reports/access
+│ └ ● /fr/reports/access
+├ ƒ /[locale]/results/[token]
+├   /[locale]/terms
+│ ├ ● /pt/terms
+│ ├ ● /en/terms
+│ ├ ● /es/terms
+│ └ ● /fr/terms
+├   /[locale]/unsubscribe
+│ ├ ● /pt/unsubscribe
+│ ├ ● /en/unsubscribe
+│ ├ ● /es/unsubscribe
+│ └ ● /fr/unsubscribe
+├ ƒ /api/admin/metrics
+├ ƒ /api/analytics/events
+├ ƒ /api/checkout
+├ ƒ /api/couple/consent
+├ ƒ /api/couple/invite
+├ ƒ /api/couple/status/[code]
+├ ƒ /api/cron/reconcile
+├ ƒ /api/health
+├ ƒ /api/leads
+├ ƒ /api/orders/[id]
+├ ƒ /api/privacy/data-request
+├ ƒ /api/privacy/data-request/confirm
+├ ƒ /api/privacy/unsubscribe
+├ ƒ /api/referrals
+├ ƒ /api/reports/access
+├ ƒ /api/sessions
+├ ƒ /api/sessions/[id]/answers
+├ ƒ /api/sessions/[id]/complete
+├ ƒ /api/sessions/[id]/memory
+├ ƒ /api/sessions/[id]/report
+├ ƒ /api/sessions/[id]/result
+├ ƒ /api/sessions/recover
+├ ƒ /api/webhooks/stripe
+├ ○ /icon.svg
+├ ○ /manifest.webmanifest
+├ ○ /robots.txt
+└ ○ /sitemap.xml
+
+
+○  (Static)   prerendered as static content
+●  (SSG)      prerendered as static HTML (uses generateStaticParams)
+ƒ  (Dynamic)  server-rendered on demand
+

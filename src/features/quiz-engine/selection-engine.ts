@@ -83,6 +83,24 @@ export function isCandidateEligible(
 ): boolean {
   if (!q.active) return false;
   if (!q.id || !q.stableKey) return false;
+  if (/^(MD2|CD2)_/.test(q.stableKey)) {
+    if (
+      !requiredLocales.every((locale) =>
+        q.translations?.some((t) => t.locale === locale && t.prompt.trim()),
+      )
+    )
+      return false;
+    if (
+      q.options?.length !== 4 ||
+      q.options.some(
+        (option) =>
+          !requiredLocales.every((locale) =>
+            option.translations?.some((t) => t.locale === locale && t.label.trim()),
+          ),
+      )
+    )
+      return false;
+  }
 
   // Check translations completeness if available
   if (q.translations && q.translations.length > 0) {
@@ -380,6 +398,15 @@ export function orderSelectedQuestions(
   if (strategy === "SEQUENTIAL") {
     // Preserve stable position or stable_key ordering
     return [...selected].sort((a, b) => a.stableKey.localeCompare(b.stableKey));
+  }
+
+  if (strategy === "SCENARIO_RAMP") {
+    return (["EASY", "MEDIUM", "HARD"] as const).flatMap((difficulty) =>
+      shuffleWithSeed(
+        selected.filter((q) => extractQuestionDifficulty(q) === difficulty),
+        prng,
+      ),
+    );
   }
 
   if (strategy === "PROGRESSIVE_RAMP") {

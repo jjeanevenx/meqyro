@@ -39,6 +39,24 @@ export function ResultView({
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   const offerViewedRef = useRef(false);
+  const hasPremiumReport = Boolean(premiumReport);
+  useEffect(() => {
+    for (const eventName of isPremium && hasPremiumReport
+      ? ["result_viewed", "premium_report_viewed"]
+      : ["result_viewed"]) {
+      void fetch("/api/analytics/events", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          eventName,
+          sessionId: summary.sessionId,
+          quizSlug: summary.quizSlug,
+          locale: safeLocale,
+        }),
+        keepalive: true,
+      }).catch(() => {});
+    }
+  }, [isPremium, hasPremiumReport, summary.sessionId, summary.quizSlug, safeLocale]);
 
   useEffect(() => {
     if (!isPremium && paywall && !offerViewedRef.current) {
@@ -117,6 +135,10 @@ export function ResultView({
   };
 
   const quizInfo = dict.quizzes[summary.quizSlug] ?? dict.quizzes.brainrank;
+  const behavioral = summary.scoringVersion === "behavioral-v2";
+  const profileValues = Object.values(summary.dimensionScores ?? {});
+  const tiedProfile =
+    behavioral && profileValues.filter((v) => v === Math.max(...profileValues)).length > 1;
 
   const labels = {
     freeBadge: dict.resultView.freeTitle,
@@ -215,10 +237,10 @@ export function ResultView({
       ) : null}
 
       {/* 3. Strongest Dimension Highlight */}
-      {summary.strongestDimension ? (
+      {summary.strongestDimension && !tiedProfile ? (
         <div className="strength-highlight bg-stone-100/70 border border-stone-200 p-5 rounded-2xl space-y-1">
           <small className="text-xs font-semibold uppercase tracking-wider text-stone-500">
-            {labels.strongestLabel}
+            {behavioral ? dict.resultView.behavioralPreference : labels.strongestLabel}
           </small>
           <h2 className="text-xl font-bold text-stone-900 capitalize">
             {getDimensionLabel(summary.strongestDimension, safeLocale)}
@@ -239,6 +261,9 @@ export function ResultView({
         </div>
       ) : null}
 
+      {behavioral ? (
+        <p className="text-sm text-stone-600">{dict.resultView.behavioralCaveat}</p>
+      ) : null}
       {/* 5. Dimension Breakdown */}
       {summary.dimensionScores && Object.keys(summary.dimensionScores).length > 0 ? (
         <div className="dimension-breakdown space-y-3">
@@ -253,7 +278,7 @@ export function ResultView({
                   {getDimensionLabel(key, safeLocale)}
                 </span>
                 <span className="dimension-row__val font-mono font-medium text-stone-900">
-                  {val}%
+                  {behavioral ? `${val}/100` : `${val}%`}
                 </span>
               </div>
             ))}

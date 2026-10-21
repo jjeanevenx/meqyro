@@ -11,7 +11,7 @@ export type FeatureFlagKey =
 
 const DEFAULT_FLAGS: Record<FeatureFlagKey, boolean> = {
   enable_referrals: true,
-  enable_bundle_checkout: true,
+  enable_bundle_checkout: false,
   enable_stripe_payments: true,
 };
 

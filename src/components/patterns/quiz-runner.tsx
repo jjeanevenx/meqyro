@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
+import { countdownState } from "@/lib/quiz-countdown";
 import { ArrowLeft, ArrowRight, AlertCircle, Loader2 } from "lucide-react";
 import type {
   PublicQuiz,
@@ -51,9 +52,29 @@ export function QuizRunner({
   });
 
   const [answers, setAnswers] = useState<
-    Record<string, { optionId?: string; numericValue?: number; durationMs?: number }>
+    Record<
+      string,
+      {
+        optionId?: string;
+        numericValue?: number;
+        durationMs?: number;
+        answerStatus?: "ANSWERED" | "TIMEOUT";
+      }
+    >
   >(() => initialSession?.answers ?? {});
 
+  const timed = quiz.slug === "brainrank";
+  const [clock, setClock] = useState<{
+    questionId: string;
+    expires: number;
+    limit: number;
+    received: number;
+    server: number;
+  } | null>(null);
+  const [remainingMs, setRemainingMs] = useState(0);
+  const [clockAttempt, setClockAttempt] = useState(0);
+  const [clockErrorId, setClockErrorId] = useState<string | null>(null);
+  const continueRef = useRef<(timeout?: boolean) => Promise<void>>(async () => {});
   const [isInitializing, setIsInitializing] = useState(!initialSession);
   const [initAttempt, setInitAttempt] = useState(0);
   const [isSaving, setIsSaving] = useState(false);
@@ -166,9 +187,90 @@ export function QuizRunner({
     Boolean(currentAnswer?.optionId) ||
     (typeof currentAnswer?.numericValue === "number" && currentAnswer.numericValue > 0);
 
+  const memoryPending =
+    !!currentQuestion?.memoryCue && !session?.memorySeen?.includes(currentQuestion.memoryCue.id);
+  const currentId = currentQuestion?.id;
+  const sessionId = session?.id;
+  useEffect(() => {
+    if (!timed || !currentId || !sessionId || memoryPending || result) return;
+    let active = true;
+    fetch(`/api/sessions/${sessionId}/question-clock`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ questionId: currentId }),
+    })
+      .then(async (response) => {
+        if (!response.ok) throw new Error("Clock unavailable");
+        const value = (await response.json()) as {
+          questionExpiresAt: string;
+          timeLimitSeconds: number;
+          serverNow: string;
+          answered: boolean;
+          answerStatus?: "ANSWERED" | "TIMEOUT";
+          currentPosition?: number;
+        };
+        if (!active) return;
+        setClockErrorId(null);
+        if (value.answered && value.answerStatus) {
+          const answerStatus = value.answerStatus;
+          setAnswers((previous) => ({
+            ...previous,
+            [currentId]:
+              answerStatus === "TIMEOUT"
+                ? { answerStatus }
+                : { ...previous[currentId], answerStatus },
+          }));
+        }
+        if (value.answered && value.currentPosition && value.currentPosition > currentIndex + 1) {
+          setCurrentIndex(value.currentPosition - 1);
+          return;
+        }
+        if (value.answered) {
+          void continueRef.current(true);
+          return;
+        }
+        const remaining = Date.parse(value.questionExpiresAt) - Date.parse(value.serverNow);
+        setRemainingMs(Math.max(0, remaining));
+        setClock({
+          questionId: currentId,
+          expires: Date.parse(value.questionExpiresAt),
+          limit: value.timeLimitSeconds,
+          server: Date.parse(value.serverNow),
+          received: performance.now(),
+        });
+      })
+      .catch(() => {
+        if (active) setClockErrorId(currentId);
+      });
+    return () => {
+      active = false;
+    };
+  }, [timed, currentId, sessionId, memoryPending, result, clockAttempt, currentIndex]);
+  const activeClock = clock && clock.questionId === currentId ? clock : null;
+  const clockError = Boolean(currentId && clockErrorId === currentId);
+  useEffect(() => {
+    if (!activeClock || isSaving || isCompleting) return;
+    const tick = () => {
+      const remaining = Math.max(
+        0,
+        activeClock.expires - activeClock.server - (performance.now() - activeClock.received),
+      );
+      setRemainingMs(remaining);
+      if (remaining === 0) void continueRef.current(true);
+    };
+    tick();
+    const interval = window.setInterval(tick, 200);
+    return () => window.clearInterval(interval);
+  }, [activeClock, isSaving, isCompleting]);
+  const timerBlocked = timed && (!activeClock || remainingMs <= 0);
+  const timerView = countdownState(remainingMs, activeClock?.limit ?? 45);
+
   const totalQuestions = questions.length;
   const answeredCount = Object.values(answers).filter(
-    (a) => Boolean(a?.optionId) || (typeof a?.numericValue === "number" && a.numericValue > 0),
+    (a) =>
+      Boolean(a?.answerStatus) ||
+      Boolean(a?.optionId) ||
+      (typeof a?.numericValue === "number" && a.numericValue > 0),
   ).length;
 
   // Single derived source of truth for progress
@@ -178,7 +280,7 @@ export function QuizRunner({
 
   // Immediate state update & immediate error clearance on answer selection
   const handleSelectOption = (optionId: string) => {
-    if (!currentQuestion || isSaving || isCompleting) return;
+    if (!currentQuestion || isSaving || isCompleting || timerBlocked) return;
     setAnswers((prev) => ({
       ...prev,
       [currentQuestion.id]: { optionId },
@@ -197,11 +299,11 @@ export function QuizRunner({
     setSystemError(null);
   };
 
-  const handleContinue = async () => {
+  const handleContinue = async (timeout = false) => {
     if (!currentQuestion) return;
 
     // 1. Validation check
-    if (!hasSelectedAnswer) {
+    if (!hasSelectedAnswer && !timeout) {
       setValidationError(dict.quizRunner.selectOptionToContinue);
       return;
     }
@@ -227,23 +329,35 @@ export function QuizRunner({
         throw new Error(dict.quizRunner.initError);
       }
 
-      // Save answer to server
-      const saveResponse = await fetch(`/api/sessions/${activeSession.id}/answers`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          questionId: currentQuestion.id,
-          optionId: currentAnswer?.optionId,
-          numericValue: currentAnswer?.numericValue,
-          durationMs,
-          nextPosition,
-        }),
-      });
+      // A confirmed timed answer is final. Retrying completion must not resubmit it,
+      // including when the server completed successfully but its response was lost.
+      if (!timed || !currentAnswer?.answerStatus) {
+        const saveResponse = await fetch(`/api/sessions/${activeSession.id}/answers`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            questionId: currentQuestion.id,
+            optionId: timeout ? undefined : currentAnswer?.optionId,
+            timeout,
+            numericValue: currentAnswer?.numericValue,
+            durationMs,
+            nextPosition,
+          }),
+        });
 
-      if (!saveResponse.ok) {
-        throw new Error(dict.quizRunner.saveError);
+        if (!saveResponse.ok) {
+          throw new Error(dict.quizRunner.saveError);
+        }
+
+        const saved = (await saveResponse.json()) as { answerStatus?: "ANSWERED" | "TIMEOUT" };
+        setAnswers((previous) => ({
+          ...previous,
+          [currentQuestion.id]:
+            saved.answerStatus === "TIMEOUT"
+              ? { answerStatus: saved.answerStatus }
+              : { ...previous[currentQuestion.id], answerStatus: saved.answerStatus ?? "ANSWERED" },
+        }));
       }
-
       if (!isLastQuestion) {
         setCurrentIndex((prev) => prev + 1);
         setIsSaving(false);
@@ -299,12 +413,20 @@ export function QuizRunner({
       setIsSaving(false);
       saveLockRef.current = false;
     } catch (err: unknown) {
+      if (timed) {
+        setClock(null);
+        setClockErrorId(currentQuestion.id);
+      }
       setSystemError(err instanceof Error ? err.message : dict.quizRunner.saveError);
       setIsSaving(false);
       setIsCompleting(false);
       saveLockRef.current = false;
     }
   };
+
+  useEffect(() => {
+    continueRef.current = handleContinue;
+  });
 
   const handleBack = () => {
     if (currentIndex > 0 && !isSaving && !isCompleting) {
@@ -399,6 +521,11 @@ export function QuizRunner({
   // 3. Question Runner screen
   const questionKicker = `${dict.common.question.toUpperCase()} ${String(currentIndex + 1).padStart(2, "0")}`;
   const activeError = validationError || systemError;
+  const behavioralScenario =
+    currentQuestion?.kind === "SCENARIO" && (quiz.slug === "moneydna" || quiz.slug === "coupledna");
+  const titleEnd = behavioralScenario ? currentQuestion.prompt.indexOf(". ") : -1;
+  const scenarioTitle = titleEnd >= 0 ? currentQuestion?.prompt.slice(0, titleEnd) : null;
+  const scenarioContext = titleEnd >= 0 ? currentQuestion?.prompt.slice(titleEnd + 2) : null;
 
   const memoryCue = currentQuestion?.memoryCue;
   if (memoryCue && session && !session.memorySeen?.includes(memoryCue.id)) {
@@ -424,7 +551,7 @@ export function QuizRunner({
         <button
           type="button"
           onClick={handleBack}
-          disabled={currentIndex === 0 || isSaving || isCompleting}
+          disabled={timed || currentIndex === 0 || isSaving || isCompleting}
           className="quiz-runner__nav-btn"
           aria-label={dict.common.previous}
         >
@@ -453,9 +580,43 @@ export function QuizRunner({
       {/* Question Content */}
       {currentQuestion ? (
         <section
-          className={`quiz-question-card ${currentQuestion.kind === "VISUAL_CHOICE" ? "quiz-question-card--visual" : ""}`}
+          className={`quiz-question-card ${currentQuestion.kind === "VISUAL_CHOICE" ? "quiz-question-card--visual" : ""} ${behavioralScenario ? "quiz-question-card--scenario" : ""}`}
           aria-labelledby="quiz-question-heading"
         >
+          {timed ? (
+            <div
+              className={`question-timer question-timer--${activeClock ? timerView.state : "normal"}`}
+            >
+              <div className="question-timer__row">
+                <span role="status">
+                  {activeClock ? dict.questionTimer[timerView.state] : dict.common.loading}
+                </span>
+                <span role="timer" aria-label={dict.questionTimer.normal}>
+                  {activeClock ? timerView.text : "--:--"}
+                </span>
+              </div>
+              <progress
+                max={100}
+                value={activeClock ? timerView.percent : 100}
+                aria-label={dict.questionTimer.normal}
+              />
+              <p>{dict.questionTimer.policy}</p>
+              {clockError ? (
+                <Button
+                  onClick={() => {
+                    setClockErrorId(null);
+                    if (currentAnswer?.answerStatus && currentIndex === totalQuestions - 1) {
+                      void handleContinue(true);
+                    } else {
+                      setClockAttempt((v) => v + 1);
+                    }
+                  }}
+                >
+                  {dict.common.retry}
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
           <div className="quiz-question-meta">
             <span className="quiz-question-kicker">{questionKicker}</span>
             {currentQuestion.clue ? (
@@ -469,8 +630,16 @@ export function QuizRunner({
             ref={headingRef}
             tabIndex={-1}
           >
-            {currentQuestion.prompt}
+            {scenarioTitle ?? currentQuestion.prompt}
           </h1>
+          {scenarioContext ? (
+            <p id="quiz-scenario-context" className="quiz-scenario-context">
+              {scenarioContext}
+            </p>
+          ) : null}
+          {behavioralScenario ? (
+            <p className="quiz-scenario-hint">{dict.quizRunner.scenarioHint}</p>
+          ) : null}
 
           {activeError ? (
             <div
@@ -492,7 +661,8 @@ export function QuizRunner({
               locale={locale}
               onSelectOption={handleSelectOption}
               onSelectValue={handleSelectValue}
-              disabled={isSaving || isCompleting}
+              disabled={isSaving || isCompleting || timerBlocked}
+              describedBy={scenarioContext ? "quiz-scenario-context" : undefined}
             />
           </div>
 
@@ -500,8 +670,8 @@ export function QuizRunner({
           <footer className="quiz-runner__footer">
             <Button
               type="button"
-              disabled={!hasSelectedAnswer || isSaving || isCompleting}
-              onClick={handleContinue}
+              disabled={!hasSelectedAnswer || isSaving || isCompleting || timerBlocked}
+              onClick={() => void handleContinue()}
               className="quiz-runner__submit-btn"
               aria-busy={isSaving || isCompleting}
             >

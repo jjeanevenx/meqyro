@@ -74,16 +74,23 @@ export function buildCoupleReport(
   const locale: Locale =
     language === "en" || language === "es" || language === "fr" ? language : "pt";
   const t = words[locale];
+  const choiceCaveat = {
+    pt: "Comparação das alternativas escolhidas nas mesmas situações. Respostas iguais não garantem uma relação saudável, e diferenças não indicam incompatibilidade. Não infere sentimentos da outra pessoa.",
+    en: "Comparison of options chosen in the same situations. Matching answers do not guarantee a healthy relationship; differences do not imply incompatibility. It does not infer your partner’s feelings.",
+    es: "Comparación de alternativas elegidas en las mismas situaciones. Coincidir no garantiza una relación sana; diferir no implica incompatibilidad. No infiere sentimientos de la otra persona.",
+    fr: "Comparaison des choix dans les mêmes situations. Des réponses identiques ne garantissent pas une relation saine ; des différences ne signifient pas une incompatibilité. Aucun sentiment de l’autre n’est déduit.",
+  }[locale];
+  const explanation = comparison.instrumentVersion === "v2.0.0" ? choiceCaveat : t.explanation;
   return {
     bandLabel: t.title,
     executiveSummary: `${t.overall}: ${comparison.overallAlignmentPercentage}/100. ${t.summary}`,
-    comparativeBenchmark: { cohort: t.source, description: t.explanation },
+    comparativeBenchmark: { cohort: t.source, description: explanation },
     sections: [
       {
         id: "bilateral-overall",
         title: t.overall,
         summary: `${comparison.overallAlignmentPercentage}/100`,
-        paragraphs: [t.explanation],
+        paragraphs: [explanation],
         keyTakeaways: [],
         actionItems: [],
       },
@@ -91,7 +98,7 @@ export function buildCoupleReport(
         id: `bilateral-${key.toLowerCase()}`,
         title: getDimensionLabel(key, locale),
         summary: `${value}/100. ${value >= 70 ? t.similar : t.different}`,
-        paragraphs: [t.explanation],
+        paragraphs: [explanation],
         keyTakeaways: [],
         actionItems: [t.action],
       })),
