@@ -12,7 +12,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const { id } = await params;
     const { cueId } = await request.json();
-    if (!/^MEMORY_0[123]$/.test(cueId))
+    if (typeof cueId !== "string" || !/^MEMORY_\d{2}$/.test(cueId))
       return Response.json({ error: "Invalid cue" }, { status: 400 });
     const db = createSupabaseSecretClient();
     const { data: session } = await db

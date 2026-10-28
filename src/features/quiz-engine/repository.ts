@@ -69,6 +69,8 @@ import { getSessionQuestions } from "./session-service";
 import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
 import { attachMemoryCues, distributeMemoryItems } from "./delayed-memory";
 import { memoryExercises } from "@/content/quizzes/memory-exercises";
+import { brainRankMemoryPool } from "@/content/quizzes/brainrank-memory";
+import { selectMemoryForAttempt } from "./selection-engine";
 
 export async function getPublicQuiz(
   slug: string,
@@ -243,7 +245,7 @@ export async function getPublicQuiz(
 
   const maxQuestions = ASSESSMENT_SELECTION_CONFIGS[slug]?.totalQuestions ?? 24;
   const ordinary = publicQuestions.filter((q) => !q.memoryRecall).slice(0, maxQuestions);
-  const recall = publicQuestions.filter((q) => q.memoryRecall);
+  const recall = selectMemoryForAttemptIfPresent(publicQuestions.filter((q) => q.memoryRecall));
   const slicedQuestions = recall.length
     ? attachMemoryCues(
         distributeMemoryItems(ordinary, recall, slug === "brainrank" ? "spaced" : "legacy"),
@@ -328,8 +330,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-brainrank-id",
       slug: "brainrank",
       productCode: "BRAINRANK",
-      version: "1.1",
-      scoringVersion: "1.1",
+      version: "1.2",
+      scoringVersion: "1.2",
       totalQuestions: 24,
       questions: withFallbackMemory(questions, locale),
     };
@@ -437,7 +439,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
 }
 
 function withFallbackMemory(questions: PublicQuestion[], locale: Locale): PublicQuestion[] {
-  const recall: PublicQuestion[] = memoryExercises.map((exercise) => ({
+  const exercises = questions.length === 24 ? brainRankMemoryPool : memoryExercises;
+  const recall: PublicQuestion[] = exercises.map((exercise) => ({
     id: exercise.key,
     stableKey: exercise.key,
     position: 0,
@@ -452,9 +455,17 @@ function withFallbackMemory(questions: PublicQuestion[], locale: Locale): Public
     })),
   }));
   return attachMemoryCues(
-    distributeMemoryItems(questions, recall, questions.length === 24 ? "spaced" : "legacy"),
+    distributeMemoryItems(
+      questions,
+      selectMemoryForAttempt(recall, "preview"),
+      questions.length === 24 ? "spaced" : "legacy",
+    ),
   ).map((q, index) => ({
     ...q,
     position: index + 1,
   }));
+}
+
+function selectMemoryForAttemptIfPresent(questions: PublicQuestion[]): PublicQuestion[] {
+  return questions.length ? selectMemoryForAttempt(questions, "preview") : [];
 }

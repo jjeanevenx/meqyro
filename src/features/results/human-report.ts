@@ -190,7 +190,11 @@ export function buildHumanReport(
       id: key.toLowerCase(),
       title: getDimensionLabel(key, locale),
       summary: `${Math.round(value)}/100. ${interpretation}`,
-      paragraphs: guidance ? [guidance.meaning, guidance.watch, explanation] : [explanation],
+      paragraphs: guidance
+        ? [guidance.meaning, guidance.watch, ...(!cognitive ? [explanation] : [])]
+        : cognitive
+          ? []
+          : [explanation],
       keyTakeaways: [interpretation],
       actionItems: [guidance ? guidance.try : cognitive ? t.practice : t.action],
     };
@@ -214,6 +218,32 @@ export function buildHumanReport(
       title: t.memory,
       summary: `${memory.correct}/${memory.total} ${t.correct}.`,
       paragraphs: [
+        {
+          pt:
+            memory.correct === memory.total
+              ? "Você recuperou corretamente os detalhes das três informações, mesmo depois de responder outras perguntas."
+              : memory.correct > 0
+                ? "Você recuperou parte dos detalhes apresentados. Nem todas as informações ficaram disponíveis depois das perguntas intermediárias."
+                : "Nesta tentativa, você não recuperou os detalhes pedidos. Distrações, cansaço e o ritmo do teste podem influenciar esse resultado.",
+          en:
+            memory.correct === memory.total
+              ? "You recalled the details of all three pieces of information correctly after answering other questions."
+              : memory.correct > 0
+                ? "You recalled some of the details. Not all the information was available after the intervening questions."
+                : "In this attempt, you did not recall the details asked for. Distractions, tiredness and the pace of the test can affect this result.",
+          es:
+            memory.correct === memory.total
+              ? "Recordaste correctamente los detalles de las tres informaciones después de responder otras preguntas."
+              : memory.correct > 0
+                ? "Recordaste parte de los detalles. No toda la información estuvo disponible después de las preguntas intermedias."
+                : "En este intento no recordaste los detalles solicitados. Las distracciones, el cansancio y el ritmo pueden influir en el resultado.",
+          fr:
+            memory.correct === memory.total
+              ? "Vous avez retrouvé les détails des trois informations après avoir répondu à d’autres questions."
+              : memory.correct > 0
+                ? "Vous avez retrouvé une partie des détails. Toutes les informations n’étaient pas disponibles après les questions intermédiaires."
+                : "Lors de cette tentative, vous n’avez pas retrouvé les détails demandés. Les distractions, la fatigue et le rythme peuvent influencer ce résultat.",
+        }[locale],
         cognitive ? t.memoryTaskCaveat : t.memoryCaveat,
         ...(typeof memory.situationsPresented === "number"
           ? [t.memoryPresented + ": " + memory.situationsPresented + "."]

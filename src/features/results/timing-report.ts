@@ -62,10 +62,41 @@ export function timingReportSection(
   const c = labels[locale === "en" || locale === "es" || locale === "fr" ? locale : "pt"];
   const seconds = (ms: unknown) =>
     typeof ms === "number" && Number.isFinite(ms) ? `${(ms / 1000).toFixed(1)} s` : "—";
+  const difficultyNames: Record<string, Record<string, string>> = {
+    pt: {
+      EASY: "Fáceis",
+      MEDIUM: "Médias",
+      HARD: "Difíceis",
+      VERY_HARD: "Muito difíceis",
+      UNKNOWN: "Sem classificação",
+    },
+    en: {
+      EASY: "Easy",
+      MEDIUM: "Medium",
+      HARD: "Hard",
+      VERY_HARD: "Very hard",
+      UNKNOWN: "Unclassified",
+    },
+    es: {
+      EASY: "Fáciles",
+      MEDIUM: "Medias",
+      HARD: "Difíciles",
+      VERY_HARD: "Muy difíciles",
+      UNKNOWN: "Sin clasificación",
+    },
+    fr: {
+      EASY: "Faciles",
+      MEDIUM: "Moyennes",
+      HARD: "Difficiles",
+      VERY_HARD: "Très difficiles",
+      UNKNOWN: "Sans classement",
+    },
+  };
+  const names = difficultyNames[locale] ?? difficultyNames.pt;
   const byDifficulty =
     t.averageByDifficultyMs && typeof t.averageByDifficultyMs === "object"
       ? Object.entries(t.averageByDifficultyMs)
-          .map(([key, ms]) => `${key}: ${seconds(ms)}`)
+          .map(([key, ms]) => `${names[key] ?? names.UNKNOWN}: ${seconds(ms)}`)
           .join("; ")
       : "—";
   const memory = t.memory as
@@ -76,7 +107,6 @@ export function timingReportSection(
     summary: `${c[1]}: ${seconds(t.averageResponseTimeMs)}. ${c[2]}: ${t.completedInTimePercent}%. ${c[3]}: ${t.timeouts}.`,
     paragraphs: [
       `${c[4]}: ${t.accuracyPercent}%. ${c[5]}: ${byDifficulty}.`,
-      c[9],
       ...(memory?.total
         ? [
             `${c[6]}: ${memory.correct}/${memory.total}; ${c[1]}: ${seconds(memory.averageResponseTimeMs)}.`,

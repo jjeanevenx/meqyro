@@ -87,8 +87,8 @@ describe("Commercial report regression with a real database and controlled payme
           .eq("session_id", session.id)
           .single();
         expect(result?.score).toMatchObject({
-          quizVersion: "1.1",
-          scoringVersion: "1.1",
+          quizVersion: "1.2",
+          scoringVersion: "1.2",
           memoryRecall: { situationsPresented: 3, total: 3 },
         });
         expect(

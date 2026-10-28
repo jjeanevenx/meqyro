@@ -58,7 +58,9 @@ describe("Persisted memory, payment and downloadable result", () => {
         });
       }
       const resumed = await getActiveSessionByToken(token, slug);
-      expect(resumed?.memorySeen).toEqual(["MEMORY_01", "MEMORY_02", "MEMORY_03"]);
+      expect(resumed?.memorySeen).toEqual(
+        questions.filter((q) => q.memoryRecall).map((q) => q.stableKey),
+      );
       await completeQuizSession({ sessionId: session.id, token });
       const { data: result } = await db
         .from("results")

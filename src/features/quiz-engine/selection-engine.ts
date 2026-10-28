@@ -74,6 +74,18 @@ export function shuffleWithSeed<T>(array: readonly T[], prng: () => number): T[]
   return result;
 }
 
+/** The saved question IDs, rather than a client seed, remain authoritative on resume. */
+export function selectMemoryForAttempt<T extends { stableKey: string }>(
+  pool: readonly T[],
+  seed: string,
+): T[] {
+  if (pool.length < 3 || new Set(pool.map((q) => q.stableKey)).size !== pool.length) {
+    throw new InsufficientQuestionPoolError("Three distinct recall exercises are required");
+  }
+  if (pool.length === 3) return [...pool]; // Preserve the original instruments.
+  return shuffleWithSeed(pool, createPrng(`${seed}:delayed-recall`)).slice(0, 3);
+}
+
 /**
  * Validates candidate eligibility
  */

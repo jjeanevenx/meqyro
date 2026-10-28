@@ -1782,6 +1782,7 @@ select {
 }
 .visual-question {
   display: grid;
+  min-width: 0;
   gap: 28px;
 }
 .visual-stimulus {
@@ -1790,6 +1791,7 @@ select {
 }
 .visual-sequence {
   display: flex;
+  min-width: 0;
   align-items: center;
   justify-content: center;
   gap: 6px;

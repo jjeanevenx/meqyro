@@ -32,6 +32,7 @@ import type { PublicQuestion, PublicOption, QuestionKind } from "./contracts";
 import { isVisualScene, isVisualStimulus } from "./visual-question-schema";
 import {
   selectQuestionsForAttempt,
+  selectMemoryForAttempt,
   type CandidateQuestion,
   type SelectedQuestionItem,
 } from "./selection-engine";
@@ -299,7 +300,7 @@ export async function startQuizSession(
       const selected = memoryCandidates.length
         ? distributeMemoryItems(
             coreSelected,
-            memoryCandidates.map((q) => ({
+            selectMemoryForAttempt(memoryCandidates, input.seed ?? session.id).map((q) => ({
               questionId: q.id,
               stableKey: q.stableKey,
               position: 0,
