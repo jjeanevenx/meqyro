@@ -228,6 +228,7 @@ export type Dictionary = {
   resultView: {
     behavioralPreference: string;
     behavioralCaveat: string;
+    behavioralCoupleCaveat: string;
     freeTitle: string;
     overallScore: string;
     strongestDimension: string;
@@ -371,6 +372,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
     resultView: {
       behavioralPreference: "Preferência mais presente nesta tentativa",
       behavioralCaveat:
+        "Índices descritivos das suas escolhas financeiras nesta tentativa, sem validação clínica. Os valores indicam a presença de cada prioridade nas situações em que ela estava disponível; maior não significa melhor. Empates não definem um perfil único. Não medem riqueza, conhecimento financeiro ou tolerância a investimentos.",
+      behavioralCoupleCaveat:
         "Índices descritivos, sem validação clínica. Maior não significa melhor. No CoupleDNA, o eixo vai de reflexão individual a elaboração conjunta; diferenças não são incompatibilidade. Empates não definem um perfil único.",
       freeTitle: "Resultado Preliminar Gratuito",
       overallScore: "Pontuação Geral",
@@ -552,6 +555,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       freeTitle: "Free Preliminary Result",
       behavioralPreference: "Most present preference in this attempt",
       behavioralCaveat:
+        "Descriptive indices of your financial choices in this attempt, without clinical validation. Values indicate how often each priority was chosen when available; higher does not mean better. Ties do not define a single profile. They do not measure wealth, financial knowledge, or investment risk tolerance.",
+      behavioralCoupleCaveat:
         "Descriptive indices without clinical validation. Higher does not mean better. In CoupleDNA, the axis runs from individual reflection to joint discussion; differences do not imply incompatibility. Ties do not define a single profile.",
       overallScore: "Overall Score",
       strongestDimension: "Highlighted Dimension",
@@ -733,6 +738,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Puntuación General",
       behavioralPreference: "Preferencia más presente en este intento",
       behavioralCaveat:
+        "Índices descriptivos de tus elecciones financieras en este intento, sin validación clínica. Los valores indican la presencia de cada prioridad cuando estaba disponible; un valor mayor no significa mejor. Los empates no definen un perfil único. No miden riqueza, conocimientos financieros ni tolerancia al riesgo de inversión.",
+      behavioralCoupleCaveat:
         "Índices descriptivos sin validación clínica. Un valor mayor no significa mejor. En CoupleDNA, el eje va de reflexión individual a elaboración conjunta; las diferencias no implican incompatibilidad. Los empates no definen un perfil único.",
       strongestDimension: "Dimensión Destacada",
       allDimensions: "Mapeo de Dimensiones",
@@ -912,6 +919,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       freeTitle: "Résultat Préliminaire Gratuit",
       behavioralPreference: "Préférence la plus présente dans cette tentative",
       behavioralCaveat:
+        "Indices descriptifs de vos choix financiers pour cette tentative, sans validation clinique. Les valeurs indiquent la présence de chaque priorité lorsqu’elle était disponible ; plus élevé ne signifie pas meilleur. Une égalité ne définit pas un profil unique. Ils ne mesurent ni richesse, ni connaissances financières, ni tolérance au risque d’investissement.",
+      behavioralCoupleCaveat:
         "Indices descriptifs sans validation clinique. Plus élevé ne signifie pas meilleur. Pour CoupleDNA, l’axe va de la réflexion individuelle à l’élaboration commune ; les différences ne signifient pas une incompatibilité. Une égalité ne définit pas un profil unique.",
       overallScore: "Score Global",
       strongestDimension: "Dimension Principale",

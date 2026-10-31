@@ -262,7 +262,11 @@ export function ResultView({
       ) : null}
 
       {behavioral ? (
-        <p className="text-sm text-stone-600">{dict.resultView.behavioralCaveat}</p>
+        <p className="text-sm text-stone-600">
+          {summary.quizSlug === "coupledna"
+            ? dict.resultView.behavioralCoupleCaveat
+            : dict.resultView.behavioralCaveat}
+        </p>
       ) : null}
       {/* 5. Dimension Breakdown */}
       {summary.dimensionScores && Object.keys(summary.dimensionScores).length > 0 ? (
