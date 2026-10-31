@@ -173,6 +173,7 @@ export type Dictionary = {
     menu: string;
     primary: string;
     home: string;
+    skipToContent: string;
     discover: string;
     about: string;
     language: string;
@@ -305,6 +306,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Navegação principal",
       home: "Página inicial Meqyro",
+      skipToContent: "Pular para o conteúdo",
       discover: "Descobrir",
       about: "Como funciona",
       language: "Idioma",
@@ -486,6 +488,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Main navigation",
       home: "Meqyro home",
+      skipToContent: "Skip to content",
       about: "How it works",
       language: "Language",
       market: "Market",
@@ -666,6 +669,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menú",
       primary: "Navegación principal",
       home: "Página de inicio Meqyro",
+      skipToContent: "Saltar al contenido",
       about: "Cómo funciona",
       language: "Idioma",
       market: "Mercado",
@@ -846,6 +850,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Navigation principale",
       home: "Accueil Meqyro",
+      skipToContent: "Aller au contenu",
       about: "Comment ça marche",
       language: "Langue",
       market: "Marché",

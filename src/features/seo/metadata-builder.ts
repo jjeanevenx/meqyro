@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import { type Locale, locales } from "@/lib/i18n/config";
 
+const OPEN_GRAPH_LOCALES: Record<Locale, string> = {
+  pt: "pt_BR",
+  en: "en_US",
+  es: "es_ES",
+  fr: "fr_FR",
+};
+
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
 
 export interface BuildMetadataInput {
@@ -57,13 +64,15 @@ export function buildPageMetadata({
       description,
       url: canonicalUrl,
       siteName: "Meqyro",
-      locale:
-        locale === "pt" ? "pt_BR" : locale === "en" ? "en_US" : locale === "es" ? "es_ES" : "fr_FR",
+      locale: OPEN_GRAPH_LOCALES[locale],
+      alternateLocale: locales
+        .filter((loc) => loc !== locale)
+        .map((loc) => OPEN_GRAPH_LOCALES[loc]),
       type: "website",
       images: [
         {
           url: `${SITE_URL}/images/brainrank-cognitive-field.png`,
-          alt: "Meqyro — Avaliações e Insights Editoriais",
+          alt: `${title} · Meqyro`,
         },
       ],
     },

@@ -906,6 +906,28 @@ select {
 }
 
 /* Home commercial landing */
+.home-skip-link {
+  position: fixed;
+  top: 12px;
+  left: var(--page-padding);
+  z-index: 1000;
+  padding: 14px 20px;
+  background: var(--surface);
+  color: var(--blue);
+  font-weight: 800;
+  box-shadow: var(--shadow);
+  transform: translateY(calc(-100% - 24px));
+}
+.home-skip-link:focus {
+  transform: translateY(0);
+}
+.conversion-hero__pricing-note {
+  max-width: 560px;
+  margin: 16px 0 0;
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--muted);
+}
 .conversion-hero {
   width: calc(100% - var(--page-padding) * 2);
   max-width: min(1280px, calc(var(--page-max-width) - var(--page-padding) * 2));

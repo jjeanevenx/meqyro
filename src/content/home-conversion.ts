@@ -1,6 +1,9 @@
 import type { Locale } from "@/lib/i18n/config";
 
 type HomeConversionCopy = {
+  seoTitle: string;
+  seoDescription: string;
+  pricingNote: string;
   eyebrow: string;
   title: string;
   accent: string;
@@ -30,10 +33,14 @@ type HomeConversionCopy = {
 
 export const homeConversionCopy: Record<Locale, HomeConversionCopy> = {
   pt: {
+    seoTitle: "Testes de autoconhecimento e raciocínio",
+    seoDescription:
+      "Explore seu raciocínio, hábitos financeiros e relacionamento com os testes do Meqyro. Resultado inicial grátis, sem cadastro. Relatório completo opcional e pago.",
+    pricingNote: "Resultado inicial grátis. Relatório completo opcional e pago.",
     eyebrow: "Menos achismo. Mais autoconhecimento.",
     title: "Entenda como você pensa.",
     accent: "Descubra seu próximo passo.",
-    body: "O Meqyro reúne quizzes para explorar seu raciocínio, personalidade e preferências. Comece pelo BrainRank e veja seu resultado inicial grátis ao concluir.",
+    body: "O Meqyro reúne testes de autoconhecimento para explorar seu raciocínio, hábitos financeiros e relacionamento. Comece pelo BrainRank e veja seu resultado inicial grátis ao concluir.",
     cta: "Começar meu desafio grátis",
     secondary: "Escolher outra experiência",
     trust: ["7–10 minutos", "Resultado inicial grátis", "Sem cadastro obrigatório"],
@@ -72,10 +79,14 @@ export const homeConversionCopy: Record<Locale, HomeConversionCopy> = {
     terms: "Termos de uso",
   },
   en: {
+    seoTitle: "Self-discovery and reasoning tests",
+    seoDescription:
+      "Explore your reasoning, money habits, and relationship with Meqyro tests. Free initial result, no account required. Optional paid report for deeper insights.",
+    pricingNote: "Free initial result. Full report is optional and paid.",
     eyebrow: "Less guesswork. More self-knowledge.",
     title: "Understand how you think.",
     accent: "Discover your next step.",
-    body: "Meqyro brings together quizzes to explore your reasoning, personality, and preferences. Start with BrainRank and see your free initial result when you finish.",
+    body: "Meqyro brings together self-discovery tests to explore your reasoning, money habits, and relationship. Start with BrainRank and see your free initial result when you finish.",
     cta: "Start my free challenge",
     secondary: "Choose another experience",
     trust: ["7–10 minutes", "Free initial result", "No account required"],
@@ -114,10 +125,14 @@ export const homeConversionCopy: Record<Locale, HomeConversionCopy> = {
     terms: "Terms of use",
   },
   es: {
+    seoTitle: "Tests de autoconocimiento y razonamiento",
+    seoDescription:
+      "Explora tu razonamiento, hábitos financieros y relación con los tests de Meqyro. Resultado inicial gratis, sin cuenta. Informe completo opcional y de pago.",
+    pricingNote: "Resultado inicial gratis. Informe completo opcional y de pago.",
     eyebrow: "Menos suposiciones. Más autoconocimiento.",
     title: "Entiende cómo piensas.",
     accent: "Descubre tu próximo paso.",
-    body: "Meqyro reúne quizzes para explorar tu razonamiento, personalidad y preferencias. Empieza con BrainRank y ve tu resultado inicial gratis al terminar.",
+    body: "Meqyro reúne tests de autoconocimiento para explorar tu razonamiento, hábitos financieros y relación. Empieza con BrainRank y descubre tu resultado inicial gratis al terminar.",
     cta: "Comenzar mi reto gratis",
     secondary: "Elegir otra experiencia",
     trust: ["7–10 minutos", "Resultado inicial gratis", "Sin registro obligatorio"],
@@ -157,10 +172,14 @@ export const homeConversionCopy: Record<Locale, HomeConversionCopy> = {
     terms: "Términos de uso",
   },
   fr: {
+    seoTitle: "Tests de connaissance de soi et de raisonnement",
+    seoDescription:
+      "Explorez votre raisonnement, vos habitudes financières et votre couple avec Meqyro. Premier résultat gratuit, sans compte. Rapport complet facultatif et payant.",
+    pricingNote: "Premier résultat gratuit. Rapport complet facultatif et payant.",
     eyebrow: "Moins de suppositions. Plus de connaissance de soi.",
     title: "Comprenez comment vous pensez.",
     accent: "Découvrez votre prochaine étape.",
-    body: "Meqyro propose des questionnaires pour explorer votre raisonnement, votre personnalité et vos préférences. Commencez par BrainRank et découvrez votre premier résultat gratuit à la fin.",
+    body: "Meqyro propose des tests de connaissance de soi pour explorer votre raisonnement, vos habitudes financières et votre couple. Commencez par BrainRank et découvrez votre premier résultat gratuit à la fin.",
     cta: "Commencer mon défi gratuit",
     secondary: "Choisir une autre expérience",
     trust: ["7–10 minutes", "Premier résultat gratuit", "Sans inscription obligatoire"],
