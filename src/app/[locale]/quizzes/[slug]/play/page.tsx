@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { attemptChoiceCopy } from "@/lib/i18n/dictionaries";
 import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
@@ -8,10 +10,7 @@ import { getPublicQuiz } from "@/features/quiz-engine/repository";
 import { resolveMarketContext } from "@/lib/market/market-context";
 import { QuizRunner } from "@/components/patterns/quiz-runner";
 import type { ActiveSession, PublicQuiz } from "@/features/quiz-engine/contracts";
-import {
-  getActiveSessionByToken,
-  getSessionQuestions,
-} from "@/features/quiz-engine/session-service";
+import { getActiveSession, getActiveSessionByToken } from "@/features/quiz-engine/session-service";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 
 export const dynamic = "force-dynamic";
@@ -43,7 +42,14 @@ export function generateStaticParams() {
 
 type PlayPageProps = {
   params: Promise<{ locale: string; slug: string }>;
-  searchParams?: Promise<{ session?: string; recover?: string; invite?: string; ref?: string }>;
+  searchParams?: Promise<{
+    session?: string;
+    recover?: string;
+    invite?: string;
+    ref?: string;
+    new?: string;
+    resume?: string;
+  }>;
 };
 
 export async function generateMetadata({ params }: PlayPageProps): Promise<Metadata> {
@@ -95,12 +101,14 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
   let initialSession: ActiveSession | null = null;
 
   // 2. Resume active attempt from cookie (handles reload/F5, back, reopen)
-  if (!initialSession) {
+  if (!query.invite) {
     const sessionCookie = cookieStore.get(anonymousSessionCookie)?.value;
     if (sessionCookie) {
       try {
-        const active = await getActiveSessionByToken(sessionCookie, slug);
-        if (active) {
+        const active = query.session
+          ? await getActiveSession(query.session, sessionCookie)
+          : await getActiveSessionByToken(sessionCookie, slug);
+        if (active?.quizSlug === slug) {
           initialSession = active;
         }
       } catch {
@@ -109,25 +117,52 @@ export default async function QuizPlayPage({ params, searchParams }: PlayPagePro
     }
   }
 
-  // 3. Load questions strictly belonging to this attempt (or catalog fallback)
-  let attemptQuestions = quiz.questions;
-  if (initialSession) {
-    const sessionQs = await getSessionQuestions(initialSession.id, locale as Locale);
-    if (sessionQs.length > 0) {
-      attemptQuestions = sessionQs;
-    }
+  if (initialSession && query.new !== "1" && query.resume !== "1") {
+    const copy = attemptChoiceCopy[locale];
+    const resumeQuery = new URLSearchParams({ resume: "1", session: initialSession.id });
+    const newQuery = new URLSearchParams({ new: "1" });
+    if (query.ref) newQuery.set("ref", query.ref);
+    return (
+      <main className="quiz-landing-container">
+        <section className="quiz-landing-card" aria-labelledby="attempt-title">
+          <h1 id="attempt-title">{copy.title}</h1>
+          <p>{copy.body}</p>
+          <p>
+            {copy.versions
+              .replace("{old}", initialSession.quizVersion)
+              .replace("{current}", quiz.version)}
+          </p>
+          <div className="quiz-landing-action">
+            <Link
+              className="button button--primary"
+              href={`/${locale}/quizzes/${slug}/play?${resumeQuery}`}
+            >
+              {copy.resume}
+            </Link>
+            <Link
+              className="button button--secondary"
+              href={`/${locale}/quizzes/${slug}/play?${newQuery}`}
+            >
+              {copy.start}
+            </Link>
+          </div>
+          <p>{copy.note}</p>
+        </section>
+      </main>
+    );
   }
 
-  const runnerQuiz: PublicQuiz = {
-    ...quiz,
-    totalQuestions: attemptQuestions.length,
-    questions: attemptQuestions,
-  };
+  if (query.new === "1") initialSession = null;
+  const runnerQuiz: PublicQuiz | null = initialSession
+    ? await getPublicQuiz(slug, locale, initialSession.id)
+    : quiz;
+  if (!runnerQuiz) notFound();
 
   return (
     <QuizRunner
       quiz={runnerQuiz}
       initialSession={initialSession}
+      forceNew={query.new === "1" && !query.invite}
       locale={locale}
       market={market.market}
       initialInviteCode={query.invite}

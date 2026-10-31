@@ -25,6 +25,7 @@ export type QuestionState = "UNANSWERED" | "ANSWERED" | "SAVING" | "ERROR" | "RE
 type QuizRunnerProps = {
   quiz: PublicQuiz;
   initialSession?: ActiveSession | null;
+  forceNew?: boolean;
   locale: string;
   market: string;
   initialInviteCode?: string;
@@ -34,6 +35,7 @@ type QuizRunnerProps = {
 export function QuizRunner({
   quiz,
   initialSession = null,
+  forceNew = false,
   locale,
   market,
   initialInviteCode,
@@ -113,6 +115,7 @@ export function QuizRunner({
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             quizSlug: quiz.slug,
+            forceNew,
             locale,
             market,
             referralCode: initialReferralCode,
@@ -135,6 +138,13 @@ export function QuizRunner({
         const activeSession = data.session;
         if (isMounted) {
           setSession(activeSession);
+          if (forceNew) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete("new");
+            url.searchParams.set("resume", "1");
+            url.searchParams.set("session", activeSession.id);
+            window.history.replaceState(null, "", url);
+          }
           const currentQs =
             data.questions && data.questions.length > 0 ? data.questions : questions;
           if (data.questions && data.questions.length > 0) {
@@ -164,6 +174,7 @@ export function QuizRunner({
     };
   }, [
     quiz.slug,
+    forceNew,
     locale,
     market,
     session,

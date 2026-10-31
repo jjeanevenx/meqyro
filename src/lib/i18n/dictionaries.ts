@@ -1025,3 +1025,78 @@ export const dictionaries: Record<Locale, Dictionary> = {
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale] ?? dictionaries.pt;
 }
+
+export const attemptChoiceCopy: Record<
+  Locale,
+  {
+    title: string;
+    body: string;
+    versions: string;
+    resume: string;
+    start: string;
+    note: string;
+  }
+> = {
+  pt: {
+    title: "Você tem uma avaliação em andamento",
+    body: "Continue de onde parou ou comece uma nova avaliação com o conteúdo atual.",
+    versions: "Tentativa salva: {old}. Versão atual: {current}.",
+    resume: "Continuar tentativa salva",
+    start: "Começar nova avaliação",
+    note: "A tentativa anterior não será apagada. Para voltar a ela neste navegador, salve o endereço de “Continuar tentativa salva”. Convites existentes continuam vinculados à tentativa original.",
+  },
+  en: {
+    title: "You have an assessment in progress",
+    body: "Continue where you left off or start a new assessment with the current content.",
+    versions: "Saved attempt: {old}. Current version: {current}.",
+    resume: "Continue saved attempt",
+    start: "Start a new assessment",
+    note: "Your previous attempt is kept. To return to it in this browser, save the Continue saved attempt link. Existing invitations remain linked to the original attempt.",
+  },
+  es: {
+    title: "Tienes una evaluación en curso",
+    body: "Continúa donde lo dejaste o comienza una nueva evaluación con el contenido actual.",
+    versions: "Intento guardado: {old}. Versión actual: {current}.",
+    resume: "Continuar intento guardado",
+    start: "Comenzar una evaluación nueva",
+    note: "El intento anterior se conserva. Para volver a él en este navegador, guarda el enlace Continuar intento guardado. Las invitaciones existentes siguen vinculadas al intento original.",
+  },
+  fr: {
+    title: "Vous avez une évaluation en cours",
+    body: "Reprenez votre progression ou commencez une nouvelle évaluation avec le contenu actuel.",
+    versions: "Tentative enregistrée : {old}. Version actuelle : {current}.",
+    resume: "Reprendre la tentative",
+    start: "Commencer une nouvelle évaluation",
+    note: "La tentative précédente est conservée. Pour y revenir dans ce navigateur, gardez le lien Reprendre la tentative. Les invitations existantes restent liées à la tentative initiale.",
+  },
+};
+
+export const reportExampleCopy: Record<
+  Locale,
+  { title: string; note: string; link: string; action: string }
+> = {
+  pt: {
+    title: "Exemplo fictício de relatório",
+    note: "Demonstração completa com respostas inventadas. Não é o seu resultado nem uma comparação de casal. Seu relatório será gerado com as suas próprias respostas.",
+    link: "Ver exemplo completo de relatório",
+    action: "Sugestões para experimentar",
+  },
+  en: {
+    title: "Fictional report example",
+    note: "A complete demonstration with invented answers. This is not your result or a couple comparison. Your report will use your own answers.",
+    link: "View a complete report example",
+    action: "Suggestions to try",
+  },
+  es: {
+    title: "Ejemplo ficticio de informe",
+    note: "Demostración completa con respuestas inventadas. No es tu resultado ni una comparación de pareja. Tu informe usará tus propias respuestas.",
+    link: "Ver ejemplo completo de informe",
+    action: "Sugerencias para probar",
+  },
+  fr: {
+    title: "Exemple fictif de rapport",
+    note: "Démonstration complète avec des réponses inventées. Ce n’est ni votre résultat ni une comparaison de couple. Votre rapport utilisera vos propres réponses.",
+    link: "Voir un exemple complet de rapport",
+    action: "Suggestions à essayer",
+  },
+};

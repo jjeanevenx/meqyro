@@ -3688,3 +3688,73 @@ select {
 .quiz-question-card--scenario .quiz-question-title:focus {
   outline: none;
 }
+/* Assessment offer uses the existing landing layout and native disclosure. */
+.assessment-offer,
+.assessment-example {
+  margin-block: 1.5rem;
+  padding: clamp(1rem, 4vw, 1.5rem);
+  border: 1px solid #dce1ec;
+  border-radius: 16px;
+  text-align: left;
+  background: #f7f8fc;
+  color: #172340;
+  overflow-wrap: anywhere;
+}
+
+.assessment-offer h2,
+.assessment-example h2 {
+  font-size: 1.05rem;
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+}
+
+.assessment-offer p,
+.assessment-example p {
+  font-size: 0.95rem;
+  line-height: 1.65;
+  margin-block: 0.75rem;
+}
+
+.assessment-example summary {
+  cursor: pointer;
+  font-weight: 650;
+  padding-block: 0.5rem;
+  min-height: 44px;
+}
+
+.assessment-example summary:focus-visible {
+  outline: 3px solid #284bce;
+  outline-offset: 4px;
+  border-radius: 4px;
+}
+
+.assessment-example ul {
+  padding-inline-start: 1.25rem;
+  margin-bottom: 0;
+}
+
+.assessment-example li {
+  padding-block: 0.4rem;
+  line-height: 1.6;
+}
+
+.report-example {
+  text-align: left;
+  overflow-wrap: anywhere;
+}
+.report-example section {
+  margin-block: 2rem;
+  padding-block-start: 1rem;
+  border-top: 1px solid #dce1ec;
+}
+.report-example p,
+.report-example li {
+  line-height: 1.7;
+}
+.report-example ul {
+  padding-inline-start: 1.25rem;
+}
+.quiz-landing-action > .button {
+  max-width: 100%;
+  white-space: normal;
+}
