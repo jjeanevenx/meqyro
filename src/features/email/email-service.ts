@@ -2,6 +2,8 @@ import "server-only";
 
 import nodemailer from "nodemailer";
 
+import { renderResultDeliveryEmail } from "@/features/email/result-delivery-template";
+
 import { logEvent } from "@/lib/observability/logger";
 import { getSiteUrl } from "@/lib/config/env";
 import type {
@@ -96,23 +98,13 @@ export async function sendResultDeliveryEmail(
     fr: "Vos résultats Meqyro sont enregistrés",
   };
 
-  const bodyTexts: Record<string, string> = {
-    pt: `Olá,\n\nSeu resultado para o teste está salvo. Você pode acessar sua pontuação e continuar a qualquer momento pelo link seguro abaixo:\n\n${recoveryUrl}${
-      unsubscribeUrl ? `\n\nCaso não queira mais receber comunicados: ${unsubscribeUrl}` : ""
-    }`,
-    en: `Hello,\n\nYour quiz results are securely saved. Access your scores and resume at any time using the link below:\n\n${recoveryUrl}${
-      unsubscribeUrl ? `\n\nTo unsubscribe from marketing: ${unsubscribeUrl}` : ""
-    }`,
-    es: `Hola,\n\nTu resultado ha sido guardado. Puedes acceder a tus puntuaciones en cualquier momento mediante el siguiente enlace:\n\n${recoveryUrl}${
-      unsubscribeUrl ? `\n\nPara cancelar la suscripción: ${unsubscribeUrl}` : ""
-    }`,
-    fr: `Bonjour,\n\nVos résultats sont enregistrés. Accédez à vos scores à tout moment via le lien ci-dessous :\n\n${recoveryUrl}${
-      unsubscribeUrl ? `\n\nPour vous désabonner : ${unsubscribeUrl}` : ""
-    }`,
-  };
-
   const subject = subjects[input.locale] ?? subjects.pt;
-  const text = bodyTexts[input.locale] ?? bodyTexts.pt;
+  const { text, html } = renderResultDeliveryEmail({
+    locale: input.locale,
+    quizSlug: input.quizSlug,
+    recoveryUrl,
+    unsubscribeUrl,
+  });
 
   logEvent("info", "email_result_delivery_dispatch", {
     recipientMasked: maskEmailForLog(input.recipientEmail),
@@ -120,7 +112,7 @@ export async function sendResultDeliveryEmail(
     quizSlug: input.quizSlug,
   });
 
-  return sendViaSmtp({ to: input.recipientEmail, subject, text });
+  return sendViaSmtp({ to: input.recipientEmail, subject, text, html });
 }
 
 export async function sendSessionRecoveryEmail(
