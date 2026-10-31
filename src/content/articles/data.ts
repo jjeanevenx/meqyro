@@ -1,4 +1,7 @@
 import type { Locale } from "@/lib/i18n/config";
+import { locales } from "@/lib/i18n/config";
+import { PORTUGUESE_ARTICLES } from "@/content/articles/pt";
+import type { BlogArticle } from "@/content/articles/types";
 
 export interface ArticleContent {
   slug: string;
@@ -13,6 +16,25 @@ export interface ArticleContent {
     paragraphs: Record<Locale, string[]>;
   }[];
   keyTakeaways: Record<Locale, string[]>;
+}
+
+export function getArticles(locale: Locale): BlogArticle[] {
+  if (locale === "pt") return PORTUGUESE_ARTICLES;
+  return ARTICLES.map((article) => ({
+    ...article,
+    title: article.title[locale],
+    subtitle: article.subtitle[locale],
+    excerpt: article.excerpt[locale],
+    sections: article.sections.map((section) => ({
+      heading: section.heading[locale],
+      paragraphs: section.paragraphs[locale],
+    })),
+    keyTakeaways: article.keyTakeaways[locale],
+  }));
+}
+
+export function getArticleLanguages(slug: string): Locale[] {
+  return locales.filter((locale) => getArticles(locale).some((article) => article.slug === slug));
 }
 
 export const ARTICLES: ArticleContent[] = [

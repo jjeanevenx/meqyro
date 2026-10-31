@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { locales } from "@/lib/i18n/config";
 import { commercialQuizSlugs } from "@/content/commercial-catalog";
+import { getArticles, getArticleLanguages } from "@/content/articles/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
@@ -10,7 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/discover",
     ...commercialQuizSlugs.map((slug) => `/quizzes/${slug}`),
     "/articles",
-    "/articles/how-logical-reasoning-works",
     "/contact",
     "/cookies",
     "/legal/privacy",
@@ -35,6 +35,26 @@ export default function sitemap(): MetadataRoute.Sitemap {
         priority: path === "" ? 1.0 : path.startsWith("/quizzes") ? 0.8 : 0.5,
         alternates: {
           languages: languageAlternates,
+        },
+      });
+    }
+  }
+
+  for (const locale of locales) {
+    for (const article of getArticles(locale)) {
+      const path = `/articles/${article.slug}`;
+      const availableLanguages = getArticleLanguages(article.slug);
+      const defaultLanguage = availableLanguages.includes("en") ? "en" : availableLanguages[0];
+      entries.push({
+        url: `${baseUrl}/${locale}${path}`,
+        lastModified: new Date(article.modifiedAt ?? article.publishedAt),
+        changeFrequency: "monthly",
+        priority: 0.6,
+        alternates: {
+          languages: Object.fromEntries([
+            ...availableLanguages.map((language) => [language, `${baseUrl}/${language}${path}`]),
+            ["x-default", `${baseUrl}/${defaultLanguage}${path}`],
+          ]),
         },
       });
     }
