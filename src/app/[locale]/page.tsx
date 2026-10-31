@@ -416,10 +416,11 @@ export default async function LocalizedHome({ params }: PageProps) {
           MEQ<span>Y</span>RO
         </Link>
         <p>© {new Date().getFullYear()} Meqyro</p>
-        <div className="conversion-footer-links">
+        <nav className="conversion-footer-links" aria-label={dictionary.nav.primary}>
+          <Link href={`/${locale}/articles`}>{dictionary.nav.articles}</Link>
           <Link href={`/${locale}/privacy`}>{conversion.privacy}</Link>
           <Link href={`/${locale}/terms`}>{conversion.terms}</Link>
-        </div>
+        </nav>
       </footer>
     </main>
   );

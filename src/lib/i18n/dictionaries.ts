@@ -311,7 +311,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       language: "Idioma",
       market: "Mercado",
       catalog: "Catálogo",
-      articles: "Artigos",
+      articles: "Blog",
     },
     hero: {
       title: "Descubra mais sobre você.",
@@ -493,7 +493,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       language: "Language",
       market: "Market",
       catalog: "Catalog",
-      articles: "Articles",
+      articles: "Blog",
     },
     hero: {
       title: "Discover more about you.",
@@ -675,7 +675,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       language: "Idioma",
       market: "Mercado",
       catalog: "Catálogo",
-      articles: "Artículos",
+      articles: "Blog",
     },
     hero: {
       title: "Descubre más sobre ti.",
@@ -857,7 +857,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       language: "Langue",
       market: "Marché",
       catalog: "Catalogue",
-      articles: "Articles",
+      articles: "Blog",
     },
     hero: {
       title: "Découvrez-en davantage sur vous.",
