@@ -24,25 +24,25 @@ export function MemoryObservation({
   }, []);
   const copy = {
     pt: {
-      title: "Informação",
+      title: "Leia a informação a seguir",
       next: "Continuar",
       loading: "Continuando…",
       error: "Não foi possível continuar. Tente novamente.",
     },
     en: {
-      title: "Information",
+      title: "Read the following information",
       next: "Continue",
       loading: "Continuing…",
       error: "Unable to continue. Please try again.",
     },
     es: {
-      title: "Información",
+      title: "Lee la siguiente información",
       next: "Continuar",
       loading: "Continuando…",
       error: "No se pudo continuar. Inténtalo de nuevo.",
     },
     fr: {
-      title: "Information",
+      title: "Lisez les informations suivantes",
       next: "Continuer",
       loading: "Suite…",
       error: "Impossible de continuer. Réessayez.",
