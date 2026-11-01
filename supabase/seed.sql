@@ -5087,6 +5087,3030 @@ begin
   values (v_option_id, 'fr', '720')
   on conflict (option_id, locale) do update set label = excluded.label;
 
+  -- Question 61: BR_EXT_PATTERN_RECOGNITION_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_01', 61, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"4 · 9 · 14 · 19 · ?","en":"4 · 9 · 14 · 19 · ?","es":"4 · 9 · 14 · 19 · ?","fr":"4 · 9 · 14 · 19 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Continue a sequência de números.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Continue the number sequence.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Continúa la secuencia numérica.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Continuez la suite de nombres.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '29')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '29')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '29')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '29')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 62: BR_EXT_PATTERN_RECOGNITION_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_02', 62, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"3 · 6 · 5 · 10 · 9 · ?","en":"3 · 6 · 5 · 10 · 9 · ?","es":"3 · 6 · 5 · 10 · 9 · ?","fr":"3 · 6 · 5 · 10 · 9 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número completa a regra alternada?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number completes the alternating rule?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número completa la regla alterna?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre complète la règle alternée ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 63: BR_EXT_PATTERN_RECOGNITION_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_03', 63, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"1 · 4 · 10 · 19 · 31 · ?","en":"1 · 4 · 10 · 19 · 31 · ?","es":"1 · 4 · 10 · 19 · 31 · ?","fr":"1 · 4 · 10 · 19 · 31 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número vem a seguir nesta sequência?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number comes next in this sequence?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número sigue en esta secuencia?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre suit dans cette suite ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '43')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '43')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '43')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '43')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 64: BR_EXT_PATTERN_RECOGNITION_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_04', 64, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"50 · 47 · 41 · 32 · ?","en":"50 · 47 · 41 · 32 · ?","es":"50 · 47 · 41 · 32 · ?","fr":"50 · 47 · 41 · 32 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Complete a sequência usando as diferenças.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Complete the sequence using the differences.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Completa la secuencia usando las diferencias.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Complétez la suite à partir des différences.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '23')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '21')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '21')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '21')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '21')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 65: BR_EXT_PATTERN_RECOGNITION_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_05', 65, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"2 · 5 · 11 · 23 · ?","en":"2 · 5 · 11 · 23 · ?","es":"2 · 5 · 11 · 23 · ?","fr":"2 · 5 · 11 · 23 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número mantém a mesma transformação?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number preserves the same transformation?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número mantiene la misma transformación?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre conserve la même transformation ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '47')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '47')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '47')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '47')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '46')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '49')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 66: BR_EXT_PATTERN_RECOGNITION_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PATTERN_RECOGNITION_06', 66, 'SINGLE_CHOICE', '{"dimension":"PATTERN_RECOGNITION","difficulty":"HARD"}'::jsonb, '{"clue":{"pt":"5 · 7 · 11 · 19 · 35 · ?","en":"5 · 7 · 11 · 19 · 35 · ?","es":"5 · 7 · 11 · 19 · 35 · ?","fr":"5 · 7 · 11 · 19 · 35 · ?"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'As diferenças sucessivas dobram. Qual é o próximo número?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Successive differences double. What is the next number?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Las diferencias sucesivas se duplican. ¿Cuál es el siguiente número?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Les différences successives doublent. Quel est le nombre suivant ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '51')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '51')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '51')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '51')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '65')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '65')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '65')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '65')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '71')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '71')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '71')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '71')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '67')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '67')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '67')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '67')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 67: BR_EXT_LOGICAL_REASONING_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_01', 67, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Todos os bilhetes azuis têm selo. O bilhete X é azul. O que é certo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'All blue tickets have a stamp. Ticket X is blue. What is certain?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Todos los billetes azules tienen sello. El billete X es azul. ¿Qué es seguro?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Tous les billets bleus ont un timbre. Le billet X est bleu. Que sait-on ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'X tem selo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'X has a stamp.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'X tiene sello.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'X a un timbre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'X não tem selo.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'X has no stamp.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'X no tiene sello.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'X n’a pas de timbre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Só X é azul.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Only X is blue.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Solo X es azul.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Seul X est bleu.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todo selo é azul.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Every stamp is blue.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todo sello es azul.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Chaque timbre est bleu.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 68: BR_EXT_LOGICAL_REASONING_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_02', 68, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se o alarme toca, a luz acende. A luz está apagada. Qual conclusão segue?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If the alarm rings, the light turns on. The light is off. What follows?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si suena la alarma, se enciende la luz. La luz está apagada. ¿Qué se deduce?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Si l’alarme sonne, la lumière s’allume. Elle est éteinte. Que déduire ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'O alarme toca.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'The alarm is ringing.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La alarma suena.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'L’alarme sonne.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'A luz está acesa.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'The light is on.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La luz está encendida.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La lumière est allumée.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'A luz nunca acende.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'The light never turns on.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La luz nunca se enciende.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'La lumière ne s’allume jamais.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'O alarme não toca.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'The alarm is not ringing.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'La alarma no suena.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'L’alarme ne sonne pas.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 69: BR_EXT_LOGICAL_REASONING_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_03', 69, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Ana chega antes de Bia. Caio chega depois de Bia e antes de Davi. Quem chega em segundo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Ana arrives before Bia. Caio arrives after Bia and before Davi. Who arrives second?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Ana llega antes de Bia. Caio llega después de Bia y antes de Davi. ¿Quién llega segundo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Ana arrive avant Bia. Caio arrive après Bia et avant Davi. Qui arrive en deuxième ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Caio')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Caio')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Caio')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Caio')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Davi')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Davi')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Davi')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Davi')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Bia')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Bia')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Bia')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Bia')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Ana')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Ana')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ana')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Ana')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 70: BR_EXT_LOGICAL_REASONING_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_04', 70, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Nenhum objeto de vidro é flexível. Alguns objetos da caixa são de vidro. O que é certo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'No glass object is flexible. Some objects in the box are glass. What is certain?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Ningún objeto de vidrio es flexible. Algunos objetos de la caja son de vidrio. ¿Qué es seguro?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Aucun objet en verre n’est souple. Certains objets de la boîte sont en verre. Que sait-on ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todos são de vidro.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'All are glass.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todos son de vidrio.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Tous sont en verre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Alguns objetos da caixa não são flexíveis.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Some objects in the box are not flexible.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Algunos objetos de la caja no son flexibles.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Certains objets de la boîte ne sont pas souples.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Todos são flexíveis.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'All are flexible.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Todos son flexibles.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Tous sont souples.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Nenhum é de vidro.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'None are glass.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ninguno es de vidrio.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Aucun n’est en verre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 71: BR_EXT_LOGICAL_REASONING_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_05', 71, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Exatamente uma das caixas A, B e C está aberta. A está fechada. Se B estivesse aberta, A também estaria. Qual está aberta?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Exactly one of boxes A, B and C is open. A is closed. If B were open, A would be too. Which is open?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Solo una de las cajas A, B y C está abierta. A está cerrada. Si B estuviera abierta, A también. ¿Cuál está abierta?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une seule boîte parmi A, B et C est ouverte. A est fermée. Si B était ouverte, A le serait aussi. Laquelle est ouverte ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'C')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'C')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'C')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'C')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'A')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'A')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'A')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'A')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'B')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Nenhuma')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'None')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Ninguna')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Aucune')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 72: BR_EXT_LOGICAL_REASONING_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_LOGICAL_REASONING_06', 72, 'SINGLE_CHOICE', '{"dimension":"LOGICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Se P ocorre, Q ocorre. Se Q ocorre, R não ocorre. R ocorre. Qual afirmação é necessariamente verdadeira?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'If P occurs, Q occurs. If Q occurs, R does not occur. R occurs. Which statement must be true?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Si ocurre P, ocurre Q. Si ocurre Q, no ocurre R. Ocurre R. ¿Qué afirmación es necesariamente cierta?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Si P se produit, Q se produit. Si Q se produit, R ne se produit pas. R se produit. Quelle affirmation est nécessairement vraie ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'P ocorre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'P occurs.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'P ocurre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'P se produit.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'Q ocorre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'Q occurs.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'Q ocurre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'Q se produit.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'R não ocorre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'R does not occur.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'R no ocurre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'R ne se produit pas.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'P não ocorre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'P does not occur.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'P no ocurre.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'P ne se produit pas.')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 73: BR_EXT_NUMERICAL_REASONING_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_01', 73, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quanto é 15% de 200?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is 15% of 200?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuánto es el 15% de 200?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Combien font 15 % de 200 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 74: BR_EXT_NUMERICAL_REASONING_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_02', 74, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Uma receita para 4 pessoas usa 300 g de arroz. Quanto usa para 6 pessoas na mesma proporção?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A recipe for 4 people uses 300 g of rice. How much for 6 people at the same ratio?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Una receta para 4 personas usa 300 g de arroz. ¿Cuánto usa para 6 en la misma proporción?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une recette pour 4 personnes utilise 300 g de riz. Combien pour 6 à proportion égale ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '350')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '350')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '350')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '350')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '400')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '400')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '400')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '400')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '600')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '600')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '600')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '600')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '450')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '450')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '450')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '450')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 75: BR_EXT_NUMERICAL_REASONING_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_03', 75, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um preço de 80 aumenta 25%. Qual é o novo preço?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A price of 80 increases by 25%. What is the new price?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un precio de 80 sube un 25%. ¿Cuál es el nuevo precio?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un prix de 80 augmente de 25 %. Quel est le nouveau prix ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '105')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '105')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '105')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '105')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '95')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 76: BR_EXT_NUMERICAL_REASONING_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_04', 76, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'A média de 12, 18 e X é 20. Qual é X?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'The mean of 12, 18 and X is 20. What is X?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'La media de 12, 18 y X es 20. ¿Cuánto vale X?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'La moyenne de 12, 18 et X est 20. Que vaut X ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '20')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 77: BR_EXT_NUMERICAL_REASONING_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_05', 77, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um tanque de 72 litros está com 5/8 da capacidade. Quantos litros contém?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A 72-litre tank is 5/8 full. How many litres does it contain?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un depósito de 72 litros está a 5/8 de su capacidad. ¿Cuántos litros contiene?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un réservoir de 72 litres est rempli aux 5/8. Combien de litres contient-il ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '40')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '48')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '48')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '48')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '48')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 78: BR_EXT_NUMERICAL_REASONING_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_NUMERICAL_REASONING_06', 78, 'SINGLE_CHOICE', '{"dimension":"NUMERICAL_REASONING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um valor sobe 20% e depois cai 20%, chegando a 96. Qual era o valor inicial?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A value rises 20% then falls 20%, ending at 96. What was the initial value?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un valor sube un 20% y después baja un 20%, quedando en 96. ¿Cuál era el valor inicial?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une valeur augmente de 20 % puis baisse de 20 %, pour atteindre 96. Quelle était sa valeur initiale ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '96')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '104')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '104')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '104')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '104')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '120')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '100')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 79: BR_EXT_ATTENTION_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_01', 79, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"K7-M2-P9","en":"K7-M2-P9","es":"K7-M2-P9","fr":"K7-M2-P9"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual código é idêntico ao modelo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which code exactly matches the model?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué código es idéntico al modelo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel code est identique au modèle ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'K7-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'K7-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'K7-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'K7-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'K7-N2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'K7-N2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'K7-N2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'K7-N2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'K7-M2-R9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'K7-M2-R9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'K7-M2-R9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'K7-M2-R9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'K1-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'K1-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'K1-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'K1-M2-P9')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 80: BR_EXT_ATTENTION_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_02', 80, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"ABBAABABBAAB","en":"ABBAABABBAAB","es":"ABBAABABBAAB","fr":"ABBAABABBAAB"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Quantas vezes aparece o par AB, sem sobreposição?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'How many times does the pair AB appear without overlap?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuántas veces aparece el par AB sin solapamiento?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Combien de fois la paire AB apparaît-elle sans chevauchement ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 81: BR_EXT_ATTENTION_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_03', 81, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"q8b6d9p","en":"q8b6d9p","es":"q8b6d9p","fr":"q8b6d9p"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual linha mantém todos os caracteres na ordem do modelo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which line keeps every character in the model order?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué línea mantiene todos los caracteres en el orden del modelo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle ligne conserve tous les caractères dans l’ordre du modèle ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'q8b9d6p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'q8b9d6p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'q8b9d6p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'q8b9d6p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'q6b8d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'q6b8d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'q6b8d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'q6b8d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'q8b6d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'q8b6d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'q8b6d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'q8b6d9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', 'q8d6b9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', 'q8d6b9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', 'q8d6b9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', 'q8d6b9p')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 82: BR_EXT_ATTENTION_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_04', 82, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"3838338383","en":"3838338383","es":"3838338383","fr":"3838338383"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Conte apenas os algarismos 3 imediatamente seguidos por 8.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Count only digit 3 immediately followed by 8.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Cuenta solo los dígitos 3 seguidos inmediatamente de 8.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Comptez seulement les chiffres 3 immédiatement suivis de 8.')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 83: BR_EXT_ATTENTION_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_05', 83, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual opção contém exatamente dois sinais + e três sinais −?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which option contains exactly two + signs and three − signs?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué opción contiene exactamente dos signos + y tres signos −?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle option contient exactement deux signes + et trois signes − ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '+−−+−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '+−−+−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '+−−+−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '+−−+−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '++−++')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '++−++')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '++−++')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '++−++')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '−+−−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '−+−−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '−+−−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '−+−−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '+++−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '+++−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '+++−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '+++−−')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 84: BR_EXT_ATTENTION_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_ATTENTION_06', 84, 'SINGLE_CHOICE', '{"dimension":"ATTENTION","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual par de códigos difere em exatamente duas posições?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which pair of codes differs in exactly two positions?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué par de códigos difiere exactamente en dos posiciones?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle paire de codes diffère à exactement deux positions ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '482716 / 482718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '482716 / 482718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '482716 / 482718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '482716 / 482718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '482716 / 592718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '482716 / 592718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '482716 / 592718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '482716 / 592718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '482716 / 482716')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '482716 / 482716')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '482716 / 482716')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '482716 / 482716')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '482716 / 492718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '482716 / 492718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '482716 / 492718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '482716 / 492718')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 85: BR_EXT_PROBLEM_SOLVING_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_01', 85, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"EASY"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Você precisa de 18 garrafas. Cada caixa contém 6. Quantas caixas completas precisa comprar?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'You need 18 bottles. Each box holds 6. How many full boxes must you buy?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Necesitas 18 botellas. Cada caja contiene 6. ¿Cuántas cajas completas compras?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Il faut 18 bouteilles. Chaque boîte en contient 6. Combien de boîtes entières acheter ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '2')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '6')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 86: BR_EXT_PROBLEM_SOLVING_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_02', 86, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Uma tarefa A dura 20 min. B dura 15 min e só começa depois de A. C dura 10 min e começa junto com A. Em quantos minutos tudo termina?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Task A takes 20 min. B takes 15 min and starts after A. C takes 10 min and starts with A. When is everything finished?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'A dura 20 min. B dura 15 min y empieza después de A. C dura 10 min y empieza con A. ¿Cuándo termina todo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'A dure 20 min. B dure 15 min et commence après A. C dure 10 min et commence avec A. Quand tout est-il fini ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 87: BR_EXT_PROBLEM_SOLVING_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_03', 87, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um veículo leva no máximo 8 caixas por viagem. Há 27 caixas. Qual é o número mínimo de viagens?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A vehicle carries at most 8 boxes per trip. There are 27 boxes. What is the minimum number of trips?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un vehículo lleva como máximo 8 cajas por viaje. Hay 27 cajas. ¿Cuál es el mínimo de viajes?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Un véhicule transporte au plus 8 boîtes par trajet. Il y a 27 boîtes. Quel est le minimum de trajets ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '4')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 88: BR_EXT_PROBLEM_SOLVING_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_04', 88, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Uma reunião começa às 14h10 e dura 55 minutos. Você precisa chegar a outro local 20 minutos depois. A que horas chega?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'A meeting starts at 14:10 and lasts 55 minutes. You travel for 20 minutes afterwards. When do you arrive?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Una reunión empieza a las 14:10 y dura 55 minutos. Después viajas 20 minutos. ¿A qué hora llegas?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une réunion commence à 14 h 10 et dure 55 minutes. Le trajet suivant dure 20 minutes. À quelle heure arrivez-vous ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15:35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15:35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15:35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15:35')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15:25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15:25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15:25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15:25')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15:05')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15:05')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15:05')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15:05')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15:15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15:15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15:15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15:15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 89: BR_EXT_PROBLEM_SOLVING_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_05', 89, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Um pedido precisa de 7 peças. Há pacotes de 3 peças por 4 e peças avulsas por 2. Qual é o menor custo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'An order needs 7 parts. Packs of 3 cost 4 and single parts cost 2. What is the lowest cost?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Un pedido necesita 7 piezas. Los paquetes de 3 cuestan 4 y las sueltas 2. ¿Cuál es el coste mínimo?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Une commande demande 7 pièces. Les lots de 3 coûtent 4 et une pièce seule coûte 2. Quel est le coût minimal ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '10')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 90: BR_EXT_PROBLEM_SOLVING_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_PROBLEM_SOLVING_06', 90, 'SINGLE_CHOICE', '{"dimension":"PROBLEM_SOLVING","difficulty":"HARD"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Duas máquinas fazem 6 peças por hora cada. Uma funciona por 3 horas e a outra só pelas 2 primeiras horas. Quantas peças produzem?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Two machines each make 6 parts per hour. One runs for 3 hours and the other only for the first 2. How many parts do they make?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', 'Dos máquinas hacen 6 piezas por hora cada una. Una trabaja 3 horas y la otra solo las 2 primeras. ¿Cuántas piezas producen?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Deux machines font chacune 6 pièces par heure. L’une tourne 3 heures, l’autre seulement les 2 premières. Combien de pièces produisent-elles ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '42')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '30')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 91: BR_EXT_SPEED_01
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_01', 91, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"EASY"}'::jsonb, '{"clue":{"pt":"18 + 7 − 9","en":"18 + 7 − 9","es":"18 + 7 − 9","fr":"18 + 7 − 9"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual é o resultado da operação?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is the result of the operation?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuál es el resultado de la operación?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel est le résultat de l’opération ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '15')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '17')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 92: BR_EXT_SPEED_02
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_02', 92, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número é o menor?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number is smallest?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número es el menor?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre est le plus petit ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '0.45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '0.45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '0.45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '0.45')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '0.54')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '0.54')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '0.54')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '0.54')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '0.504')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '0.504')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '0.504')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '0.504')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '0.405')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '0.405')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '0.405')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '0.405')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 93: BR_EXT_SPEED_03
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_03', 93, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"9 × 4 − 12 ÷ 3","en":"9 × 4 − 12 ÷ 3","es":"9 × 4 − 12 ÷ 3","fr":"9 × 4 − 12 ÷ 3"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual é o resultado, respeitando a ordem das operações?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is the result, following the order of operations?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuál es el resultado respetando el orden de operaciones?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel est le résultat en respectant l’ordre des opérations ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '36')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '32')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '32')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '32')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '32')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 94: BR_EXT_SPEED_04
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_04', 94, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual fração é igual a 0,375?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which fraction equals 0.375?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué fracción equivale a 0,375?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quelle fraction est égale à 0,375 ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '1/3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '1/3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '1/3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '1/3')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '3/5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '3/5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '3/5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '3/5')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '5/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '5/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '5/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '5/8')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 95: BR_EXT_SPEED_05
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_05', 95, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"MEDIUM"}'::jsonb, '{"clue":{"pt":"7 × ? = 84","en":"7 × ? = 84","es":"7 × ? = 84","fr":"7 × ? = 84"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual número completa a igualdade?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'Which number completes the equality?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Qué número completa la igualdad?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel nombre complète l’égalité ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '11')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '13')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '13')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '13')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '13')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '14')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
+  -- Question 96: BR_EXT_SPEED_06
+  insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
+  values (v_quiz_version_id, 'BR_EXT_SPEED_06', 96, 'SINGLE_CHOICE', '{"dimension":"SPEED","difficulty":"HARD"}'::jsonb, '{"clue":{"pt":"(18 − 6) × (9 + 3) ÷ 8","en":"(18 − 6) × (9 + 3) ÷ 8","es":"(18 − 6) × (9 + 3) ÷ 8","fr":"(18 − 6) × (9 + 3) ÷ 8"}}'::jsonb)
+  on conflict (quiz_version_id, stable_key) do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true
+  returning id into v_question_id;
+
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'pt', 'Qual é o resultado da expressão?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'en', 'What is the result of the expression?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'es', '¿Cuál es el resultado de la expresión?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+  insert into meqyro.question_translations (question_id, locale, prompt)
+  values (v_question_id, 'fr', 'Quel est le résultat de l’expression ?')
+  on conflict (question_id, locale) do update set prompt = excluded.prompt;
+
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'A', 1, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '12')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'B', 2, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '16')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'C', 3, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '24')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
+  values (v_question_id, 'D', 4, '{"isCorrect":true}'::jsonb, '{}'::jsonb)
+  on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
+  returning id into v_option_id;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'pt', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'en', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'es', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+  insert into meqyro.option_translations (option_id, locale, label)
+  values (v_option_id, 'fr', '18')
+  on conflict (option_id, locale) do update set label = excluded.label;
+
 end $$;
 
 -- 5. Personality Map Questions
@@ -9449,6 +12473,3606 @@ insert into meqyro.option_translations (option_id, locale, label)
             values (v_option, 'es', 'Cumplir un deseo que venía aplazando.') on conflict (option_id, locale) do nothing;
 insert into meqyro.option_translations (option_id, locale, label)
             values (v_option, 'fr', 'Réaliser une envie que je repousse.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_21', 21, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_21';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você pode pagar um curso profissional ou manter esse dinheiro disponível para o próximo mês. Qual seria sua prioridade?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You can pay for professional training or keep the money available next month. What would you prioritise?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Puedes pagar formación profesional o conservar el dinero para el mes próximo. ¿Qué priorizarías?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous pouvez financer une formation ou garder cette somme pour le mois prochain. Quelle priorité choisir ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_21_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_21_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_21_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_21_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_21_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_21_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_21_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_21_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_22', 22, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_22';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma ferramenta pode melhorar seu trabalho, mas seu benefício só aparecerá em alguns meses. Como você decidiria usar essa verba?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A tool may improve your work, but its benefits will take months. How would you decide how to use the funds?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una herramienta puede mejorar tu trabajo, pero su beneficio tardará meses. ¿Cómo decidirías usar ese dinero?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un outil peut améliorer votre travail, mais ses bénéfices prendront des mois. Comment utiliser cette somme ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_22_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_22_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_22_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_22_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_22_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_22_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_22_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_22_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_23', 23, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_23';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Seu projeto pessoal precisa de materiais e compete com uma viagem curta. O orçamento cobre apenas uma escolha. O que pesa mais?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your personal project needs materials and competes with a short trip. The budget covers only one. What matters most?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu proyecto necesita materiales y compite con un viaje corto. El presupuesto solo cubre uno. ¿Qué pesa más?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre projet nécessite du matériel et concurrence un court voyage. Le budget ne couvre qu’un choix. Quelle priorité ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_23_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_23_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_23_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_23_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_23_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_23_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_23_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_23_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_24', 24, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_24';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você termina de pagar uma dívida e libera uma parcela mensal. Que prioridade daria a esse dinheiro a partir de agora?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You finish repaying a debt and free up a monthly payment. What priority would you give that money now?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Terminas de pagar una deuda y liberas una cuota mensual. ¿Qué prioridad darías ahora a ese dinero?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous finissez de rembourser une dette et libérez une mensualité. Quelle priorité donner à cet argent ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_24_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_24_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_24_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_24_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_24_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_24_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_24_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_24_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_25', 25, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_25';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você vende um equipamento que não usa e pode financiar uma primeira etapa de um projeto. Como alocaria esse valor?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You sell unused equipment and could fund the first stage of a project. How would you allocate the proceeds?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Vendes un equipo que no usas y podrías financiar una etapa de un proyecto. ¿Cómo distribuirías ese importe?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous vendez un équipement inutilisé et pourriez financer une étape d’un projet. Comment répartir cette somme ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_25_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_25_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_25_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_25_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_25_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_25_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_25_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_25_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_26', 26, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_26';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma atividade extra gera renda, mas exige comprar materiais antes de começar. Qual prioridade guiaria sua decisão financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A side activity could earn money but requires buying materials first. What priority would guide your financial decision?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una actividad extra puede generar ingresos, pero exige comprar materiales antes. ¿Qué prioridad guiaría tu decisión?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une activité complémentaire peut rapporter mais nécessite du matériel au départ. Quelle priorité guiderait votre décision ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_26_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_26_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_26_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_26_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_26_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_26_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_26_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_26_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_27', 27, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_27';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você recebe um reembolso e pensa em tirar uma ideia do papel. Há também necessidades adiadas. Como escolheria o destino do valor?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You receive a refund and consider starting an idea, while other needs have been postponed. How would you allocate it?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Recibes un reembolso y piensas iniciar una idea, pero hay necesidades aplazadas. ¿Cómo decidirías su destino?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous recevez un remboursement et envisagez de lancer une idée, avec d’autres besoins reportés. Comment l’affecter ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_27_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_27_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_27_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_27_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_27_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_27_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_27_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_27_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_28', 28, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_28';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma certificação exige pagamentos ao longo de seis meses, sem garantia de retorno. Qual prioridade financeira adotaria?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A qualification requires payments over six months with no guaranteed return. What financial priority would you adopt?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una certificación exige pagos durante seis meses sin retorno garantizado. ¿Qué prioridad financiera adoptarías?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une certification demande six mois de paiements sans retour garanti. Quelle priorité financière adopter ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_28_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_28_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_28_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_28_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_28_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_28_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_28_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_28_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_29', 29, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_29';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma parceria propõe dividir custos para criar um produto. Você tem uma pequena quantia livre. O que orientaria sua escolha?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A partnership proposes sharing costs to create a product. You have a small amount available. What would guide your choice?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una colaboración propone compartir costes para crear un producto. Tienes algo de dinero libre. ¿Qué guiaría tu elección?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un partenariat propose de partager les frais d’un produit. Vous avez une petite marge. Qu’est-ce qui guiderait votre choix ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_29_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_29_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_29_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_29_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_29_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_29_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_29_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_29_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_30', 30, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_30';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você pode melhorar seu espaço de trabalho ou reservar o valor para outras necessidades. Que uso consideraria primeiro?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You can improve your workspace or reserve the money for other needs. Which use would you consider first?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Puedes mejorar tu espacio de trabajo o reservar el dinero para otras necesidades. ¿Qué uso considerarías primero?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous pouvez améliorer votre espace de travail ou garder la somme pour d’autres besoins. Quel usage considérer en premier ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_30_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_30_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_30_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_30_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_30_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_30_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_30_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_30_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_31', 31, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_31';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um projeto pode avançar mais rápido com uma compra hoje, mas também pode continuar devagar sem ela. O que priorizaria?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A purchase today could speed up a project, which could also continue slowly without it. What would you prioritise?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una compra hoy aceleraría un proyecto que también puede seguir más despacio sin ella. ¿Qué priorizarías?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un achat accélérerait un projet qui peut aussi avancer lentement sans lui. Que privilégieriez-vous ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_31_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_31_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_31_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_31_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_31_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_31_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_31_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_31_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_32', 32, 'SCENARIO', '{"dimension":"BUILDER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_32';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você tem verba para aprender uma habilidade nova, reformar um item ou manter a folga. Qual objetivo guiaria sua decisão?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have funds to learn a skill, refurbish an item or keep a cushion. Which goal would guide your decision?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tienes dinero para aprender una habilidad, renovar algo o conservar margen. ¿Qué objetivo guiaría tu decisión?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez de quoi apprendre une compétence, rénover un objet ou garder une marge. Quel objectif guiderait votre décision ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_32_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_32_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_32_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_32_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_32_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_32_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_32_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_32_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_33', 33, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_33';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Sua renda varia a cada mês e surgiu uma despesa anual previsível. Como priorizaria o dinheiro que sobrou?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your income varies monthly and a predictable annual bill is approaching. How would you prioritise the money left?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tus ingresos varían cada mes y se acerca un gasto anual previsible. ¿Cómo priorizarías el dinero restante?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vos revenus varient et une facture annuelle prévisible approche. Comment affecter votre marge ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_33_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_33_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_33_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_33_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_33_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_33_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_33_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_33_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_34', 34, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_34';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma manutenção doméstica pode ser feita agora ou adiada por alguns meses. Como decidiria o uso desse dinheiro?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Home maintenance can happen now or in a few months. How would you decide how to use that money?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un mantenimiento doméstico puede hacerse ahora o aplazarse unos meses. ¿Cómo decidirías usar ese dinero?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un entretien du logement peut se faire maintenant ou dans quelques mois. Comment affecter cette somme ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_34_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_34_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_34_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_34_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_34_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_34_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_34_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_34_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_35', 35, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_35';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Seu contrato de trabalho será renovado em breve e você recebeu um valor extra. Qual destino consideraria primeiro?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your work contract is due for renewal and you received extra money. Which use would you consider first?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu contrato laboral se renovará pronto y recibiste un extra. ¿Qué destino considerarías primero?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre contrat de travail arrive à renouvellement et vous recevez un supplément. Quel usage considérer en premier ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_35_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_35_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_35_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_35_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_35_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_35_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_35_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_35_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_36', 36, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_36';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um eletrodoméstico antigo ainda funciona, mas pode precisar de reparo. Há uma pequena folga no orçamento. Como a usaria?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An old appliance still works but may need repairs. Your budget has a little room. How would you use it?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un electrodoméstico antiguo funciona, pero puede necesitar reparación. Tienes algo de margen. ¿Cómo lo usarías?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un appareil ancien fonctionne encore mais pourrait nécessiter une réparation. Comment utiliser une petite marge ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_36_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_36_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_36_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_36_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_36_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_36_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_36_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_36_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_37', 37, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_37';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você vai mudar de casa e os custos finais ainda não estão claros. Qual prioridade daria ao dinheiro disponível?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You are moving home and final costs are unclear. What priority would you give the available money?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Vas a mudarte y los costes finales no están claros. ¿Qué prioridad darías al dinero disponible?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous déménagez et les frais finaux restent incertains. Quelle priorité donner à l’argent disponible ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_37_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_37_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_37_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_37_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_37_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_37_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_37_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_37_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_38', 38, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_38';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma despesa de transporte caiu e liberou um valor recorrente. Como decidiria o destino dessa nova margem?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Transport costs fell, freeing a recurring amount. How would you decide what to do with this new margin?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Bajó un gasto de transporte y liberó una cantidad recurrente. ¿Cómo decidirías usar ese nuevo margen?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Les frais de transport baissent et libèrent une somme régulière. Comment affecter cette nouvelle marge ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_38_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_38_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_38_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_38_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_38_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_38_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_38_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_38_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_39', 39, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_39';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você está perto de atingir sua reserva planejada e recebeu um convite pago. Qual prioridade guiaria a escolha?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You are close to your planned savings cushion and receive a paid invitation. Which priority would guide your choice?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Estás cerca de tu reserva prevista y recibes una invitación de pago. ¿Qué prioridad guiaría tu elección?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous approchez de votre réserve prévue et recevez une invitation payante. Quelle priorité guiderait votre choix ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_39_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_39_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_39_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_39_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_39_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_39_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_39_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_39_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_40', 40, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_40';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma franquia de seguro pode aumentar no próximo ano. Hoje existe uma pequena quantia livre. Como decidiria usá-la?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An insurance deductible may increase next year. You have a small amount free today. How would you use it?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'La franquicia de un seguro puede subir el próximo año. Hoy tienes algo de dinero libre. ¿Cómo lo usarías?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une franchise d’assurance pourrait augmenter l’an prochain. Comment utiliser une petite somme disponible aujourd’hui ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_40_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_40_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_40_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_40_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_40_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_40_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_40_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_40_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_41', 41, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_41';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Seu trabalho autônomo teve um mês bom, mas o próximo ainda não tem contratos. Qual uso daria à diferença?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your freelance work had a good month, but next month has no contracts yet. How would you use the difference?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu trabajo autónomo tuvo un buen mes, pero el siguiente aún no tiene contratos. ¿Cómo usarías la diferencia?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre activité indépendante a bien marché ce mois-ci, sans contrat pour le suivant. Comment utiliser l’écart ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_41_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_41_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_41_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_41_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_41_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_41_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_41_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_41_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_42', 42, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_42';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma conta foi menor do que o previsto e sua rotina segue estável. Como escolheria o destino da economia?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A bill was lower than expected and your routine is stable. How would you allocate the savings?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una factura fue menor de lo previsto y tu rutina sigue estable. ¿Cómo destinarías el ahorro?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une facture est inférieure aux prévisions et votre routine reste stable. Comment affecter cette économie ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_42_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_42_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_42_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_42_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_42_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_42_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_42_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_42_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_43', 43, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_43';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você planeja uma pausa no trabalho dentro de alguns meses. Qual prioridade financeira adotaria com o saldo atual?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You plan a work break in a few months. What financial priority would you adopt for your current balance?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Planeas una pausa laboral dentro de unos meses. ¿Qué prioridad financiera adoptarías con el saldo actual?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous prévoyez une pause professionnelle dans quelques mois. Quelle priorité donner à votre solde actuel ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_43_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_43_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_43_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_43_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_43_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_43_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_43_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_43_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_44', 44, 'SCENARIO', '{"dimension":"GUARDIAN","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_44';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'O custo de vida aumentou e você ainda tem alguma folga mensal. Como decidiria o que fazer com essa margem?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Living costs rose and you still have some monthly room. How would you decide what to do with it?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Subió el coste de vida y aún conservas algo de margen mensual. ¿Cómo decidirías qué hacer con él?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Le coût de la vie augmente et il vous reste une marge mensuelle. Comment décider de son usage ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_44_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_44_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_44_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_44_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_44_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_44_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_44_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_44_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_45', 45, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_45';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Dois planos de internet têm taxas e prazos diferentes. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Two internet plans have different fees and terms. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Dos planes de internet tienen cuotas y plazos distintos. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Deux forfaits internet ont des frais et des durées différents. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_45_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_45_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_45_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_45_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_45_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_45_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_45_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_45_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_46', 46, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_46';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma compra parcelada tem custo total maior que o pagamento à vista. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An instalment purchase costs more overall than paying upfront. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una compra a plazos cuesta más en total que al contado. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un achat échelonné coûte plus cher au total que le paiement comptant. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_46_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_46_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_46_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_46_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_46_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_46_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_46_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_46_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_47', 47, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_47';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você recebe duas propostas de trabalho com benefícios diferentes. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You receive two job offers with different benefits. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Recibes dos ofertas laborales con prestaciones diferentes. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous recevez deux offres d’emploi aux avantages différents. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_47_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_47_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_47_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_47_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_47_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_47_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_47_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_47_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_48', 48, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_48';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um desconto por volume exige comprar mais do que você usa no mês. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A bulk discount requires buying more than you use in a month. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un descuento por volumen exige comprar más de lo que usas al mes. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une remise en volume exige d’acheter plus que votre usage mensuel. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_48_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_48_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_48_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_48_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_48_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_48_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_48_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_48_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_49', 49, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_49';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma mensalidade baixa esconde uma taxa de adesão elevada. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A low monthly fee comes with a high joining charge. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una cuota mensual baja incluye un alta elevada. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une mensualité faible s’accompagne de frais d’adhésion élevés. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_49_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_49_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_49_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_49_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_49_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_49_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_49_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_49_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_50', 50, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_50';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um serviço novo promete economizar tempo mas exige contrato anual. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A new service promises time savings but needs an annual contract. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un servicio promete ahorrar tiempo, pero exige contrato anual. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un nouveau service promet du temps gagné mais exige un contrat annuel. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_50_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_50_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_50_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_50_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_50_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_50_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_50_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_50_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_51', 51, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_51';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você pode alugar ou comprar um equipamento de uso ocasional. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You can rent or buy equipment you only use occasionally. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Puedes alquilar o comprar un equipo de uso ocasional. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous pouvez louer ou acheter un équipement utilisé occasionnellement. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_51_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_51_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_51_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_51_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_51_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_51_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_51_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_51_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_52', 52, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_52';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma escola oferece bolsa parcial mas exige custos de deslocamento. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A school offers a partial scholarship with travel costs. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una escuela ofrece beca parcial, pero exige gastos de transporte. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une école offre une bourse partielle mais implique des frais de trajet. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_52_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_52_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_52_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_52_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_52_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_52_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_52_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_52_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_53', 53, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_53';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Trocar de banco reduz tarifas mas exige reorganizar os pagamentos. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Changing banks lowers fees but requires reorganising payments. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Cambiar de banco reduce comisiones, pero exige reorganizar pagos. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Changer de banque réduit les frais mais exige de réorganiser les paiements. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_53_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_53_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_53_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_53_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_53_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_53_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_53_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_53_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_54', 54, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_54';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um pacote de férias inclui atividades que você talvez não use. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A holiday package includes activities you may not use. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un paquete de vacaciones incluye actividades que quizá no uses. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un forfait vacances inclut des activités que vous n’utiliserez peut-être pas. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_54_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_54_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_54_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_54_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_54_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_54_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_54_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_54_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_55', 55, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_55';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma assinatura oferece desconto se você antecipar um ano inteiro. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A subscription discounts a full year paid in advance. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una suscripción ofrece descuento al anticipar un año entero. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un abonnement réduit son prix si vous payez une année d’avance. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_55_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_55_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_55_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_55_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_55_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_55_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_55_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_55_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_56', 56, 'SCENARIO', '{"dimension":"STRATEGIST","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_56';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma promoção termina hoje mas você ainda não comparou alternativas. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A promotion ends today but you have not compared alternatives. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una promoción termina hoy, pero aún no comparaste alternativas. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une promotion finit aujourd’hui sans que vous ayez comparé les alternatives. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_56_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_56_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_56_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_56_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_56_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_56_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_56_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_56_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_57', 57, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_57';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Amigos propõem uma viagem curta fora dos seus planos. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Friends suggest a short trip outside your plans. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Amigos proponen un viaje corto fuera de tus planes. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Des amis proposent un court voyage imprévu. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_57_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_57_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_57_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_57_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_57_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_57_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_57_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_57_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_58', 58, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_58';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um artista de que você gosta fará um único show na cidade. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An artist you enjoy will perform one show in town. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un artista que te gusta dará un único concierto en tu ciudad. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un artiste que vous aimez donne un seul concert en ville. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_58_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_58_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_58_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_58_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_58_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_58_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_58_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_58_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_59', 59, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_59';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma aula experimental paga desperta sua curiosidade. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A paid introductory class sparks your curiosity. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una clase de prueba de pago despierta tu curiosidad. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un cours d’essai payant éveille votre curiosité. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_59_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_59_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_59_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_59_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_59_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_59_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_59_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_59_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_60', 60, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_60';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma experiência gastronômica custa o mesmo que sua folga semanal. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A dining experience costs your entire weekly spare budget. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una experiencia gastronómica cuesta todo tu margen semanal. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une expérience gastronomique coûte toute votre marge hebdomadaire. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_60_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_60_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_60_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_60_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_60_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_60_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_60_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_60_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_61', 61, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_61';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Surge uma vaga de última hora em um passeio de fim de semana. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A last-minute place opens on a weekend outing. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Surge una plaza de última hora para una excursión de fin de semana. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une place se libère au dernier moment pour une sortie de week-end. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_61_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_61_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_61_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_61_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_61_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_61_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_61_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_61_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_62', 62, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_62';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você encontra uma atividade nova durante uma viagem já paga. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You find a new activity during an already paid trip. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Encuentras una actividad nueva durante un viaje ya pagado. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous découvrez une activité nouvelle lors d’un voyage déjà payé. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_62_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_62_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_62_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_62_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_62_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_62_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_62_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_62_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_63', 63, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_63';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um hobby novo exige uma pequena compra inicial. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A new hobby needs a small initial purchase. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un nuevo pasatiempo exige una pequeña compra inicial. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un nouveau loisir nécessite un petit achat initial. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_63_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_63_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_63_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_63_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_63_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_63_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_63_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_63_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_64', 64, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_64';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma festa especial compete com outro uso do seu dinheiro livre. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A special party competes with another use of your spare money. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una fiesta especial compite con otro uso de tu dinero libre. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une fête spéciale concurrence un autre usage de votre argent disponible. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_64_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_64_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_64_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_64_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_64_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_64_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_64_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_64_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_65', 65, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_65';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer comemorar uma conquista depois de um mês exigente. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to celebrate an achievement after a demanding month. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres celebrar un logro tras un mes exigente. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez célébrer une réussite après un mois exigeant. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_65_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_65_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_65_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_65_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_65_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_65_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_65_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_65_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_66', 66, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_66';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma visita a alguém querido exige uma passagem que não estava prevista. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Visiting a loved one requires an unplanned ticket. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Visitar a alguien querido exige un billete que no estaba previsto. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Rendre visite à un proche exige un billet imprévu. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_66_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_66_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_66_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_66_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_66_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_66_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_66_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_66_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_67', 67, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_67';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um festival local oferece atividades que você nunca experimentou. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A local festival offers activities you have never tried. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un festival local ofrece actividades que nunca probaste. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un festival local propose des activités que vous n’avez jamais essayées. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_67_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_67_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_67_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_67_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_67_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_67_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_67_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_67_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_68', 68, 'SCENARIO', '{"dimension":"ADVENTURER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_68';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você pode prolongar suas férias por um dia mediante um custo extra. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You can extend your holiday by a day for an extra cost. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Puedes alargar tus vacaciones un día pagando un extra. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous pouvez prolonger vos vacances d’un jour pour un supplément. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_68_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_68_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_68_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_68_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_68_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_68_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_68_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_68_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_69', 69, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_69';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma semana cansativa aumentou seus gastos com conveniência. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A tiring week increased your convenience spending. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una semana agotadora aumentó tus gastos de comodidad. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une semaine fatigante a augmenté vos dépenses de commodité. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_69_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_69_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_69_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_69_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_69_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_69_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_69_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_69_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_70', 70, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_70';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer ajudar alguém sem comprometer suas próprias contas. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to help someone while keeping your bills covered. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres ayudar a alguien sin comprometer tus propias facturas. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous voulez aider quelqu’un en préservant vos propres factures. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_70_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_70_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_70_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_70_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_70_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_70_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_70_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_70_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_71', 71, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_71';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Seu orçamento permite um pequeno prazer mas também há uma meta futura. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your budget allows a small treat alongside a future goal. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu presupuesto permite un pequeño gusto, pero también hay una meta futura. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre budget permet un petit plaisir mais vous avez aussi un objectif futur. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_71_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_71_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_71_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_71_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_71_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_71_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_71_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_71_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_72', 72, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_72';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você percebe que reduziu tanto os gastos que abandonou atividades importantes. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You notice spending cuts made you drop meaningful activities. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Notas que redujiste tanto el gasto que dejaste actividades importantes. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous constatez que vos économies vous ont fait abandonner des activités importantes. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_72_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_72_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_72_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_72_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_72_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_72_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_72_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_72_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_73', 73, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_73';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um convite social recorrente pesa no orçamento do mês. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A recurring social invitation weighs on this month’s budget. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una invitación social recurrente pesa en el presupuesto mensual. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une invitation sociale régulière pèse sur le budget du mois. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_73_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_73_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_73_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_73_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_73_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_73_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_73_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_73_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_74', 74, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_74';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você precisa conciliar gastos de saúde cotidiana com lazer. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You need to balance everyday health spending and leisure. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Necesitas conciliar gastos de salud cotidiana y ocio. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous devez concilier dépenses de santé courantes et loisirs. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_74_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_74_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_74_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_74_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_74_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_74_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_74_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_74_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_75', 75, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_75';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma pessoa sugere cortar todo lazer para atingir uma meta mais rápido. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Someone suggests cutting all leisure to reach a goal sooner. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Alguien propone cortar todo ocio para alcanzar antes una meta. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Quelqu’un propose de supprimer tous les loisirs pour atteindre un objectif plus vite. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_75_1', 1, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_75_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_75_2', 2, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_75_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_75_3', 3, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_75_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_75_4', 4, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_75_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_76', 76, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_76';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você conseguiu economizar mas sente falta de encontros com amigos. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You saved money but miss meeting friends. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Lograste ahorrar, pero echas de menos reunirte con amigos. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez économisé mais les rencontres amicales vous manquent. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_76_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_76_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_76_2', 2, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_76_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_76_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_76_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_76_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_76_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_77', 77, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_77';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma melhoria simples na rotina compete com a poupança do mês. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A small daily-life improvement competes with this month’s savings. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una mejora sencilla de la rutina compite con el ahorro del mes. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une petite amélioration du quotidien concurrence l’épargne du mois. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_77_1', 1, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_77_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_77_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_77_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_77_3', 3, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_77_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_77_4', 4, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_77_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_78', 78, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_78';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer presentear alguém e também manter seu plano financeiro. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to give someone a gift while keeping your financial plan. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres hacer un regalo y mantener tu plan financiero. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez offrir un cadeau tout en préservant votre plan financier. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_78_1', 1, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_78_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_78_2', 2, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_78_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_78_3', 3, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_78_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_78_4', 4, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_78_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_79', 79, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_79';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Seu orçamento ficou rígido e um pequeno imprevisto exige adaptação. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your budget became rigid and a small surprise needs an adjustment. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu presupuesto se volvió rígido y un imprevisto exige adaptarlo. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre budget est devenu rigide et un petit imprévu exige un ajustement. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_79_1', 1, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_79_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_79_2', 2, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_79_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_79_3', 3, '{"signals":{"BUILDER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_79_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Aplicar o valor em uma etapa de um projeto de longo prazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Use the money for a step in a long-term project.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Usar el dinero en una etapa de un proyecto a largo plazo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Consacrer la somme à une étape d’un projet à long terme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_79_4', 4, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_79_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'MD2_80', 80, 'SCENARIO', '{"dimension":"BALANCER","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'MD2_80';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você tem renda estável e quer rever o espaço dado a metas e bem-estar. Como definiria sua prioridade financeira?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your income is stable and you want to review goals and wellbeing. How would you set your financial priority?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tienes ingresos estables y quieres revisar el espacio de metas y bienestar. ¿Cómo definirías tu prioridad financiera?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vos revenus sont stables et vous voulez revoir la place des objectifs et du bien-être. Comment définir votre priorité financière ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_80_1', 1, '{"signals":{"BALANCER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_80_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dividir a margem entre uma necessidade atual e uma meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Split the margin between a current need and a future goal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Repartir el margen entre una necesidad actual y una meta futura.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Répartir la marge entre un besoin actuel et un objectif futur.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_80_2', 2, '{"signals":{"GUARDIAN":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_80_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Preservar o dinheiro para manter minha margem diante de imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Keep the money to preserve my cushion for unexpected costs.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Conservar el dinero para mantener mi margen ante imprevistos.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Garder l’argent pour préserver ma marge face aux imprévus.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_80_3', 3, '{"signals":{"STRATEGIST":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_80_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Comparar custos, prazos e impacto antes de alocar o dinheiro.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Compare costs, timing and impact before allocating the money.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Comparar costes, plazos e impacto antes de asignar el dinero.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Comparer coûts, délais et effets avant d’affecter la somme.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'MD2_80_4', 4, '{"signals":{"ADVENTURER":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'MD2_80_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Dar espaço a uma experiência significativa no presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Make room for a meaningful experience in the present.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Dar espacio a una experiencia significativa en el presente.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Faire une place à une expérience significative dans le présent.') on conflict (option_id, locale) do nothing;
 end $$;
 do $$ declare v_version uuid; v_question uuid; v_option uuid; begin
       insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
@@ -10657,4 +17281,3604 @@ insert into meqyro.option_translations (option_id, locale, label)
             values (v_option, 'es', 'Reunir alternativas y acordar revisarlas después.') on conflict (option_id, locale) do nothing;
 insert into meqyro.option_translations (option_id, locale, label)
             values (v_option, 'fr', 'Réunir des alternatives et prévoir de les examiner ensuite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_21', 21, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_21';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma mensagem sua foi entendida como cobrança. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your message was understood as a demand. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un mensaje tuyo se entendió como exigencia. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Votre message a été compris comme un reproche. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_21_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_21_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_21_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_21_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_21_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_21_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_21_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_21_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_22', 22, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_22';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer falar de um dia difícil enquanto a outra pessoa está ocupada. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to discuss a hard day while your partner is busy. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres hablar de un día difícil mientras tu pareja está ocupada. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous voulez parler d’une journée difficile alors que l’autre est occupé. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_22_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_22_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_22_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_22_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_22_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_22_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_22_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_22_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_23', 23, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_23';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma brincadeira feita em público deixou você desconfortável. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A joke in public made you uncomfortable. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una broma en público te hizo sentir mal. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une plaisanterie en public vous a mis mal à l’aise. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_23_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_23_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_23_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_23_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_23_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_23_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_23_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_23_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_24', 24, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_24';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm preferências diferentes sobre mensagens durante o trabalho. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have different preferences about messages during work. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis preferencias distintas sobre mensajes durante el trabajo. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez des préférences différentes pour les messages au travail. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_24_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_24_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_24_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_24_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_24_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_24_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_24_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_24_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_25', 25, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_25';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você sente falta de ouvir reconhecimento por algo que fez. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You miss hearing appreciation for something you did. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Echas de menos reconocimiento por algo que hiciste. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous aimeriez entendre de la reconnaissance pour quelque chose que vous avez fait. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_25_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_25_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_25_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_25_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_25_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_25_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_25_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_25_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_26', 26, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_26';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'A outra pessoa pede sua opinião enquanto você ainda está confuso. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your partner asks your opinion while you still feel unsure. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu pareja pide tu opinión cuando aún tienes dudas. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'L’autre vous demande votre avis alors que vous hésitez encore. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_26_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_26_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_26_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_26_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_26_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_26_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_26_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_26_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_27', 27, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_27';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma conversa importante foi interrompida várias vezes. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An important conversation was interrupted several times. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una conversación importante se interrumpió varias veces. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une conversation importante a été interrompue plusieurs fois. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_27_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_27_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_27_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_27_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_27_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_27_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_27_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_27_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_28', 28, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_28';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês discordam sobre compartilhar detalhes do casal com amigos. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You disagree about sharing relationship details with friends. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'No coincidís sobre compartir detalles de pareja con amigos. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous n’êtes pas d’accord sur les détails du couple à partager avec des amis. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_28_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_28_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_28_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_28_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_28_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_28_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_28_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_28_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_29', 29, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_29';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer pedir mais tempo de qualidade durante a semana. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to ask for more quality time during the week. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres pedir más tiempo de calidad durante la semana. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez demander plus de temps de qualité en semaine. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_29_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_29_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_29_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_29_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_29_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_29_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_29_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_29_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_30', 30, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_30';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma mudança de rotina fez suas conversas ficarem muito curtas. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A routine change made your conversations much shorter. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un cambio de rutina acortó mucho vuestras conversaciones. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un changement de routine a beaucoup raccourci vos échanges. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_30_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_30_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_30_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_30_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_30_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_30_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_30_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_30_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_31', 31, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_31';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você recebe uma notícia pessoal e ainda não sabe como compartilhá-la. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You receive personal news and do not yet know how to share it. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Recibes una noticia personal y aún no sabes cómo compartirla. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous recevez une nouvelle personnelle sans savoir encore comment la partager. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_31_1', 1, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_31_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_31_2', 2, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_31_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_31_3', 3, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_31_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_31_4', 4, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_31_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_32', 32, 'SCENARIO', '{"dimension":"COMMUNICATION","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_32';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'A outra pessoa interpreta seu silêncio como desinteresse. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your partner interprets your silence as lack of interest. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu pareja interpreta tu silencio como desinterés. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'L’autre interprète votre silence comme un manque d’intérêt. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_32_1', 1, '{"signals":{"COMMUNICATION":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_32_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_32_2', 2, '{"signals":{"COMMUNICATION":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_32_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_32_3', 3, '{"signals":{"COMMUNICATION":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_32_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_32_4', 4, '{"signals":{"COMMUNICATION":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_32_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_33', 33, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_33';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma tradição familiar importante para você não faz sentido para a outra pessoa. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A family tradition important to you means little to your partner. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una tradición familiar importante para ti no tiene sentido para tu pareja. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une tradition familiale importante pour vous n’a pas de sens pour l’autre. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_33_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_33_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_33_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_33_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_33_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_33_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_33_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_33_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_34', 34, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_34';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm preferências diferentes sobre praticar uma religião. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have different preferences about practising a religion. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis preferencias distintas sobre practicar una religión. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez des préférences différentes concernant la pratique religieuse. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_34_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_34_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_34_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_34_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_34_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_34_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_34_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_34_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_35', 35, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_35';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer dedicar parte do fim de semana a uma causa social. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to dedicate part of the weekend to a social cause. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres dedicar parte del fin de semana a una causa social. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez consacrer une partie du week-end à une cause sociale. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_35_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_35_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_35_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_35_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_35_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_35_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_35_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_35_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_36', 36, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_36';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês divergem sobre a frequência de visitas à família. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You differ on how often to visit family. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'No coincidís sobre la frecuencia de visitas familiares. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous divergez sur la fréquence des visites familiales. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_36_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_36_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_36_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_36_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_36_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_36_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_36_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_36_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_37', 37, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_37';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma escolha de consumo sustentável exige mudar um hábito do casal. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A sustainable purchase requires changing a shared habit. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una elección de consumo sostenible exige cambiar un hábito de pareja. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un choix de consommation durable demande de changer une habitude commune. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_37_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_37_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_37_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_37_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_37_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_37_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_37_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_37_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_38', 38, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_38';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer preservar uma amizade que a outra pessoa não conhece. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to preserve a friendship your partner does not know. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres mantener una amistad que tu pareja no conoce. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous voulez préserver une amitié que l’autre ne connaît pas. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_38_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_38_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_38_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_38_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_38_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_38_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_38_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_38_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_39', 39, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_39';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm visões diferentes sobre receber convidados em casa. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have different views on hosting guests at home. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis ideas distintas sobre recibir visitas en casa. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez des avis différents sur l’accueil d’invités à la maison. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_39_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_39_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_39_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_39_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_39_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_39_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_39_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_39_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_40', 40, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_40';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um compromisso familiar compete com seu tempo de descanso. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A family commitment competes with your rest time. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un compromiso familiar compite con tu descanso. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un engagement familial concurrence votre temps de repos. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_40_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_40_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_40_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_40_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_40_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_40_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_40_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_40_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_41', 41, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_41';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer manter um costume pessoal após começar a morar junto. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to keep a personal custom after moving in together. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres mantener una costumbre personal al empezar a convivir. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez garder une habitude personnelle après l’emménagement à deux. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_41_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_41_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_41_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_41_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_41_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_41_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_41_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_41_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_42', 42, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_42';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês discordam sobre a exposição da vida pessoal nas redes. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You disagree on exposing personal life on social media. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'No coincidís sobre exponer la vida personal en redes. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous divergez sur l’exposition de la vie privée sur les réseaux. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_42_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_42_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_42_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_42_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_42_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_42_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_42_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_42_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_43', 43, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_43';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma celebração importante para você não é prioridade para a outra pessoa. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A celebration important to you is not your partner’s priority. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una celebración importante para ti no es prioridad para tu pareja. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une fête importante pour vous n’est pas prioritaire pour l’autre. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_43_1', 1, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_43_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_43_2', 2, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_43_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_43_3', 3, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_43_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_43_4', 4, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_43_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_44', 44, 'SCENARIO', '{"dimension":"LIFE_VALUES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_44';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você precisa equilibrar privacidade pessoal e hábitos compartilhados. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You need to balance personal privacy and shared habits. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Necesitas equilibrar privacidad personal y hábitos compartidos. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous devez concilier intimité personnelle et habitudes communes. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_44_1', 1, '{"signals":{"LIFE_VALUES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_44_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_44_2', 2, '{"signals":{"LIFE_VALUES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_44_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_44_3', 3, '{"signals":{"LIFE_VALUES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_44_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_44_4', 4, '{"signals":{"LIFE_VALUES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_44_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_45', 45, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_45';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma discussão sobre tarefas domésticas volta toda semana. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An argument about household chores returns every week. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una discusión sobre tareas domésticas se repite cada semana. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une dispute sur les tâches ménagères revient chaque semaine. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_45_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_45_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_45_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_45_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_45_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_45_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_45_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_45_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_46', 46, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_46';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês percebem que uma conversa está ficando mais tensa. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You notice a conversation becoming more tense. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Notáis que una conversación está ganando tensión. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous constatez qu’une conversation devient plus tendue. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_46_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_46_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_46_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_46_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_46_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_46_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_46_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_46_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_47', 47, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_47';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'A outra pessoa pede para resolver um desacordo antes de dormir. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your partner asks to settle a disagreement before bed. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu pareja pide resolver un desacuerdo antes de dormir. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'L’autre demande de régler un désaccord avant de dormir. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_47_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_47_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_47_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_47_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_47_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_47_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_47_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_47_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_48', 48, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_48';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você percebe que errou depois de defender sua posição com firmeza. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You realise you were wrong after firmly defending your position. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Notas que te equivocaste tras defender tu postura con firmeza. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous réalisez votre erreur après avoir fermement défendu votre position. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_48_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_48_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_48_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_48_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_48_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_48_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_48_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_48_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_49', 49, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_49';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês lembram de formas diferentes um acordo recente. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You remember a recent agreement differently. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Recordáis de forma distinta un acuerdo reciente. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous vous souvenez différemment d’un accord récent. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_49_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_49_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_49_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_49_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_49_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_49_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_49_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_49_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_50', 50, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_50';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um atraso gera irritação antes de um compromisso importante. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A delay causes irritation before an important appointment. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un retraso causa irritación antes de una cita importante. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un retard provoque de l’irritation avant un rendez-vous important. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_50_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_50_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_50_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_50_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_50_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_50_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_50_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_50_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_51', 51, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_51';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma crítica sobre organização parece mais dura do que você esperava. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A comment on organisation feels harsher than expected. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una crítica sobre organización parece más dura de lo esperado. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une critique sur l’organisation vous semble plus dure que prévu. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_51_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_51_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_51_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_51_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_51_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_51_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_51_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_51_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_52', 52, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_52';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês discordam durante uma viagem e precisam seguir o roteiro. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You disagree during a trip and need to continue the itinerary. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Discutís durante un viaje y necesitáis seguir el itinerario. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous divergez pendant un voyage et devez poursuivre l’itinéraire. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_52_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_52_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_52_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_52_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_52_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_52_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_52_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_52_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_53', 53, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_53';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um pedido de mudança chega em um momento de cansaço. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A request for change arrives when you are tired. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una petición de cambio llega cuando estás cansado. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une demande de changement arrive à un moment de fatigue. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_53_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_53_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_53_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_53_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_53_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_53_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_53_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_53_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_54', 54, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_54';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês já tentaram uma solução e o problema reapareceu. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You tried a solution and the problem returned. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Ya probasteis una solución y el problema reapareció. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez essayé une solution et le problème est revenu. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_54_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_54_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_54_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_54_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_54_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_54_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_54_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_54_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_55', 55, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_55';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer retomar uma conversa que terminou sem acordo. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to reopen a conversation that ended without agreement. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres retomar una conversación que terminó sin acuerdo. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous voulez reprendre une conversation terminée sans accord. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_55_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_55_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_55_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_55_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_55_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_55_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_55_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_55_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_56', 56, 'SCENARIO', '{"dimension":"CONFLICT_MANAGEMENT","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_56';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma divisão de responsabilidades passou a parecer injusta. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A division of responsibilities has started to feel unfair. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un reparto de responsabilidades empezó a parecer injusto. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une répartition des responsabilités commence à sembler injuste. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_56_1', 1, '{"signals":{"CONFLICT_MANAGEMENT":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_56_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_56_2', 2, '{"signals":{"CONFLICT_MANAGEMENT":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_56_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_56_3', 3, '{"signals":{"CONFLICT_MANAGEMENT":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_56_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_56_4', 4, '{"signals":{"CONFLICT_MANAGEMENT":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_56_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_57', 57, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_57';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma compra pessoal afeta o prazo de uma meta compartilhada. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A personal purchase affects a shared goal’s timeline. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una compra personal afecta al plazo de una meta compartida. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un achat personnel modifie le calendrier d’un objectif commun. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_57_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_57_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_57_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_57_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_57_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_57_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_57_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_57_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_58', 58, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_58';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm rendas diferentes e precisam dividir uma despesa nova. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your incomes differ and you need to split a new expense. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis ingresos distintos y debéis repartir un gasto nuevo. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vos revenus diffèrent et vous devez répartir une nouvelle dépense. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_58_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_58_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_58_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_58_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_58_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_58_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_58_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_58_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_59', 59, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_59';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma conta conjunta veio acima do valor previsto. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A shared bill came in above the expected amount. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una factura compartida superó el importe previsto. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une facture commune dépasse le montant prévu. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_59_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_59_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_59_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_59_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_59_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_59_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_59_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_59_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_60', 60, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_60';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'A outra pessoa quer emprestar dinheiro a um amigo. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'Your partner wants to lend money to a friend. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tu pareja quiere prestar dinero a un amigo. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'L’autre souhaite prêter de l’argent à un ami. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_60_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_60_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_60_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_60_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_60_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_60_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_60_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_60_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_61', 61, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_61';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você gostaria de manter parte da renda em uma conta pessoal. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You would like to keep some income in a personal account. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Te gustaría guardar parte de tus ingresos en una cuenta personal. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous aimeriez garder une partie de vos revenus sur un compte personnel. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_61_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_61_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_61_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_61_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_61_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_61_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_61_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_61_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_62', 62, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_62';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês precisam decidir um teto de gastos para as férias. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You need to decide a holiday spending ceiling. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Necesitáis decidir un límite de gasto para las vacaciones. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous devez décider d’un plafond de dépenses pour les vacances. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_62_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_62_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_62_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_62_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_62_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_62_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_62_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_62_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_63', 63, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_63';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma assinatura usada por apenas uma pessoa entra nas contas comuns. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A subscription used by one person enters shared bills. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una suscripción usada por una persona entra en gastos comunes. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un abonnement utilisé par une seule personne entre dans les frais communs. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_63_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_63_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_63_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_63_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_63_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_63_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_63_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_63_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_64', 64, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_64';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você recebe um bônus enquanto há uma despesa compartilhada pendente. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You receive a bonus while a shared expense is pending. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Recibes una prima mientras queda un gasto compartido pendiente. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous recevez une prime alors qu’une dépense commune reste en attente. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_64_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_64_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_64_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_64_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_64_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_64_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_64_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_64_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_65', 65, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_65';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês divergem sobre quanto reservar para emergências. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You differ on how much to reserve for emergencies. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'No coincidís sobre cuánto reservar para emergencias. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous divergez sur le montant à réserver aux imprévus. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_65_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_65_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_65_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_65_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_65_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_65_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_65_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_65_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_66', 66, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_66';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma redução de renda exige rever a contribuição de cada pessoa. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A drop in income requires reviewing each person’s contribution. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una caída de ingresos exige revisar la contribución de cada persona. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une baisse de revenus exige de revoir la contribution de chacun. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_66_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_66_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_66_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_66_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_66_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_66_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_66_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_66_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_67', 67, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_67';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma reforma da casa exige escolher quais despesas adiar. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A home renovation requires choosing which expenses to postpone. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una reforma exige decidir qué gastos aplazar. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une rénovation du logement oblige à choisir les dépenses à reporter. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_67_1', 1, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_67_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_67_2', 2, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_67_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_67_3', 3, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_67_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_67_4', 4, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_67_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_68', 68, 'SCENARIO', '{"dimension":"FINANCES","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_68';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês precisam escolher como registrar as despesas compartilhadas. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You need to choose how to record shared expenses. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Necesitáis elegir cómo registrar los gastos compartidos. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous devez choisir comment consigner les dépenses communes. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_68_1', 1, '{"signals":{"FINANCES":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_68_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_68_2', 2, '{"signals":{"FINANCES":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_68_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_68_3', 3, '{"signals":{"FINANCES":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_68_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_68_4', 4, '{"signals":{"FINANCES":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_68_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_69', 69, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_69';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma proposta de trabalho pode exigir mudança de cidade. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A job offer may require moving to another city. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una oferta laboral puede exigir cambiar de ciudad. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une offre d’emploi peut nécessiter un déménagement. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_69_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_69_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_69_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_69_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_69_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_69_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_69_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_69_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_70', 70, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_70';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm prazos diferentes para começar a morar juntos. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have different timelines for moving in together. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis plazos distintos para empezar a convivir. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous avez des calendriers différents pour vivre ensemble. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_70_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_70_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_70_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_70_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_70_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_70_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_70_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_70_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_71', 71, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"EASY"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_71';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer voltar a estudar e isso mudaria a rotina do casal. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to resume studying and it would change your shared routine. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres retomar estudios y eso cambiaría la rutina de pareja. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez reprendre des études et cela modifierait votre routine commune. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_71_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_71_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_71_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_71_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_71_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_71_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_71_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_71_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_72', 72, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_72';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma meta de viagem deixou de caber no próximo ano. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A travel goal no longer fits next year. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una meta de viaje ya no cabe el próximo año. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un projet de voyage ne trouve plus sa place l’an prochain. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_72_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_72_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_72_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_72_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_72_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_72_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_72_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_72_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_73', 73, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_73';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês têm dúvidas sobre onde gostariam de viver no futuro. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You are unsure where you would like to live in future. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Tenéis dudas sobre dónde os gustaría vivir en el futuro. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous hésitez sur le lieu où vivre à l’avenir. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_73_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_73_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_73_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_73_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_73_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_73_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_73_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_73_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_74', 74, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"MEDIUM"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_74';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma oportunidade de intercâmbio muda seus planos por alguns meses. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'An exchange opportunity changes your plans for several months. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Una oportunidad de intercambio cambia tus planes unos meses. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Une occasion d’échange modifie vos projets pour quelques mois. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_74_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_74_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_74_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_74_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_74_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_74_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_74_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_74_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_75', 75, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_75';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer redefinir uma meta profissional que afeta o tempo juntos. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to redefine a career goal that affects time together. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres redefinir una meta laboral que afecta al tiempo juntos. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez redéfinir un objectif professionnel qui affecte votre temps ensemble. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_75_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_75_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_75_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_75_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_75_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_75_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_75_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_75_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_76', 76, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_76';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Vocês ainda não conversaram sobre responsabilidades futuras de cuidado. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You have not yet discussed future caring responsibilities. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Aún no hablasteis de futuras responsabilidades de cuidado. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous n’avez pas encore parlé de futures responsabilités d’aide aux proches. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_76_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_76_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_76_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_76_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_76_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_76_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_76_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_76_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_77', 77, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_77';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Uma mudança familiar exige reorganizar planos para o próximo semestre. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A family change requires reorganising plans for the next six months. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un cambio familiar exige reorganizar el próximo semestre. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un changement familial exige de revoir les projets du prochain semestre. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_77_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_77_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_77_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_77_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_77_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_77_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_77_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_77_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_78', 78, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_78';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você quer avaliar com calma a possibilidade de ter filhos. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want time to consider the possibility of having children. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres valorar con calma la posibilidad de tener hijos. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez réfléchir sereinement à la possibilité d’avoir des enfants. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_78_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_78_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_78_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_78_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_78_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_78_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_78_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_78_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_79', 79, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_79';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Um projeto conjunto ficou maior do que vocês conseguem executar agora. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'A shared project grew beyond what you can manage now. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Un proyecto conjunto creció más de lo que podéis ejecutar ahora. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Un projet commun dépasse ce que vous pouvez réaliser maintenant. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_79_1', 1, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_79_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_79_2', 2, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_79_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_79_3', 3, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_79_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_79_4', 4, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_79_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
+        values (v_version, 'CD2_80', 80, 'SCENARIO', '{"dimension":"FUTURE_PLANS","difficulty":"HARD"}'::jsonb)
+        on conflict (quiz_version_id, stable_key) do nothing;
+        select id into strict v_question from meqyro.questions where quiz_version_id = v_version and stable_key = 'CD2_80';
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'pt', 'Você deseja planejar o próximo ano sem fechar todas as possibilidades. Qual seria seu primeiro passo?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'en', 'You want to plan next year while keeping possibilities open. What would your first step be?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'es', 'Quieres planear el próximo año sin cerrar todas las posibilidades. ¿Cuál sería tu primer paso?') on conflict (question_id, locale) do nothing;
+insert into meqyro.question_translations (question_id, locale, prompt)
+          values (v_question, 'fr', 'Vous souhaitez préparer l’année prochaine en gardant des possibilités ouvertes. Quelle serait votre première démarche ?') on conflict (question_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_80_1', 1, '{"signals":{"FUTURE_PLANS":3}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_80_1';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Conversar sobre o que importa para cada pessoa antes de definir o caminho.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Discuss what matters to each person before deciding a way forward.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Hablar de lo que importa a cada persona antes de definir el camino.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Discuter de ce qui compte pour chacun avant de définir la suite.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_80_2', 2, '{"signals":{"FUTURE_PLANS":0}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_80_2';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Refletir sobre minhas necessidades e limites antes de trazer uma proposta.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Reflect on my needs and boundaries before bringing a proposal.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Reflexionar sobre mis necesidades y límites antes de proponer algo.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Réfléchir à mes besoins et limites avant de proposer quelque chose.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_80_3', 3, '{"signals":{"FUTURE_PLANS":1}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_80_3';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Definir o que posso ajustar e comunicar minha posição depois.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Decide what I can adjust and communicate my position afterwards.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Definir qué puedo ajustar y comunicar mi postura después.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Définir ce que je peux adapter puis communiquer ma position.') on conflict (option_id, locale) do nothing;
+insert into meqyro.options (question_id, stable_key, position, scoring_value)
+          values (v_question, 'CD2_80_4', 4, '{"signals":{"FUTURE_PLANS":2}}'::jsonb)
+          on conflict (question_id, stable_key) do nothing;
+          select id into strict v_option from meqyro.options where question_id = v_question and stable_key = 'CD2_80_4';
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'pt', 'Propor um pequeno ajuste conjunto e observar como funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'en', 'Suggest a small joint adjustment and see how it works.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'es', 'Proponer un pequeño ajuste conjunto y observar cómo funciona.') on conflict (option_id, locale) do nothing;
+insert into meqyro.option_translations (option_id, locale, label)
+            values (v_option, 'fr', 'Proposer un petit ajustement commun et observer son effet.') on conflict (option_id, locale) do nothing;
 end $$;

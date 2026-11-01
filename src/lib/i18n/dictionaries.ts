@@ -243,6 +243,7 @@ export type Dictionary = {
     moneyBackGuarantee: string;
     securePayment: string;
     premiumUnlocked: string;
+    reportEvidence: string;
     disclaimer: string;
     shareTitle: string;
     noResultFound: string;
@@ -390,6 +391,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantia incondicional de 7 dias",
       securePayment: "Ambiente de pagamento seguro e criptografado",
       premiumUnlocked: "Acesso Premium Desbloqueado",
+      reportEvidence: "Evidências e pontos de atenção",
       disclaimer:
         "Este teste destina-se ao autoconhecimento e reflexão pessoal, sem caráter diagnóstico, clínico ou financeiro.",
       shareTitle: "Compartilhe seu resultado",
@@ -573,6 +575,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "7-day money-back guarantee",
       securePayment: "Encrypted and secure checkout",
       premiumUnlocked: "Premium Access Unlocked",
+      reportEvidence: "Evidence and key observations",
       disclaimer:
         "This assessment is intended solely for personal reflection and self-discovery. It does not constitute clinical, diagnostic or financial advice.",
       shareTitle: "Share your results",
@@ -756,6 +759,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantía de reembolso de 7 días",
       securePayment: "Proceso de pago cifrado y seguro",
       premiumUnlocked: "Acceso Premium Desbloqueado",
+      reportEvidence: "Evidencias y puntos de atención",
       disclaimer:
         "Esta evaluación está destinada exclusivamente al autoconocimiento y reflexión personal, sin carácter clínico o financiero.",
       shareTitle: "Comparte tu resultado",
@@ -939,6 +943,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantie satisfait ou remboursé 7 jours",
       securePayment: "Paiement chiffré et sécurisé",
       premiumUnlocked: "Accès Premium Débloqué",
+      reportEvidence: "Éléments observés et points d’attention",
       disclaimer:
         "Ce test est destiné uniquement à la réflexion personnelle et au développement personnel. Il ne constitue aucunement un avis clinique ou financier.",
       shareTitle: "Partagez votre résultat",

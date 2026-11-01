@@ -8,8 +8,8 @@ import {
 } from "@/features/scoring/personality-map";
 
 describe("Content definitions integrity", () => {
-  it("BrainRank contains exactly 60 valid candidate items in pool (10 per dimension) and 24 canonical questions", () => {
-    expect(brainRankPool).toHaveLength(60);
+  it("BrainRank contains exactly 96 valid candidate items in pool (16 per dimension) and 24 canonical questions", () => {
+    expect(brainRankPool).toHaveLength(96);
     expect(brainRankQuestions).toHaveLength(24);
 
     const byDimension: Record<BrainRankDimension, number> = Object.fromEntries(
@@ -24,7 +24,7 @@ describe("Content definitions integrity", () => {
     }
 
     for (const dim of brainRankDimensions) {
-      expect(byDimension[dim]).toBe(10);
+      expect(byDimension[dim]).toBe(16);
     }
   });
 

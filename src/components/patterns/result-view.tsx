@@ -336,6 +336,19 @@ export function ResultView({
                   </p>
                 ))}
 
+                {section.keyTakeaways.length > 0 ? (
+                  <div className="space-y-2">
+                    <strong className="text-sm text-stone-800">
+                      {dict.resultView.reportEvidence}
+                    </strong>
+                    <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                      {section.keyTakeaways.map((item, index) => (
+                        <li key={`${section.id}-evidence-${index}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+
                 {section.actionItems.length > 0 ? (
                   <div className="action-items-box bg-stone-50 p-4 rounded-xl space-y-2">
                     <strong className="text-xs font-semibold text-stone-800 uppercase tracking-wider block">

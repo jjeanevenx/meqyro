@@ -202,7 +202,7 @@ describe("Behavioral instruments v2", () => {
     expect(sql).toContain("'v2.0.0', 'behavioral-v2'");
     expect(sql).toContain("'SCENARIO'");
     expect(sql).not.toMatch(/update |delete |v1\.0\.0|insert into meqyro\.results/i);
-    expect(sql.match(/insert into meqyro.questions /g)).toHaveLength(40);
-    expect(sql.match(/insert into meqyro.option_translations /g)).toHaveLength(640);
+    expect(sql.match(/insert into meqyro.questions /g)).toHaveLength(160);
+    expect(sql.match(/insert into meqyro.option_translations /g)).toHaveLength(2560);
   });
 });

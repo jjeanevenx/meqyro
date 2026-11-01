@@ -263,7 +263,13 @@ export async function startQuizSession(
       .order("position", { ascending: true });
 
     if (candidates && candidates.length > 0) {
-      const baseConfig = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
+      const configured = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
+      const baseConfig =
+        configured &&
+        (input.quizSlug === "brainrank" ||
+          activeVersion.scoring_version === behavioralScoringVersion)
+          ? { ...configured, maxQuestionExposure: 0.25 }
+          : configured;
       const config =
         activeVersion.scoring_version === behavioralScoringVersion && baseConfig
           ? { ...baseConfig, orderingStrategy: "SCENARIO_RAMP" as const }

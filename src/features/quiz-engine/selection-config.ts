@@ -20,6 +20,8 @@ export type QuizSelectionConfig = Readonly<{
   dimensions: Readonly<Record<string, DimensionQuota>>;
   orderingStrategy: QuizOrderingStrategy;
   requiresDifficulty: boolean;
+  /** Maximum inclusion probability in every selected stratum. */
+  maxQuestionExposure?: number;
 }>;
 
 export const ASSESSMENT_SELECTION_CONFIGS: Readonly<Record<string, QuizSelectionConfig>> = {

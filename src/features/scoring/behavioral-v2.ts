@@ -5,8 +5,8 @@ import {
   indexUniqueAnswers,
   type ScoringAnswer,
 } from "@/features/quiz-engine/contracts";
-import { moneyDnaScenarios } from "@/content/quizzes/moneydna-v2";
-import { coupleDnaScenarios } from "@/content/quizzes/coupledna-v2";
+import { moneyDnaPool } from "@/content/quizzes/moneydna-v2";
+import { coupleDnaPool } from "@/content/quizzes/coupledna-v2";
 import type { BilateralCoupleComparison, CoupleDimension } from "./coupledna";
 
 export const behavioralVersion = "v2.0.0";
@@ -37,7 +37,7 @@ export function scoreBehavioralV2(
   items: readonly BehavioralItem[],
   answers: readonly ScoringAnswer[],
 ): BehavioralScore {
-  const definition = slug === "moneydna" ? moneyDnaScenarios : coupleDnaScenarios;
+  const definition = slug === "moneydna" ? moneyDnaPool : coupleDnaPool;
   const canonical = new Map(definition.map((q) => [q.stableKey, q]));
   const indexed = indexUniqueAnswers(answers);
   if (
@@ -145,11 +145,24 @@ export function compareBehavioralCouple(
   ) {
     throw new InvalidQuizSubmissionError("Couple instruments must match");
   }
+  const leftKeys = new Set(a.evidence.map((e) => e.questionKey));
+  const rightKeys = new Set(b.evidence.map((e) => e.questionKey));
+  if (
+    leftKeys.size !== 20 ||
+    rightKeys.size !== 20 ||
+    [...leftKeys].some((key) => !rightKeys.has(key))
+  ) {
+    throw new InvalidQuizSubmissionError("Couple attempts must share the same selected questions");
+  }
   const alignments = {} as Record<CoupleDimension, number>;
   for (const dimension of [
-    ...new Set(coupleDnaScenarios.map((q) => q.dimension)),
+    ...new Set(coupleDnaPool.map((q) => q.dimension)),
   ] as CoupleDimension[]) {
-    const questions = coupleDnaScenarios.filter((q) => q.dimension === dimension);
+    const questions = coupleDnaPool.filter(
+      (q) => q.dimension === dimension && leftKeys.has(q.stableKey),
+    );
+    if (questions.length !== 4)
+      throw new InvalidQuizSubmissionError("Invalid couple dimension coverage");
     let matches = 0;
     for (const q of questions) {
       const left = a.evidence.find((e) => e.questionKey === q.stableKey)?.optionKey;
