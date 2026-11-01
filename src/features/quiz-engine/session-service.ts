@@ -142,10 +142,7 @@ export async function startQuizSession(
 
   const rawVersions = quiz.quiz_versions as unknown as VersionRecord | VersionRecord[];
   const versions = Array.isArray(rawVersions) ? rawVersions : [rawVersions];
-  let activeVersion =
-    input.quizSlug === "moneydna" || input.quizSlug === "coupledna"
-      ? publishedVersion(versions)
-      : versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED");
+  let activeVersion = publishedVersion(versions);
 
   if (!activeVersion) {
     throw new SessionNotFoundError(`No active version for ${input.quizSlug}`);
@@ -1093,6 +1090,7 @@ export async function completeQuizSession(input: {
         })),
       })),
       scoringAnswers,
+      session.quiz_version,
     ) as unknown as Record<string, unknown>;
   } else if (quizSlug === "brainrank") {
     const brainRankItems: BrainRankItem[] = rawQuestions.map((q) => {
@@ -1245,8 +1243,8 @@ export async function completeQuizSession(input: {
       );
     }
   }
-  // Snapshot input
-  if (quizSlug === "brainrank") {
+  // Pin provenance to the assigned instrument even when an unchanged scorer is reused.
+  if (quizSlug === "brainrank" || Object.hasOwn(calculatedScore, "quizVersion")) {
     calculatedScore.quizVersion = session.quiz_version;
     calculatedScore.scoringVersion = session.scoring_version;
   }

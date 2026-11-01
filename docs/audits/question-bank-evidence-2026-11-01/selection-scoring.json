@@ -1,0 +1,48 @@
+[
+  {
+    "slug": "brainrank",
+    "attempts": 100,
+    "failed": 0,
+    "examples": []
+  },
+  {
+    "slug": "personality-map",
+    "attempts": 100,
+    "failed": 0,
+    "examples": []
+  },
+  {
+    "slug": "careerfit",
+    "attempts": 100,
+    "failed": 0,
+    "examples": []
+  },
+  {
+    "slug": "moneydna",
+    "attempts": 100,
+    "failed": 100,
+    "examples": [
+      "Invalid behavioral item or answer"
+    ]
+  },
+  {
+    "slug": "focusstyle",
+    "attempts": 100,
+    "failed": 0,
+    "examples": []
+  },
+  {
+    "slug": "decisiondna",
+    "attempts": 100,
+    "failed": 0,
+    "examples": []
+  },
+  {
+    "slug": "coupledna",
+    "attempts": 100,
+    "failed": 100,
+    "examples": [
+      "Invalid behavioral item or answer"
+    ]
+  }
+]

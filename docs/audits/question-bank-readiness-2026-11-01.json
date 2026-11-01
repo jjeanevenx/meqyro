@@ -1,0 +1,461 @@
+{
+  "date": "2026-11-01",
+  "sourceCommit": "27b67f2",
+  "database": {
+    "project": "meqyro-hml",
+    "projectId": "zfdipjfgzkaqcbudfzub",
+    "productionVerified": false
+  },
+  "scope": "Active questions in latest publishable versions; no session, user, payment or lead data queried",
+  "stats": {
+    "brainrank": {
+      "questions": 108,
+      "options": 432,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "PATTERN_RECOGNITION": 16,
+        "LOGICAL_REASONING": 16,
+        "NUMERICAL_REASONING": 16,
+        "ATTENTION": 16,
+        "PROBLEM_SOLVING": 16,
+        "SPEED": 16,
+        "DELAYED_MEMORY": 12
+      },
+      "difficulty": {
+        "EASY": 24,
+        "MEDIUM": 48,
+        "HARD": 24,
+        "NA": 12
+      },
+      "correctPositions": {
+        "1": 24,
+        "2": 45,
+        "3": 24,
+        "4": 15
+      }
+    },
+    "careerfit": {
+      "questions": 24,
+      "options": 0,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "TECHNICAL": 4,
+        "MANAGERIAL": 4,
+        "CREATIVE": 4,
+        "AUTONOMOUS": 4,
+        "SECURITY": 4,
+        "CAUSE": 4
+      },
+      "difficulty": {
+        "NA": 24
+      },
+      "correctPositions": {}
+    },
+    "coupledna": {
+      "questions": 80,
+      "options": 320,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "COMMUNICATION": 16,
+        "LIFE_VALUES": 16,
+        "CONFLICT_MANAGEMENT": 16,
+        "FINANCES": 16,
+        "FUTURE_PLANS": 16
+      },
+      "difficulty": {
+        "EASY": 20,
+        "MEDIUM": 20,
+        "HARD": 40
+      },
+      "correctPositions": {}
+    },
+    "decisiondna": {
+      "questions": 4,
+      "options": 16,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "UNKNOWN": 4
+      },
+      "difficulty": {
+        "NA": 4
+      },
+      "correctPositions": {}
+    },
+    "focusstyle": {
+      "questions": 23,
+      "options": 12,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "IMMERSIVE_HYPERFOCUS": 5,
+        "MODULAR_SERIAL": 5,
+        "COLLABORATIVE": 5,
+        "REACTIVE_SPRINT": 5,
+        "DELAYED_MEMORY": 3
+      },
+      "difficulty": {
+        "NA": 23
+      },
+      "correctPositions": {
+        "2": 1,
+        "3": 1,
+        "4": 1
+      }
+    },
+    "moneydna": {
+      "questions": 80,
+      "options": 320,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "BUILDER": 16,
+        "GUARDIAN": 16,
+        "STRATEGIST": 16,
+        "ADVENTURER": 16,
+        "BALANCER": 16
+      },
+      "difficulty": {
+        "EASY": 20,
+        "MEDIUM": 20,
+        "HARD": 40
+      },
+      "correctPositions": {}
+    },
+    "personality-map": {
+      "questions": 40,
+      "options": 0,
+      "missingPrompts": 0,
+      "missingLabels": 0,
+      "badKeys": 0,
+      "dimensions": {
+        "OPENNESS": 8,
+        "CONSCIENTIOUSNESS": 8,
+        "EXTRAVERSION": 8,
+        "AGREEABLENESS": 8,
+        "EMOTIONAL_STABILITY": 8
+      },
+      "difficulty": {
+        "NA": 40
+      },
+      "correctPositions": {}
+    }
+  },
+  "structuralIssues": [],
+  "encodingOrSignalIssues": [],
+  "repeatedOptions": {
+    "brainrank": {
+      "pt": [
+        {
+          "text": "20",
+          "count": 7
+        },
+        {
+          "text": "5",
+          "count": 7
+        },
+        {
+          "text": "30",
+          "count": 6
+        },
+        {
+          "text": "3",
+          "count": 6
+        },
+        {
+          "text": "4",
+          "count": 6
+        }
+      ],
+      "en": [
+        {
+          "text": "20",
+          "count": 7
+        },
+        {
+          "text": "5",
+          "count": 7
+        },
+        {
+          "text": "30",
+          "count": 6
+        },
+        {
+          "text": "3",
+          "count": 6
+        },
+        {
+          "text": "4",
+          "count": 6
+        }
+      ],
+      "es": [
+        {
+          "text": "20",
+          "count": 7
+        },
+        {
+          "text": "5",
+          "count": 7
+        },
+        {
+          "text": "30",
+          "count": 6
+        },
+        {
+          "text": "3",
+          "count": 6
+        },
+        {
+          "text": "4",
+          "count": 6
+        }
+      ],
+      "fr": [
+        {
+          "text": "20",
+          "count": 7
+        },
+        {
+          "text": "5",
+          "count": 7
+        },
+        {
+          "text": "30",
+          "count": 6
+        },
+        {
+          "text": "3",
+          "count": 6
+        },
+        {
+          "text": "4",
+          "count": 6
+        }
+      ]
+    },
+    "careerfit": {
+      "pt": [],
+      "en": [],
+      "es": [],
+      "fr": []
+    },
+    "coupledna": {
+      "pt": [
+        {
+          "text": "Definir o que posso ajustar e comunicar minha posição depois.",
+          "count": 60
+        },
+        {
+          "text": "Propor um pequeno ajuste conjunto e observar como funciona.",
+          "count": 60
+        },
+        {
+          "text": "Conversar sobre o que importa para cada pessoa antes de definir o caminho.",
+          "count": 60
+        },
+        {
+          "text": "Refletir sobre minhas necessidades e limites antes de trazer uma proposta.",
+          "count": 60
+        }
+      ],
+      "en": [
+        {
+          "text": "Decide what I can adjust and communicate my position afterwards.",
+          "count": 60
+        },
+        {
+          "text": "Suggest a small joint adjustment and see how it works.",
+          "count": 60
+        },
+        {
+          "text": "Discuss what matters to each person before deciding a way forward.",
+          "count": 60
+        },
+        {
+          "text": "Reflect on my needs and boundaries before bringing a proposal.",
+          "count": 60
+        }
+      ],
+      "es": [
+        {
+          "text": "Definir qué puedo ajustar y comunicar mi postura después.",
+          "count": 60
+        },
+        {
+          "text": "Proponer un pequeño ajuste conjunto y observar cómo funciona.",
+          "count": 60
+        },
+        {
+          "text": "Hablar de lo que importa a cada persona antes de definir el camino.",
+          "count": 60
+        },
+        {
+          "text": "Reflexionar sobre mis necesidades y límites antes de proponer algo.",
+          "count": 60
+        }
+      ],
+      "fr": [
+        {
+          "text": "Définir ce que je peux adapter puis communiquer ma position.",
+          "count": 60
+        },
+        {
+          "text": "Proposer un petit ajustement commun et observer son effet.",
+          "count": 60
+        },
+        {
+          "text": "Discuter de ce qui compte pour chacun avant de définir la suite.",
+          "count": 60
+        },
+        {
+          "text": "Réfléchir à mes besoins et limites avant de proposer quelque chose.",
+          "count": 60
+        }
+      ]
+    },
+    "decisiondna": {
+      "pt": [],
+      "en": [],
+      "es": [],
+      "fr": []
+    },
+    "focusstyle": {
+      "pt": [],
+      "en": [],
+      "es": [],
+      "fr": []
+    },
+    "moneydna": {
+      "pt": [
+        {
+          "text": "Preservar o dinheiro para manter minha margem diante de imprevistos.",
+          "count": 48
+        },
+        {
+          "text": "Comparar custos, prazos e impacto antes de alocar o dinheiro.",
+          "count": 48
+        },
+        {
+          "text": "Dar espaço a uma experiência significativa no presente.",
+          "count": 48
+        },
+        {
+          "text": "Dividir a margem entre uma necessidade atual e uma meta futura.",
+          "count": 48
+        },
+        {
+          "text": "Aplicar o valor em uma etapa de um projeto de longo prazo.",
+          "count": 48
+        }
+      ],
+      "en": [
+        {
+          "text": "Keep the money to preserve my cushion for unexpected costs.",
+          "count": 48
+        },
+        {
+          "text": "Compare costs, timing and impact before allocating the money.",
+          "count": 48
+        },
+        {
+          "text": "Make room for a meaningful experience in the present.",
+          "count": 48
+        },
+        {
+          "text": "Split the margin between a current need and a future goal.",
+          "count": 48
+        },
+        {
+          "text": "Use the money for a step in a long-term project.",
+          "count": 48
+        }
+      ],
+      "es": [
+        {
+          "text": "Conservar el dinero para mantener mi margen ante imprevistos.",
+          "count": 48
+        },
+        {
+          "text": "Comparar costes, plazos e impacto antes de asignar el dinero.",
+          "count": 48
+        },
+        {
+          "text": "Dar espacio a una experiencia significativa en el presente.",
+          "count": 48
+        },
+        {
+          "text": "Repartir el margen entre una necesidad actual y una meta futura.",
+          "count": 48
+        },
+        {
+          "text": "Usar el dinero en una etapa de un proyecto a largo plazo.",
+          "count": 48
+        }
+      ],
+      "fr": [
+        {
+          "text": "Garder l’argent pour préserver ma marge face aux imprévus.",
+          "count": 48
+        },
+        {
+          "text": "Comparer coûts, délais et effets avant d’affecter la somme.",
+          "count": 48
+        },
+        {
+          "text": "Faire une place à une expérience significative dans le présent.",
+          "count": 48
+        },
+        {
+          "text": "Répartir la marge entre un besoin actuel et un objectif futur.",
+          "count": 48
+        },
+        {
+          "text": "Consacrer la somme à une étape d’un projet à long terme.",
+          "count": 48
+        }
+      ]
+    },
+    "personality-map": {
+      "pt": [],
+      "en": [],
+      "es": [],
+      "fr": []
+    }
+  },
+  "semanticBlocker": {
+    "question": "BR_ATT_02",
+    "expected": 10,
+    "keyed": 12,
+    "offered": [
+      6,
+      7,
+      12,
+      9
+    ],
+    "locales": [
+      "pt",
+      "en",
+      "es",
+      "fr"
+    ]
+  },
+  "checks": {
+    "unitTests": 324,
+    "unitFiles": 45,
+    "typecheck": "passed",
+    "build": "passed",
+    "integration": "not run; no local Supabase verification",
+    "browser": "not run"
+  },
+  "decision": "NO_GO"
+}

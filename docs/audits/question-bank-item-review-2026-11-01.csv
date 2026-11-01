@@ -1,0 +1,360 @@
+﻿teste,chave_original,decisao,versao_revisada,chaves_revisadas,motivo
+brainrank,BR_PAT_01,REVALIDADA,1.3,BR_PAT_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_02,CORRIGIDA,1.3,BR_PAT_02,Explicitada a observação separada de posições ímpares e pares.
+brainrank,BR_PAT_03,REVALIDADA,1.3,BR_PAT_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_04,REVALIDADA,1.3,BR_PAT_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_01,REVALIDADA,1.3,BR_LOG_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_02,CORRIGIDA,1.3,BR_LOG_02,"Premissa e conclusão no mesmo instante, com regra sem exceções explicitada."
+brainrank,BR_LOG_03,REVALIDADA,1.3,BR_LOG_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_04,REVALIDADA,1.3,BR_LOG_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_01,REVALIDADA,1.3,BR_NUM_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_02,REVALIDADA,1.3,BR_NUM_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_03,REVALIDADA,1.3,BR_NUM_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_04,CORRIGIDA,1.3,BR_NUM_04,Definida a regra pelos inversos sem exigir conhecer o termo progressão harmônica.
+brainrank,BR_ATT_01,REVALIDADA,1.3,BR_ATT_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_02,CORRIGIDA,1.3,BR_ATT_02,Contagem independente de R = 10; criada alternativa correta na versão 1.3.
+brainrank,BR_ATT_03,REVALIDADA,1.3,BR_ATT_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_04,REVALIDADA,1.3,BR_ATT_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_01,REVALIDADA,1.3,BR_PRB_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_02,CORRIGIDA,1.3,BR_PRB_02,Esclarecidos todos os passos para obter exatamente 4 L com baldes de 5 L e 3 L.
+brainrank,BR_PRB_03,REVALIDADA,1.3,BR_PRB_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_04,REVALIDADA,1.3,BR_PRB_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_01,CORRIGIDA,1.3,BR_SPD_01,"Pergunta por exatamente duas ocorrências; cada alternativa apresenta uma figura, sem opção visual composta ambígua."
+brainrank,BR_SPD_02,REVALIDADA,1.3,BR_SPD_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_03,REVALIDADA,1.3,BR_SPD_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_04,REVALIDADA,1.3,BR_SPD_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_05,REVALIDADA,1.3,BR_PAT_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_06,REVALIDADA,1.3,BR_PAT_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_07,REVALIDADA,1.3,BR_PAT_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_08,REVALIDADA,1.3,BR_PAT_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_09,REVALIDADA,1.3,BR_PAT_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PAT_10,REVALIDADA,1.3,BR_PAT_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_05,REVALIDADA,1.3,BR_LOG_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_06,REVALIDADA,1.3,BR_LOG_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_07,REVALIDADA,1.3,BR_LOG_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_08,REVALIDADA,1.3,BR_LOG_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_09,REVALIDADA,1.3,BR_LOG_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_LOG_10,REVALIDADA,1.3,BR_LOG_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_05,REVALIDADA,1.3,BR_NUM_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_06,REVALIDADA,1.3,BR_NUM_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_07,REVALIDADA,1.3,BR_NUM_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_08,REVALIDADA,1.3,BR_NUM_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_09,REVALIDADA,1.3,BR_NUM_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_NUM_10,REVALIDADA,1.3,BR_NUM_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_05,REVALIDADA,1.3,BR_ATT_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_06,REVALIDADA,1.3,BR_ATT_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_07,REVALIDADA,1.3,BR_ATT_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_08,REVALIDADA,1.3,BR_ATT_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_09,REVALIDADA,1.3,BR_ATT_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_ATT_10,REVALIDADA,1.3,BR_ATT_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_05,REVALIDADA,1.3,BR_PRB_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_06,REVALIDADA,1.3,BR_PRB_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_07,REVALIDADA,1.3,BR_PRB_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_08,REVALIDADA,1.3,BR_PRB_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_09,REVALIDADA,1.3,BR_PRB_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_PRB_10,REVALIDADA,1.3,BR_PRB_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_05,REVALIDADA,1.3,BR_SPD_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_06,REVALIDADA,1.3,BR_SPD_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_07,REVALIDADA,1.3,BR_SPD_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_08,REVALIDADA,1.3,BR_SPD_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_09,REVALIDADA,1.3,BR_SPD_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_SPD_10,REVALIDADA,1.3,BR_SPD_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_01,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_02,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_03,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_04,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_05,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PATTERN_RECOGNITION_06,REVALIDADA,1.3,BR_EXT_PATTERN_RECOGNITION_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_01,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_02,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_03,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_04,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_05,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_LOGICAL_REASONING_06,REVALIDADA,1.3,BR_EXT_LOGICAL_REASONING_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_01,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_02,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_03,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_04,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_05,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_NUMERICAL_REASONING_06,REVALIDADA,1.3,BR_EXT_NUMERICAL_REASONING_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_01,REVALIDADA,1.3,BR_EXT_ATTENTION_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_02,REVALIDADA,1.3,BR_EXT_ATTENTION_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_03,REVALIDADA,1.3,BR_EXT_ATTENTION_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_04,REVALIDADA,1.3,BR_EXT_ATTENTION_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_05,REVALIDADA,1.3,BR_EXT_ATTENTION_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_ATTENTION_06,REVALIDADA,1.3,BR_EXT_ATTENTION_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_01,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_02,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_03,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_04,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_05,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_PROBLEM_SOLVING_06,REVALIDADA,1.3,BR_EXT_PROBLEM_SOLVING_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_01,REVALIDADA,1.3,BR_EXT_SPEED_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_02,REVALIDADA,1.3,BR_EXT_SPEED_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_03,REVALIDADA,1.3,BR_EXT_SPEED_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_04,REVALIDADA,1.3,BR_EXT_SPEED_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_05,REVALIDADA,1.3,BR_EXT_SPEED_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,BR_EXT_SPEED_06,REVALIDADA,1.3,BR_EXT_SPEED_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_04,REVALIDADA,1.3,MEMORY_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_05,REVALIDADA,1.3,MEMORY_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_06,REVALIDADA,1.3,MEMORY_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_07,REVALIDADA,1.3,MEMORY_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_08,REVALIDADA,1.3,MEMORY_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_09,REVALIDADA,1.3,MEMORY_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_10,REVALIDADA,1.3,MEMORY_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_11,REVALIDADA,1.3,MEMORY_11,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_12,REVALIDADA,1.3,MEMORY_12,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_13,REVALIDADA,1.3,MEMORY_13,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_14,REVALIDADA,1.3,MEMORY_14,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+brainrank,MEMORY_15,REVALIDADA,1.3,MEMORY_15,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+careerfit,CF_TECH_01,REESCRITA,v1.1.0,CF_TECH_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_TECH_02,REESCRITA,v1.1.0,CF_TECH_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_TECH_03,REESCRITA,v1.1.0,CF_TECH_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_TECH_04,REESCRITA,v1.1.0,CF_TECH_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_MGT_01,REESCRITA,v1.1.0,CF_MGT_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_MGT_02,REESCRITA,v1.1.0,CF_MGT_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_MGT_03,REESCRITA,v1.1.0,CF_MGT_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_MGT_04,REESCRITA,v1.1.0,CF_MGT_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CREAT_01,REESCRITA,v1.1.0,CF_CREAT_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CREAT_02,REESCRITA,v1.1.0,CF_CREAT_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CREAT_03,REESCRITA,v1.1.0,CF_CREAT_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CREAT_04,REESCRITA,v1.1.0,CF_CREAT_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_AUTO_01,REESCRITA,v1.1.0,CF_AUTO_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_AUTO_02,REESCRITA,v1.1.0,CF_AUTO_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_AUTO_03,REESCRITA,v1.1.0,CF_AUTO_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_AUTO_04,REESCRITA,v1.1.0,CF_AUTO_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_SEC_01,REESCRITA,v1.1.0,CF_SEC_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_SEC_02,REESCRITA,v1.1.0,CF_SEC_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_SEC_03,REESCRITA,v1.1.0,CF_SEC_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_SEC_04,REESCRITA,v1.1.0,CF_SEC_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CAUSE_01,REESCRITA,v1.1.0,CF_CAUSE_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CAUSE_02,REESCRITA,v1.1.0,CF_CAUSE_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CAUSE_03,REESCRITA,v1.1.0,CF_CAUSE_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+careerfit,CF_CAUSE_04,REESCRITA,v1.1.0,CF_CAUSE_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+coupledna,CD2_01,REVALIDADA,v3.0.0,CD3_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_02,REVALIDADA,v3.0.0,CD3_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_03,REVALIDADA,v3.0.0,CD3_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_04,REVALIDADA,v3.0.0,CD3_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_05,REVALIDADA,v3.0.0,CD3_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_06,REVALIDADA,v3.0.0,CD3_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_07,REVALIDADA,v3.0.0,CD3_07,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_08,REVALIDADA,v3.0.0,CD3_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_09,REVALIDADA,v3.0.0,CD3_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_10,REVALIDADA,v3.0.0,CD3_10,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_11,REVALIDADA,v3.0.0,CD3_11,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_12,REVALIDADA,v3.0.0,CD3_12,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_13,REVALIDADA,v3.0.0,CD3_13,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_14,REVALIDADA,v3.0.0,CD3_14,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_15,REVALIDADA,v3.0.0,CD3_15,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_16,REVALIDADA,v3.0.0,CD3_16,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_17,REVALIDADA,v3.0.0,CD3_17,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_18,REVALIDADA,v3.0.0,CD3_18,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_19,REVALIDADA,v3.0.0,CD3_19,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_20,REVALIDADA,v3.0.0,CD3_20,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+coupledna,CD2_21,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_22,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_23,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_24,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_25,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_26,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_27,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_28,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_29,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_30,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_31,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_32,SUBSTITUIDA,v3.0.0,CD3_01 | CD3_06 | CD3_11 | CD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_33,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_34,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_35,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_36,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_37,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_38,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_39,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_40,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_41,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_42,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_43,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_44,SUBSTITUIDA,v3.0.0,CD3_02 | CD3_07 | CD3_12 | CD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_45,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_46,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_47,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_48,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_49,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_50,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_51,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_52,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_53,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_54,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_55,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_56,SUBSTITUIDA,v3.0.0,CD3_03 | CD3_08 | CD3_13 | CD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_57,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_58,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_59,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_60,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_61,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_62,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_63,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_64,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_65,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_66,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_67,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_68,SUBSTITUIDA,v3.0.0,CD3_04 | CD3_09 | CD3_14 | CD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_69,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_70,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_71,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_72,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_73,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_74,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_75,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_76,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_77,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_78,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_79,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+coupledna,CD2_80,SUBSTITUIDA,v3.0.0,CD3_05 | CD3_10 | CD3_15 | CD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+decisiondna,DD_SCEN_01,SUBSTITUIDA,v1.1.0,DD_SCEN_01,Cenário profissional substituído por situação cotidiana; mantidos os quatro estilos.
+decisiondna,DD_SCEN_02,SUBSTITUIDA,v1.1.0,DD_SCEN_02,Cenário profissional substituído por situação cotidiana; mantidos os quatro estilos.
+decisiondna,DD_SCEN_03,SUBSTITUIDA,v1.1.0,DD_SCEN_03,Cenário profissional substituído por situação cotidiana; mantidos os quatro estilos.
+decisiondna,DD_SCEN_04,SUBSTITUIDA,v1.1.0,DD_SCEN_04,Cenário profissional substituído por situação cotidiana; mantidos os quatro estilos.
+focusstyle,FS_HYPER_01,REESCRITA,v1.1.0,FS_HYPER_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_HYPER_02,REESCRITA,v1.1.0,FS_HYPER_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_HYPER_03,REESCRITA,v1.1.0,FS_HYPER_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_HYPER_04,REESCRITA,v1.1.0,FS_HYPER_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_HYPER_05,REESCRITA,v1.1.0,FS_HYPER_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_MOD_01,REESCRITA,v1.1.0,FS_MOD_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_MOD_02,REESCRITA,v1.1.0,FS_MOD_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_MOD_03,REESCRITA,v1.1.0,FS_MOD_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_MOD_04,REESCRITA,v1.1.0,FS_MOD_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_MOD_05,REESCRITA,v1.1.0,FS_MOD_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_COL_01,REESCRITA,v1.1.0,FS_COL_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_COL_02,REESCRITA,v1.1.0,FS_COL_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_COL_03,REESCRITA,v1.1.0,FS_COL_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_COL_04,REESCRITA,v1.1.0,FS_COL_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_COL_05,REESCRITA,v1.1.0,FS_COL_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_SPR_01,REESCRITA,v1.1.0,FS_SPR_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_SPR_02,REESCRITA,v1.1.0,FS_SPR_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_SPR_03,REESCRITA,v1.1.0,FS_SPR_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_SPR_04,REESCRITA,v1.1.0,FS_SPR_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,FS_SPR_05,REESCRITA,v1.1.0,FS_SPR_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+focusstyle,MEMORY_01,REVALIDADA,v1.1.0,MEMORY_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+focusstyle,MEMORY_02,REVALIDADA,v1.1.0,MEMORY_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+focusstyle,MEMORY_03,REVALIDADA,v1.1.0,MEMORY_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_01,REVALIDADA,v3.0.0,MD3_01,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_02,REVALIDADA,v3.0.0,MD3_02,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_03,REVALIDADA,v3.0.0,MD3_03,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_04,REVALIDADA,v3.0.0,MD3_04,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_05,REVALIDADA,v3.0.0,MD3_05,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_06,REVALIDADA,v3.0.0,MD3_06,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_07,CORRIGIDA,v3.0.0,MD3_07,"Esclarecidos fluxo de caixa, sequência de ações ou relação entre tempo e gasto."
+moneydna,MD2_08,REVALIDADA,v3.0.0,MD3_08,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_09,REVALIDADA,v3.0.0,MD3_09,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_10,SUBSTITUIDA,v3.0.0,MD3_10,Empréstimo confundia generosidade com preferência por experiências; substituído por escolha sobre evento e poupança.
+moneydna,MD2_11,REVALIDADA,v3.0.0,MD3_11,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_12,CORRIGIDA,v3.0.0,MD3_12,"Esclarecidos fluxo de caixa, sequência de ações ou relação entre tempo e gasto."
+moneydna,MD2_13,REVALIDADA,v3.0.0,MD3_13,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_14,REVALIDADA,v3.0.0,MD3_14,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_15,REVALIDADA,v3.0.0,MD3_15,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_16,REVALIDADA,v3.0.0,MD3_16,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_17,CORRIGIDA,v3.0.0,MD3_17,"Esclarecidos fluxo de caixa, sequência de ações ou relação entre tempo e gasto."
+moneydna,MD2_18,REVALIDADA,v3.0.0,MD3_18,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_19,REVALIDADA,v3.0.0,MD3_19,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_20,REVALIDADA,v3.0.0,MD3_20,Enunciado e alternativas coerentes; traduções e estrutura verificadas.
+moneydna,MD2_21,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_22,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_23,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_24,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_25,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_26,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_27,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_28,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_29,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_30,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_31,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_32,SUBSTITUIDA,v3.0.0,MD3_01 | MD3_06 | MD3_11 | MD3_16,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_33,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_34,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_35,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_36,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_37,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_38,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_39,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_40,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_41,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_42,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_43,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_44,SUBSTITUIDA,v3.0.0,MD3_02 | MD3_07 | MD3_12 | MD3_17,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_45,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_46,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_47,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_48,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_49,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_50,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_51,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_52,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_53,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_54,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_55,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_56,SUBSTITUIDA,v3.0.0,MD3_03 | MD3_08 | MD3_13 | MD3_18,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_57,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_58,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_59,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_60,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_61,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_62,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_63,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_64,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_65,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_66,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_67,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_68,SUBSTITUIDA,v3.0.0,MD3_04 | MD3_09 | MD3_14 | MD3_19,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_69,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_70,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_71,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_72,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_73,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_74,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_75,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_76,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_77,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_78,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_79,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+moneydna,MD2_80,SUBSTITUIDA,v3.0.0,MD3_05 | MD3_10 | MD3_15 | MD3_20,"Cenário da expansão com alternativas genéricas retirado das novas tentativas. Substituição pelo conjunto de quatro cenários específicos do mesmo tema, sem correspondência 1:1."
+personality-map,PM_OPN_01,REESCRITA,1.1,PM_OPN_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_02,REESCRITA,1.1,PM_OPN_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_03,REESCRITA,1.1,PM_OPN_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_04,REESCRITA,1.1,PM_OPN_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_05,REESCRITA,1.1,PM_OPN_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_06,REESCRITA,1.1,PM_OPN_06,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_07,REESCRITA,1.1,PM_OPN_07,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_OPN_08,REESCRITA,1.1,PM_OPN_08,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_01,REESCRITA,1.1,PM_CON_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_02,REESCRITA,1.1,PM_CON_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_03,REESCRITA,1.1,PM_CON_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_04,REESCRITA,1.1,PM_CON_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_05,REESCRITA,1.1,PM_CON_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_06,REESCRITA,1.1,PM_CON_06,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_07,REESCRITA,1.1,PM_CON_07,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_CON_08,REESCRITA,1.1,PM_CON_08,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_01,REESCRITA,1.1,PM_EXT_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_02,REESCRITA,1.1,PM_EXT_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_03,REESCRITA,1.1,PM_EXT_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_04,REESCRITA,1.1,PM_EXT_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_05,REESCRITA,1.1,PM_EXT_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_06,REESCRITA,1.1,PM_EXT_06,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_07,REESCRITA,1.1,PM_EXT_07,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EXT_08,REESCRITA,1.1,PM_EXT_08,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_01,REESCRITA,1.1,PM_AGR_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_02,REESCRITA,1.1,PM_AGR_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_03,REESCRITA,1.1,PM_AGR_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_04,REESCRITA,1.1,PM_AGR_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_05,REESCRITA,1.1,PM_AGR_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_06,REESCRITA,1.1,PM_AGR_06,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_07,REESCRITA,1.1,PM_AGR_07,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_AGR_08,REESCRITA,1.1,PM_AGR_08,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_01,REESCRITA,1.1,PM_EMS_01,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_02,REESCRITA,1.1,PM_EMS_02,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_03,REESCRITA,1.1,PM_EMS_03,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_04,REESCRITA,1.1,PM_EMS_04,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_05,REESCRITA,1.1,PM_EMS_05,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_06,REESCRITA,1.1,PM_EMS_06,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_07,REESCRITA,1.1,PM_EMS_07,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.
+personality-map,PM_EMS_08,REESCRITA,1.1,PM_EMS_08,Uma ideia por afirmação; linguagem simples; retirada de absolutos e jargão.

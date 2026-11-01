@@ -95,7 +95,7 @@ export function isCandidateEligible(
 ): boolean {
   if (!q.active) return false;
   if (!q.id || !q.stableKey) return false;
-  if (/^(MD2|CD2)_/.test(q.stableKey)) {
+  if (/^(MD[23]|CD[23])_/.test(q.stableKey)) {
     if (
       !requiredLocales.every((locale) =>
         q.translations?.some((t) => t.locale === locale && t.prompt.trim()),

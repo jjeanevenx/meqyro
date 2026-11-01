@@ -9,6 +9,7 @@ import { decisionDnaScenarios } from "../src/content/quizzes/decisiondna";
 import { coupleDnaQuestions } from "../src/content/quizzes/coupledna";
 import { memorySeedSql } from "./memory-seed";
 import { behavioralSeedSql } from "./behavioral-seed";
+import { reviewedQuestionSeedSql, activateReviewedBanksSql } from "./reviewed-question-seed";
 
 function escapeSql(str: string): string {
   return str.replace(/'/g, "''");
@@ -375,7 +376,17 @@ export function generateSeedSql(): string {
   lines.push("end $$;");
   lines.push("");
 
-  return lines.join("\n") + "\n" + memorySeedSql() + "\n" + behavioralSeedSql();
+  return (
+    lines.join("\n") +
+    "\n" +
+    memorySeedSql() +
+    "\n" +
+    behavioralSeedSql() +
+    "\n" +
+    reviewedQuestionSeedSql() +
+    "\n" +
+    activateReviewedBanksSql()
+  );
 }
 
 if (import.meta.url === `file://${process.argv[1]}`) {

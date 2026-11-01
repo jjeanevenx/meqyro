@@ -1,6 +1,5 @@
 import "server-only";
-import { moneyDnaScenarios } from "@/content/quizzes/moneydna-v2";
-import { coupleDnaScenarios } from "@/content/quizzes/coupledna-v2";
+import { behavioralDefinition } from "@/features/scoring/behavioral-definition";
 import type { Locale } from "@/lib/i18n/config";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
 import type { BehavioralScore } from "@/features/scoring/behavioral-v2";
@@ -105,7 +104,7 @@ export function buildBehavioralReport(
 ): ComprehensiveReport {
   const t = copy[locale],
     money = slug === "moneydna";
-  const source = money ? moneyDnaScenarios : coupleDnaScenarios;
+  const source = behavioralDefinition(money ? "moneydna" : "coupledna", score.instrumentVersion);
   const experienceMeaning = {
     pt: "Estas escolhas priorizaram experiências presentes. Não estimam sua tolerância a riscos financeiros ou a investimentos.",
     en: "These choices prioritised present experiences. They do not estimate your tolerance for financial or investment risk.",
@@ -120,7 +119,10 @@ export function buildBehavioralReport(
   return {
     bandLabel: t.title,
     executiveSummary: `${t.title}. ${money ? t.money : t.individual} ${t.balanced}`,
-    comparativeBenchmark: { cohort: "v2.0.0 · behavioral-v2", description: t.limit },
+    comparativeBenchmark: {
+      cohort: `${score.instrumentVersion} · ${score.algorithmVersion}`,
+      description: t.limit,
+    },
     sections: Object.entries(score.dimensionScores).map(([dimension, value]) => {
       const guidance = money ? getDimensionGuidance(dimension, locale) : undefined;
       return {
