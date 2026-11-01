@@ -1,3 +1,4 @@
+import { additionalMoneyScenarios } from "./moneydna-expanded";
 import { scenario, type ScenarioDefinition } from "@/content/quizzes/behavioral-scenario";
 
 // Each choice expresses a priority, never correctness. Exposure-normalized signals use equal weights.
@@ -728,4 +729,10 @@ export const moneyDnaScenarios: readonly ScenarioDefinition[] = [
     },
     [E, B, G, A],
   ),
+];
+
+/** Full bank; the original 20 remain a canonical compatibility form. */
+export const moneyDnaPool: readonly ScenarioDefinition[] = [
+  ...moneyDnaScenarios,
+  ...additionalMoneyScenarios,
 ];

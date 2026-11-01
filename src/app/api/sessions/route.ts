@@ -23,6 +23,7 @@ const createSessionSchema = z.object({
   referralCode: z.string().optional(),
   inviteCode: z.string().optional(),
   comparisonConsent: z.boolean().optional(),
+  forceNew: z.boolean().optional(),
 });
 
 export async function POST(request: NextRequest) {

@@ -1,5 +1,6 @@
 import "server-only";
 import { behavioralDefinition } from "@/features/scoring/behavioral-definition";
+import { resultReading, resultAction, resultOverview } from "./result-specific-guidance";
 import type { Locale } from "@/lib/i18n/config";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
 import type { BehavioralScore } from "@/features/scoring/behavioral-v2";
@@ -118,7 +119,7 @@ export function buildBehavioralReport(
   });
   return {
     bandLabel: t.title,
-    executiveSummary: `${t.title}. ${money ? t.money : t.individual} ${t.balanced}`,
+    executiveSummary: `${resultOverview(slug, Object.entries(score.dimensionScores), locale)} ${money ? t.money : t.individual} ${t.balanced}`,
     comparativeBenchmark: {
       cohort: `${score.instrumentVersion} · ${score.algorithmVersion}`,
       description: t.limit,
@@ -130,7 +131,7 @@ export function buildBehavioralReport(
         title: getDimensionLabel(dimension, locale),
         summary: `${value}/100 · ${score.observations[dimension]} ${t.observed}`,
         paragraphs: [
-          money ? t.money : t.poles,
+          resultReading(dimension, value, locale) ?? (money ? t.money : t.poles),
           ...(guidance
             ? [dimension === "ADVENTURER" ? experienceMeaning : guidance.meaning, guidance.watch]
             : []),
@@ -145,9 +146,14 @@ export function buildBehavioralReport(
             ({ question, option }) =>
               `${question.prompt[locale]} ${t.selected}: ${option.label[locale]}`,
           ),
-        actionItems: money
-          ? [guidance ? guidance.try : t.tryMoney]
-          : [getDimensionGuidance(dimension, locale)?.try ?? t.tryCouple, t.tryCouple],
+        actionItems: [
+          resultAction(
+            slug,
+            value,
+            getDimensionGuidance(dimension, locale)?.try ?? (money ? t.tryMoney : t.tryCouple),
+            locale,
+          ),
+        ],
       };
     }),
   };

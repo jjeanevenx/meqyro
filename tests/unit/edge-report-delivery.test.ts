@@ -1,3 +1,4 @@
+import { renderTransactionalEmail } from "@/lib/email/branded-template";
 import { readFileSync } from "node:fs";
 import { transpileModule, ModuleKind } from "typescript";
 import { describe, expect, it, vi } from "vitest";
@@ -5,9 +6,16 @@ import { describe, expect, it, vi } from "vitest";
 type SmtpMessage = {
   to: string;
   text: string;
+  html: string;
   attachments: { content: string; contentType: string }[];
 };
-function harness(status = "FULFILLED", alreadySent = false, claim = true) {
+function harness(
+  status = "FULFILLED",
+  alreadySent = false,
+  claim = true,
+  productCode = "BRAINRANK",
+  locale = "pt",
+) {
   const send = vi.fn(async (message: SmtpMessage) => {
     return { messageId: "email-123", accepted: [message.to], rejected: [] };
   });
@@ -31,16 +39,24 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
             ? {
                 buyer_id: "buyer",
                 status: "COMPLETED",
-                quiz_versions: { quizzes: { product_code: "BRAINRANK" } },
+                quiz_versions: { quizzes: { product_code: productCode } },
               }
             : table === "report_deliveries"
               ? { sent_at: alreadySent ? "2026-10-01" : null, message_id: "email-123" }
-              : [{ id: "grant" }];
+              : table === "couple_invites"
+                ? { id: "pair", initiator_session_id: "session", partner_session_id: "partner" }
+                : table === "couple_consents"
+                  ? [{ session_id: "session" }, { session_id: "partner" }]
+                  : [{ id: "grant" }];
       const result = { data: value, error: null };
       const chain: Record<string, unknown> = {
         then: (resolve: (value: unknown) => void) => resolve(result),
       };
-      for (const method of ["select", "eq", "is", "limit", "gt"]) chain[method] = () => chain;
+      for (const method of ["select", "eq", "is", "limit", "gt", "or", "neq", "order"])
+        chain[method] = () => chain;
+      chain.in = () => ({
+        eq: async () => ({ data: [{ id: "session" }, { id: "partner" }], error: null }),
+      });
       chain.single = async () => result;
       chain.maybeSingle = async () => result;
       chain.upsert = (value: unknown) => {
@@ -70,7 +86,7 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
     SUPABASE_URL: "http://localhost",
     SUPABASE_SERVICE_ROLE_KEY: "test",
   };
-  new Function("Deno", "createClient", "nodemailer", compiled)(
+  new Function("Deno", "createClient", "nodemailer", "renderTransactionalEmail", compiled)(
     {
       env: { get: (key: string) => env[key] },
       serve: (fn: typeof handler) => {
@@ -79,6 +95,7 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
     },
     () => db,
     { createTransport },
+    renderTransactionalEmail,
   );
   const request = (authenticated = true) =>
     new Request("http://localhost/deliver-report", {
@@ -87,8 +104,9 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
       body: JSON.stringify({
         orderId: "order",
         sessionId: "session",
-        productCode: "BRAINRANK",
-        locale: "pt",
+        productCode,
+        locale,
+        accessUrl: "https://meqyro.com/pt/results/access-token",
         filename: "meqyro-brainrank-resultado.html",
         html: "<h1>Árvore e atenção</h1>",
         text: "Seu resultado: atenção",
@@ -146,4 +164,32 @@ describe("Supabase report delivery handler", () => {
     expect(test.update).not.toHaveBeenCalled();
     expect(test.close).toHaveBeenCalled();
   });
+});
+
+describe("paid email template coverage for all seven assessments", () => {
+  const products = [
+    "BRAINRANK",
+    "PERSONALITY_MAP",
+    "CAREERFIT",
+    "MONEYDNA",
+    "COUPLEDNA",
+    "DECISIONDNA",
+    "FOCUSSTYLE",
+  ];
+  const cases = products.flatMap((productCode) =>
+    ["pt", "en", "es", "fr"].map((locale) => ({ productCode, locale })),
+  );
+  it.each(cases)(
+    "delivers HTML in the email body and preserves the report attachment: $productCode / $locale",
+    async ({ productCode, locale }) => {
+      const test = harness("FULFILLED", false, true, productCode, locale);
+      expect((await test.handler(test.request())).status).toBe(200);
+      const message = test.send.mock.calls[0][0];
+      expect(message.html).toContain(`lang="${locale}"`);
+      expect(message.html).toContain("MEQ<span");
+      expect(message.html).toContain('href="https://meqyro.com/pt/results/access-token"');
+      expect(message.text).toContain("Seu resultado: atenção");
+      expect(message.attachments[0].content).toBe("<h1>Árvore e atenção</h1>");
+    },
+  );
 });

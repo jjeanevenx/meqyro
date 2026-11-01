@@ -1,4 +1,5 @@
 import "server-only";
+import { resultReading, resultAction, resultOverview } from "./result-specific-guidance";
 import { timingReportSection } from "./timing-report";
 import type { ComprehensiveReport } from "./contracts";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
@@ -195,8 +196,19 @@ export function buildHumanReport(
         : cognitive
           ? []
           : [explanation],
-      keyTakeaways: [interpretation],
-      actionItems: [guidance ? guidance.try : cognitive ? t.practice : t.action],
+      keyTakeaways: [resultReading(key, value, locale) ?? interpretation],
+      actionItems: [
+        cognitive || slug === "moneydna" || slug === "coupledna"
+          ? resultAction(
+              slug,
+              value,
+              guidance ? guidance.try : cognitive ? t.practice : t.action,
+              locale,
+            )
+          : guidance
+            ? guidance.try
+            : t.action,
+      ],
     };
   });
   const memory = score.memoryRecall as
@@ -266,7 +278,7 @@ export function buildHumanReport(
   const overall =
     typeof score.overallScore === "number" ? `${t.score} ${score.overallScore}/1000. ` : "";
   return {
-    executiveSummary: `${overall}${dimensions.length ? t.summary : t.missing}`,
+    executiveSummary: `${overall}${dimensions.length ? `${resultOverview(slug, dimensions, locale)} ${t.summary}` : t.missing}`,
     bandLabel: t.title,
     sections,
     comparativeBenchmark: { cohort: t.title, description: explanation },

@@ -173,6 +173,7 @@ export type Dictionary = {
     menu: string;
     primary: string;
     home: string;
+    skipToContent: string;
     discover: string;
     about: string;
     language: string;
@@ -228,6 +229,7 @@ export type Dictionary = {
   resultView: {
     behavioralPreference: string;
     behavioralCaveat: string;
+    behavioralCoupleCaveat: string;
     freeTitle: string;
     overallScore: string;
     strongestDimension: string;
@@ -241,6 +243,7 @@ export type Dictionary = {
     moneyBackGuarantee: string;
     securePayment: string;
     premiumUnlocked: string;
+    reportEvidence: string;
     disclaimer: string;
     shareTitle: string;
     noResultFound: string;
@@ -305,12 +308,13 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Navegação principal",
       home: "Página inicial Meqyro",
+      skipToContent: "Pular para o conteúdo",
       discover: "Descobrir",
       about: "Como funciona",
       language: "Idioma",
       market: "Mercado",
       catalog: "Catálogo",
-      articles: "Artigos",
+      articles: "Blog",
     },
     hero: {
       title: "Descubra mais sobre você.",
@@ -371,6 +375,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
     resultView: {
       behavioralPreference: "Preferência mais presente nesta tentativa",
       behavioralCaveat:
+        "Índices descritivos das suas escolhas financeiras nesta tentativa, sem validação clínica. Os valores indicam a presença de cada prioridade nas situações em que ela estava disponível; maior não significa melhor. Empates não definem um perfil único. Não medem riqueza, conhecimento financeiro ou tolerância a investimentos.",
+      behavioralCoupleCaveat:
         "Índices descritivos, sem validação clínica. Maior não significa melhor. No CoupleDNA, o eixo vai de reflexão individual a elaboração conjunta; diferenças não são incompatibilidade. Empates não definem um perfil único.",
       freeTitle: "Resultado Preliminar Gratuito",
       overallScore: "Pontuação Geral",
@@ -385,6 +391,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantia incondicional de 7 dias",
       securePayment: "Ambiente de pagamento seguro e criptografado",
       premiumUnlocked: "Acesso Premium Desbloqueado",
+      reportEvidence: "Evidências e pontos de atenção",
       disclaimer:
         "Este teste destina-se ao autoconhecimento e reflexão pessoal, sem caráter diagnóstico, clínico ou financeiro.",
       shareTitle: "Compartilhe seu resultado",
@@ -486,11 +493,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Main navigation",
       home: "Meqyro home",
+      skipToContent: "Skip to content",
       about: "How it works",
       language: "Language",
       market: "Market",
       catalog: "Catalog",
-      articles: "Articles",
+      articles: "Blog",
     },
     hero: {
       title: "Discover more about you.",
@@ -552,6 +560,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       freeTitle: "Free Preliminary Result",
       behavioralPreference: "Most present preference in this attempt",
       behavioralCaveat:
+        "Descriptive indices of your financial choices in this attempt, without clinical validation. Values indicate how often each priority was chosen when available; higher does not mean better. Ties do not define a single profile. They do not measure wealth, financial knowledge, or investment risk tolerance.",
+      behavioralCoupleCaveat:
         "Descriptive indices without clinical validation. Higher does not mean better. In CoupleDNA, the axis runs from individual reflection to joint discussion; differences do not imply incompatibility. Ties do not define a single profile.",
       overallScore: "Overall Score",
       strongestDimension: "Highlighted Dimension",
@@ -565,6 +575,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "7-day money-back guarantee",
       securePayment: "Encrypted and secure checkout",
       premiumUnlocked: "Premium Access Unlocked",
+      reportEvidence: "Evidence and key observations",
       disclaimer:
         "This assessment is intended solely for personal reflection and self-discovery. It does not constitute clinical, diagnostic or financial advice.",
       shareTitle: "Share your results",
@@ -666,11 +677,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menú",
       primary: "Navegación principal",
       home: "Página de inicio Meqyro",
+      skipToContent: "Saltar al contenido",
       about: "Cómo funciona",
       language: "Idioma",
       market: "Mercado",
       catalog: "Catálogo",
-      articles: "Artículos",
+      articles: "Blog",
     },
     hero: {
       title: "Descubre más sobre ti.",
@@ -733,6 +745,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       overallScore: "Puntuación General",
       behavioralPreference: "Preferencia más presente en este intento",
       behavioralCaveat:
+        "Índices descriptivos de tus elecciones financieras en este intento, sin validación clínica. Los valores indican la presencia de cada prioridad cuando estaba disponible; un valor mayor no significa mejor. Los empates no definen un perfil único. No miden riqueza, conocimientos financieros ni tolerancia al riesgo de inversión.",
+      behavioralCoupleCaveat:
         "Índices descriptivos sin validación clínica. Un valor mayor no significa mejor. En CoupleDNA, el eje va de reflexión individual a elaboración conjunta; las diferencias no implican incompatibilidad. Los empates no definen un perfil único.",
       strongestDimension: "Dimensión Destacada",
       allDimensions: "Mapeo de Dimensiones",
@@ -745,6 +759,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantía de reembolso de 7 días",
       securePayment: "Proceso de pago cifrado y seguro",
       premiumUnlocked: "Acceso Premium Desbloqueado",
+      reportEvidence: "Evidencias y puntos de atención",
       disclaimer:
         "Esta evaluación está destinada exclusivamente al autoconocimiento y reflexión personal, sin carácter clínico o financiero.",
       shareTitle: "Comparte tu resultado",
@@ -846,11 +861,12 @@ export const dictionaries: Record<Locale, Dictionary> = {
       menu: "Menu",
       primary: "Navigation principale",
       home: "Accueil Meqyro",
+      skipToContent: "Aller au contenu",
       about: "Comment ça marche",
       language: "Langue",
       market: "Marché",
       catalog: "Catalogue",
-      articles: "Articles",
+      articles: "Blog",
     },
     hero: {
       title: "Découvrez-en davantage sur vous.",
@@ -912,6 +928,8 @@ export const dictionaries: Record<Locale, Dictionary> = {
       freeTitle: "Résultat Préliminaire Gratuit",
       behavioralPreference: "Préférence la plus présente dans cette tentative",
       behavioralCaveat:
+        "Indices descriptifs de vos choix financiers pour cette tentative, sans validation clinique. Les valeurs indiquent la présence de chaque priorité lorsqu’elle était disponible ; plus élevé ne signifie pas meilleur. Une égalité ne définit pas un profil unique. Ils ne mesurent ni richesse, ni connaissances financières, ni tolérance au risque d’investissement.",
+      behavioralCoupleCaveat:
         "Indices descriptifs sans validation clinique. Plus élevé ne signifie pas meilleur. Pour CoupleDNA, l’axe va de la réflexion individuelle à l’élaboration commune ; les différences ne signifient pas une incompatibilité. Une égalité ne définit pas un profil unique.",
       overallScore: "Score Global",
       strongestDimension: "Dimension Principale",
@@ -925,6 +943,7 @@ export const dictionaries: Record<Locale, Dictionary> = {
       moneyBackGuarantee: "Garantie satisfait ou remboursé 7 jours",
       securePayment: "Paiement chiffré et sécurisé",
       premiumUnlocked: "Accès Premium Débloqué",
+      reportEvidence: "Éléments observés et points d’attention",
       disclaimer:
         "Ce test est destiné uniquement à la réflexion personnelle et au développement personnel. Il ne constitue aucunement un avis clinique ou financier.",
       shareTitle: "Partagez votre résultat",
@@ -1025,3 +1044,78 @@ export const dictionaries: Record<Locale, Dictionary> = {
 export function getDictionary(locale: Locale): Dictionary {
   return dictionaries[locale] ?? dictionaries.pt;
 }
+
+export const attemptChoiceCopy: Record<
+  Locale,
+  {
+    title: string;
+    body: string;
+    versions: string;
+    resume: string;
+    start: string;
+    note: string;
+  }
+> = {
+  pt: {
+    title: "Você tem uma avaliação em andamento",
+    body: "Continue de onde parou ou comece uma nova avaliação com o conteúdo atual.",
+    versions: "Tentativa salva: {old}. Versão atual: {current}.",
+    resume: "Continuar tentativa salva",
+    start: "Começar nova avaliação",
+    note: "A tentativa anterior não será apagada. Para voltar a ela neste navegador, salve o endereço de “Continuar tentativa salva”. Convites existentes continuam vinculados à tentativa original.",
+  },
+  en: {
+    title: "You have an assessment in progress",
+    body: "Continue where you left off or start a new assessment with the current content.",
+    versions: "Saved attempt: {old}. Current version: {current}.",
+    resume: "Continue saved attempt",
+    start: "Start a new assessment",
+    note: "Your previous attempt is kept. To return to it in this browser, save the Continue saved attempt link. Existing invitations remain linked to the original attempt.",
+  },
+  es: {
+    title: "Tienes una evaluación en curso",
+    body: "Continúa donde lo dejaste o comienza una nueva evaluación con el contenido actual.",
+    versions: "Intento guardado: {old}. Versión actual: {current}.",
+    resume: "Continuar intento guardado",
+    start: "Comenzar una evaluación nueva",
+    note: "El intento anterior se conserva. Para volver a él en este navegador, guarda el enlace Continuar intento guardado. Las invitaciones existentes siguen vinculadas al intento original.",
+  },
+  fr: {
+    title: "Vous avez une évaluation en cours",
+    body: "Reprenez votre progression ou commencez une nouvelle évaluation avec le contenu actuel.",
+    versions: "Tentative enregistrée : {old}. Version actuelle : {current}.",
+    resume: "Reprendre la tentative",
+    start: "Commencer une nouvelle évaluation",
+    note: "La tentative précédente est conservée. Pour y revenir dans ce navigateur, gardez le lien Reprendre la tentative. Les invitations existantes restent liées à la tentative initiale.",
+  },
+};
+
+export const reportExampleCopy: Record<
+  Locale,
+  { title: string; note: string; link: string; action: string }
+> = {
+  pt: {
+    title: "Exemplo fictício de relatório",
+    note: "Demonstração completa com respostas inventadas. Não é o seu resultado nem uma comparação de casal. Seu relatório será gerado com as suas próprias respostas.",
+    link: "Ver exemplo completo de relatório",
+    action: "Sugestões para experimentar",
+  },
+  en: {
+    title: "Fictional report example",
+    note: "A complete demonstration with invented answers. This is not your result or a couple comparison. Your report will use your own answers.",
+    link: "View a complete report example",
+    action: "Suggestions to try",
+  },
+  es: {
+    title: "Ejemplo ficticio de informe",
+    note: "Demostración completa con respuestas inventadas. No es tu resultado ni una comparación de pareja. Tu informe usará tus propias respuestas.",
+    link: "Ver ejemplo completo de informe",
+    action: "Sugerencias para probar",
+  },
+  fr: {
+    title: "Exemple fictif de rapport",
+    note: "Démonstration complète avec des réponses inventées. Ce n’est ni votre résultat ni une comparaison de couple. Votre rapport utilisera vos propres réponses.",
+    link: "Voir un exemple complet de rapport",
+    action: "Suggestions à essayer",
+  },
+};

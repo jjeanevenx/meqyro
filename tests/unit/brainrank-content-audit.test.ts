@@ -12,7 +12,7 @@ const locales = ["pt", "en", "es", "fr"] as const;
 const question = (key: string) => brainRankPool.find((q) => q.stableKey === key)!;
 describe("BrainRank content 1.1 audit", () => {
   it.each(locales)("has complete unique options across the entire pool in %s", (locale) => {
-    expect(brainRankPool).toHaveLength(60);
+    expect(brainRankPool).toHaveLength(96);
     for (const q of brainRankPool) {
       expect(q.prompt[locale].trim(), q.stableKey).not.toBe("");
       expect(

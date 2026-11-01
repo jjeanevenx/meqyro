@@ -93,13 +93,13 @@ export const experiences: readonly Experience[] = [
       fr: "Comportement Financier",
     },
     description: {
-      pt: "Entenda seus padrões de planejamento, impulsividade e tolerância a risco.",
-      en: "Understand your patterns around planning, impulsivity, and risk tolerance.",
-      es: "Comprende tus patrones de planificación, impulsividad y tolerancia al riesgo.",
-      fr: "Comprenez vos réflexes de planification, d’impulsivité et de tolérance au risque.",
+      pt: "Explore suas prioridades ao gastar, guardar e planejar em 20 situações reais.",
+      en: "Explore your spending, saving, and planning priorities through 20 real-life situations.",
+      es: "Explora tus prioridades al gastar, ahorrar y planificar en 20 situaciones reales.",
+      fr: "Explorez vos priorités de dépenses, d’épargne et de planification dans 20 situations réelles.",
     },
     duration: "5–8 min",
-    items: { pt: "20 perguntas", en: "20 questions", es: "20 preguntas", fr: "20 questions" },
+    items: { pt: "20 situações", en: "20 situations", es: "20 situaciones", fr: "20 situations" },
   },
   {
     slug: "coupledna",
@@ -118,7 +118,7 @@ export const experiences: readonly Experience[] = [
       fr: "Comparez communication et valeurs dans une analyse privée et mutuellement consentie.",
     },
     duration: "6–8 min",
-    items: { pt: "20 perguntas", en: "20 questions", es: "20 preguntas", fr: "20 questions" },
+    items: { pt: "20 situações", en: "20 situations", es: "20 situaciones", fr: "20 situations" },
   },
   {
     slug: "decisiondna",

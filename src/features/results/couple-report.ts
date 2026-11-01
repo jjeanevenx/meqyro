@@ -1,4 +1,5 @@
 import "server-only";
+import { getDimensionGuidance } from "./dimension-guidance-locales";
 import type { ComprehensiveReport } from "@/features/results/contracts";
 import type { BilateralCoupleComparison } from "@/features/scoring/coupledna";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
@@ -103,7 +104,7 @@ export function buildCoupleReport(
         summary: `${value}/100. ${value >= 70 ? t.similar : t.different}`,
         paragraphs: [explanation],
         keyTakeaways: [],
-        actionItems: [t.action],
+        actionItems: [getDimensionGuidance(key, locale)?.try ?? t.action, t.action],
       })),
     ],
   };

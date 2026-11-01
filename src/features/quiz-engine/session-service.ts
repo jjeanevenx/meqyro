@@ -36,7 +36,7 @@ import {
   type CandidateQuestion,
   type SelectedQuestionItem,
 } from "./selection-engine";
-import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
+import { getInstrumentSelectionConfig } from "./selection-config";
 import { resolveQuestionTiming } from "./question-timing";
 import { attachMemoryCues, distributeMemoryItems, memoryExecutionPlan } from "./delayed-memory";
 
@@ -69,6 +69,7 @@ export type StartQuizSessionInput = {
   inviteCode?: string;
   comparisonConsent?: boolean;
   existingToken?: string;
+  forceNew?: boolean;
   seed?: string;
   /** Trusted server-side accommodation, frozen into each assigned limit. */
   timeMultiplier?: number;
@@ -109,12 +110,14 @@ export async function startQuizSession(
     coupleInvite = invite;
   }
 
-  // If client provided an existing token, try to resume active attempt for this quiz
+  let retainedToken: string | undefined;
+  // Authenticate before retaining the credential for an explicitly requested new attempt.
   if (input.existingToken && !input.inviteCode) {
     try {
       const existing = await getActiveSessionByToken(input.existingToken, input.quizSlug);
       if (existing) {
-        return { session: existing, token: input.existingToken };
+        if (!input.forceNew) return { session: existing, token: input.existingToken };
+        retainedToken = input.existingToken;
       }
     } catch {
       // Continue to fresh session if token is invalid
@@ -167,7 +170,7 @@ export async function startQuizSession(
     };
   }
 
-  const token = createAnonymousSessionToken();
+  const token = retainedToken ?? createAnonymousSessionToken();
   const tokenHash = hashAnonymousSessionToken(token);
   const expiresAt = new Date(Date.now() + anonymousSessionTtlSeconds * 1000).toISOString();
 
@@ -257,11 +260,11 @@ export async function startQuizSession(
       .order("position", { ascending: true });
 
     if (candidates && candidates.length > 0) {
-      const baseConfig = ASSESSMENT_SELECTION_CONFIGS[input.quizSlug];
-      const config =
-        activeVersion.scoring_version === behavioralScoringVersion && baseConfig
-          ? { ...baseConfig, orderingStrategy: "SCENARIO_RAMP" as const }
-          : baseConfig;
+      const config = getInstrumentSelectionConfig(
+        input.quizSlug,
+        activeVersion.version,
+        activeVersion.scoring_version,
+      );
       const candidateList: CandidateQuestion[] = candidates.map((c) => ({
         id: c.id,
         stableKey: c.stable_key,
@@ -487,7 +490,7 @@ export async function getActiveSessionByToken(
   const supabase = createSupabaseSecretClient();
   const tokenHash = hashAnonymousSessionToken(token);
 
-  const { data: sessions, error } = await supabase
+  let query = supabase
     .from("quiz_sessions")
     .select(
       `
@@ -502,15 +505,16 @@ export async function getActiveSessionByToken(
       current_position, memory_exposures,
       expires_at,
       memory_exposures,
-      quizzes:quiz_versions(quizzes(slug))
+      quizzes:quiz_versions!inner(quizzes!inner(slug))
     `,
     )
     .eq("access_token_hash", tokenHash)
     .neq("status", "COMPLETED")
     .neq("status", "EXPIRED")
     .gt("expires_at", new Date().toISOString())
-    .order("started_at", { ascending: false })
-    .limit(1);
+    .order("started_at", { ascending: false });
+  if (quizSlug) query = query.eq("quizzes.quizzes.slug", quizSlug);
+  const { data: sessions, error } = await query.limit(1);
 
   if (error || !sessions || sessions.length === 0) return null;
 

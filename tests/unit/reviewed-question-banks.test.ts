@@ -15,7 +15,7 @@ import {
   isCandidateEligible,
   type CandidateQuestion,
 } from "@/features/quiz-engine/selection-engine";
-import { getAssessmentSelectionConfig } from "@/features/quiz-engine/selection-config";
+import { getInstrumentSelectionConfig } from "@/features/quiz-engine/selection-config";
 import { buildBehavioralReport } from "@/features/results/behavioral-report";
 import { assertVisualQuestion } from "@/features/quiz-engine/visual-question-schema";
 import { getFallbackPublicQuiz } from "@/features/quiz-engine/repository";
@@ -229,7 +229,7 @@ describe("Reviewed and historical behavioral instruments", () => {
         for (let seed = 0; seed < 100; seed++) {
           const selected = selectQuestionsForAttempt(
             candidates,
-            { ...getAssessmentSelectionConfig(slug), orderingStrategy: "SCENARIO_RAMP" },
+            getInstrumentSelectionConfig(slug, version, "behavioral-v2")!,
             `production-audit-${seed}`,
           );
           const assigned = selected.map((s) => source.find((q) => q.stableKey === s.stableKey)!);

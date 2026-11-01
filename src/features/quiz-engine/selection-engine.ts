@@ -181,6 +181,37 @@ export function selectQuestionsForAttempt(
     );
   }
 
+  // Enforce the exposure budget before drawing. A small bucket cannot be repaired
+  // by shuffling or borrowing difficulty levels without increasing item exposure.
+  if (config.maxQuestionExposure !== undefined) {
+    const exposure = config.maxQuestionExposure;
+    if (!(exposure > 0 && exposure <= 1)) throw new Error("Invalid question exposure budget");
+    if (
+      new Set(eligible.map((q) => q.id)).size !== eligible.length ||
+      new Set(eligible.map((q) => q.stableKey)).size !== eligible.length
+    ) {
+      throw new InsufficientQuestionPoolError("Question bank contains duplicate candidates");
+    }
+    for (const [dimension, quota] of Object.entries(config.dimensions)) {
+      const candidates = eligible.filter((q) => extractQuestionDimension(q) === dimension);
+      const buckets = quota.difficulties
+        ? Object.entries(quota.difficulties).map(([difficulty, count]) => ({
+            count: count ?? 0,
+            available: candidates.filter((q) => extractQuestionDifficulty(q) === difficulty).length,
+            label: `${dimension}/${difficulty}`,
+          }))
+        : [{ count: quota.total, available: candidates.length, label: dimension }];
+      for (const bucket of buckets) {
+        const required = Math.ceil(bucket.count / exposure);
+        if (bucket.available < required) {
+          throw new InsufficientQuestionPoolError(
+            `Question exposure budget exceeded for ${config.quizSlug}/${bucket.label}: required ${required}, available ${bucket.available}.`,
+          );
+        }
+      }
+    }
+  }
+
   // 2. Index candidates by dimension
   const byDimension = new Map<string, CandidateQuestion[]>();
   for (const q of eligible) {

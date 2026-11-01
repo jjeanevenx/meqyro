@@ -155,7 +155,7 @@ export function compareBehavioralCouple(
     [...leftByQuestion.keys()].some((key) => !rightByQuestion.has(key)) ||
     [...leftByQuestion.keys()].some((key) => !definition.some((q) => q.stableKey === key))
   )
-    throw new InvalidQuizSubmissionError("Couple instruments must use the same assigned questions");
+    throw new InvalidQuizSubmissionError("Couple instruments must use the same selected questions");
   const alignments = {} as Record<CoupleDimension, number>;
   for (const dimension of [...new Set(definition.map((q) => q.dimension))] as CoupleDimension[]) {
     const questions = definition.filter(
