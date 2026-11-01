@@ -1,5 +1,15 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { sendResultDeliveryEmail, sendSessionRecoveryEmail } from "@/features/email/email-service";
+import {
+  sendResultDeliveryEmail,
+  sendSessionRecoveryEmail,
+  sendDataRequestEmail,
+  sendPurchaseConfirmationEmail,
+  sendRefundEmail,
+  sendReportAccessEmail,
+  sendCoupleInviteEmail,
+  sendCoupleUnlockedEmail,
+} from "@/features/email/email-service";
+import { experiences } from "@/content/experiences";
 
 const smtp = vi.hoisted(() => ({ sendMail: vi.fn(), close: vi.fn(), createTransport: vi.fn() }));
 vi.mock("nodemailer", () => ({ default: { createTransport: smtp.createTransport } }));
@@ -122,4 +132,81 @@ describe("branded result delivery email", () => {
     expect(message.html).not.toContain("/unsubscribe");
     expect(message.text).not.toContain("/unsubscribe");
   });
+});
+
+describe("template coverage across assessments and email flows", () => {
+  function configureSmtp() {
+    vi.stubEnv("SMTP_USER", "sender@example.com");
+    vi.stubEnv("SMTP_PASSWORD", "test-only-password");
+    smtp.createTransport.mockReturnValue({ sendMail: smtp.sendMail, close: smtp.close });
+    smtp.sendMail.mockResolvedValue({
+      messageId: "email-message",
+      accepted: [input.recipientEmail],
+      rejected: [],
+    });
+  }
+
+  const cases = experiences.flatMap(({ slug, brand }) =>
+    ["pt", "en", "es", "fr"].map((locale) => ({ slug, brand, locale })),
+  );
+  it.each(cases)(
+    "uses HTML for saved results and recovery: $slug / $locale",
+    async ({ slug, brand, locale }) => {
+      configureSmtp();
+      await sendResultDeliveryEmail({ ...input, quizSlug: slug, locale });
+      await sendSessionRecoveryEmail({ ...input, quizSlug: slug, locale });
+      for (const [message] of smtp.sendMail.mock.calls) {
+        expect(message.html).toContain(`lang="${locale}"`);
+        expect(message.html).toContain("MEQ<span");
+        expect(message.html).toContain(
+          `/${locale}/quizzes/${slug}/play?session=session&amp;recover=test-only-token`,
+        );
+        expect(message.html).toContain('bgcolor="#082da7"');
+        expect(message.text).toContain("test-only-token");
+      }
+      expect(smtp.sendMail.mock.calls[0][0].html).toContain(brand);
+    },
+  );
+
+  it.each(["pt", "en", "es", "fr"])(
+    "uses the brand template for every other transactional flow in %s",
+    async (locale) => {
+      configureSmtp();
+      const common = { recipientEmail: input.recipientEmail, locale };
+      await sendDataRequestEmail({
+        ...common,
+        requestType: "export",
+        verificationToken: "verification-token",
+      });
+      await sendPurchaseConfirmationEmail({
+        ...common,
+        orderNumber: "order-123",
+        amount: 1290,
+        currency: "BRL",
+        sessionId: "session",
+        resultToken: "result-token",
+      });
+      await sendRefundEmail({ ...common, orderNumber: "order-123", amount: 1290, currency: "BRL" });
+      await sendReportAccessEmail({
+        ...common,
+        reportUrls: ["https://meqyro.com/pt/results/first", "https://meqyro.com/pt/results/second"],
+      });
+      await sendCoupleInviteEmail({ ...common, inviteCode: "invite-code" });
+      await sendCoupleUnlockedEmail({
+        ...common,
+        inviteCode: "invite-code",
+        comparisonUrl: "https://meqyro.com/pt/comparison",
+      });
+      expect(smtp.sendMail).toHaveBeenCalledTimes(6);
+      for (const [message] of smtp.sendMail.mock.calls) {
+        expect(message.html).toContain(`lang="${locale}"`);
+        expect(message.html).toContain("MEQ<span");
+        expect(message.html).toContain("max-width:560px");
+        expect(message.text).toBeTruthy();
+      }
+      const reportAccess = smtp.sendMail.mock.calls[3][0].html;
+      expect(reportAccess).toContain('href="https://meqyro.com/pt/results/first"');
+      expect(reportAccess).toContain('href="https://meqyro.com/pt/results/second"');
+    },
+  );
 });

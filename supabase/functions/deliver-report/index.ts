@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.117.1";
 import nodemailer from "npm:nodemailer@10.0.16";
+import { renderTransactionalEmail } from "../../../src/lib/email/branded-template.ts";
 
 // Server-to-server only. Authenticate before parsing; payment and recipient come from DB.
 async function secureEqual(left: string, right: string): Promise<boolean> {
@@ -61,6 +62,19 @@ Deno.serve(async (request: Request) => {
       const sent = await transport.sendMail({
         from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
         text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
+        html: renderTransactionalEmail({
+          locale: body.locale,
+          subject,
+          text: `${({
+            pt: "Seu relatório completo está no anexo deste e-mail. Você também pode acessar seu resultado pelo botão abaixo.",
+            en: "Your complete report is attached to this email. You can also access your result using the button below.",
+            es: "Tu informe completo está adjunto a este correo. También puedes acceder a tu resultado con el botón de abajo.",
+            fr: "Votre rapport complet est joint à cet e-mail. Vous pouvez aussi accéder à votre résultat avec le bouton ci-dessous.",
+          } as Record<string, string>)[body.locale] ?? "Seu relatório completo está no anexo deste e-mail."}\n\n${({
+            BRAINRANK: "BrainRank", PERSONALITY_MAP: "Personality Map", CAREERFIT: "CareerFit", MONEYDNA: "MoneyDNA",
+            COUPLEDNA: "CoupleDNA", DECISIONDNA: "DecisionDNA", FOCUSSTYLE: "FocusStyle",
+          } as Record<string, string>)[body.productCode] ?? "Meqyro"} · #${order.order_number}\n\n${typeof body.accessUrl === "string" ? body.accessUrl : ""}`,
+        }),
         attachments: [{ filename: body.filename, content: body.html, contentType: "text/html; charset=utf-8" }],
       });
       if (sent.rejected.length || !sent.accepted.length) return Response.json({ error: "Email recipient rejected" }, { status: 502 });

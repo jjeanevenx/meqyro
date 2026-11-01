@@ -1,6 +1,7 @@
 import "server-only";
 
 import nodemailer from "nodemailer";
+import { renderTransactionalEmail } from "@/lib/email/branded-template";
 
 import { renderResultDeliveryEmail } from "@/features/email/result-delivery-template";
 
@@ -31,6 +32,7 @@ async function sendViaSmtp(options: {
   subject: string;
   text: string;
   html?: string;
+  locale?: string;
 }): Promise<EmailResult> {
   const host = process.env.SMTP_HOST || "smtp.hostinger.com";
   const port = Number(process.env.SMTP_PORT || "465");
@@ -69,7 +71,13 @@ async function sendViaSmtp(options: {
       to: options.to,
       subject: options.subject,
       text: options.text,
-      html: options.html,
+      html:
+        options.html ??
+        renderTransactionalEmail({
+          locale: options.locale ?? "pt",
+          subject: options.subject,
+          text: options.text,
+        }),
     });
     if (sent.rejected.length || !sent.accepted.length)
       return { success: false, error: "SMTP recipient rejected." };
@@ -136,6 +144,7 @@ export async function sendSessionRecoveryEmail(
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -161,6 +170,7 @@ export async function sendDataRequestEmail(input: DataRequestEmailInput): Promis
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -190,6 +200,7 @@ export async function sendPurchaseConfirmationEmail(
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -212,6 +223,7 @@ export async function sendRefundEmail(input: RefundEmailInput): Promise<EmailRes
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -234,6 +246,7 @@ export async function sendReportAccessEmail(input: ReportAccessEmailInput): Prom
   const links = input.reportUrls.map((url, index) => `${index + 1}. ${url}`).join("\n");
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: `${intro[input.locale] ?? intro.pt}\n\n${links}\n\nThese links expire in 30 days.`,
@@ -259,6 +272,7 @@ export async function sendCoupleInviteEmail(input: CoupleInviteEmailInput): Prom
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,
@@ -283,6 +297,7 @@ export async function sendCoupleUnlockedEmail(
   };
 
   return sendViaSmtp({
+    locale: input.locale,
     to: input.recipientEmail,
     subject: subjects[input.locale] ?? subjects.pt,
     text: bodyTexts[input.locale] ?? bodyTexts.pt,

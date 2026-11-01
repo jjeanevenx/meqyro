@@ -1,3 +1,4 @@
+import { renderTransactionalEmail } from "@/lib/email/branded-template";
 import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
@@ -79,6 +80,7 @@ beforeAll(async () => {
     "Deno",
     "createClient",
     "nodemailer",
+    "renderTransactionalEmail",
     transpileModule(source, { compilerOptions: { module: ModuleKind.None } }).outputText,
   )(
     {
@@ -89,6 +91,7 @@ beforeAll(async () => {
     },
     createClient,
     { createTransport: () => ({ sendMail: providerSend, close: () => {} }) },
+    renderTransactionalEmail,
   );
   vi.stubGlobal("fetch", ((input: RequestInfo | URL, init?: RequestInit) => {
     const url = input instanceof Request ? input.url : String(input);
