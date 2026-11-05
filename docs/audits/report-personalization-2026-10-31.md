@@ -2,11 +2,11 @@
 
 ## Diagnóstico e alterações
 
-| Teste | Problema observado | Alteração |
-| --- | --- | --- |
+| Teste     | Problema observado                                                                                                     | Alteração                                                                                                                                              |
+| --------- | ---------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | BrainRank | Banco de 60 itens com exposição desigual por dificuldade; síntese e exercícios semelhantes para desempenhos distintos. | 96 itens cognitivos, com cada estrato quatro vezes maior que sua cota; síntese pelos índices reais e prática diferenciada por área e faixa de acertos. |
-| MoneyDNA | Os 20 cenários eram todo o banco; orientações pouco sensíveis à prioridade escolhida. | Banco de 80 cenários; interpretação por prioridade e faixa, evidências das escolhas e experimento financeiro com limite e revisão em sete dias. |
-| CoupleDNA | Os mesmos 20 cenários para todos; orientação individual pouco sensível ao polo escolhido. | Banco de 80 cenários; interpretação de reflexão individual versus elaboração conjunta em cada tema e acordo prático para revisar em uma semana. |
+| MoneyDNA  | Os 20 cenários eram todo o banco; orientações pouco sensíveis à prioridade escolhida.                                  | Banco de 80 cenários; interpretação por prioridade e faixa, evidências das escolhas e experimento financeiro com limite e revisão em sete dias.        |
+| CoupleDNA | Os mesmos 20 cenários para todos; orientação individual pouco sensível ao polo escolhido.                              | Banco de 80 cenários; interpretação de reflexão individual versus elaboração conjunta em cada tema e acordo prático para revisar em uma semana.        |
 
 Os novos conteúdos incluem dilemas de trabalho, formação, despesas recorrentes, experiências, comunicação, privacidade, responsabilidades e projetos futuros. Não são cópias com novos IDs. Cada cenário tem quatro alternativas, sem resposta considerada correta. As 20 questões originais continuam disponíveis como formulário canônico para compatibilidade. Novas tentativas reais usam o banco ampliado e salvam os IDs sorteados.
 

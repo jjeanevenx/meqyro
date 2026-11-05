@@ -21,9 +21,7 @@
     "slug": "moneydna",
     "attempts": 100,
     "failed": 100,
-    "examples": [
-      "Invalid behavioral item or answer"
-    ]
+    "examples": ["Invalid behavioral item or answer"]
   },
   {
     "slug": "focusstyle",
@@ -41,8 +39,6 @@
     "slug": "coupledna",
     "attempts": 100,
     "failed": 100,
-    "examples": [
-      "Invalid behavioral item or answer"
-    ]
+    "examples": ["Invalid behavioral item or answer"]
   }
 ]

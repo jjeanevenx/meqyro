@@ -436,18 +436,8 @@
     "question": "BR_ATT_02",
     "expected": 10,
     "keyed": 12,
-    "offered": [
-      6,
-      7,
-      12,
-      9
-    ],
-    "locales": [
-      "pt",
-      "en",
-      "es",
-      "fr"
-    ]
+    "offered": [6, 7, 12, 9],
+    "locales": ["pt", "en", "es", "fr"]
   },
   "checks": {
     "unitTests": 324,

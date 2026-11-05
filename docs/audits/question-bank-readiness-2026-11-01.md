@@ -14,15 +14,15 @@ Auditoria inicial, anterior às correções. O estado do candidato revisado est�
 
 ## Inventário verificado no banco
 
-| Teste | Versão | Itens no banco | Itens por tentativa | Avaliação |
-| --- | --- | ---: | ---: | --- |
-| BrainRank | 1.2 | 108 (96 centrais + 12 memórias) | 24 (21 centrais + 3 memórias) | Bloqueado por gabarito inválido |
-| MoneyDNA | v2.0.0 | 80 | 20 | Bloqueado por incompatibilidade com scorer |
-| CoupleDNA | v2.0.0 | 80 | 20 | Bloqueado por incompatibilidade com scorer/comparação |
-| Personality Map | 1.0 | 40 | 40 | Estrutura aprovada; aprovação de produção pendente |
-| CareerFit | v1.0.0 | 24 | 24 | Estrutura aprovada; aprovação de produção pendente |
-| DecisionDNA | v1.0.0 | 4 | 4 | Estrutura aprovada; alcance interpretativo muito limitado |
-| FocusStyle | v1.0.0 | 23 (20 centrais + 3 memórias) | 20 | Estrutura aprovada; aprovação de produção pendente |
+| Teste           | Versão |                  Itens no banco |           Itens por tentativa | Avaliação                                                 |
+| --------------- | ------ | ------------------------------: | ----------------------------: | --------------------------------------------------------- |
+| BrainRank       | 1.2    | 108 (96 centrais + 12 memórias) | 24 (21 centrais + 3 memórias) | Bloqueado por gabarito inválido                           |
+| MoneyDNA        | v2.0.0 |                              80 |                            20 | Bloqueado por incompatibilidade com scorer                |
+| CoupleDNA       | v2.0.0 |                              80 |                            20 | Bloqueado por incompatibilidade com scorer/comparação     |
+| Personality Map | 1.0    |                              40 |                            40 | Estrutura aprovada; aprovação de produção pendente        |
+| CareerFit       | v1.0.0 |                              24 |                            24 | Estrutura aprovada; aprovação de produção pendente        |
+| DecisionDNA     | v1.0.0 |                               4 |                             4 | Estrutura aprovada; alcance interpretativo muito limitado |
+| FocusStyle      | v1.0.0 |   23 (20 centrais + 3 memórias) |                            20 | Estrutura aprovada; aprovação de produção pendente        |
 
 Quantidade no banco não é quantidade aplicada. FocusStyle substitui três itens por memória; não aplica 23 perguntas. `coupledna-invite` é um adicional comercial sem questionário e foi excluído corretamente.
 
