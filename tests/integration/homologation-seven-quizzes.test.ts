@@ -1,3 +1,4 @@
+import { pdfText } from "../pdf-text";
 import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
@@ -211,11 +212,12 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
       expect(messages).toHaveLength(before + 1);
       const message = messages.at(-1)!;
       expect(message.to).toBe(recipient);
-      expect(message.attachments[0].filename).toBe(`meqyro-${slug}-resultado.html`);
+      expect(message.attachments[0].filename).toBe(`meqyro-${slug}-resultado.pdf`);
       const response = await downloadReport(request(), context);
       expect(response.status).toBe(200);
-      const html = await response.text();
-      expect(Buffer.from(message.attachments[0].content, "base64").toString("utf8")).toBe(html);
+      expect(response.headers.get("Content-Type")).toBe("application/pdf");
+      const html = await pdfText(new Uint8Array(await response.arrayBuffer()));
+      expect(await pdfText(Buffer.from(message.attachments[0].content, "base64"))).toBe(html);
       const report = await getProtectedResult({
         sessionId: session.id,
         sessionToken: token,

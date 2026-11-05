@@ -330,8 +330,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-brainrank-id",
       slug: "brainrank",
       productCode: "BRAINRANK",
-      version: "1.2",
-      scoringVersion: "1.2",
+      version: "1.3",
+      scoringVersion: "1.3",
       totalQuestions: 24,
       questions: withFallbackMemory(questions, locale),
     };

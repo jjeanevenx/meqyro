@@ -5,8 +5,8 @@ Implementado em 02/10/2026; validado no Supabase local. Publicação e envio rea
 ## Entrega ao comprador
 
 - Relatório com indicadores das respostas, explicações humanas e ações práticas, sem percentis populacionais inventados.
-- Após pagamento confirmado e fulfillment: download de HTML independente, sem scripts ou arquivos externos. Pode ser guardado offline ou impresso em PDF pelo navegador. Inclui uma declaração digital de conclusão.
-- A Supabase Function `deliver-report` envia o resultado completo no corpo e anexa o mesmo HTML. Hostinger SMTP é o provedor de envio dentro da função.
+- Após pagamento confirmado e fulfillment: download de PDF, sem scripts ou arquivos externos. Pode ser guardado offline. Não inclui certificado ou declaração de conclusão.
+- A Supabase Function `deliver-report` envia o resultado completo no corpo e anexa o relatório em PDF. Hostinger SMTP é o provedor de envio dentro da função.
 - Destinatário e pagamento são consultados no banco. A função autentica a chamada com segredo exclusivo de servidor de pelo menos 32 caracteres. Não envia para pedidos pendentes ou sem grant.
 - O envio confirmado é persistido no pedido, com idempotência no provedor. A reconciliação repete entregas pendentes em lotes de cinco, priorizando pedidos não tentados e respeitando cinco minutos entre tentativas. Monitorar `paid_report_retry_failed`.
 - Acesso online mantém o prazo existente de 24 meses a partir do grant. O arquivo baixado permanece com o comprador. Removida a promessa de acesso vitalício.
@@ -47,3 +47,7 @@ Revisão editorial dos demais produtos/idiomas, configuração externa e recebim
 ## Entregas por comprador e participante
 
 O ledger `report_deliveries` registra cada par pedido/sessão e é a referência de idempotência; timestamps antigos no pedido permanecem por compatibilidade. A fila retoma testes concluídos depois da compra e espera conclusão/autorização de ambos para CoupleDNA. As orientações específicas estão implementadas nos quatro idiomas. Aplicar migrations pendentes de comprador/entrega e seleção do grant mais recente conforme histórico remoto, sem alterar migrations existentes.
+
+## Revisão de 05/11/2026
+
+O download e o envio por e-mail geram PDF com o mesmo conteúdo. A função recebe `pdfBase64`, exige nome `.pdf` e usa MIME `application/pdf`; publicar o servidor e a função em conjunto para manter esse contrato. Os relatórios de personalidade incluem o alerta de respostas uniformes quando registrado pelo cálculo. A migration `20261105090000_clarify_brainrank_operation_prompt.sql` esclarece a operação numérica em quatro idiomas, sem alterar gabarito ou pontuação.

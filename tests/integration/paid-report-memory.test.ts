@@ -1,3 +1,4 @@
+import { pdfText } from "../pdf-text";
 import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { NextRequest } from "next/server";
@@ -105,7 +106,8 @@ describe("Persisted memory, payment and downloadable result", () => {
       expect(download.status).toBe(200);
       expect(download.headers.get("Content-Disposition")).toContain("attachment");
       expect(download.headers.get("Cache-Control")).toContain("no-store");
-      const html = await download.text();
+      expect(download.headers.get("Content-Type")).toBe("application/pdf");
+      const html = await pdfText(new Uint8Array(await download.arrayBuffer()));
       expect(html).toContain("3/3 acertos");
       expect(html).not.toMatch(/certific/i);
       const expiredGrant = await db

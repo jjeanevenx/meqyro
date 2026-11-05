@@ -17,7 +17,7 @@ Deno.serve(async (request: Request) => {
   if (!secret || secret.length < 32 || !await secureEqual(request.headers.get("x-report-delivery-secret") ?? "", secret)) return Response.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = await request.json();
-    if (typeof body.orderId !== "string" || typeof body.html !== "string" || body.html.length > 200_000 || typeof body.text !== "string" || body.text.length > 100_000 || !/^meqyro-[a-z-]+-resultado\.html$/.test(body.filename)) return Response.json({ error: "Invalid report" }, { status: 400 });
+    if (typeof body.orderId !== "string" || typeof body.pdfBase64 !== "string" || body.pdfBase64.length > 2_000_000 || !/^JVBERi0[A-Za-z0-9+/]*={0,2}$/.test(body.pdfBase64) || typeof body.text !== "string" || body.text.length > 100_000 || !/^meqyro-[a-z-]+-resultado\.pdf$/.test(body.filename)) return Response.json({ error: "Invalid report" }, { status: 400 });
     const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { db: { schema: "meqyro" } });
     const { data: order, error } = await db.from("orders").select("status,customer_email,session_id,order_number,confirmation_email_sent_at,confirmation_email_message_id").eq("id", body.orderId).single();
     if (error || !order || order.status !== "FULFILLED" || !order.customer_email) return Response.json({ error: "Confirmed purchase required" }, { status: 403 });
@@ -61,7 +61,7 @@ Deno.serve(async (request: Request) => {
       const sent = await transport.sendMail({
         from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
         text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
-        attachments: [{ filename: body.filename, content: body.html, contentType: "text/html; charset=utf-8" }],
+        attachments: [{ filename: body.filename, content: body.pdfBase64, encoding: "base64", contentType: "application/pdf" }],
       });
       if (sent.rejected.length || !sent.accepted.length) return Response.json({ error: "Email recipient rejected" }, { status: 502 });
       messageId = sent.messageId;

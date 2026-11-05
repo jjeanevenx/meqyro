@@ -9,6 +9,8 @@ import type { BehavioralScore } from "@/features/scoring/behavioral-v2";
 
 const copy = {
   pt: {
+    responseCaution:
+      "Você marcou a mesma alternativa em quase todas as perguntas, incluindo afirmações de sentidos opostos. Isso limita a interpretação do perfil. Revise suas respostas considerando cada afirmação separadamente.",
     memoryPresented: "Informações apresentadas",
     memoryIntervals: "Perguntas intermediárias por desafio",
     memoryTaskCaveat:
@@ -43,6 +45,8 @@ const copy = {
     missing: "Não há indicadores suficientes para interpretar este resultado com segurança.",
   },
   en: {
+    responseCaution:
+      "You selected the same response for almost every question, including statements with opposite meanings. This limits interpretation of the profile. Review your answers, considering each statement separately.",
     memoryPresented: "Information situations presented",
     memoryIntervals: "Intervening questions per task",
     memoryTaskCaveat:
@@ -77,6 +81,8 @@ const copy = {
     missing: "There are not enough indicators to interpret this result reliably.",
   },
   es: {
+    responseCaution:
+      "Elegiste la misma respuesta en casi todas las preguntas, incluidas afirmaciones de sentido opuesto. Esto limita la interpretación del perfil. Revisa tus respuestas considerando cada afirmación por separado.",
     memoryPresented: "Situaciones informativas presentadas",
     memoryIntervals: "Preguntas intermedias por tarea",
     memoryTaskCaveat:
@@ -111,6 +117,8 @@ const copy = {
     missing: "No hay suficientes indicadores para interpretar este resultado.",
   },
   fr: {
+    responseCaution:
+      "Vous avez choisi la même réponse à presque toutes les questions, y compris des affirmations de sens opposés. Cela limite l’interprétation du profil. Revoyez vos réponses en considérant chaque affirmation séparément.",
     memoryPresented: "Situations informatives présentées",
     memoryIntervals: "Questions intermédiaires par exercice",
     memoryTaskCaveat:
@@ -266,7 +274,7 @@ export function buildHumanReport(
   const overall =
     typeof score.overallScore === "number" ? `${t.score} ${score.overallScore}/1000. ` : "";
   return {
-    executiveSummary: `${overall}${dimensions.length ? t.summary : t.missing}`,
+    executiveSummary: `${overall}${dimensions.length ? t.summary : t.missing}${score.uniformResponseWarning === true ? ` ${t.responseCaution}` : ""}`,
     bandLabel: t.title,
     sections,
     comparativeBenchmark: { cohort: t.title, description: explanation },

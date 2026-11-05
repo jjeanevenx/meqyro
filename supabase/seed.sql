@@ -16,9 +16,9 @@ select id, 'v1.0.0', 'v1', 'PUBLISHED'::meqyro.content_status, now() from meqyro
 on conflict (quiz_id, version) do update set status = 'PUBLISHED', scoring_version = 'v1';
 
 insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
-select id, '1.2', '1.2', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug = 'brainrank'
+select id, '1.3', '1.3', 'APPROVED'::meqyro.content_status, now() from meqyro.quizzes where slug = 'brainrank'
 on conflict (quiz_id, version) do nothing;
-update meqyro.quiz_versions set status = 'ARCHIVED' where quiz_id = (select id from meqyro.quizzes where slug = 'brainrank') and version in ('1.0','1.1');
+update meqyro.quiz_versions set status = 'ARCHIVED' where quiz_id = (select id from meqyro.quizzes where slug = 'brainrank') and version in ('1.0','1.1','1.2');
 
 -- 3. Product Prices
 insert into meqyro.product_prices (quiz_id, market, currency, amount, active)
@@ -45,7 +45,7 @@ begin
   select qv.id into v_quiz_version_id
   from meqyro.quiz_versions qv
   join meqyro.quizzes q on q.id = qv.quiz_id
-  where q.slug = 'brainrank' and qv.version = '1.2';
+  where q.slug = 'brainrank' and qv.version = '1.3';
 
   -- Question 1: BR_PAT_01
   insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key, metadata)
@@ -726,16 +726,16 @@ begin
   returning id into v_question_id;
 
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'pt', 'Uma operação é definida por a ◇ b = a × b + a + b + 2. Quanto vale 5 ◇ 6?')
+  values (v_question_id, 'pt', 'Uma operação com dois números segue esta regra: multiplique os dois números, some os dois números ao produto e acrescente 2. Qual é o resultado para os números 5 e 6?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'en', 'An operation is defined by a ◇ b = a × b + a + b + 2. What is 5 ◇ 6?')
+  values (v_question_id, 'en', 'An operation on two numbers follows this rule: multiply the two numbers, add both numbers to the product, then add 2. What is the result for the numbers 5 and 6?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'es', 'Una operación se define como a ◇ b = a × b + a + b + 2. ¿Cuánto vale 5 ◇ 6?')
+  values (v_question_id, 'es', 'Una operación con dos números sigue esta regla: multiplica los dos números, suma ambos números al producto y añade 2. ¿Cuál es el resultado para los números 5 y 6?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
   insert into meqyro.question_translations (question_id, locale, prompt)
-  values (v_question_id, 'fr', 'Une opération est définie par a ◇ b = a × b + a + b + 2. Que vaut 5 ◇ 6 ?')
+  values (v_question_id, 'fr', 'Une opération sur deux nombres suit cette règle : multipliez les deux nombres, ajoutez les deux nombres au produit, puis ajoutez 2. Quel est le résultat pour les nombres 5 et 6 ?')
   on conflict (question_id, locale) do update set prompt = excluded.prompt;
 
   insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
@@ -1195,16 +1195,16 @@ begin
   on conflict (question_id, stable_key) do update set scoring_value = excluded.scoring_value, metadata = excluded.metadata
   returning id into v_option_id;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'pt', '12')
+  values (v_option_id, 'pt', '10')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'en', '12')
+  values (v_option_id, 'en', '10')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'es', '12')
+  values (v_option_id, 'es', '10')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.option_translations (option_id, locale, label)
-  values (v_option_id, 'fr', '12')
+  values (v_option_id, 'fr', '10')
   on conflict (option_id, locale) do update set label = excluded.label;
   insert into meqyro.options (question_id, stable_key, position, scoring_value, metadata)
   values (v_question_id, 'D', 4, '{"isCorrect":false}'::jsonb, '{}'::jsonb)
@@ -7861,7 +7861,7 @@ begin
 end $$;
 
 do $$ declare v record; qid uuid; oid uuid; begin
-for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where (q.slug='focusstyle' or (q.slug='brainrank' and qv.version <> '1.2')) and qv.status in ('APPROVED','PUBLISHED') loop
+for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where (q.slug='focusstyle' or (q.slug='brainrank' and qv.version not in ('1.2','1.3'))) and qv.status in ('APPROVED','PUBLISHED') loop
 insert into meqyro.questions(quiz_version_id,stable_key,position,kind,scoring_key,metadata) values(v.id,'MEMORY_01',1001,'SINGLE_CHOICE','{"dimension":"DELAYED_MEMORY"}'::jsonb,'{"memoryCue":{"pt":"Observe esta sequência: lua → chave → árvore → barco.","en":"Look at this sequence: moon → key → tree → boat.","es":"Observa esta secuencia: luna → llave → árbol → barco.","fr":"Observez cette suite : lune → clé → arbre → bateau."}}'::jsonb) on conflict(quiz_version_id,stable_key) do update set metadata=excluded.metadata,scoring_key=excluded.scoring_key,active=true returning id into qid;
 insert into meqyro.question_translations(question_id,locale,prompt) values(qid,'pt','Na sequência que você viu, o que vinha logo depois da chave?') on conflict(question_id,locale) do update set prompt=excluded.prompt;
 insert into meqyro.question_translations(question_id,locale,prompt) values(qid,'en','In the sequence you saw, what came right after the key?') on conflict(question_id,locale) do update set prompt=excluded.prompt;
@@ -7938,7 +7938,7 @@ insert into meqyro.option_translations(option_id,locale,label) values(oid,'en','
 insert into meqyro.option_translations(option_id,locale,label) values(oid,'es','7') on conflict(option_id,locale) do update set label=excluded.label;
 insert into meqyro.option_translations(option_id,locale,label) values(oid,'fr','7') on conflict(option_id,locale) do update set label=excluded.label;
 end loop;
-for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where q.slug='brainrank' and qv.version='1.2' loop
+for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where q.slug='brainrank' and qv.version='1.3' loop
 insert into meqyro.questions(quiz_version_id,stable_key,position,kind,scoring_key,metadata) values(v.id,'MEMORY_04',1001,'SINGLE_CHOICE','{"dimension":"DELAYED_MEMORY"}'::jsonb,'{"memoryCue":{"pt":"Marina chegou a Aurora na terça-feira. Ficou no Hotel Central e visitou o museu à tarde.","en":"Marina arrived in Aurora on Tuesday. She stayed at the Central Hotel and visited the museum that afternoon.","es":"Marina llegó a Aurora el martes. Se alojó en el Hotel Central y visitó el museo por la tarde.","fr":"Marina est arrivée à Aurora mardi. Elle a séjourné à l’hôtel Central et visité le musée l’après-midi."}}'::jsonb) on conflict(quiz_version_id,stable_key) do update set metadata=excluded.metadata,scoring_key=excluded.scoring_key,active=true returning id into qid;
 insert into meqyro.question_translations(question_id,locale,prompt) values(qid,'pt','Em qual hotel Marina ficou?') on conflict(question_id,locale) do update set prompt=excluded.prompt;
 insert into meqyro.question_translations(question_id,locale,prompt) values(qid,'en','Which hotel did Marina stay at?') on conflict(question_id,locale) do update set prompt=excluded.prompt;

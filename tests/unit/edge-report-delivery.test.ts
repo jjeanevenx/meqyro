@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from "vitest";
 type SmtpMessage = {
   to: string;
   text: string;
-  attachments: { content: string; contentType: string }[];
+  attachments: { filename: string; content: string; encoding: string; contentType: string }[];
 };
 function harness(status = "FULFILLED", alreadySent = false, claim = true) {
   const send = vi.fn(async (message: SmtpMessage) => {
@@ -80,7 +80,10 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
     () => db,
     { createTransport },
   );
-  const request = (authenticated = true) =>
+  const request = (
+    authenticated = true,
+    pdfBase64 = Buffer.from("%PDF-1.7\nTest report").toString("base64"),
+  ) =>
     new Request("http://localhost/deliver-report", {
       method: "POST",
       headers: authenticated ? { "x-report-delivery-secret": secret } : {},
@@ -89,8 +92,8 @@ function harness(status = "FULFILLED", alreadySent = false, claim = true) {
         sessionId: "session",
         productCode: "BRAINRANK",
         locale: "pt",
-        filename: "meqyro-brainrank-resultado.html",
-        html: "<h1>Árvore e atenção</h1>",
+        filename: "meqyro-brainrank-resultado.pdf",
+        pdfBase64,
         text: "Seu resultado: atenção",
         customer_email: "attacker@example.com",
       }),
@@ -107,14 +110,29 @@ describe("Supabase report delivery handler", () => {
     expect((await unpaid.handler(unpaid.request())).status).toBe(403);
     expect(unpaid.send).not.toHaveBeenCalled();
   });
+  it("rejects non-PDF attachments before sending", async () => {
+    const test = harness();
+    expect(
+      (
+        await test.handler(
+          test.request(true, Buffer.from("<html>invalid</html>").toString("base64")),
+        )
+      ).status,
+    ).toBe(400);
+    expect(test.send).not.toHaveBeenCalled();
+  });
   it("uses the purchased recipient and attaches the complete UTF-8 result", async () => {
     const test = harness();
     expect((await test.handler(test.request())).status).toBe(200);
     const payload = test.send.mock.calls[0][0];
     expect(payload.to).toBe("buyer@example.com");
     expect(payload.text).toContain("Seu resultado: atenção");
-    expect(payload.attachments[0].content).toBe("<h1>Árvore e atenção</h1>");
-    expect(payload.attachments[0].contentType).toBe("text/html; charset=utf-8");
+    expect(Buffer.from(payload.attachments[0].content, "base64").toString()).toBe(
+      "%PDF-1.7\nTest report",
+    );
+    expect(payload.attachments[0].encoding).toBe("base64");
+    expect(payload.attachments[0].filename).toBe("meqyro-brainrank-resultado.pdf");
+    expect(payload.attachments[0].contentType).toBe("application/pdf");
     expect(test.createTransport).toHaveBeenCalledWith(
       expect.objectContaining({
         host: "smtp.hostinger.com",

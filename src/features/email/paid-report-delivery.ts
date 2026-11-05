@@ -2,7 +2,8 @@ import "server-only";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { buildPaidSessionReport } from "@/features/results/paid-session-report";
 import { findPaidEntitlement } from "@/features/commerce/entitlement-service";
-import { reportHtml, reportText } from "@/features/results/report-document";
+import { reportText } from "@/features/results/report-document";
+import { reportPdf } from "@/features/results/report-pdf";
 
 export async function deliverPaidReport(
   orderId: string,
@@ -59,8 +60,8 @@ export async function deliverPaidReport(
       productCode,
       locale,
       accessUrl,
-      filename: `meqyro-${slug}-resultado.html`,
-      html: reportHtml(report, slug, locale),
+      filename: `meqyro-${slug}-resultado.pdf`,
+      pdfBase64: Buffer.from(await reportPdf(report, slug)).toString("base64"),
       text: reportText(report),
     }),
     signal: AbortSignal.timeout(20_000),

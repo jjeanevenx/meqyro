@@ -202,3 +202,9 @@ Substituir o conjunto fixo das novas tentativas por três situações distintas 
 Publicar conteúdo/scoring 1.2 sem recalcular resultados nem editar perguntas de 1.0/1.1. A fórmula cognitiva permanece igual; a versão identifica o novo conteúdo de recuperação. A RPC identifica ciclos pela ordem persistida, preserva tentativas legadas e exige confirmação da informação vinculada antes de iniciar o prazo. O endpoint aceita apenas uma situação atribuída na posição atual, sem confiar no ID enviado pelo navegador.
 
 O relatório BrainRank explica o que foi recuperado, contextualiza acertos parciais sem rotular a pessoa, mantém as limitações do indicador exploratório e usa nomes de dificuldade traduzidos. A ressalva geral aparece uma vez no relatório cognitivo, preservando os contratos dos demais quizzes. Corrigir também o recorte de sequências visuais no mobile permitindo que o grid e a sequência encolham ao espaço disponível.
+
+## ADR — BrainRank 1.3: correção da contagem de letras (2026-11-05)
+
+A conferência independente encontrou 10 ocorrências de R em “RACIOCINAR COM RIGOR REQUER RECONHECER REGRAS”, enquanto BR_ATT_02 oferecia 6/7/12/9 e marcava 12. A versão 1.3 substitui o rótulo da alternativa C por 10 nos quatro idiomas. Mantém IDs estáveis dentro da nova versão, a fórmula e o peso de um ponto; eleva conteúdo/scoring para 1.3 porque a resposta correta mudou semanticamente. A migration clona as perguntas e opções de 1.2 com novos IDs, mantém o banco de 12 situações de memória, arquiva 1.2 para novas seleções e preserva sessões, perguntas e resultados históricos. Não há recálculo retroativo. O seed e o fallback passam a publicar 1.3.
+
+A revisão também mantém o alerta de respostas uniformes no relatório de personalidade e padroniza o arquivo baixado e o anexo de e-mail como PDF. Servidor e função de entrega devem ser publicados juntos por causa da mudança de contrato (`pdfBase64`).
