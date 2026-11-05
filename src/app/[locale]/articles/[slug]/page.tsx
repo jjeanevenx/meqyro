@@ -1,150 +1,201 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, Clock, Sparkles, CheckCircle2 } from "lucide-react";
-import { isLocale, locales, type Locale } from "@/lib/i18n/config";
-import { ARTICLES } from "@/content/articles/data";
+import { ArrowLeft, Clock } from "lucide-react";
+import { isLocale, locales } from "@/lib/i18n/config";
+import { getArticles, getArticleLanguages } from "@/content/articles/data";
+import { BLOG_LABELS } from "@/content/articles/labels";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
 import { ButtonLink } from "@/components/ui/button-link";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL?.replace(/\/$/, "") ?? "https://meqyro.com";
+
 export function generateStaticParams() {
   return locales.flatMap((locale) =>
-    ARTICLES.map((article) => ({
-      locale,
-      slug: article.slug,
-    })),
+    getArticles(locale).map((article) => ({ locale, slug: article.slug })),
   );
-}
-
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string; slug: string }>;
-}): Promise<Metadata> {
-  const { locale, slug } = await params;
-  if (!isLocale(locale)) return {};
-
-  const article = ARTICLES.find((a) => a.slug === slug);
-  if (!article) return {};
-
-  return buildPageMetadata({
-    locale,
-    path: `/articles/${slug}`,
-    title: `${article.title[locale as Locale]} | Meqyro`,
-    description: article.excerpt[locale as Locale],
-  });
 }
 
 type ArticleDetailPageProps = {
   params: Promise<{ locale: string; slug: string }>;
 };
 
+export async function generateMetadata({ params }: ArticleDetailPageProps): Promise<Metadata> {
+  const { locale, slug } = await params;
+  if (!isLocale(locale)) return {};
+  const article = getArticles(locale).find((item) => item.slug === slug);
+  if (!article) return {};
+  const path = `/articles/${slug}`;
+  const metadata = buildPageMetadata({
+    locale,
+    path,
+    title: article.title,
+    description: article.excerpt,
+  });
+  const availableLanguages = getArticleLanguages(slug);
+  const defaultLanguage = availableLanguages.includes("en") ? "en" : availableLanguages[0];
+  return {
+    ...metadata,
+    alternates: {
+      canonical: `${SITE_URL}/${locale}${path}`,
+      languages: Object.fromEntries([
+        ...availableLanguages.map((language) => [language, `${SITE_URL}/${language}${path}`]),
+        ["x-default", `${SITE_URL}/${defaultLanguage}${path}`],
+      ]),
+    },
+    openGraph: {
+      ...metadata.openGraph,
+      type: "article",
+      publishedTime: article.publishedAt,
+      modifiedTime: article.modifiedAt ?? article.publishedAt,
+      authors: [`${SITE_URL}/${locale}/articles`],
+    },
+  };
+}
+
 export default async function ArticleDetailPage({ params }: ArticleDetailPageProps) {
   const { locale, slug } = await params;
   if (!isLocale(locale)) notFound();
-
-  const article = ARTICLES.find((a) => a.slug === slug);
+  const articles = getArticles(locale);
+  const article = articles.find((item) => item.slug === slug);
   if (!article) notFound();
-
+  const copy = BLOG_LABELS[locale];
+  const url = `${SITE_URL}/${locale}/articles/${slug}`;
+  const related = articles
+    .filter((item) => item.slug !== slug)
+    .sort(
+      (a, b) =>
+        Number(b.relatedQuizSlug === article.relatedQuizSlug) -
+        Number(a.relatedQuizSlug === article.relatedQuizSlug),
+    )
+    .slice(0, 3);
+  const modifiedAt = article.modifiedAt ?? article.publishedAt;
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "Article",
-    headline: article.title[locale as Locale],
-    description: article.excerpt[locale as Locale],
-    datePublished: article.publishedAt,
-    inLanguage: locale,
-    publisher: {
-      "@type": "Organization",
-      name: "Meqyro",
-      url: "https://meqyro.com",
-    },
+    "@graph": [
+      {
+        "@type": "BlogPosting",
+        "@id": `${url}#article`,
+        mainEntityOfPage: { "@type": "WebPage", "@id": url },
+        headline: article.title,
+        description: article.excerpt,
+        datePublished: article.publishedAt,
+        dateModified: modifiedAt,
+        inLanguage: locale === "pt" ? "pt-BR" : locale,
+        author: {
+          "@type": "Organization",
+          name: copy.author,
+          url: `${SITE_URL}/${locale}/articles`,
+        },
+        publisher: { "@type": "Organization", name: "Meqyro", url: SITE_URL },
+        isAccessibleForFree: true,
+      },
+      {
+        "@type": "BreadcrumbList",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Meqyro", item: `${SITE_URL}/${locale}` },
+          {
+            "@type": "ListItem",
+            position: 2,
+            name: copy.title,
+            item: `${SITE_URL}/${locale}/articles`,
+          },
+          { "@type": "ListItem", position: 3, name: article.title, item: url },
+        ],
+      },
+    ],
   };
 
   return (
-    <main className="min-h-screen bg-stone-50 py-16 px-4 sm:px-6">
+    <main className="blog blog--detail">
       <script
         type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c") }}
       />
-      <div className="max-w-2xl mx-auto space-y-8">
-        <div>
-          <Link
-            href={`/${locale}/articles`}
-            className="text-xs text-stone-500 hover:text-stone-900 inline-flex items-center gap-1 mb-4 transition-colors"
-          >
-            <ArrowLeft size={14} /> Voltar aos artigos
+      <Link href={`/${locale}/articles`} className="blog__back">
+        <ArrowLeft size={16} aria-hidden="true" />
+        {copy.back}
+      </Link>
+      <article>
+        <header className="blog__header">
+          <Link className="blog__brand" href={`/${locale}`}>
+            Meqyro Insights
           </Link>
-          <div className="flex items-center gap-3 text-xs text-stone-500 mb-2">
-            <span className="inline-flex items-center gap-1">
-              <Clock size={13} /> {article.readingTimeMinutes} min de leitura
-            </span>
-            <span>•</span>
-            <span className="uppercase tracking-wider font-semibold text-[11px] text-stone-600">
-              {article.relatedQuizSlug.replace(/-/g, " ")}
-            </span>
-          </div>
-          <h1 className="text-3xl sm:text-4xl font-serif font-bold text-stone-900 leading-tight">
-            {article.title[locale as Locale]}
-          </h1>
-          <p className="text-base text-stone-600 mt-3 leading-relaxed">
-            {article.subtitle[locale as Locale]}
+          <h1>{article.title}</h1>
+          <p className="blog__subtitle">{article.subtitle}</p>
+          <p className="blog__meta">
+            <Clock size={15} aria-hidden="true" />
+            {article.readingTimeMinutes} {copy.minRead}
+            <span aria-hidden="true">·</span>
+            {copy.author}
           </p>
-        </div>
-
-        <div className="bg-white border border-stone-200 rounded-2xl p-6 sm:p-8 shadow-sm space-y-8 text-stone-800 leading-relaxed text-sm">
-          <p className="text-base text-stone-700 font-serif italic border-l-2 border-stone-300 pl-4 py-1">
-            {article.excerpt[locale as Locale]}
+          <p className="blog__meta">
+            {copy.updated}{" "}
+            <time dateTime={modifiedAt}>
+              {new Intl.DateTimeFormat(locale, { dateStyle: "long", timeZone: "UTC" }).format(
+                new Date(modifiedAt),
+              )}
+            </time>
           </p>
-
-          {article.sections.map((section, idx) => (
-            <section key={idx} className="space-y-4">
-              <h2 className="text-lg font-serif font-bold text-stone-900">
-                {section.heading[locale as Locale]}
-              </h2>
-              {section.paragraphs[locale as Locale].map((para, pIdx) => (
-                <p key={pIdx} className="text-stone-700 leading-relaxed">
-                  {para}
-                </p>
+        </header>
+        <nav className="blog__contents" aria-label={copy.contents}>
+          <h2>{copy.contents}</h2>
+          <ol>
+            {article.sections.map((section, index) => (
+              <li key={section.heading}>
+                <a href={`#section-${index + 1}`}>{section.heading}</a>
+              </li>
+            ))}
+          </ol>
+        </nav>
+        <div className="blog__body">
+          {article.sections.map((section, index) => (
+            <section id={`section-${index + 1}`} key={section.heading}>
+              <h2>{section.heading}</h2>
+              {section.paragraphs.map((paragraph) => (
+                <p key={paragraph}>{paragraph}</p>
               ))}
             </section>
           ))}
-
-          {/* Key Takeaways */}
-          <div className="bg-stone-50 border border-stone-200 rounded-xl p-5 space-y-3">
-            <h3 className="text-xs font-bold uppercase tracking-wider text-stone-900 flex items-center gap-1.5">
-              <CheckCircle2 size={16} className="text-emerald-600" />
-              Pontos Principais para Lembrar
-            </h3>
-            <ul className="space-y-2 text-xs text-stone-700">
-              {article.keyTakeaways[locale as Locale].map((point, kIdx) => (
-                <li key={kIdx} className="flex items-start gap-2">
-                  <span className="text-stone-400 font-bold">•</span>
-                  <span>{point}</span>
-                </li>
+          <aside className="blog__takeaways" aria-label={copy.takeaways}>
+            <h2>{copy.takeaways}</h2>
+            <ul>
+              {article.keyTakeaways.map((point) => (
+                <li key={point}>{point}</li>
               ))}
             </ul>
-          </div>
+          </aside>
+          {article.sources?.length ? (
+            <section className="blog__sources">
+              <h2>{copy.sources}</h2>
+              <ul>
+                {article.sources.map((source) => (
+                  <li key={source.url}>
+                    <a href={source.url}>{source.label}</a>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </div>
-
-        {/* Call to Action for Related Quiz */}
-        <div className="bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200/80 rounded-2xl p-6 text-center space-y-4 shadow-sm">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-100 text-amber-900 text-xs font-semibold">
-            <Sparkles size={14} /> Experimente na Prática
-          </div>
-          <h2 className="text-lg font-serif font-bold text-stone-900">
-            Descubra seu perfil no desafio oficial{" "}
-            {article.relatedQuizSlug.replace(/-/g, " ").toUpperCase()}
-          </h2>
-          <p className="text-xs text-stone-600 max-w-md mx-auto">
-            Avaliação rápida, confidencial e com resultado gratuito instantâneo.
-          </p>
-          <div className="pt-2">
-            <ButtonLink href={`/${locale}/quizzes/${article.relatedQuizSlug}`} variant="primary">
-              Começar teste agora
-            </ButtonLink>
-          </div>
-        </div>
-      </div>
+        <section className="blog__cta">
+          <h2>{article.cta?.title ?? copy.ctaTitle}</h2>
+          <p>{article.cta?.description ?? copy.ctaDescription}</p>
+          <ButtonLink href={`/${locale}/quizzes/${article.relatedQuizSlug}`}>
+            {article.cta?.label ?? copy.test}
+          </ButtonLink>
+        </section>
+      </article>
+      <nav className="blog__related" aria-label={copy.related}>
+        <h2>{copy.related}</h2>
+        <ul>
+          {related.map((item) => (
+            <li key={item.slug}>
+              <Link href={`/${locale}/articles/${item.slug}`}>{item.title}</Link>
+            </li>
+          ))}
+        </ul>
+      </nav>
     </main>
   );
 }

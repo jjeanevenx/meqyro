@@ -8,8 +8,8 @@ export function memorySeedSql(onlyBrainRank12 = false): string {
     if (onlyBrainRank12 && bank === "legacy") continue;
     statements.push(
       bank === "legacy"
-        ? "for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where (q.slug='focusstyle' or (q.slug='brainrank' and qv.version not in ('1.2','1.3'))) and qv.status in ('APPROVED','PUBLISHED') loop"
-        : `for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where q.slug='brainrank' and qv.version='${onlyBrainRank12 ? "1.2" : "1.3"}' loop`,
+        ? "for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where (q.slug='focusstyle' or (q.slug='brainrank' and qv.version <> '1.2')) and qv.status in ('APPROVED','PUBLISHED') loop"
+        : "for v in select qv.id from meqyro.quiz_versions qv join meqyro.quizzes q on q.id=qv.quiz_id where q.slug='brainrank' and qv.version='1.2' loop",
     );
     (bank === "legacy" ? memoryExercises : brainRankMemoryPool).forEach((exercise, index) => {
       statements.push(

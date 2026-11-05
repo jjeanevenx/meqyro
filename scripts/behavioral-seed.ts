@@ -1,15 +1,15 @@
-import { moneyDnaScenarios } from "../src/content/quizzes/moneydna-v2";
-import { coupleDnaScenarios } from "../src/content/quizzes/coupledna-v2";
+import { moneyDnaPool } from "../src/content/quizzes/moneydna-v2";
+import { coupleDnaPool } from "../src/content/quizzes/coupledna-v2";
 
 const sqlText = (value: string) => `'${value.replace(/'/g, "''")}'`;
 const json = (value: unknown) => `${sqlText(JSON.stringify(value))}::jsonb`;
 
 /** Additive and repeatable: never updates v1 content or stored results. */
-export function behavioralSeedSql(): string {
+export function behavioralSeedSql(onlyAdditional = false): string {
   const lines = ["-- Behavioral scenarios v2. Generated from content; no historical rewrites."];
   for (const [slug, questions] of [
-    ["moneydna", moneyDnaScenarios],
-    ["coupledna", coupleDnaScenarios],
+    ["moneydna", moneyDnaPool],
+    ["coupledna", coupleDnaPool],
   ] as const) {
     lines.push(`do $$ declare v_version uuid; v_question uuid; v_option uuid; begin
       insert into meqyro.quiz_versions (quiz_id, version, scoring_version, status, published_at)
@@ -18,7 +18,7 @@ export function behavioralSeedSql(): string {
       on conflict (quiz_id, version) do nothing;
       select v.id into strict v_version from meqyro.quiz_versions v join meqyro.quizzes q on q.id = v.quiz_id
       where q.slug = '${slug}' and v.version = 'v2.0.0';`);
-    for (const q of questions) {
+    for (const q of questions.filter((question) => !onlyAdditional || question.position > 20)) {
       lines.push(`insert into meqyro.questions (quiz_version_id, stable_key, position, kind, scoring_key)
         values (v_version, '${q.stableKey}', ${q.position}, 'SCENARIO', ${json({ dimension: q.dimension, difficulty: q.difficulty })})
         on conflict (quiz_version_id, stable_key) do nothing;

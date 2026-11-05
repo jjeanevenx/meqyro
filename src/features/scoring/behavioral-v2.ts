@@ -5,8 +5,7 @@ import {
   indexUniqueAnswers,
   type ScoringAnswer,
 } from "@/features/quiz-engine/contracts";
-import { moneyDnaScenarios } from "@/content/quizzes/moneydna-v2";
-import { coupleDnaScenarios } from "@/content/quizzes/coupledna-v2";
+import { behavioralDefinition, type BehavioralInstrumentVersion } from "./behavioral-definition";
 import type { BilateralCoupleComparison, CoupleDimension } from "./coupledna";
 
 export const behavioralVersion = "v2.0.0";
@@ -18,7 +17,7 @@ export type BehavioralItem = Readonly<{
 }>;
 export type BehavioralEvidence = Readonly<{ questionKey: string; optionKey: string }>;
 export type BehavioralScore = {
-  instrumentVersion: typeof behavioralVersion;
+  instrumentVersion: BehavioralInstrumentVersion;
   algorithmVersion: typeof behavioralScoringVersion;
   dimensionScores: Record<string, number>;
   observations: Record<string, number>;
@@ -36,8 +35,9 @@ export function scoreBehavioralV2(
   slug: "moneydna" | "coupledna",
   items: readonly BehavioralItem[],
   answers: readonly ScoringAnswer[],
+  instrumentVersion: string = behavioralVersion,
 ): BehavioralScore {
-  const definition = slug === "moneydna" ? moneyDnaScenarios : coupleDnaScenarios;
+  const definition = behavioralDefinition(slug, instrumentVersion);
   const canonical = new Map(definition.map((q) => [q.stableKey, q]));
   const indexed = indexUniqueAnswers(answers);
   if (
@@ -111,7 +111,7 @@ export function scoreBehavioralV2(
   const ranked = [...dimensions].sort((a, b) => dimensionScores[b] - dimensionScores[a]);
   const tiedDimensions = ranked.filter((d) => dimensionScores[d] === dimensionScores[ranked[0]]);
   return {
-    instrumentVersion: behavioralVersion,
+    instrumentVersion: instrumentVersion as BehavioralInstrumentVersion,
     algorithmVersion: behavioralScoringVersion,
     dimensionScores,
     observations,
@@ -140,20 +140,33 @@ export function compareBehavioralCouple(
   if (
     a.algorithmVersion !== behavioralScoringVersion ||
     b.algorithmVersion !== behavioralScoringVersion ||
+    a.instrumentVersion !== b.instrumentVersion ||
     a.evidence.length !== 20 ||
     b.evidence.length !== 20
   ) {
     throw new InvalidQuizSubmissionError("Couple instruments must match");
   }
+  const definition = behavioralDefinition("coupledna", a.instrumentVersion);
+  const leftByQuestion = new Map(a.evidence.map((e) => [e.questionKey, e.optionKey]));
+  const rightByQuestion = new Map(b.evidence.map((e) => [e.questionKey, e.optionKey]));
+  if (
+    leftByQuestion.size !== 20 ||
+    rightByQuestion.size !== 20 ||
+    [...leftByQuestion.keys()].some((key) => !rightByQuestion.has(key)) ||
+    [...leftByQuestion.keys()].some((key) => !definition.some((q) => q.stableKey === key))
+  )
+    throw new InvalidQuizSubmissionError("Couple instruments must use the same selected questions");
   const alignments = {} as Record<CoupleDimension, number>;
-  for (const dimension of [
-    ...new Set(coupleDnaScenarios.map((q) => q.dimension)),
-  ] as CoupleDimension[]) {
-    const questions = coupleDnaScenarios.filter((q) => q.dimension === dimension);
+  for (const dimension of [...new Set(definition.map((q) => q.dimension))] as CoupleDimension[]) {
+    const questions = definition.filter(
+      (q) => q.dimension === dimension && leftByQuestion.has(q.stableKey),
+    );
+    if (questions.length !== 4)
+      throw new InvalidQuizSubmissionError("Invalid couple dimension coverage");
     let matches = 0;
     for (const q of questions) {
-      const left = a.evidence.find((e) => e.questionKey === q.stableKey)?.optionKey;
-      const right = b.evidence.find((e) => e.questionKey === q.stableKey)?.optionKey;
+      const left = leftByQuestion.get(q.stableKey);
+      const right = rightByQuestion.get(q.stableKey);
       if (
         !q.options.some((o) => o.stableKey === left) ||
         !q.options.some((o) => o.stableKey === right)
@@ -169,7 +182,7 @@ export function compareBehavioralCouple(
   );
   return {
     bilateralUnlocked: true,
-    instrumentVersion: behavioralVersion,
+    instrumentVersion: a.instrumentVersion,
     overallAlignmentPercentage: Math.round(
       Object.values(alignments).reduce((sum, n) => sum + n, 0) / ranked.length,
     ),

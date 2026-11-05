@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { brainRankPool } from "@/content/quizzes/brainrank";
+import { reviewedBrainRankPool as brainRankPool } from "@/content/quizzes/brainrank-reviewed";
 import { buildHumanReport } from "@/features/results/human-report";
 import { reportPdf } from "@/features/results/report-pdf";
 import { reportText } from "@/features/results/report-document";

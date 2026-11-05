@@ -50,4 +50,4 @@ O ledger `report_deliveries` registra cada par pedido/sessão e é a referência
 
 ## Revisão de 05/11/2026
 
-O download e o envio por e-mail geram PDF com o mesmo conteúdo. A função recebe `pdfBase64`, exige nome `.pdf` e usa MIME `application/pdf`; publicar o servidor e a função em conjunto para manter esse contrato. Os relatórios de personalidade incluem o alerta de respostas uniformes quando registrado pelo cálculo. A migration `20261105090000_clarify_brainrank_operation_prompt.sql` esclarece a operação numérica em quatro idiomas, sem alterar gabarito ou pontuação.
+O download e o envio por e-mail geram PDF com o mesmo conteúdo. A função recebe `pdfBase64`, exige nome `.pdf` e usa MIME `application/pdf`; publicar o servidor e a função em conjunto para manter esse contrato. Os relatórios de personalidade incluem o alerta de respostas uniformes quando registrado pelo cálculo. A migration `20261105090000_clarify_brainrank_operation_prompt.sql` esclarece a operação numérica em quatro idiomas, sem alterar gabarito ou pontuação. A correção das letras R já pertence ao banco remoto 1.3, preservado na integração com development.

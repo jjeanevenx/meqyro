@@ -1,3 +1,4 @@
+import { additionalBrainRankQuestions } from "./brainrank-expanded";
 import type { BrainRankDimension, BrainRankDifficulty } from "@/features/scoring/brainrank";
 import type { QuestionKind, VisualScene, VisualStimulus } from "@/features/quiz-engine/contracts";
 
@@ -45,7 +46,7 @@ export type BrainRankQuestionDef = {
   }[];
 };
 
-export const brainRankPool: readonly BrainRankQuestionDef[] = [
+const originalBrainRankPool: readonly BrainRankQuestionDef[] = [
   // --- 1. PATTERN RECOGNITION (4 items) ---
   {
     stableKey: "BR_PAT_01",
@@ -484,10 +485,10 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
     dimension: "NUMERICAL_REASONING",
     difficulty: "EASY",
     prompt: {
-      pt: "Uma operação com dois números segue esta regra: multiplique os dois números, some os dois números ao produto e acrescente 2. Qual é o resultado para os números 5 e 6?",
-      en: "An operation on two numbers follows this rule: multiply the two numbers, add both numbers to the product, then add 2. What is the result for the numbers 5 and 6?",
-      es: "Una operación con dos números sigue esta regla: multiplica los dos números, suma ambos números al producto y añade 2. ¿Cuál es el resultado para los números 5 y 6?",
-      fr: "Une opération sur deux nombres suit cette règle : multipliez les deux nombres, ajoutez les deux nombres au produit, puis ajoutez 2. Quel est le résultat pour les nombres 5 et 6 ?",
+      pt: "Uma operação é definida por a ◇ b = a × b + a + b + 2. Quanto vale 5 ◇ 6?",
+      en: "An operation is defined by a ◇ b = a × b + a + b + 2. What is 5 ◇ 6?",
+      es: "Una operación se define como a ◇ b = a × b + a + b + 2. ¿Cuánto vale 5 ◇ 6?",
+      fr: "Une opération est définie par a ◇ b = a × b + a + b + 2. Que vaut 5 ◇ 6 ?",
     },
     options: [
       {
@@ -709,7 +710,7 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
         stableKey: "C",
         position: 3,
         isCorrect: true,
-        label: { pt: "10", en: "10", es: "10", fr: "10" },
+        label: { pt: "12", en: "12", es: "12", fr: "12" },
       },
       {
         stableKey: "D",
@@ -2772,6 +2773,11 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       },
     ],
   },
+];
+
+export const brainRankPool: readonly BrainRankQuestionDef[] = [
+  ...originalBrainRankPool,
+  ...additionalBrainRankQuestions,
 ];
 
 export const brainRankQuestions: readonly BrainRankQuestionDef[] = brainRankPool.slice(0, 24);

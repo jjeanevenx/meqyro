@@ -13,4 +13,5 @@ join meqyro.quizzes as quiz on quiz.id = version.quiz_id,
 where translation.question_id = question.id
   and translation.locale::text = wording.locale
   and quiz.slug = 'brainrank'
+  and version.status in ('APPROVED', 'PUBLISHED')
   and question.stable_key = 'BR_NUM_01';

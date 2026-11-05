@@ -1,0 +1,13 @@
+$ vitest run --config vitest.config.mts tests/unit
+
+ RUN  v5.0.1 /workspace/meqyro
+
+
+ Test Files  46 passed (46)
+      Tests  349 passed (349)
+   Start at  01:10:57
+   Duration  16.00s (tests 65%, import 23%, transform 9%, worker 1%, setup 1%)
+
+    Isolate  46 workers spawned · ~74ms startup each (spawn + environment, per file)
+             at least ~3.33s faster with isolate: false — reuses workers across files instead of one per file
+

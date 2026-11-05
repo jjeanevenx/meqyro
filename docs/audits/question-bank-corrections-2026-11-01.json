@@ -1,0 +1,84 @@
+{
+  "date": "2026-11-01",
+  "reviewedOriginalQuestions": 359,
+  "candidateQuestions": 239,
+  "retiredGenericQuestions": 120,
+  "sourceDatabase": "meqyro-hml",
+  "databaseComparison": {
+    "questions": 239,
+    "allFieldsMatch": true,
+    "liveActivation": false
+  },
+  "candidateStatus": "DRAFT",
+  "remoteMigration": "20261101010236_reviewed_question_banks",
+  "activationDryRun": "passed and rolled back",
+  "versions": [
+    {
+      "slug": "brainrank",
+      "version": "1.3",
+      "scoringVersion": "1.3",
+      "questions": 108
+    },
+    {
+      "slug": "personality-map",
+      "version": "1.1",
+      "scoringVersion": "1.0",
+      "questions": 40
+    },
+    {
+      "slug": "careerfit",
+      "version": "v1.1.0",
+      "scoringVersion": "v1",
+      "questions": 24
+    },
+    {
+      "slug": "focusstyle",
+      "version": "v1.1.0",
+      "scoringVersion": "v1",
+      "questions": 23
+    },
+    {
+      "slug": "decisiondna",
+      "version": "v1.1.0",
+      "scoringVersion": "v1",
+      "questions": 4
+    },
+    {
+      "slug": "moneydna",
+      "version": "v3.0.0",
+      "scoringVersion": "behavioral-v2",
+      "questions": 20
+    },
+    {
+      "slug": "coupledna",
+      "version": "v3.0.0",
+      "scoringVersion": "behavioral-v2",
+      "questions": 20
+    }
+  ],
+  "unitTests": {
+    "passed": 349,
+    "files": 46
+  },
+  "limitations": [
+    "Local Supabase initialization failed: Docker image extraction reported no space left on device. Integration suite not executed.",
+    "Production database and deployed application were not changed.",
+    "Editorial and engineering review does not establish psychometric validity."
+  ],
+  "candidateOptions": 620,
+  "checks": {
+    "typecheck": "passed",
+    "unit": "349 passed / 46 files",
+    "lint": "passed",
+    "build": "passed",
+    "remoteContentParity": "239/239 exact matches",
+    "activation": "passed in transaction, rolled back"
+  },
+  "refinementMigration": "20261101010948_clarify_reviewed_brainrank_items",
+  "itemDecisions": {
+    "revalidated": 141,
+    "corrected": 9,
+    "rewritten": 84,
+    "replaced": 125
+  }
+}
