@@ -1,10 +1,12 @@
 # Execução da homologação
 
-Supabase informado: `zfdipjfgzkaqcbudfzub`. Hosting: Vercel. Domínios: `meqyro.com` e `meqyro.com.br`. Nenhum deployment remoto foi realizado nesta entrega.
+Supabase HML: `zfdipjfgzkaqcbudfzub`. Hosting: Vercel, equipe MEQYRO, projeto `meqyro`. Os domínios `meqyro.com` e `meqyro.com.br` são destinados a Production; não usar credenciais live na homologação.
 
-## Pendências de acesso
+## Estado confirmado em 20/11/2026
 
-O conector Supabase atual negou acesso às consultas do projeto informado. O usuário confirmou que ainda não existe projeto Vercel; a equipe conectada é `JJE-APPS`. O checkout local está sem remote Git. Para criar o projeto, conectar um repositório com o candidato publicado ou autenticar a CLI para envio do código local. Conectar também uma conta autorizada ao Supabase. Não enviar chaves pelo chat.
+O candidato `5b06652` está no PR [#1](https://github.com/jjeanevenx/meqyro/pull/1), ainda draft, com CI completa aprovada: 611 testes em 78 arquivos, replay de banco vazio, build e smoke. O Preview protegido `https://meqyro-git-development-meqyro.vercel.app` serve o derivado `223bff0e750a`; somente o cron foi retirado do derivado para permitir o build no Hobby. A configuração de cinco minutos permanece no candidato de produção.
+
+MoneyDNA foi concluído nos quatro idiomas, e os quatro aliases tiveram entrega real confirmada. Uma compra Stripe TEST confirmou pedido e grant por consulta autenticada à Stripe, mas não comprovou webhook. O sandbox não tinha destino cadastrado. A entrega do relatório premium recebeu 401 da função HML, aguardando sincronização privada de `REPORT_DELIVERY_SECRET` entre os dois provedores e novo deployment. Não declarar webhook, anexo premium, PDF baixado, recuperação em segundo navegador ou CoupleDNA bilateral aceitos antes de validar essas etapas.
 
 ## Preparar o ambiente
 

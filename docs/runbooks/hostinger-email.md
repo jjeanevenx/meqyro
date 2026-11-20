@@ -43,6 +43,10 @@ Validação do código: TypeScript, ESLint e build Next.js passaram, assim como 
 
 ## Publicação e teste
 
+Atualização de 20/11, candidato `5b06652`: CI completa aprovada com 611 testes em 78 arquivos, build e smoke. O Preview estável já aponta para `dpl_GNwHCAY7A5Dirsw8Nzc6mNFqWu4b`, versão `223bff0e750a`. Quatro conclusões reais MoneyDNA e os logs de entrada da Hostinger confirmaram entrega dos remetentes pt/en/es/fr, todos sem spam. Isso valida o SMTP do servidor Next.js para resultado salvo; não comprova anexos premium enviados pela Edge Function.
+
+O primeiro pedido Stripe TEST dessa revalidação foi confirmado e liberou acesso premium, mas a entrega do anexo recebeu 401 da função HML antes de reservar o envio. Sincronizar `REPORT_DELIVERY_SECRET` apenas entre **Vercel Preview** e **Supabase meqyro-hml**, gerar um novo Preview e repetir a entrega do pedido existente, sem cobrar novamente. Não alterar Production para corrigir essa divergência de HML. Conferir `report_deliveries.sent_at`, log de entrega e recebimento do anexo antes de concluir o aceite.
+
 Em 20/11/2026, os quatro remetentes por idioma foram salvos também no Supabase **meqyro-hml** (`zfdipjfgzkaqcbudfzub`) e relidos com os digests esperados. A função HML foi atualizada para o mesmo bundle de seleção de remetente já validado em Production. As configurações SMTP básicas e os dois secrets privados de HML foram preservados. Os quatro remetentes também estão cadastrados como Config/Preview na Vercel. A execução direcionada de SMTP, função de entrega e fallbacks passou com 93 testes em três arquivos. O envio SMTP externo continua pendente.
 
 1. Confirmar que a caixa existe e que as configurações SMTP do hPanel correspondem ao servidor acima. Conferir SPF, DKIM e DMARC do domínio no painel Hostinger.
