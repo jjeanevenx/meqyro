@@ -7,10 +7,12 @@ import { fulfillOrder } from "./fulfillment-service";
 import { logEvent } from "@/lib/observability/logger";
 import { sendPurchaseConfirmationForOrder } from "./webhook-handler";
 import { assertTransition, orderTransitions } from "@/lib/domain/states";
+import { activateInviteSlot } from "@/features/couple/couple-invite-service";
 
 export interface ReconciliationReport {
   success: boolean;
   repairedPaidCount: number;
+  repairedInviteCount: number;
   checkedPendingCount: number;
   confirmedCount: number;
   expiredOrdersCount: number;
@@ -86,6 +88,49 @@ export async function reconcileUnfulfilledPaidOrders(): Promise<{ repairedCount:
   }
 
   return { repairedCount };
+}
+
+/** Recover invite dependencies even when the payment transaction already committed. */
+export async function reconcileIncompleteInviteActivations(): Promise<{
+  repairedCount: number;
+  failedCount: number;
+}> {
+  const db = createSupabaseSecretClient();
+  const { data: slots, error } = await db
+    .from("couple_invite_slots")
+    .select("id, order_id, orders!couple_invite_slots_order_id_fkey!inner(status)")
+    .eq("orders.status", "FULFILLED")
+    .is("activation_completed_at", null)
+    .in("status", ["PENDING_PAYMENT", "ACTIVE", "REDEEMED", "QUIZ_STARTED", "COMPLETED"])
+    .order("updated_at", { ascending: true })
+    .order("id", { ascending: true })
+    .limit(50);
+  if (error) throw new Error("Unable to load incomplete paid invitations.");
+
+  let repairedCount = 0;
+  let failedCount = 0;
+  for (const slot of slots ?? []) {
+    if (!slot.order_id) continue;
+    try {
+      await activateInviteSlot({ slotId: slot.id as string, orderId: slot.order_id as string });
+      repairedCount += 1;
+    } catch (error) {
+      failedCount += 1;
+      logEvent("error", "invite_activation_recovery_failed", {
+        slotId: slot.id,
+        orderId: slot.order_id,
+        error: error instanceof Error ? error.message : "Unknown",
+      });
+      // Move a persistent failure behind other incomplete slots in the next batch.
+      const { error: retryError } = await db
+        .from("couple_invite_slots")
+        .update({ updated_at: new Date().toISOString() })
+        .eq("id", slot.id)
+        .is("activation_completed_at", null);
+      if (retryError) throw new Error("Unable to schedule invite activation recovery.");
+    }
+  }
+  return { repairedCount, failedCount };
 }
 
 /**
@@ -230,6 +275,7 @@ export async function runFullReconciliationSuite(
       success: false,
       locked: true,
       repairedPaidCount: 0,
+      repairedInviteCount: 0,
       checkedPendingCount: 0,
       confirmedCount: 0,
       expiredOrdersCount: 0,
@@ -243,6 +289,7 @@ export async function runFullReconciliationSuite(
   try {
     const unfulfilled = await reconcileUnfulfilledPaidOrders();
     const pending = await reconcilePendingOrders();
+    const invites = await reconcileIncompleteInviteActivations();
     const sessions = await expireStaleSessions();
     const tokens = await cleanupExpiredTokens();
     const db = createSupabaseSecretClient();
@@ -271,6 +318,7 @@ export async function runFullReconciliationSuite(
 
     logEvent("info", "reconciliation_suite_completed", {
       repairedPaidCount: unfulfilled.repairedCount,
+      repairedInviteCount: invites.repairedCount,
       checkedPendingCount: pending.checkedCount,
       confirmedCount: pending.confirmedCount,
       expiredOrdersCount: pending.expiredCount,
@@ -280,14 +328,18 @@ export async function runFullReconciliationSuite(
     });
 
     return {
-      success: true,
+      success: invites.failedCount === 0,
       repairedPaidCount: unfulfilled.repairedCount,
+      repairedInviteCount: invites.repairedCount,
       checkedPendingCount: pending.checkedCount,
       confirmedCount: pending.confirmedCount,
       expiredOrdersCount: pending.expiredCount,
       expiredSessionsCount: sessions.expiredCount,
       cleanedTokensCount: tokens.cleanedCount,
       durationMs,
+      ...(invites.failedCount > 0
+        ? { error: "Some paid invitations could not be recovered." }
+        : {}),
     };
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
@@ -296,6 +348,7 @@ export async function runFullReconciliationSuite(
     return {
       success: false,
       repairedPaidCount: 0,
+      repairedInviteCount: 0,
       checkedPendingCount: 0,
       confirmedCount: 0,
       expiredOrdersCount: 0,

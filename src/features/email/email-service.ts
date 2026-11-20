@@ -2,6 +2,7 @@ import "server-only";
 
 import nodemailer from "nodemailer";
 import { renderTransactionalEmail } from "@/lib/email/branded-template";
+import { resolveEmailSender } from "@/lib/email/sender";
 
 import { renderResultDeliveryEmail } from "@/features/email/result-delivery-template";
 
@@ -39,7 +40,7 @@ async function sendViaSmtp(options: {
   const user = process.env.SMTP_USER;
   const password = process.env.SMTP_PASSWORD;
   const isProduction = process.env.NODE_ENV === "production";
-  const from = process.env.EMAIL_FROM || "Meqyro <noreply@meqyro.com>";
+  const from = resolveEmailSender(options.locale, (name) => process.env[name]);
 
   if (!user || !password || port !== 465) {
     if (isProduction) {

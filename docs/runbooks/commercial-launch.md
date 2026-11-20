@@ -2,6 +2,25 @@
 
 Este runbook prepara uma publicação revisável. A auditoria de 18/10/2026 ainda não aprova produção.
 
+## Atualização de preparação — 18/11/2026
+
+- Produção separada: Supabase `meqyro-prod` (`tmsdnerpaiqukxfpkmyo`, `us-east-1`, custo de criação informado: US$ 0/mês). O projeto foi provisionado com estrutura, conteúdo revisado DRAFT e preços desativados, sem copiar clientes, respostas ou pedidos de HML. O registro detalhado está em `docs/audits/production-corrections-2026-11-18.md`.
+- Aplicar `20261118020555_couple_invite_activation_recovery.sql` antes de publicar o código corrigido. A coluna já existe no banco local, em HML e no bootstrap de produção. A ativação só marca `activation_completed_at` depois de persistir grants, convite e consentimento inicial; replays preservam consentimentos revogados, código e expiração.
+- O cron também recupera dependências incompletas de pedidos FULFILLED. `vercel.json` configura `/api/cron/reconcile` a cada cinco minutos; confirmar plano Vercel compatível antes do deploy. A configuração não comprova execução nem alertas.
+- `pnpm build` verifica as configurações quando `VERCEL_ENV=production`. Usar `pnpm check:production-env` para uma verificação explícita. O comando lista somente nomes ausentes/inválidos; não valida conectividade de provedores nem imprime valores.
+- O smoke exige `databaseStatus=CONNECTED`. Sucesso HTTP com métricas indisponíveis não é mais aceito.
+- A geração de evidências de homologação é opt-in por `HOMOLOGATION_EVIDENCE_PATH`, somente em execução integral aprovada. Não sobrescrever o JSON histórico para registrar uma nova execução.
+- Antes de ativar os instrumentos revisados de produção, consolidar as correções com o código compatível do preview (`aeb4d7b` ou sucessor revisado). O checkout local em `27b67f2` é anterior ao suporte dos instrumentos revisados v3; não publicá-lo sobre o catálogo novo.
+- `meqyro.com`, `meqyro.com.br` e seus `www` estão vinculados à Vercel. O endereço principal é `https://meqyro.com`; os demais têm redirect 308. DNS permanece no destino anterior até existir um deployment Production validado. Preservar MX, SPF, DKIM, DMARC e registros de autoconfiguração do `.com.br`.
+
+## Histórico e bootstrap da nova base
+
+O schema privado foi provisionado por snapshot somente de estrutura do banco local validado: 32 tabelas com RLS, funções, constraints, índices e ACLs, incluindo a recuperação de ativação. O conteúdo inicial usa os sete instrumentos revisados do commit `aeb4d7b`, com 239 perguntas em DRAFT e os refinamentos posteriores de BrainRank; não importa instrumentos antigos ou dados pessoais. O adicional de convite não possui perguntas.
+
+As migrações remotas de bootstrap são `bootstrap_meqyro_validated_schema`, `bootstrap_reviewed_catalog_as_draft`, `refine_unpublished_reviewed_brainrank` e `configure_private_application_data_api`. Esse baseline tem histórico próprio: não executar `db push` comparando cegamente timestamps locais, nem reaplicar migrations antigas sobre ele. Conferir conteúdo e registrar somente as migrations incrementais necessárias.
+
+O PostgREST do novo projeto inclui `public,graphql_public,meqyro` por configuração de `authenticator.pgrst.db_schemas`. Alterações futuras nos schemas expostos devem considerar esse override, ou removê-lo de forma revisada para voltar à configuração do Dashboard. O schema `meqyro` continua sem acesso direto para anon/authenticated. `deliver-report` está publicado com autenticação própria; configurar seus secrets antes de testar entrega.
+
 ## Configuração
 
 - Catálogo novo: BRAINRANK, MONEYDNA e COUPLEDNA, compra única. Os quatro demais e bundles não aceitam novas vendas. Grants históricos continuam suportados.

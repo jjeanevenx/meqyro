@@ -1,6 +1,6 @@
 # E-mail pela Hostinger
 
-O servidor Next.js envia mensagens transacionais por SMTP. A Supabase Function `deliver-report` envia uma apresentação HTML com botão de acesso, o relatório pago completo na alternativa de texto e como anexo HTML, após validar pagamento, acesso e destinatário. O template visual compartilhado está em `src/lib/email/branded-template.ts`; incluir esse arquivo ao publicar a Function.
+O servidor Next.js envia mensagens transacionais por SMTP. A Supabase Function `deliver-report` envia uma apresentação HTML com botão de acesso, o relatório pago completo na alternativa de texto e como anexo PDF, após validar pagamento, acesso e destinatário. O template visual compartilhado está em `src/lib/email/branded-template.ts`; incluir esse arquivo ao publicar a Function.
 
 ## Configuração
 
@@ -18,7 +18,32 @@ Na Vercel, usar **Secret** para `SMTP_PASSWORD` e **Config** para os demais camp
 
 Manter `REPORT_DELIVERY_SECRET` igual na Vercel e na Function, com pelo menos 32 caracteres. O Supabase fornece suas próprias variáveis `SUPABASE_URL` e `SUPABASE_SERVICE_ROLE_KEY` à Function.
 
+## Aliases de relatório por idioma — 19/11/2026
+
+A caixa `admin@meqyro.com.br` permanece como usuário de autenticação SMTP. Após atingir o limite da caixa, o usuário escolheu reutilizar `hello`, `ola` e `salut`. O domínio é `meqyro.com.br`.
+
+| Idioma | Variável        | Alias usado                |
+| ------ | --------------- | -------------------------- |
+| pt     | `EMAIL_FROM_PT` | `relatorios@meqyro.com.br` |
+| en     | `EMAIL_FROM_EN` | `hello@meqyro.com.br`      |
+| es     | `EMAIL_FROM_ES` | `ola@meqyro.com.br`        |
+| fr     | `EMAIL_FROM_FR` | `salut@meqyro.com.br`      |
+
+A criação de `reports` recebeu HTTP 409, `ERR_ALIAS_ACC_QUOTA_REACHED`, após a criação de `relatorios`. A releitura retornou cinco aliases ativos: `hello`, `noreply`, `ola`, `relatorios` e `salut`, todos vinculados à caixa principal. Nenhum alias existente foi excluído e nenhum plano foi alterado. `ola` foi reutilizado para espanhol ao adotar os três aliases existentes; o usuário pode mudar esse mapeamento por configuração.
+
+O servidor Next.js e a função `deliver-report` compartilham `src/lib/email/sender.ts`, que seleciona a variável por idioma e usa `EMAIL_FROM` como fallback para idioma desconhecido ou valor ausente. A autenticação SMTP não muda. Configure as quatro variáveis também nos secrets de Edge Functions do Supabase; inclua `sender.ts` junto de `branded-template.ts` ao publicar a função. As variáveis de remetente são Config na Vercel e não devem receber prefixo `NEXT_PUBLIC_`.
+
+O arquivo `vercel-production/email-aliases.env` contém as quatro configurações SMTP básicas (`SMTP_HOST`, `SMTP_PORT`, `SMTP_USER`, `EMAIL_FROM`) e os quatro remetentes por idioma para importação, sem senhas. A existência do alias e os testes com SMTP simulado não comprovam que a Hostinger aceite o endereço como remetente real; validar o envio antes do release.
+
+Estado confirmado em 19/11: os quatro remetentes foram cadastrados e relidos como Config/Production no projeto Vercel `meqyro`. A função `deliver-report` foi publicada como v6 em `meqyro-prod`, relida com os mesmos arquivos locais e recebeu HTTP 401 no probe sem autenticação. Após as importações pelo usuário, a listagem retorna a revisão v8 ACTIVE, com o mesmo hash do bundle validado. A releitura da Vercel confirmou todas as variáveis de Production esperadas presentes, sem ler os secrets. O aplicativo Next.js ainda precisa do deployment do candidato para usar a nova seleção.
+
+A credencial disponível na CLI recebeu 403 na consulta de secrets e recusa de privilégios na tentativa de importar o arquivo com os quatro remetentes. Depois disso, o usuário confirmou a importação pelo painel e enviou captura com `REPORT_DELIVERY_SECRET`, `SMTP_PASSWORD` e os quatro remetentes. Os prefixos de SHA-256 visíveis dos quatro remetentes correspondem aos valores combinados. Como a captura não mostrava `SMTP_USER`, o arquivo foi complementado com as quatro configurações SMTP básicas. O usuário então confirmou a conclusão dessa importação também. Essa última confirmação é do usuário; o acesso automatizado aos secrets não foi restabelecido. Nenhum segredo privado foi extraído ou comparado entre provedores.
+
+Validação do código: TypeScript, ESLint e build Next.js passaram, assim como 527 testes unitários em 61 arquivos. A execução completa foi interrompida após falhas de conexão com o banco local em testes de integração; não se declara a suíte completa aprovada nesta etapa. Nenhum email real foi enviado e nenhum alias existente foi removido.
+
 ## Publicação e teste
+
+Em 20/11/2026, os quatro remetentes por idioma foram salvos também no Supabase **meqyro-hml** (`zfdipjfgzkaqcbudfzub`) e relidos com os digests esperados. A função HML foi atualizada para o mesmo bundle de seleção de remetente já validado em Production. As configurações SMTP básicas e os dois secrets privados de HML foram preservados. Os quatro remetentes também estão cadastrados como Config/Preview na Vercel. A execução direcionada de SMTP, função de entrega e fallbacks passou com 93 testes em três arquivos. O envio SMTP externo continua pendente.
 
 1. Confirmar que a caixa existe e que as configurações SMTP do hPanel correspondem ao servidor acima. Conferir SPF, DKIM e DMARC do domínio no painel Hostinger.
 2. Aplicar as migrações pendentes, incluindo `20261011010059_smtp_report_delivery_claim.sql`. A migração reserva atomicamente cada envio e concede execução apenas a `service_role`.

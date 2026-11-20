@@ -28,6 +28,33 @@ const input = {
 };
 
 describe("Hostinger transactional SMTP", () => {
+  it.each([
+    ["pt", "relatorios"],
+    ["en", "hello"],
+    ["es", "ola"],
+    ["fr", "salut"],
+  ])("selects the %s alias without changing the SMTP login", async (locale, alias) => {
+    const sender = `Meqyro <${alias}@meqyro.com.br>`;
+    vi.stubEnv("SMTP_USER", "admin@meqyro.com.br");
+    vi.stubEnv("SMTP_PASSWORD", "test-only-password");
+    vi.stubEnv("EMAIL_FROM", "Meqyro <default@example.com>");
+    vi.stubEnv(`EMAIL_FROM_${locale.toUpperCase()}`, sender);
+    smtp.createTransport.mockReturnValue({ sendMail: smtp.sendMail, close: smtp.close });
+    smtp.sendMail.mockResolvedValue({
+      messageId: "alias-message",
+      accepted: [input.recipientEmail],
+      rejected: [],
+    });
+
+    expect((await sendSessionRecoveryEmail({ ...input, locale })).success).toBe(true);
+    expect(smtp.sendMail).toHaveBeenCalledWith(expect.objectContaining({ from: sender }));
+    expect(smtp.createTransport).toHaveBeenCalledWith(
+      expect.objectContaining({
+        auth: { user: "admin@meqyro.com.br", pass: "test-only-password" },
+      }),
+    );
+  });
+
   it("requires SMTP credentials in production", async () => {
     vi.stubEnv("NODE_ENV", "production");
     vi.stubEnv("SMTP_USER", "");

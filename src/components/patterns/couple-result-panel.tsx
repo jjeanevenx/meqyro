@@ -1,9 +1,11 @@
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Check, Copy } from "lucide-react";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import type { Locale } from "@/lib/i18n/config";
 import type { ProtectedResultResponse } from "@/features/results/contracts";
+import { InviteManagerPanel } from "./invite-manager-panel";
 
 export function CoupleResultPanel({
   sessionId,
@@ -16,11 +18,13 @@ export function CoupleResultPanel({
   initialState: ProtectedResultResponse["couple"];
   paid: boolean;
 }) {
-  const t = getDictionary(locale).coupleFlow;
+  const dict = getDictionary(locale);
+  const t = dict.coupleFlow;
   const router = useRouter();
   const [allowed, setAllowed] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(false);
+  const [copied, setCopied] = useState(false);
   const [inviteUrl, setInviteUrl] = useState<string | null>(null);
   const state = initialState?.state ?? "NO_INVITE";
   useEffect(() => {
@@ -66,6 +70,16 @@ export function CoupleResultPanel({
       setBusy(false);
     }
   }
+  async function copyUrl() {
+    if (!url) return;
+    try {
+      await navigator.clipboard.writeText(url);
+      setCopied(true);
+      window.setTimeout(() => setCopied(false), 2500);
+    } catch {
+      // Fallback handled by input selection
+    }
+  }
   return (
     <section
       className="rounded-2xl border border-stone-200 bg-stone-50 p-5 space-y-3"
@@ -98,20 +112,32 @@ export function CoupleResultPanel({
         </button>
       )}
       {url ? (
-        <label className="block">
-          {t.link}
-          <input
-            className="w-full rounded border p-2 mt-2"
-            readOnly
-            value={url}
-            onFocus={(event) => event.currentTarget.select()}
-          />
-        </label>
+        <div className="space-y-2">
+          <label className="block">
+            {t.link}
+            <input
+              className="w-full rounded border p-2 mt-2"
+              readOnly
+              value={url}
+              onFocus={(event) => event.currentTarget.select()}
+            />
+          </label>
+          <button
+            type="button"
+            onClick={() => void copyUrl()}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-stone-300 bg-white px-3 py-1.5 text-xs font-semibold text-stone-800 hover:bg-stone-100 transition-colors"
+          >
+            {copied ? <Check size={14} className="text-emerald-600" /> : <Copy size={14} />}
+            <span>{copied ? dict.common.linkCopied : dict.common.copyLink}</span>
+          </button>
+        </div>
       ) : null}
       <button disabled={busy} onClick={() => act("refresh")}>
         {t.refresh}
       </button>
       {error ? <p role="alert">{t.error}</p> : null}
+
+      <InviteManagerPanel sessionId={sessionId} locale={locale} />
     </section>
   );
 }

@@ -8,7 +8,8 @@
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "node scripts/check-deployment-env.mjs && next build",
+    "check:production-env": "node scripts/check-deployment-env.mjs --production",
     "start": "next start",
     "lint": "eslint .",
     "format": "prettier --write .",

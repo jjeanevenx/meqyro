@@ -116,8 +116,7 @@ export async function GET(request: Request) {
       databaseStatus: "CONNECTED",
       timestamp: new Date().toISOString(),
     });
-  } catch (error) {
-    const message = error instanceof Error ? error.message : "Internal Server Error";
-    return NextResponse.json({ error: message }, { status: 500 });
+  } catch {
+    return NextResponse.json({ error: "Internal Server Error" }, { status: 500 });
   }
 }

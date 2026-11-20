@@ -1,9 +1,11 @@
 import { renderTransactionalEmail } from "@/lib/email/branded-template";
+import { resolveEmailSender } from "@/lib/email/sender";
 import { readFileSync } from "node:fs";
 import { transpileModule, ModuleKind } from "typescript";
 import { describe, expect, it, vi } from "vitest";
 
 type SmtpMessage = {
+  from: string;
   to: string;
   text: string;
   html: string;
@@ -15,6 +17,7 @@ function harness(
   claim = true,
   productCode = "BRAINRANK",
   locale = "pt",
+  senderEnv: Record<string, string> = {},
 ) {
   const send = vi.fn(async (message: SmtpMessage) => {
     return { messageId: "email-123", accepted: [message.to], rejected: [] };
@@ -85,8 +88,16 @@ function harness(
     SMTP_PASSWORD: "test-only-password",
     SUPABASE_URL: "http://localhost",
     SUPABASE_SERVICE_ROLE_KEY: "test",
+    ...senderEnv,
   };
-  new Function("Deno", "createClient", "nodemailer", "renderTransactionalEmail", compiled)(
+  new Function(
+    "Deno",
+    "createClient",
+    "nodemailer",
+    "renderTransactionalEmail",
+    "resolveEmailSender",
+    compiled,
+  )(
     {
       env: { get: (key: string) => env[key] },
       serve: (fn: typeof handler) => {
@@ -96,6 +107,7 @@ function harness(
     () => db,
     { createTransport },
     renderTransactionalEmail,
+    resolveEmailSender,
   );
   const request = (
     authenticated = true,
@@ -120,6 +132,39 @@ function harness(
 }
 
 describe("Supabase report delivery handler", () => {
+  it.each([
+    ["pt", "relatorios"],
+    ["en", "hello"],
+    ["es", "ola"],
+    ["fr", "salut"],
+  ])(
+    "uses the configured %s alias while authenticating with the mailbox",
+    async (locale, alias) => {
+      const sender = `Meqyro <${alias}@meqyro.com.br>`;
+      const test = harness("FULFILLED", false, true, "BRAINRANK", locale, {
+        [`EMAIL_FROM_${locale.toUpperCase()}`]: sender,
+        EMAIL_FROM: "Meqyro <default@example.com>",
+      });
+      expect((await test.handler(test.request())).status).toBe(200);
+      expect(test.send).toHaveBeenCalledWith(expect.objectContaining({ from: sender }));
+      expect(test.createTransport).toHaveBeenCalledWith(
+        expect.objectContaining({
+          auth: { user: "sender@example.com", pass: "test-only-password" },
+        }),
+      );
+    },
+  );
+
+  it("preserves the common sender when a locale alias is not configured", async () => {
+    const test = harness("FULFILLED", false, true, "BRAINRANK", "en", {
+      EMAIL_FROM: "Meqyro <default@example.com>",
+    });
+    expect((await test.handler(test.request())).status).toBe(200);
+    expect(test.send).toHaveBeenCalledWith(
+      expect.objectContaining({ from: "Meqyro <default@example.com>" }),
+    );
+  });
+
   it("rejects missing authentication and unconfirmed payments without sending", async () => {
     const auth = harness();
     expect((await auth.handler(auth.request(false))).status).toBe(401);
