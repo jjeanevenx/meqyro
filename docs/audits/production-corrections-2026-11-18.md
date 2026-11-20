@@ -115,6 +115,8 @@ TypeScript, ESLint e build passaram. A suíte unitária passou com 527 testes em
 
 ## Evidências externas ao repositório
 
+A primeira CI do commit `11543e7` falhou antes dos testes: no banco vazio, a migração histórica `20261019104646_brainrank_content_v11.sql` não encontrava o catálogo que até então era criado apenas pelo seed posterior. O Postgres recusou `questions.quiz_version_id = null` (23502). Foi adicionada uma dependência anterior, `20261019104645_ensure_catalog_before_content.sql`, que insere apenas identidades de quiz ausentes, inativas e com `ON CONFLICT DO NOTHING`. Nenhuma migração existente, versão, pergunta ou gabarito foi alterado. Um ensaio transacional com rollback no HML confirmou zero inserções e preservação integral dos registros existentes. A validação de replay completo depende da nova execução da CI; não se declara essa etapa aprovada antecipadamente.
+
 Atualização de 20/11: os quatro aliases foram cadastrados e relidos no Supabase HML pelo painel autenticado, preservando SMTP e secrets privados existentes. A função `deliver-report` HML foi atualizada para o bundle compartilhado de remetentes; os valores Config/Preview da Vercel também foram cadastrados. A verificação direcionada passou com 93 testes em três arquivos. O snapshot `preview-source-manifest.json` exclui `.env`, credenciais e o diretório de importação. O upload por arquivos foi interrompido por falha de revisão automática causada pelo limite de uso da sessão, sem novo deployment concluído; a publicação será retomada por uma referência Git identificável. Nenhuma mensagem de teste ou cobrança real foi executada nessa etapa.
 
 Pasta: `C:/Users/ingev/.codex/visualizations/2026/11/18/01a1ec3b-339d-74e1-a256-f75771e58f7f/`.
