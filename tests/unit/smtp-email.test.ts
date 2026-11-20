@@ -47,7 +47,16 @@ describe("Hostinger transactional SMTP", () => {
     });
 
     expect((await sendSessionRecoveryEmail({ ...input, locale })).success).toBe(true);
-    expect(smtp.sendMail).toHaveBeenCalledWith(expect.objectContaining({ from: sender }));
+    expect((await sendResultDeliveryEmail({ ...input, locale })).success).toBe(true);
+    expect(smtp.sendMail).toHaveBeenCalledTimes(2);
+    for (const [message] of smtp.sendMail.mock.calls) {
+      expect(message).toEqual(
+        expect.objectContaining({
+          from: sender,
+          html: expect.stringContaining(`lang="${locale}"`),
+        }),
+      );
+    }
     expect(smtp.createTransport).toHaveBeenCalledWith(
       expect.objectContaining({
         auth: { user: "admin@meqyro.com.br", pass: "test-only-password" },

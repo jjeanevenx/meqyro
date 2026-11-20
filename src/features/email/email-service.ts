@@ -121,7 +121,7 @@ export async function sendResultDeliveryEmail(
     quizSlug: input.quizSlug,
   });
 
-  return sendViaSmtp({ to: input.recipientEmail, subject, text, html });
+  return sendViaSmtp({ locale: input.locale, to: input.recipientEmail, subject, text, html });
 }
 
 export async function sendSessionRecoveryEmail(
