@@ -8,6 +8,8 @@ O candidato `5b06652` está no PR [#1](https://github.com/jjeanevenx/meqyro/pull
 
 MoneyDNA foi concluído nos quatro idiomas, e os quatro aliases tiveram entrega real confirmada. Uma compra Stripe TEST confirmou pedido e grant por consulta autenticada à Stripe, mas não comprovou webhook. O sandbox não tinha destino cadastrado. A entrega do relatório premium recebeu 401 da função HML, aguardando sincronização privada de `REPORT_DELIVERY_SECRET` entre os dois provedores e novo deployment. Não declarar webhook, anexo premium, PDF baixado, recuperação em segundo navegador ou CoupleDNA bilateral aceitos antes de validar essas etapas.
 
+Atualização de 21/11: a sincronização de entrega funcionou após o redeploy Preview `dpl_FpN4oi7yJL57d86tkZbMEUp7xAcb`, mesmo commit funcional. O endereço estável foi atualizado. O pedido TEST existente enviou seu relatório e a repetição da consulta não reenviou a mensagem. A Hostinger confirmou entrega, mas classificou a mensagem premium como spam. Verificar cabeçalhos, PDF e recuperação; não considerar caixa principal aprovada. Webhook TEST e demais cenários acima permanecem pendentes.
+
 ## Preparar o ambiente
 
 1. Confirmar que o banco é destinado à homologação, conferir histórico de migrations e fazer backup. Aplicar somente migrations pendentes, em ordem; não resetar nem editar migrations existentes. Investigar convites ativos duplicados antes dos novos índices, preservando participantes e consentimentos. Não aplicar seed cegamente sobre dados existentes.
