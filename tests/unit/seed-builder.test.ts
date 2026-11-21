@@ -64,8 +64,5 @@ describe("Content definitions integrity", () => {
     expect(sql).toContain(
       "do update set position = excluded.position, kind = excluded.kind, scoring_key = excluded.scoring_key, metadata = excluded.metadata, active = true",
     );
-    const fs = await import("node:fs");
-    const path = await import("node:path");
-    fs.writeFileSync(path.resolve(import.meta.dirname, "../../supabase/seed.sql"), sql, "utf8");
   });
 });

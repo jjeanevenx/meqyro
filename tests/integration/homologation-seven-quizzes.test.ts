@@ -1,10 +1,11 @@
 import { pdfText } from "../pdf-text";
 import { renderTransactionalEmail } from "@/lib/email/branded-template";
+import { resolveEmailSender } from "@/lib/email/sender";
 import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
 import { transpileModule, ModuleKind } from "typescript";
-import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
+import { afterAll, beforeAll, describe, expect, it, vi, type RunnerTask } from "vitest";
 import { createClient } from "@supabase/supabase-js";
 import { NextRequest } from "next/server";
 import {
@@ -47,7 +48,12 @@ const languages = ["pt", "en", "es", "fr"] as const;
 const evidence: Record<string, unknown>[] = [];
 const nativeFetch = globalThis.fetch;
 let edgeHandler: (request: Request) => Promise<Response>;
-type Mail = { to: string; text: string; attachments: { filename: string; content: string }[] };
+let auditReady = false;
+type Mail = {
+  to: string;
+  text: string;
+  attachments: { filename: string; content: string; encoding?: string }[];
+};
 const messages: Mail[] = [];
 
 beforeAll(async () => {
@@ -68,7 +74,10 @@ beforeAll(async () => {
       ...message,
       attachments: message.attachments.map((attachment) => ({
         ...attachment,
-        content: Buffer.from(attachment.content, "utf8").toString("base64"),
+        content:
+          attachment.encoding === "base64"
+            ? attachment.content
+            : Buffer.from(attachment.content, "utf8").toString("base64"),
       })),
     });
     return { messageId: `local-email-${randomUUID()}`, accepted: [message.to], rejected: [] };
@@ -82,6 +91,7 @@ beforeAll(async () => {
     "createClient",
     "nodemailer",
     "renderTransactionalEmail",
+    "resolveEmailSender",
     transpileModule(source, { compilerOptions: { module: ModuleKind.None } }).outputText,
   )(
     {
@@ -93,6 +103,7 @@ beforeAll(async () => {
     createClient,
     { createTransport: () => ({ sendMail: providerSend, close: () => {} }) },
     renderTransactionalEmail,
+    resolveEmailSender,
   );
   vi.stubGlobal("fetch", ((input: RequestInfo | URL, init?: RequestInit) => {
     const url = input instanceof Request ? input.url : String(input);
@@ -101,24 +112,42 @@ beforeAll(async () => {
       throw new Error("External requests forbidden in local audit");
     return nativeFetch(input, init);
   }) satisfies typeof fetch);
+  auditReady = true;
 });
 
-afterAll(() => {
-  writeFileSync(
-    "docs/audits/homologation-flow-evidence-2026-10-04.json",
-    JSON.stringify(
-      {
-        scope:
-          "Local Supabase; controlled payment provider; real Edge handler in-process; simulated mail provider. No real charge or external email.",
-        cases: evidence,
-      },
-      null,
-      2,
-    ),
+function allTestsPassed(tasks: readonly RunnerTask[]): boolean {
+  return (
+    tasks.length > 0 &&
+    tasks.every((task) =>
+      task.type === "suite" ? allTestsPassed(task.tasks) : task.result?.state === "pass",
+    )
   );
-  setPaymentProviderFactoryForTests(null);
-  vi.unstubAllGlobals();
-  vi.unstubAllEnvs();
+}
+
+afterAll(({}, suite) => {
+  try {
+    // Evidence is opt-in and only written for a complete successful run.
+    // Never replace historical evidence after failed setup, filtered or skipped tests.
+    const evidencePath = process.env.HOMOLOGATION_EVIDENCE_PATH;
+    if (evidencePath && auditReady && evidence.length > 0 && allTestsPassed(suite.tasks)) {
+      writeFileSync(
+        evidencePath,
+        JSON.stringify(
+          {
+            scope:
+              "Local Supabase; controlled payment provider; real Edge handler in-process; simulated mail provider. No real charge or external email.",
+            cases: evidence,
+          },
+          null,
+          2,
+        ),
+      );
+    }
+  } finally {
+    setPaymentProviderFactoryForTests(null);
+    vi.unstubAllGlobals();
+    vi.unstubAllEnvs();
+  }
 });
 
 describe("Homologation audit: complete paid delivery for seven quizzes in four languages", () => {

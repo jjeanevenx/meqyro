@@ -65,34 +65,32 @@ export async function fulfillOrder(
     completion.already_fulfilled,
   );
 
-  if (alreadyFulfilled) {
-    return { success: true, alreadyFulfilled: true };
-  }
+  if (!alreadyFulfilled) {
+    // Attribution and analytics must only run for the first fulfillment.
+    if (order.referral_code) {
+      await recordReferralConversion(order.referral_code).catch(() => {});
+    }
 
-  // 4. Attribution: If referral code exists, record conversion
-  if (order.referral_code) {
-    await recordReferralConversion(order.referral_code).catch(() => {});
-  }
+    // 5. Funnel analytics tracking
+    await recordFunnelEvent({
+      eventName: "checkout_completed",
+      sessionId: order.session_id,
+      properties: {
+        amount: order.amount,
+        currency: order.currency,
+        referral_code: order.referral_code ?? undefined,
+      },
+    }).catch(() => {});
 
-  // 5. Funnel analytics tracking
-  await recordFunnelEvent({
-    eventName: "checkout_completed",
-    sessionId: order.session_id,
-    properties: {
-      amount: order.amount,
+    logEvent("info", "order_fulfillment_completed", {
+      orderId,
+      orderNumber: order.order_number,
       currency: order.currency,
-      referral_code: order.referral_code ?? undefined,
-    },
-  }).catch(() => {});
+      providerEventId,
+    });
+  }
 
-  logEvent("info", "order_fulfillment_completed", {
-    orderId,
-    orderNumber: order.order_number,
-    currency: order.currency,
-    providerEventId,
-  });
-
-  // Activate invite slot if this order is linked to one (D-003, D-006)
+  // Replays also repair activation interrupted after the payment transaction committed.
   const slotId = order.couple_invite_slot_id as string | null;
   if (slotId) {
     try {

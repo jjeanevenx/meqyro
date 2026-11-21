@@ -71,8 +71,11 @@ try {
   await verify("/pt/quizzes/coupledna/play", "quiz-runner");
 
   // Editorial & Institutional
-  await verify("/pt/articles", "Artigos");
-  await verify("/pt/articles/how-logical-reasoning-works", "Como funciona o raciocínio");
+  await verify("/pt/articles", "Blog de autoconhecimento: mente, dinheiro e relacionamentos");
+  await verify(
+    "/pt/articles/how-logical-reasoning-works",
+    "Raciocínio lógico: o que é e como desenvolver no dia a dia",
+  );
   await verify("/pt/contact", "support@meqyro.com");
   await verify("/pt/cookies", "Cookies");
   await verify("/pt/legal/privacy", "Política de Privacidade");
@@ -98,9 +101,14 @@ try {
   console.log("PASS /api/admin/metrics (401 Unauthorized Gate)");
 
   // Verify authenticated admin metrics succeeds (200)
-  await verify("/api/admin/metrics", '"metrics"', {
+  const metricsResponse = await fetch(`${baseUrl}/api/admin/metrics`, {
     headers: { "x-admin-token": adminSecret },
   });
+  const metrics = await metricsResponse.json();
+  if (!metricsResponse.ok || !metrics.metrics || metrics.databaseStatus !== "CONNECTED") {
+    throw new Error("/api/admin/metrics failed: a connected integration database is required");
+  }
+  console.log("PASS /api/admin/metrics (200, database connected)");
   await verify("/sitemap.xml", "<urlset");
   await verify("/robots.txt", "Disallow");
 } finally {

@@ -37,6 +37,13 @@ pnpm supabase db reset
 
 This applies all migrations from `supabase/migrations/` and runs `supabase/seed.sql`.
 
+Clean databases need catalog identities before the historical content migrations run.
+`20261019104645_ensure_catalog_before_content.sql` supplies only missing quiz rows,
+inactive, immediately before that dependency. Its conflict policy preserves existing
+IDs and activation. It does not seed questions or change existing migrations.
+Hosted Production has an independent bootstrap history; do not force-replay the
+historical migration chain there.
+
 ## Regenerate seed SQL
 
 The `supabase/seed.sql` is generated from `src/content/quizzes/`. After editing quiz content:

@@ -1,6 +1,7 @@
 import { createClient } from "npm:@supabase/supabase-js@2.117.1";
 import nodemailer from "npm:nodemailer@10.0.16";
 import { renderTransactionalEmail } from "../../../src/lib/email/branded-template.ts";
+import { resolveEmailSender } from "../../../src/lib/email/sender.ts";
 
 // Server-to-server only. Authenticate before parsing; payment and recipient come from DB.
 async function secureEqual(left: string, right: string): Promise<boolean> {
@@ -60,7 +61,7 @@ Deno.serve(async (request: Request) => {
     let messageId: string;
     try {
       const sent = await transport.sendMail({
-        from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
+        from: resolveEmailSender(body.locale, (name) => Deno.env.get(name)), to: order.customer_email, subject,
         text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
         html: renderTransactionalEmail({
           locale: body.locale,

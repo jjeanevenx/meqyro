@@ -142,12 +142,50 @@ export async function getCoupleState(sessionId: string, code?: string): Promise<
     .select("id,invite_code,initiator_session_id,partner_session_id,status,expires_at")
     .or(`initiator_session_id.eq.${sessionId},partner_session_id.eq.${sessionId}`);
   if (code) query = query.eq("invite_code", code.trim().toUpperCase());
-  const { data: invite, error } = await query
+  const { data: invites, error } = await query
     .order("created_at", { ascending: false })
-    .limit(1)
-    .maybeSingle();
+    .limit(code ? 1 : 10);
   if (error) throw error;
-  if (!invite) return { state: "NO_INVITE" as const, inviteCode: null, consentGiven: false };
+  if (!invites || invites.length === 0) {
+    return { state: "NO_INVITE" as const, inviteCode: null, consentGiven: false };
+  }
+
+  const priority: Record<CoupleState["state"], number> = {
+    READY: 6,
+    PAYMENT_REQUIRED: 5,
+    CONSENT_REQUIRED: 4,
+    WAITING_RESULTS: 3,
+    WAITING_PARTNER: 2,
+    EXPIRED: 1,
+    NO_INVITE: 0,
+  };
+
+  let bestState: CoupleState | null = null;
+  for (const invite of invites) {
+    const evaluated = await evaluateSingleCoupleInvite(db, sessionId, invite);
+    if (evaluated.state === "READY") {
+      return evaluated;
+    }
+    if (!bestState || priority[evaluated.state] > priority[bestState.state]) {
+      bestState = evaluated;
+    }
+  }
+
+  return bestState ?? { state: "NO_INVITE" as const, inviteCode: null, consentGiven: false };
+}
+
+async function evaluateSingleCoupleInvite(
+  db: ReturnType<typeof createSupabaseSecretClient>,
+  sessionId: string,
+  invite: {
+    id: string;
+    invite_code: string;
+    initiator_session_id: string;
+    partner_session_id: string | null;
+    status: string;
+    expires_at: string;
+  },
+): Promise<CoupleState> {
   const { data: consents, error: consentError } = await db
     .from("couple_consents")
     .select("session_id,can_share_comparison")

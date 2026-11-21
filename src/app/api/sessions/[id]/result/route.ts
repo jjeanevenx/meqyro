@@ -37,7 +37,13 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
 
     return NextResponse.json({ result });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Erro ao carregar resultado.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    const raw = err instanceof Error ? err.message : "";
+    if (raw.includes("Token de acesso inválido")) {
+      return NextResponse.json({ error: "Acesso não autorizado ao resultado." }, { status: 403 });
+    }
+    if (raw.includes("Sessão não encontrada") || raw.includes("Resultado ainda não calculado")) {
+      return NextResponse.json({ error: "Resultado não encontrado." }, { status: 404 });
+    }
+    return NextResponse.json({ error: "Erro ao carregar resultado." }, { status: 400 });
   }
 }

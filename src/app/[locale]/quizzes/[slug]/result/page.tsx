@@ -13,6 +13,7 @@ import { ButtonLink } from "@/components/ui/button-link";
 import { buildPageMetadata } from "@/features/seo/metadata-builder";
 import { getDictionary } from "@/lib/i18n/dictionaries";
 import { getSiteUrl } from "@/lib/config/env";
+import { logEvent } from "@/lib/observability/logger";
 
 export const dynamic = "force-dynamic";
 
@@ -121,17 +122,27 @@ export default async function QuizResultPage({ params, searchParams }: ResultPag
       market: market.market,
     });
   } catch (err) {
+    logEvent("error", "result_page_load_failed", {
+      sessionId,
+      error: err instanceof Error ? err.message : "Unknown",
+    });
+    const retryQuery = new URLSearchParams({ session: sessionId });
+    if (query.token) retryQuery.set("token", query.token);
     return (
       <main className="min-h-screen bg-stone-50 py-16 px-4">
         <div className="max-w-md mx-auto text-center space-y-6">
           <h1 className="text-2xl font-serif font-bold text-stone-900">
-            {dict.resultView.noResultFound}
+            {dict.resultView.loadErrorTitle}
           </h1>
-          <p className="text-stone-600 text-sm">
-            {err instanceof Error ? err.message : dict.common.error}
-          </p>
-          <ButtonLink href={`/${locale}/quizzes/${slug}/play`} variant="primary">
-            {dict.resultView.startQuizCta}
+          <p className="text-stone-600 text-sm">{dict.resultView.loadErrorDescription}</p>
+          <a
+            className="button button--primary"
+            href={`/${locale}/quizzes/${slug}/result?${retryQuery}`}
+          >
+            {dict.common.retry}
+          </a>
+          <ButtonLink href={`/${locale}/reports/access`} variant="secondary">
+            {dict.auth.reports}
           </ButtonLink>
         </div>
       </main>

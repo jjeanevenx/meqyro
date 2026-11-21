@@ -91,14 +91,30 @@ export async function startQuizSession(
       .maybeSingle();
     buyerId = owner?.buyer_id;
   }
-  let coupleInvite: { id: string; initiator_session_id: string } | null = null;
+  let coupleInvite: { id: string; initiator_session_id: string; slot_id?: string | null } | null =
+    null;
   if (input.inviteCode) {
     if (input.quizSlug !== "coupledna" || input.comparisonConsent !== true)
       throw new Error("Explicit comparison consent required");
+    const normalizedInviteCode = input.inviteCode.trim().toUpperCase();
+    const { data: slotInvite } = await supabase
+      .from("couple_invite_slots")
+      .select("id,host_session_id,guest_session_id,status,expires_at")
+      .eq("invite_code", normalizedInviteCode)
+      .maybeSingle();
+    if (slotInvite) {
+      if (
+        slotInvite.status !== "ACTIVE" ||
+        slotInvite.guest_session_id ||
+        (slotInvite.expires_at && new Date(slotInvite.expires_at) <= new Date())
+      ) {
+        throw new Error("Invite unavailable or expired");
+      }
+    }
     const { data: invite } = await supabase
       .from("couple_invites")
       .select("id,initiator_session_id,partner_session_id,status,expires_at")
-      .eq("invite_code", input.inviteCode.trim().toUpperCase())
+      .eq("invite_code", normalizedInviteCode)
       .maybeSingle();
     if (
       !invite ||
@@ -107,7 +123,7 @@ export async function startQuizSession(
       new Date(invite.expires_at) <= new Date()
     )
       throw new Error("Invite unavailable or expired");
-    coupleInvite = invite;
+    coupleInvite = { ...invite, slot_id: slotInvite?.id ?? null };
   }
 
   let retainedToken: string | undefined;
@@ -235,9 +251,22 @@ export async function startQuizSession(
           .maybeSingle();
         if (claimError || !claimed) throw new Error("Invite already accepted");
 
+        if (invite.slot_id) {
+          await supabase
+            .from("couple_invite_slots")
+            .update({
+              status: "REDEEMED",
+              guest_session_id: session.id,
+              redeemed_at: new Date().toISOString(),
+            })
+            .eq("id", invite.slot_id)
+            .eq("status", "ACTIVE");
+        }
+
         await supabase.from("couple_consents").upsert(
           {
             invite_id: invite.id,
+            ...(invite.slot_id ? { invite_slot_id: invite.slot_id } : {}),
             session_id: session.id,
             can_share_comparison: true,
           },
@@ -919,6 +948,12 @@ export async function saveAnswer(input: {
     })
     .eq("id", input.sessionId);
 
+  await supabase
+    .from("couple_invite_slots")
+    .update({ status: "QUIZ_STARTED" })
+    .eq("guest_session_id", input.sessionId)
+    .eq("status", "REDEEMED");
+
   return { success: true, currentPosition: updatedPosition };
 }
 
@@ -1321,6 +1356,17 @@ export async function completeQuizSession(input: {
       updated_at: new Date().toISOString(),
     })
     .eq("id", input.sessionId);
+
+  if (quizSlug === "coupledna") {
+    await supabase
+      .from("couple_invite_slots")
+      .update({
+        status: "COMPLETED",
+        completed_at: new Date().toISOString(),
+      })
+      .eq("guest_session_id", input.sessionId)
+      .in("status", ["REDEEMED", "QUIZ_STARTED"]);
+  }
 
   await recordFunnelEvent({
     eventName: "quiz_completed",
