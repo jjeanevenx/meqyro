@@ -51,6 +51,8 @@ Em 21/11, essa divergência foi resolvida no Preview `dpl_FpN4oi7yJL57d86tkZbMEU
 
 A inspeção posterior dessa mensagem confirmou **SPF/DKIM/DMARC pass** e `X-Spam: Yes`. O anexo recebido foi validado: quatro páginas A4, conteúdo completo, acentos legíveis e nenhuma sobreposição ou corte confirmado. A classificação do filtro continua pendente; não foi tratada como falha de DNS nem corrigida com alteração de políticas sem evidência. A recuperação pelo link em outro navegador aguarda o login Vercel no Edge, exigido apenas pela proteção da homologação.
 
+Depois de o usuário concluir o login Vercel, o link recebido recuperou o relatório premium no Edge, onde o resultado não estava disponível antes do link. A URL final não reteve o token. Recuperação em outro navegador aprovada nesse pedido; classificação de spam e webhook TEST continuam pendentes.
+
 Em 20/11/2026, os quatro remetentes por idioma foram salvos também no Supabase **meqyro-hml** (`zfdipjfgzkaqcbudfzub`) e relidos com os digests esperados. A função HML foi atualizada para o mesmo bundle de seleção de remetente já validado em Production. As configurações SMTP básicas e os dois secrets privados de HML foram preservados. Os quatro remetentes também estão cadastrados como Config/Preview na Vercel. A execução direcionada de SMTP, função de entrega e fallbacks passou com 93 testes em três arquivos. O envio SMTP externo continua pendente.
 
 1. Confirmar que a caixa existe e que as configurações SMTP do hPanel correspondem ao servidor acima. Conferir SPF, DKIM e DMARC do domínio no painel Hostinger.
