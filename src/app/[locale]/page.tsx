@@ -204,8 +204,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   return buildPageMetadata({
     locale,
     path: "",
-    title: copy.title,
-    description: copy.body,
+    title: copy.seoTitle,
+    description: copy.seoDescription,
   });
 }
 
@@ -220,7 +220,10 @@ export default async function LocalizedHome({ params }: PageProps) {
   const goalIcons = [Brain, Wallet, Heart];
   const startHref = `/${locale}/quizzes/brainrank/play?source=home_hero`;
   return (
-    <main className="home-page conversion-home">
+    <div className="home-page conversion-home">
+      <a className="home-skip-link" href="#main-content">
+        {dictionary.nav.skipToContent}
+      </a>
       <FunnelView locale={locale} />
       <script
         type="application/ld+json"
@@ -233,194 +236,198 @@ export default async function LocalizedHome({ params }: PageProps) {
         howLabel={dictionary.nav.about}
         current="home"
       />
-      <section className="conversion-hero" id="about" aria-labelledby="home-title">
-        <div className="conversion-hero__copy">
-          <p className="conversion-eyebrow">
-            <span />
-            {conversion.eyebrow}
-          </p>
-          <h1 id="home-title">
-            {conversion.title} <span>{conversion.accent}</span>
-          </h1>
-          <p className="conversion-hero__body">{conversion.body}</p>
-          <div className="conversion-hero__actions">
-            <ButtonLink href={startHref}>{conversion.cta}</ButtonLink>
-            <Link className="conversion-text-link" href="#experiences">
-              {conversion.secondary}
+      <main id="main-content" tabIndex={-1}>
+        <section className="conversion-hero" id="about" aria-labelledby="home-title">
+          <div className="conversion-hero__copy">
+            <p className="conversion-eyebrow">
+              <span />
+              {conversion.eyebrow}
+            </p>
+            <h1 id="home-title">
+              {conversion.title} <span>{conversion.accent}</span>
+            </h1>
+            <p className="conversion-hero__body">{conversion.body}</p>
+            <div className="conversion-hero__actions">
+              <ButtonLink href={startHref}>{conversion.cta}</ButtonLink>
+              <Link className="conversion-text-link" href="#experiences">
+                {conversion.secondary}
+                <ArrowRight aria-hidden="true" size={17} />
+              </Link>
+            </div>
+            <ul className="conversion-trust">
+              {conversion.trust.map((label) => (
+                <li key={label}>
+                  <CheckCircle2 aria-hidden="true" size={16} />
+                  {label}
+                </li>
+              ))}
+            </ul>
+            <p className="conversion-hero__pricing-note">{conversion.pricingNote}</p>
+          </div>
+          <div className="conversion-preview">
+            <div className="conversion-preview__top">
+              <Brain aria-hidden="true" size={22} />
+              <span>{conversion.featured}</span>
+            </div>
+            <div className="conversion-preview__art" aria-hidden="true">
+              <div className="conversion-orbit conversion-orbit--outer" />
+              <div className="conversion-orbit conversion-orbit--inner" />
+              <Brain size={88} strokeWidth={1.2} />
+              <span className="conversion-node conversion-node--one" />
+              <span className="conversion-node conversion-node--two" />
+              <span className="conversion-node conversion-node--three" />
+            </div>
+            <h2>{conversion.challenge}</h2>
+            <p>{conversion.challengeBody}</p>
+            <div className="conversion-dimensions">
+              {conversion.dimensions.map((label) => (
+                <span key={label}>{label}</span>
+              ))}
+            </div>
+            <div className="conversion-preview__result">
+              <Compass aria-hidden="true" size={22} />
+              <div>
+                <strong>{conversion.result}</strong>
+                <p>{conversion.resultBody}</p>
+              </div>
+            </div>
+            <Link className="conversion-text-link" href={`/${locale}/quizzes/brainrank`}>
+              {dictionary.brainrank.label}
               <ArrowRight aria-hidden="true" size={17} />
             </Link>
           </div>
-          <ul className="conversion-trust">
-            {conversion.trust.map((label) => (
-              <li key={label}>
-                <CheckCircle2 aria-hidden="true" size={16} />
-                {label}
-              </li>
-            ))}
-          </ul>
-        </div>
-        <div className="conversion-preview">
-          <div className="conversion-preview__top">
-            <Brain aria-hidden="true" size={22} />
-            <span>{conversion.featured}</span>
+        </section>
+        <section
+          className="home-section conversion-goals"
+          id="experiences"
+          aria-labelledby="goals-title"
+        >
+          <p className="conversion-eyebrow">
+            MEQYRO · {experiences.length} {conversion.catalog}
+          </p>
+          <h2 id="goals-title">{conversion.goalsTitle}</h2>
+          <p>{conversion.goalsBody}</p>
+          <div className="conversion-goals__grid">
+            {goals.map((slug, index) => {
+              const experience = experiences.find((item) => item.slug === slug)!;
+              const Icon = goalIcons[index];
+              return (
+                <Link
+                  className="conversion-goal"
+                  key={slug}
+                  href={`/${locale}/quizzes/${slug}?source=home_goal`}
+                >
+                  <div className="conversion-goal__top">
+                    <Icon aria-hidden="true" size={24} />
+                    <span>{experience.duration}</span>
+                  </div>
+                  <h3>{conversion.goals[index]}</h3>
+                  <span className="conversion-goal__brand">{experience.brand}</span>
+                  <p>{experience.description[locale]}</p>
+                  <span className="conversion-goal__cta">
+                    {conversion.goalCta.replace("{experience}", experience.brand)}
+                    <ArrowRight aria-hidden="true" size={18} />
+                  </span>
+                </Link>
+              );
+            })}
           </div>
-          <div className="conversion-preview__art" aria-hidden="true">
-            <div className="conversion-orbit conversion-orbit--outer" />
-            <div className="conversion-orbit conversion-orbit--inner" />
-            <Brain size={88} strokeWidth={1.2} />
-            <span className="conversion-node conversion-node--one" />
-            <span className="conversion-node conversion-node--two" />
-            <span className="conversion-node conversion-node--three" />
-          </div>
-          <h2>{conversion.challenge}</h2>
-          <p>{conversion.challengeBody}</p>
-          <div className="conversion-dimensions">
-            {conversion.dimensions.map((label) => (
-              <span key={label}>{label}</span>
-            ))}
-          </div>
-          <div className="conversion-preview__result">
-            <Compass aria-hidden="true" size={22} />
+          <Link className="conversion-text-link" href={`/${locale}/discover`}>
+            {copy.explore}
+            <ArrowRight aria-hidden="true" size={18} />
+          </Link>
+        </section>
+        <section className="home-section" id="how-it-works">
+          <div className="home-section__heading">
+            <span>01</span>
             <div>
-              <strong>{conversion.result}</strong>
-              <p>{conversion.resultBody}</p>
+              <h2>{copy.howTitle}</h2>
+              <p>{copy.howBody}</p>
             </div>
           </div>
-          <Link className="conversion-text-link" href={`/${locale}/quizzes/brainrank`}>
-            {dictionary.brainrank.label}
-            <ArrowRight aria-hidden="true" size={17} />
-          </Link>
-        </div>
-      </section>
-      <section
-        className="home-section conversion-goals"
-        id="experiences"
-        aria-labelledby="goals-title"
-      >
-        <p className="conversion-eyebrow">
-          MEQYRO · {experiences.length} {conversion.catalog}
-        </p>
-        <h2 id="goals-title">{conversion.goalsTitle}</h2>
-        <p>{conversion.goalsBody}</p>
-        <div className="conversion-goals__grid">
-          {goals.map((slug, index) => {
-            const experience = experiences.find((item) => item.slug === slug)!;
-            const Icon = goalIcons[index];
-            return (
-              <Link
-                className="conversion-goal"
-                key={slug}
-                href={`/${locale}/quizzes/${slug}?source=home_goal`}
-              >
-                <div className="conversion-goal__top">
-                  <Icon aria-hidden="true" size={24} />
-                  <span>{experience.duration}</span>
-                </div>
-                <h3>{conversion.goals[index]}</h3>
-                <span className="conversion-goal__brand">{experience.brand}</span>
-                <p>{experience.description[locale]}</p>
-                <span className="conversion-goal__cta">
-                  {conversion.goalCta.replace("{experience}", experience.brand)}
-                  <ArrowRight aria-hidden="true" size={18} />
-                </span>
-              </Link>
-            );
-          })}
-        </div>
-        <Link className="conversion-text-link" href={`/${locale}/discover`}>
-          {copy.explore}
-          <ArrowRight aria-hidden="true" size={18} />
-        </Link>
-      </section>
-      <section className="home-section" id="how-it-works">
-        <div className="home-section__heading">
-          <span>01</span>
-          <div>
-            <h2>{copy.howTitle}</h2>
-            <p>{copy.howBody}</p>
-          </div>
-        </div>
-        <ol className="home-steps">
-          {copy.steps.map((step, index) => (
-            <li key={step}>
-              <b>{String(index + 1).padStart(2, "0")}</b>
-              <span>{step}</span>
-            </li>
-          ))}
-        </ol>
-      </section>
-      <section className="home-section home-method">
-        <ShieldCheck aria-hidden="true" />
-        <div>
-          <h2>{copy.methodTitle}</h2>
-          <p>{copy.methodBody}</p>
-        </div>
-      </section>
-      <section className="home-section home-results">
-        <article>
-          <Compass aria-hidden="true" />
-          <h2>{copy.freeTitle}</h2>
-          <p>{copy.freeBody}</p>
-          <ul className="conversion-checklist">
-            {conversion.freeItems.map((item) => (
-              <li key={item}>
-                <CheckCircle2 aria-hidden="true" size={18} />
-                {item}
+          <ol className="home-steps">
+            {copy.steps.map((step, index) => (
+              <li key={step}>
+                <b>{String(index + 1).padStart(2, "0")}</b>
+                <span>{step}</span>
               </li>
             ))}
-          </ul>
-          <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_free`}>
+          </ol>
+        </section>
+        <section className="home-section home-method">
+          <ShieldCheck aria-hidden="true" />
+          <div>
+            <h2>{copy.methodTitle}</h2>
+            <p>{copy.methodBody}</p>
+          </div>
+        </section>
+        <section className="home-section home-results">
+          <article>
+            <Compass aria-hidden="true" />
+            <h2>{copy.freeTitle}</h2>
+            <p>{copy.freeBody}</p>
+            <ul className="conversion-checklist">
+              {conversion.freeItems.map((item) => (
+                <li key={item}>
+                  <CheckCircle2 aria-hidden="true" size={18} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_free`}>
+              {conversion.cta}
+            </ButtonLink>
+          </article>
+          <article>
+            <FileText aria-hidden="true" />
+            <h2>{copy.premiumTitle}</h2>
+            <p>{copy.premiumBody}</p>
+            <ul className="conversion-checklist">
+              {conversion.premiumItems.map((item) => (
+                <li key={item}>
+                  <CheckCircle2 aria-hidden="true" size={18} />
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <small>{conversion.premiumNote}</small>
+          </article>
+        </section>
+        <section className="home-section home-faq">
+          <div className="home-section__heading">
+            <span>FAQ</span>
+            <h2>{copy.faqTitle}</h2>
+          </div>
+          {copy.faqs.map(([question, answer]) => (
+            <details key={question}>
+              <summary>
+                {question}
+                <Plus aria-hidden="true" />
+              </summary>
+              <p>{answer}</p>
+            </details>
+          ))}
+        </section>
+        <section className="home-final">
+          <h2>{conversion.finalTitle}</h2>
+          <p>{conversion.finalBody}</p>
+          <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_final`}>
             {conversion.cta}
           </ButtonLink>
-        </article>
-        <article>
-          <FileText aria-hidden="true" />
-          <h2>{copy.premiumTitle}</h2>
-          <p>{copy.premiumBody}</p>
-          <ul className="conversion-checklist">
-            {conversion.premiumItems.map((item) => (
-              <li key={item}>
-                <CheckCircle2 aria-hidden="true" size={18} />
-                {item}
-              </li>
-            ))}
-          </ul>
-          <small>{conversion.premiumNote}</small>
-        </article>
-      </section>
-      <section className="home-section home-faq">
-        <div className="home-section__heading">
-          <span>FAQ</span>
-          <h2>{copy.faqTitle}</h2>
-        </div>
-        {copy.faqs.map(([question, answer]) => (
-          <details key={question}>
-            <summary>
-              {question}
-              <Plus aria-hidden="true" />
-            </summary>
-            <p>{answer}</p>
-          </details>
-        ))}
-      </section>
-      <section className="home-final">
-        <h2>{conversion.finalTitle}</h2>
-        <p>{conversion.finalBody}</p>
-        <ButtonLink href={`/${locale}/quizzes/brainrank/play?source=home_final`}>
-          {conversion.cta}
-        </ButtonLink>
-        <small>{dictionary.hero.note}</small>
-      </section>
+          <small>{dictionary.hero.note}</small>
+        </section>
+      </main>
       <footer className="site-footer">
         <Link className="brand" href={`/${locale}`} aria-label="Meqyro">
           MEQ<span>Y</span>RO
         </Link>
         <p>© {new Date().getFullYear()} Meqyro</p>
-        <div className="conversion-footer-links">
-          <Link href={`/${locale}/privacy`}>{conversion.privacy}</Link>
-          <Link href={`/${locale}/terms`}>{conversion.terms}</Link>
-        </div>
+        <nav className="conversion-footer-links" aria-label={dictionary.nav.primary}>
+          <Link href={`/${locale}/articles`}>{dictionary.nav.articles}</Link>
+          <Link href={`/${locale}/legal/privacy`}>{conversion.privacy}</Link>
+          <Link href={`/${locale}/legal/terms`}>{conversion.terms}</Link>
+        </nav>
       </footer>
-    </main>
+    </div>
   );
 }

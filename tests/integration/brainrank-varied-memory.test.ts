@@ -63,7 +63,7 @@ describe("BrainRank varied recall on the database", () => {
         locale: "pt",
         market: "BR",
       });
-      expect(session.quizVersion).toBe("1.2");
+      expect(session.quizVersion).toBe("1.3");
       const first = await getSessionQuestions(session.id, "pt");
       const memory = first.filter((q) => q.memoryRecall);
       expect(first).toHaveLength(24);

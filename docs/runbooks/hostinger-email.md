@@ -1,6 +1,6 @@
 # E-mail pela Hostinger
 
-O servidor Next.js envia mensagens transacionais por SMTP. A Supabase Function `deliver-report` envia o relatório pago completo no texto e como anexo HTML, após validar pagamento, acesso e destinatário.
+O servidor Next.js envia mensagens transacionais por SMTP. A Supabase Function `deliver-report` envia uma apresentação HTML com botão de acesso, o relatório pago completo na alternativa de texto e como anexo HTML, após validar pagamento, acesso e destinatário. O template visual compartilhado está em `src/lib/email/branded-template.ts`; incluir esse arquivo ao publicar a Function.
 
 ## Configuração
 
@@ -22,7 +22,7 @@ Manter `REPORT_DELIVERY_SECRET` igual na Vercel e na Function, com pelo menos 32
 
 1. Confirmar que a caixa existe e que as configurações SMTP do hPanel correspondem ao servidor acima. Conferir SPF, DKIM e DMARC do domínio no painel Hostinger.
 2. Aplicar as migrações pendentes, incluindo `20261011010059_smtp_report_delivery_claim.sql`. A migração reserva atomicamente cada envio e concede execução apenas a `service_role`.
-3. Publicar novamente `deliver-report` e gerar um novo deployment Preview na Vercel. Alterar variáveis não atualiza deployments existentes.
+3. Publicar novamente `deliver-report` e gerar um novo deployment Preview na Vercel. Alterar variáveis não atualiza deployments existentes. Após READY, conferir que `meqyro-git-development-meqyro.vercel.app` aponta para o novo deployment; um Preview publicado apenas em uma URL única não garante a atualização desse alias.
 4. Fazer uma compra Stripe em modo teste com destinatário autorizado. Conferir recebimento, pasta de spam, texto completo e acentos no anexo HTML; conferir também recuperação de sessão e convite CoupleDNA.
 5. Repetir o webhook e verificar que um relatório já registrado como enviado não é reenviado. Simular falha SMTP e verificar recuperação pela reconciliação.
 

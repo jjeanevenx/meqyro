@@ -8,6 +8,7 @@ import type { Locale } from "@/lib/i18n/config";
 export function SiteNavigation({
   locale,
   discoverLabel,
+  blogLabel,
   howLabel,
   current,
   menuLabel,
@@ -15,6 +16,7 @@ export function SiteNavigation({
 }: {
   locale: Locale;
   discoverLabel: string;
+  blogLabel: string;
   howLabel?: string;
   current?: "home" | "discover";
   menuLabel: string;
@@ -43,6 +45,14 @@ export function SiteNavigation({
           {howLabel}
         </Link>
       ) : null}
+      <Link
+        href={`/${locale}/articles`}
+        onClick={() => {
+          if (menuRef.current) menuRef.current.open = false;
+        }}
+      >
+        {blogLabel}
+      </Link>
     </>
   );
 

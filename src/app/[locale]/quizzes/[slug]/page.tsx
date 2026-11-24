@@ -1,3 +1,5 @@
+import { reportExampleCopy } from "@/lib/i18n/dictionaries";
+import { assessmentOffer } from "@/content/assessment-offer";
 import { FunnelView } from "@/components/patterns/funnel-view";
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
@@ -375,9 +377,16 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
               : slug === "decisiondna"
                 ? "DecisionDNA"
                 : "CoupleDNA";
-  const subtitle = meta.subtitles[locale as Locale];
+  const offer = assessmentOffer[locale];
+  const commercialSlug =
+    slug === "brainrank" || slug === "moneydna" || slug === "coupledna" ? slug : null;
+  const subtitle = commercialSlug ? offer.outcomes[commercialSlug] : meta.subtitles[locale];
+  const scenarioExample =
+    commercialSlug && quiz.scoringVersion === "behavioral-v2"
+      ? quiz.questions.find((question) => question.kind === "SCENARIO")
+      : undefined;
   const duration = meta.duration;
-  const itemsCount = meta.itemsCount[locale as Locale];
+  const itemsCount = scenarioExample ? offer.scenarios : meta.itemsCount[locale];
   const badgeText = meta.badge[locale as Locale];
   const dimensions = meta.dimensions[locale as Locale];
 
@@ -477,6 +486,32 @@ export default async function QuizLandingPage({ params }: QuizPageProps) {
             <span>{freeResultText}</span>
           </div>
         </div>
+
+        {commercialSlug && (
+          <section className="assessment-offer" aria-labelledby="offer-title">
+            <h2 id="offer-title">{offer.title}</h2>
+            <p>{offer.free}</p>
+            <p>{offer.premium}</p>
+            {(slug === "moneydna" || slug === "coupledna") && (
+              <Link href={`/${locale}/quizzes/${slug}/example`}>
+                {reportExampleCopy[locale].link}
+              </Link>
+            )}
+          </section>
+        )}
+
+        {scenarioExample && (
+          <details className="assessment-example">
+            <summary>{offer.example}</summary>
+            <p>{offer.exampleNote}</p>
+            <h2>{scenarioExample.prompt}</h2>
+            <ul>
+              {scenarioExample.options.map((option) => (
+                <li key={option.id}>{option.label}</li>
+              ))}
+            </ul>
+          </details>
+        )}
 
         <section className="quiz-landing-dimensions">
           <h2>{dimensionsHeading}</h2>

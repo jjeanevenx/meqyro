@@ -26,6 +26,7 @@ export function SiteHeader({
       <SiteNavigation
         locale={locale}
         discoverLabel={discoverLabel}
+        blogLabel={nav.articles}
         howLabel={howLabel}
         current={current}
         menuLabel={nav.menu}

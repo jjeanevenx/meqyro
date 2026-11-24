@@ -1,6 +1,6 @@
 import type { NextRequest } from "next/server";
 import { getProtectedResult } from "@/features/results/result-service";
-import { reportHtml } from "@/features/results/report-document";
+import { reportPdf } from "@/features/results/report-pdf";
 import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { isLocale } from "@/lib/i18n/config";
 
@@ -22,11 +22,12 @@ export async function GET(request: NextRequest, { params }: { params: Promise<{ 
     if (result.accessLevel !== "PREMIUM_UNLOCKED" || !result.premiumReport) {
       return Response.json({ error: "Payment required" }, { status: 403, headers });
     }
-    return new Response(reportHtml(result.premiumReport, result.quizSlug, locale), {
+    const pdf = await reportPdf(result.premiumReport, result.quizSlug);
+    return new Response(new Uint8Array(pdf), {
       headers: {
         ...headers,
-        "Content-Type": "text/html; charset=utf-8",
-        "Content-Disposition": `attachment; filename="meqyro-${result.quizSlug}-resultado.html"`,
+        "Content-Type": "application/pdf",
+        "Content-Disposition": `attachment; filename="meqyro-${result.quizSlug}-resultado.pdf"`,
         "Content-Security-Policy": "default-src 'none'; style-src 'unsafe-inline'; sandbox",
       },
     });

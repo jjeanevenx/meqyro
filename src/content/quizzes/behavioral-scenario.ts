@@ -21,12 +21,13 @@ export function scenario(
   dimension: string,
   rows: Readonly<Record<Locale, LocalizedScenarioRow>>,
   signals: readonly Readonly<Record<string, number>>[],
+  difficulty?: ScenarioDefinition["difficulty"],
 ): ScenarioDefinition {
   return {
     stableKey,
     position,
     dimension,
-    difficulty: position <= 5 ? "EASY" : position <= 10 ? "MEDIUM" : "HARD",
+    difficulty: difficulty ?? (position <= 5 ? "EASY" : position <= 10 ? "MEDIUM" : "HARD"),
     prompt: { pt: rows.pt[0], en: rows.en[0], es: rows.es[0], fr: rows.fr[0] },
     options: [1, 2, 3, 4].map((index) => ({
       stableKey: `${stableKey}_${index}`,

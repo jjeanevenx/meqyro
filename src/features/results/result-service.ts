@@ -111,6 +111,8 @@ export async function getProtectedResult(input: {
                 ? score.dominantStyle
                 : strongestScoredDimension,
     dimensionScores,
+    qualityWarning:
+      typeof score.uniformResponseWarning === "boolean" ? score.uniformResponseWarning : undefined,
   };
 
   // 4. Check for premium access grant in result_access_grants

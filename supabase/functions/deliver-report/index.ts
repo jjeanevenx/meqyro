@@ -1,5 +1,6 @@
 import { createClient } from "npm:@supabase/supabase-js@2.117.1";
 import nodemailer from "npm:nodemailer@10.0.16";
+import { renderTransactionalEmail } from "../../../src/lib/email/branded-template.ts";
 
 // Server-to-server only. Authenticate before parsing; payment and recipient come from DB.
 async function secureEqual(left: string, right: string): Promise<boolean> {
@@ -17,7 +18,7 @@ Deno.serve(async (request: Request) => {
   if (!secret || secret.length < 32 || !await secureEqual(request.headers.get("x-report-delivery-secret") ?? "", secret)) return Response.json({ error: "Unauthorized" }, { status: 401 });
   try {
     const body = await request.json();
-    if (typeof body.orderId !== "string" || typeof body.html !== "string" || body.html.length > 200_000 || typeof body.text !== "string" || body.text.length > 100_000 || !/^meqyro-[a-z-]+-resultado\.html$/.test(body.filename)) return Response.json({ error: "Invalid report" }, { status: 400 });
+    if (typeof body.orderId !== "string" || typeof body.pdfBase64 !== "string" || body.pdfBase64.length > 2_000_000 || !/^JVBERi0[A-Za-z0-9+/]*={0,2}$/.test(body.pdfBase64) || typeof body.text !== "string" || body.text.length > 100_000 || !/^meqyro-[a-z-]+-resultado\.pdf$/.test(body.filename)) return Response.json({ error: "Invalid report" }, { status: 400 });
     const db = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!, { db: { schema: "meqyro" } });
     const { data: order, error } = await db.from("orders").select("status,customer_email,session_id,order_number,confirmation_email_sent_at,confirmation_email_message_id").eq("id", body.orderId).single();
     if (error || !order || order.status !== "FULFILLED" || !order.customer_email) return Response.json({ error: "Confirmed purchase required" }, { status: 403 });
@@ -61,7 +62,20 @@ Deno.serve(async (request: Request) => {
       const sent = await transport.sendMail({
         from: Deno.env.get("EMAIL_FROM") ?? "Meqyro <noreply@meqyro.com>", to: order.customer_email, subject,
         text: `${subject}\n\n#${order.order_number}\n\n${body.text}\n\n${body.accessUrl ?? ""}`,
-        attachments: [{ filename: body.filename, content: body.html, contentType: "text/html; charset=utf-8" }],
+        html: renderTransactionalEmail({
+          locale: body.locale,
+          subject,
+          text: `${({
+            pt: "Seu relatório completo está no anexo deste e-mail. Você também pode acessar seu resultado pelo botão abaixo.",
+            en: "Your complete report is attached to this email. You can also access your result using the button below.",
+            es: "Tu informe completo está adjunto a este correo. También puedes acceder a tu resultado con el botón de abajo.",
+            fr: "Votre rapport complet est joint à cet e-mail. Vous pouvez aussi accéder à votre résultat avec le bouton ci-dessous.",
+          } as Record<string, string>)[body.locale] ?? "Seu relatório completo está no anexo deste e-mail."}\n\n${({
+            BRAINRANK: "BrainRank", PERSONALITY_MAP: "Personality Map", CAREERFIT: "CareerFit", MONEYDNA: "MoneyDNA",
+            COUPLEDNA: "CoupleDNA", DECISIONDNA: "DecisionDNA", FOCUSSTYLE: "FocusStyle",
+          } as Record<string, string>)[body.productCode] ?? "Meqyro"} · #${order.order_number}\n\n${typeof body.accessUrl === "string" ? body.accessUrl : ""}`,
+        }),
+        attachments: [{ filename: body.filename, content: body.pdfBase64, encoding: "base64", contentType: "application/pdf" }],
       });
       if (sent.rejected.length || !sent.accepted.length) return Response.json({ error: "Email recipient rejected" }, { status: 502 });
       messageId = sent.messageId;

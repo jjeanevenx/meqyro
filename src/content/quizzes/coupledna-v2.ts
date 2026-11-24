@@ -1,3 +1,4 @@
+import { additionalCoupleScenarios } from "./coupledna-expanded";
 import { scenario, type ScenarioDefinition } from "@/content/quizzes/behavioral-scenario";
 
 // Bipolar preferences within each topic: more explicit joint processing vs more individual processing.
@@ -726,4 +727,10 @@ export const coupleDnaScenarios: readonly ScenarioDefinition[] = [
     },
     signals("FUTURE_PLANS", [0, 3, 2, 1]),
   ),
+];
+
+/** Full bank; the original 20 remain a canonical compatibility form. */
+export const coupleDnaPool: readonly ScenarioDefinition[] = [
+  ...coupleDnaScenarios,
+  ...additionalCoupleScenarios,
 ];

@@ -3,9 +3,11 @@ import "server-only";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import type { Locale } from "@/lib/i18n/config";
 import type { PublicQuiz, PublicQuestion, PublicOption, QuestionKind } from "./contracts";
-import { brainRankQuestions } from "@/content/quizzes/brainrank";
-import { moneyDnaScenarios } from "@/content/quizzes/moneydna-v2";
-import { coupleDnaScenarios } from "@/content/quizzes/coupledna-v2";
+import { reviewedBrainRankQuestions as brainRankQuestions } from "@/content/quizzes/brainrank-reviewed";
+import {
+  reviewedMoneyScenarios as moneyDnaScenarios,
+  reviewedCoupleScenarios as coupleDnaScenarios,
+} from "@/content/quizzes/behavioral-reviewed";
 import { publishedVersion } from "./instrument-version";
 import { assertVisualQuestion, isVisualScene, isVisualStimulus } from "./visual-question-schema";
 
@@ -61,10 +63,12 @@ function validateQuizContent(quiz: PublicQuiz): boolean {
   }
   return true;
 }
-import { personalityMapQuestions } from "@/content/quizzes/personality-map";
-import { careerFitQuestions } from "@/content/quizzes/careerfit";
-import { focusStyleQuestions } from "@/content/quizzes/focusstyle";
-import { decisionDnaScenarios } from "@/content/quizzes/decisiondna";
+import {
+  reviewedPersonalityQuestions as personalityMapQuestions,
+  reviewedCareerQuestions as careerFitQuestions,
+  reviewedFocusQuestions as focusStyleQuestions,
+} from "@/content/quizzes/reviewed-likert";
+import { reviewedDecisionScenarios as decisionDnaScenarios } from "@/content/quizzes/decisiondna-reviewed";
 import { getSessionQuestions } from "./session-service";
 import { ASSESSMENT_SELECTION_CONFIGS } from "./selection-config";
 import { attachMemoryCues, distributeMemoryItems } from "./delayed-memory";
@@ -95,10 +99,7 @@ export async function getPublicQuiz(
   }
 
   const versions = Array.isArray(quiz.quiz_versions) ? quiz.quiz_versions : [quiz.quiz_versions];
-  let activeVersion =
-    slug === "moneydna" || slug === "coupledna"
-      ? publishedVersion(versions)
-      : versions.find((v) => v.status === "APPROVED" || v.status === "PUBLISHED");
+  let activeVersion = publishedVersion(versions);
 
   if (sessionId) {
     const { data: pinned } = await supabase
@@ -278,10 +279,10 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
   if (slug === "moneydna" || slug === "coupledna") {
     const source = slug === "moneydna" ? moneyDnaScenarios : coupleDnaScenarios;
     return {
-      id: `fallback-${slug}-v2`,
+      id: `fallback-${slug}-v3`,
       slug,
       productCode: slug.toUpperCase(),
-      version: "v2.0.0",
+      version: "v3.0.0",
       scoringVersion: "behavioral-v2",
       totalQuestions: 20,
       questions: source.map((q) => ({
@@ -330,8 +331,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-brainrank-id",
       slug: "brainrank",
       productCode: "BRAINRANK",
-      version: "1.2",
-      scoringVersion: "1.2",
+      version: "1.3",
+      scoringVersion: "1.3",
       totalQuestions: 24,
       questions: withFallbackMemory(questions, locale),
     };
@@ -353,7 +354,7 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-personality-id",
       slug: "personality-map",
       productCode: "PERSONALITY_MAP",
-      version: "1.0",
+      version: "1.1",
       scoringVersion: "1.0",
       totalQuestions: 40,
       questions,
@@ -376,8 +377,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-careerfit-id",
       slug: "careerfit",
       productCode: "CAREERFIT",
-      version: "1.0",
-      scoringVersion: "1.0",
+      version: "v1.1.0",
+      scoringVersion: "v1",
       totalQuestions: 24,
       questions,
     };
@@ -399,8 +400,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-focusstyle-id",
       slug: "focusstyle",
       productCode: "FOCUSSTYLE",
-      version: "1.0",
-      scoringVersion: "1.0",
+      version: "v1.1.0",
+      scoringVersion: "v1",
       totalQuestions: 20,
       questions: withFallbackMemory(questions, locale),
     };
@@ -428,8 +429,8 @@ export function getFallbackPublicQuiz(slug: string, locale: Locale): PublicQuiz 
       id: "fallback-decisiondna-id",
       slug: "decisiondna",
       productCode: "DECISIONDNA",
-      version: "1.0",
-      scoringVersion: "1.0",
+      version: "v1.1.0",
+      scoringVersion: "v1",
       totalQuestions: 4,
       questions,
     };

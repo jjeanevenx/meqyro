@@ -1,4 +1,5 @@
 import "server-only";
+import { getDimensionGuidance } from "./dimension-guidance-locales";
 import type { ComprehensiveReport } from "@/features/results/contracts";
 import type { BilateralCoupleComparison } from "@/features/scoring/coupledna";
 import { getDimensionLabel } from "@/lib/i18n/dimension-labels";
@@ -80,7 +81,10 @@ export function buildCoupleReport(
     es: "Comparación de alternativas elegidas en las mismas situaciones. Coincidir no garantiza una relación sana; diferir no implica incompatibilidad. No infiere sentimientos de la otra persona.",
     fr: "Comparaison des choix dans les mêmes situations. Des réponses identiques ne garantissent pas une relation saine ; des différences ne signifient pas une incompatibilité. Aucun sentiment de l’autre n’est déduit.",
   }[locale];
-  const explanation = comparison.instrumentVersion === "v2.0.0" ? choiceCaveat : t.explanation;
+  const explanation =
+    comparison.instrumentVersion === "v2.0.0" || comparison.instrumentVersion === "v3.0.0"
+      ? choiceCaveat
+      : t.explanation;
   return {
     bandLabel: t.title,
     executiveSummary: `${t.overall}: ${comparison.overallAlignmentPercentage}/100. ${t.summary}`,
@@ -100,7 +104,7 @@ export function buildCoupleReport(
         summary: `${value}/100. ${value >= 70 ? t.similar : t.different}`,
         paragraphs: [explanation],
         keyTakeaways: [],
-        actionItems: [t.action],
+        actionItems: [getDimensionGuidance(key, locale)?.try ?? t.action, t.action],
       })),
     ],
   };

@@ -20,6 +20,8 @@ export type QuizSelectionConfig = Readonly<{
   dimensions: Readonly<Record<string, DimensionQuota>>;
   orderingStrategy: QuizOrderingStrategy;
   requiresDifficulty: boolean;
+  /** Maximum inclusion probability in every selected stratum. */
+  maxQuestionExposure?: number;
 }>;
 
 export const ASSESSMENT_SELECTION_CONFIGS: Readonly<Record<string, QuizSelectionConfig>> = {
@@ -125,4 +127,21 @@ export function getAssessmentSelectionConfig(quizSlug: string): QuizSelectionCon
     throw new Error(`No assessment selection configuration found for quiz slug: "${quizSlug}"`);
   }
   return config;
+}
+
+/** Exposure follows the pinned instrument: reviewed v3 scenarios form a fixed 20-item set. */
+export function getInstrumentSelectionConfig(
+  quizSlug: string,
+  version: string,
+  scoringVersion: string,
+): QuizSelectionConfig | undefined {
+  const configured = ASSESSMENT_SELECTION_CONFIGS[quizSlug];
+  if (!configured) return undefined;
+  const behavioral = quizSlug === "moneydna" || quizSlug === "coupledna";
+  const commercial = quizSlug === "brainrank" || (behavioral && scoringVersion === "behavioral-v2");
+  return {
+    ...configured,
+    ...(commercial ? { maxQuestionExposure: behavioral && version === "v3.0.0" ? 1 : 0.25 } : {}),
+    ...(scoringVersion === "behavioral-v2" ? { orderingStrategy: "SCENARIO_RAMP" as const } : {}),
+  };
 }

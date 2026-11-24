@@ -262,7 +262,11 @@ export function ResultView({
       ) : null}
 
       {behavioral ? (
-        <p className="text-sm text-stone-600">{dict.resultView.behavioralCaveat}</p>
+        <p className="text-sm text-stone-600">
+          {summary.quizSlug === "coupledna"
+            ? dict.resultView.behavioralCoupleCaveat
+            : dict.resultView.behavioralCaveat}
+        </p>
       ) : null}
       {/* 5. Dimension Breakdown */}
       {summary.dimensionScores && Object.keys(summary.dimensionScores).length > 0 ? (
@@ -331,6 +335,19 @@ export function ResultView({
                     {p}
                   </p>
                 ))}
+
+                {section.keyTakeaways.length > 0 ? (
+                  <div className="space-y-2">
+                    <strong className="text-sm text-stone-800">
+                      {dict.resultView.reportEvidence}
+                    </strong>
+                    <ul className="list-disc pl-5 text-sm text-stone-700 space-y-2">
+                      {section.keyTakeaways.map((item, index) => (
+                        <li key={`${section.id}-evidence-${index}`}>{item}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
 
                 {section.actionItems.length > 0 ? (
                   <div className="action-items-box bg-stone-50 p-4 rounded-xl space-y-2">

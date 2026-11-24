@@ -1,3 +1,4 @@
+import { additionalBrainRankQuestions } from "./brainrank-expanded";
 import type { BrainRankDimension, BrainRankDifficulty } from "@/features/scoring/brainrank";
 import type { QuestionKind, VisualScene, VisualStimulus } from "@/features/quiz-engine/contracts";
 
@@ -45,7 +46,7 @@ export type BrainRankQuestionDef = {
   }[];
 };
 
-export const brainRankPool: readonly BrainRankQuestionDef[] = [
+const originalBrainRankPool: readonly BrainRankQuestionDef[] = [
   // --- 1. PATTERN RECOGNITION (4 items) ---
   {
     stableKey: "BR_PAT_01",
@@ -2772,6 +2773,11 @@ export const brainRankPool: readonly BrainRankQuestionDef[] = [
       },
     ],
   },
+];
+
+export const brainRankPool: readonly BrainRankQuestionDef[] = [
+  ...originalBrainRankPool,
+  ...additionalBrainRankQuestions,
 ];
 
 export const brainRankQuestions: readonly BrainRankQuestionDef[] = brainRankPool.slice(0, 24);

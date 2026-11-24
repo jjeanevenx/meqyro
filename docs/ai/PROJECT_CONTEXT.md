@@ -74,7 +74,7 @@ Person A starts the quiz → gets an invite link/code → shares with Person B �
 
 ## Email
 
-Sent via Hostinger SMTP using Nodemailer and TLS on port 465. Recovery, consent, purchase and couple messages are sent by the Next.js server. Paid reports are sent by the Supabase Function `deliver-report`, with the complete text and an HTML attachment. SMTP credentials are server-only.
+Sent via Hostinger SMTP using Nodemailer and TLS on port 465. Recovery, consent, purchase and couple messages are sent by the Next.js server. Paid reports are sent by the Supabase Function `deliver-report`, with the complete text and a PDF attachment. SMTP credentials are server-only.
 
 ## Admin / operations
 
@@ -92,4 +92,4 @@ Users can generate shareable referral links. Referral codes are tracked on sessi
 
 ## Contratos do candidato de homologação
 
-Sessões novas herdam `buyer_id` apenas mediante cookie válido; não há login obrigatório. Grants premium exigem pedido FULFILLED e prazo de 24 meses. Pacotes cobrem testes posteriores do comprador. CoupleDNA exige pagamento, conclusão e autorização dos dois participantes. A entrega completa ocorre por Supabase Function com corpo de texto e anexo HTML, registrada por pedido/sessão.
+Sessões novas herdam `buyer_id` apenas mediante cookie válido; não há login obrigatório. Grants premium exigem pedido FULFILLED e prazo de 24 meses. Pacotes cobrem testes posteriores do comprador. CoupleDNA exige pagamento, conclusão e autorização dos dois participantes. A entrega completa ocorre por Supabase Function com corpo de texto e anexo PDF, registrada por pedido/sessão.
