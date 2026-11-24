@@ -56,6 +56,24 @@ export async function acquireOperationalLock(
   return !error;
 }
 
+export async function renewOperationalLock(
+  jobName: string,
+  lockedBy: string,
+  timeoutMinutes = 10,
+): Promise<boolean> {
+  const now = new Date();
+  const cutoff = new Date(now.getTime() - timeoutMinutes * 60_000).toISOString();
+  const { data, error } = await createSupabaseSecretClient()
+    .from("operational_locks")
+    .update({ locked_at: now.toISOString() })
+    .eq("job_name", jobName)
+    .eq("locked_by", lockedBy)
+    .gte("locked_at", cutoff)
+    .select("job_name");
+  if (error) throw new Error("Unable to renew operational lock.");
+  return (data?.length ?? 0) === 1;
+}
+
 export async function releaseOperationalLock(jobName: string, lockedBy: string): Promise<void> {
   const supabase = createSupabaseSecretClient();
   const { error } = await supabase
@@ -69,7 +87,9 @@ export async function releaseOperationalLock(jobName: string, lockedBy: string):
 /**
  * Auto-repairs orders in PAID status that have not yet finalized fulfillment.
  */
-export async function reconcileUnfulfilledPaidOrders(): Promise<{ repairedCount: number }> {
+export async function reconcileUnfulfilledPaidOrders(
+  assertLease?: () => Promise<void>,
+): Promise<{ repairedCount: number }> {
   const supabase = createSupabaseSecretClient();
 
   const { data: paidOrders, error } = await supabase
@@ -85,6 +105,7 @@ export async function reconcileUnfulfilledPaidOrders(): Promise<{ repairedCount:
 
   let repairedCount = 0;
   for (const order of paidOrders) {
+    await assertLease?.();
     try {
       await fulfillOrder(order.id, "reconciliation_repair");
       repairedCount += 1;
@@ -104,7 +125,7 @@ export async function reconcileUnfulfilledPaidOrders(): Promise<{ repairedCount:
 }
 
 /** Recover invite dependencies even when the payment transaction already committed. */
-export async function reconcileIncompleteInviteActivations(): Promise<{
+export async function reconcileIncompleteInviteActivations(assertLease?: () => Promise<void>): Promise<{
   repairedCount: number;
   failedCount: number;
 }> {
@@ -123,6 +144,7 @@ export async function reconcileIncompleteInviteActivations(): Promise<{
   let repairedCount = 0;
   let failedCount = 0;
   for (const slot of slots ?? []) {
+    await assertLease?.();
     if (!slot.order_id) continue;
     try {
       await activateInviteSlot({ slotId: slot.id as string, orderId: slot.order_id as string });
@@ -149,7 +171,7 @@ export async function reconcileIncompleteInviteActivations(): Promise<{
 /**
  * Checks pending orders against gateway endpoints.
  */
-export async function reconcilePendingOrders(): Promise<{
+export async function reconcilePendingOrders(assertLease?: () => Promise<void>): Promise<{
   checkedCount: number;
   confirmedCount: number;
   expiredCount: number;
@@ -176,6 +198,7 @@ export async function reconcilePendingOrders(): Promise<{
   let expiredCount = 0;
 
   for (const order of pendingOrders) {
+    await assertLease?.();
     const attempts = order.payment_attempts as Array<{
       provider_attempt_id?: string;
       status: string;
@@ -310,12 +333,42 @@ export async function runFullReconciliationSuite(
     };
   }
 
+  let leaseLost = false;
+  let heartbeat: Promise<void> = Promise.resolve();
+  let renewing = false;
+  const renew = () => {
+    if (renewing || leaseLost) return heartbeat;
+    renewing = true;
+    heartbeat = renewOperationalLock("master_reconciliation", lockOwner)
+      .then((owned) => {
+        if (!owned) leaseLost = true;
+      })
+      .catch(() => {
+        leaseLost = true;
+      })
+      .finally(() => {
+        renewing = false;
+      });
+    return heartbeat;
+  };
+  const timer = setInterval(() => void renew(), 60_000);
+  const assertLease = async () => {
+    await renew();
+    if (leaseLost) throw new Error("Reconciliation operational lock lost.");
+  };
+
   try {
-    const unfulfilled = await reconcileUnfulfilledPaidOrders();
-    const pending = await reconcilePendingOrders();
-    const invites = await reconcileIncompleteInviteActivations();
+    await assertLease();
+    const unfulfilled = await reconcileUnfulfilledPaidOrders(assertLease);
+    await assertLease();
+    const pending = await reconcilePendingOrders(assertLease);
+    await assertLease();
+    const invites = await reconcileIncompleteInviteActivations(assertLease);
+    await assertLease();
     const sessions = await expireStaleSessions();
+    await assertLease();
     const tokens = await cleanupExpiredTokens();
+    await assertLease();
     const db = createSupabaseSecretClient();
     const { data: undelivered, error: deliveryQueryError } = await db
       .from("orders")
@@ -329,6 +382,7 @@ export async function runFullReconciliationSuite(
       .limit(5);
     if (deliveryQueryError) throw deliveryQueryError;
     for (const order of undelivered ?? []) {
+      await assertLease();
       await sendPurchaseConfirmationForOrder(order.id).catch((error: unknown) => {
         logEvent("error", "paid_report_retry_failed", {
           orderId: order.id,
@@ -336,7 +390,9 @@ export async function runFullReconciliationSuite(
         });
       });
     }
-    await deliverCompletedReports();
+    await assertLease();
+    await deliverCompletedReports(5, undefined, assertLease);
+    await assertLease();
 
     const durationMs = Date.now() - startTime;
 
@@ -382,6 +438,8 @@ export async function runFullReconciliationSuite(
       error: errorMsg,
     };
   } finally {
+    clearInterval(timer);
+    await heartbeat;
     await releaseOperationalLock("master_reconciliation", lockOwner);
   }
 }
