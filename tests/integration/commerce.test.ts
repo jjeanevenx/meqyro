@@ -1,4 +1,5 @@
 import { afterAll, beforeAll, describe, it, expect } from "vitest";
+import { randomUUID } from "node:crypto";
 import {
   startCompletedCommerceSession as startQuizSession,
   createOrderOrHistoricalFixture as createOrder,
@@ -6,7 +7,11 @@ import {
 import { getOrderById, setPaymentProviderFactoryForTests } from "@/features/commerce/order-service";
 import { fulfillOrder, refundOrder } from "@/features/commerce/fulfillment-service";
 import { handleWebhook } from "@/features/commerce/webhook-handler";
-import { reconcileUnfulfilledPaidOrders } from "@/features/commerce/reconciliation-service";
+import {
+  acquireOperationalLock,
+  releaseOperationalLock,
+  reconcileUnfulfilledPaidOrders,
+} from "@/features/commerce/reconciliation-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { isSupabaseAvailable } from "./db-check";
 import { ControlledPaymentProvider } from "./controlled-payment-provider";
@@ -22,6 +27,32 @@ afterAll(() => {
 });
 
 describe.skipIf(!isOnline)("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
+  it("keeps the successor lock when a stale owner releases its lock", async () => {
+    const job = `test-reconciliation-${randomUUID()}`;
+    const db = createSupabaseSecretClient();
+    try {
+      const acquired = await Promise.all([
+        acquireOperationalLock(job, "owner-a"),
+        acquireOperationalLock(job, "owner-b"),
+      ]);
+      expect(acquired.filter(Boolean)).toHaveLength(1);
+      const previousOwner = acquired[0] ? "owner-a" : "owner-b";
+      const { error } = await db
+        .from("operational_locks")
+        .update({ locked_at: new Date(Date.now() - 11 * 60_000).toISOString() })
+        .eq("job_name", job);
+      expect(error).toBeNull();
+      expect(await acquireOperationalLock(job, "owner-c")).toBe(true);
+      await releaseOperationalLock(job, previousOwner);
+      expect(await acquireOperationalLock(job, "owner-d")).toBe(false);
+      await releaseOperationalLock(job, "owner-c");
+      expect(await acquireOperationalLock(job, "owner-d")).toBe(true);
+    } finally {
+      const { error } = await db.from("operational_locks").delete().eq("job_name", job);
+      expect(error).toBeNull();
+    }
+  });
+
   it("preserves confirmed payment when it arrives while checkout creation is still processing", async () => {
     setPaymentProviderFactoryForTests((name) => {
       const provider = new ControlledPaymentProvider(name);
