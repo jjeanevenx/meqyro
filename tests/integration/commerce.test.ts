@@ -10,6 +10,7 @@ import { handleWebhook } from "@/features/commerce/webhook-handler";
 import {
   acquireOperationalLock,
   releaseOperationalLock,
+  renewOperationalLock,
   reconcileUnfulfilledPaidOrders,
 } from "@/features/commerce/reconciliation-service";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
@@ -27,6 +28,33 @@ afterAll(() => {
 });
 
 describe.skipIf(!isOnline)("Commerce & Fulfillment Lifecycle — Integration Tests", () => {
+  it("renews only a live lease owned by the requesting execution", async () => {
+    const job = `test-lease-${randomUUID()}`;
+    const db = createSupabaseSecretClient();
+    try {
+      expect(await acquireOperationalLock(job, "owner-a")).toBe(true);
+      expect(await renewOperationalLock(job, "owner-b")).toBe(false);
+      const { error } = await db
+        .from("operational_locks")
+        .update({ locked_at: new Date(Date.now() - 9 * 60_000).toISOString() })
+        .eq("job_name", job);
+      expect(error).toBeNull();
+      expect(await renewOperationalLock(job, "owner-a")).toBe(true);
+      expect(await acquireOperationalLock(job, "owner-b")).toBe(false);
+      const expired = await db
+        .from("operational_locks")
+        .update({ locked_at: new Date(Date.now() - 11 * 60_000).toISOString() })
+        .eq("job_name", job);
+      expect(expired.error).toBeNull();
+      expect(await renewOperationalLock(job, "owner-a")).toBe(false);
+      expect(await acquireOperationalLock(job, "owner-b")).toBe(true);
+      expect(await renewOperationalLock(job, "owner-a")).toBe(false);
+    } finally {
+      const { error } = await db.from("operational_locks").delete().eq("job_name", job);
+      expect(error).toBeNull();
+    }
+  });
+
   it("keeps the successor lock when a stale owner releases its lock", async () => {
     const job = `test-reconciliation-${randomUUID()}`;
     const db = createSupabaseSecretClient();
