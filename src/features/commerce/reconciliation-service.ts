@@ -12,6 +12,10 @@ import { activateInviteSlot } from "@/features/couple/couple-invite-service";
 
 export interface ReconciliationReport {
   success: boolean;
+  failedPaidCount: number;
+  failedPendingCount: number;
+  failedInviteCount: number;
+  failedReportCount: number;
   repairedPaidCount: number;
   repairedInviteCount: number;
   checkedPendingCount: number;
@@ -89,7 +93,7 @@ export async function releaseOperationalLock(jobName: string, lockedBy: string):
  */
 export async function reconcileUnfulfilledPaidOrders(
   assertLease?: () => Promise<void>,
-): Promise<{ repairedCount: number }> {
+): Promise<{ repairedCount: number; failedCount: number }> {
   const supabase = createSupabaseSecretClient();
 
   const { data: paidOrders, error } = await supabase
@@ -100,10 +104,11 @@ export async function reconcileUnfulfilledPaidOrders(
 
   if (error) throw new Error("Unable to load paid orders.");
   if (!paidOrders || paidOrders.length === 0) {
-    return { repairedCount: 0 };
+    return { repairedCount: 0, failedCount: 0 };
   }
 
   let repairedCount = 0;
+  let failedCount = 0;
   for (const order of paidOrders) {
     await assertLease?.();
     try {
@@ -114,6 +119,7 @@ export async function reconcileUnfulfilledPaidOrders(
         orderNumber: order.order_number,
       });
     } catch (err: unknown) {
+      failedCount += 1;
       logEvent("error", "order_reconciliation_failed", {
         orderId: order.id,
         error: err instanceof Error ? err.message : String(err),
@@ -121,7 +127,7 @@ export async function reconcileUnfulfilledPaidOrders(
     }
   }
 
-  return { repairedCount };
+  return { repairedCount, failedCount };
 }
 
 /** Recover invite dependencies even when the payment transaction already committed. */
@@ -177,6 +183,7 @@ export async function reconcilePendingOrders(assertLease?: () => Promise<void>):
   checkedCount: number;
   confirmedCount: number;
   expiredCount: number;
+  failedCount: number;
 }> {
   const supabase = createSupabaseSecretClient();
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
@@ -193,11 +200,12 @@ export async function reconcilePendingOrders(assertLease?: () => Promise<void>):
 
   if (error) throw new Error("Unable to load pending orders.");
   if (!pendingOrders || pendingOrders.length === 0) {
-    return { checkedCount: 0, confirmedCount: 0, expiredCount: 0 };
+    return { checkedCount: 0, confirmedCount: 0, expiredCount: 0, failedCount: 0 };
   }
 
   let confirmedCount = 0;
   let expiredCount = 0;
+  let failedCount = 0;
 
   for (const order of pendingOrders) {
     await assertLease?.();
@@ -213,9 +221,8 @@ export async function reconcilePendingOrders(assertLease?: () => Promise<void>):
 
     if (!latestAttempt?.provider_attempt_id || !order.payment_provider) continue;
 
-    const provider = getPaymentProvider("stripe");
-
     try {
+      const provider = getPaymentProvider("stripe");
       const statusCheck = await provider.getPaymentStatus({
         orderId: order.id,
         providerAttemptId: latestAttempt.provider_attempt_id,
@@ -231,14 +238,17 @@ export async function reconcilePendingOrders(assertLease?: () => Promise<void>):
         confirmedCount += 1;
       } else if (statusCheck.status === "EXPIRED") {
         assertTransition("order", "PENDING", "EXPIRED", orderTransitions);
-        await supabase
+        const { data: expired, error: expireError } = await supabase
           .from("orders")
           .update({ status: "EXPIRED", updated_at: new Date().toISOString() })
           .eq("id", order.id)
-          .eq("status", "PENDING");
-        expiredCount += 1;
+          .eq("status", "PENDING")
+          .select("id");
+        if (expireError) throw new Error("Unable to expire pending order.");
+        expiredCount += expired?.length ?? 0;
       }
     } catch (err: unknown) {
+      failedCount += 1;
       logEvent("warn", "reconciliation_check_error", {
         orderId: order.id,
         error: err instanceof Error ? err.message : String(err),
@@ -246,7 +256,7 @@ export async function reconcilePendingOrders(assertLease?: () => Promise<void>):
     }
   }
 
-  return { checkedCount: pendingOrders.length, confirmedCount, expiredCount };
+  return { checkedCount: pendingOrders.length, confirmedCount, expiredCount, failedCount };
 }
 
 /**
@@ -323,6 +333,10 @@ export async function runFullReconciliationSuite(
     return {
       success: false,
       locked: true,
+      failedPaidCount: 0,
+      failedPendingCount: 0,
+      failedInviteCount: 0,
+      failedReportCount: 0,
       repairedPaidCount: 0,
       repairedInviteCount: 0,
       checkedPendingCount: 0,
@@ -383,9 +397,11 @@ export async function runFullReconciliationSuite(
       .order("report_delivery_last_attempt_at", { ascending: true, nullsFirst: true })
       .limit(5);
     if (deliveryQueryError) throw deliveryQueryError;
+    let failedReportCount = 0;
     for (const order of undelivered ?? []) {
       await assertLease();
       await sendPurchaseConfirmationForOrder(order.id).catch((error: unknown) => {
+        failedReportCount += 1;
         logEvent("error", "paid_report_retry_failed", {
           orderId: order.id,
           error: error instanceof Error ? error.message : "Unknown",
@@ -393,12 +409,21 @@ export async function runFullReconciliationSuite(
       });
     }
     await assertLease();
-    await deliverCompletedReports(5, undefined, assertLease);
+    const completedReports = await deliverCompletedReports(5, undefined, assertLease);
+    failedReportCount += completedReports.failedCount;
     await assertLease();
 
     const durationMs = Date.now() - startTime;
+    const failures = {
+      failedPaidCount: unfulfilled.failedCount,
+      failedPendingCount: pending.failedCount,
+      failedInviteCount: invites.failedCount,
+      failedReportCount,
+    };
+    const success = Object.values(failures).every((count) => count === 0);
 
-    logEvent("info", "reconciliation_suite_completed", {
+    logEvent(success ? "info" : "warn", "reconciliation_suite_completed", {
+      ...failures,
       repairedPaidCount: unfulfilled.repairedCount,
       repairedInviteCount: invites.repairedCount,
       checkedPendingCount: pending.checkedCount,
@@ -410,7 +435,8 @@ export async function runFullReconciliationSuite(
     });
 
     return {
-      success: invites.failedCount === 0,
+      success,
+      ...failures,
       repairedPaidCount: unfulfilled.repairedCount,
       repairedInviteCount: invites.repairedCount,
       checkedPendingCount: pending.checkedCount,
@@ -419,9 +445,7 @@ export async function runFullReconciliationSuite(
       expiredSessionsCount: sessions.expiredCount,
       cleanedTokensCount: tokens.cleanedCount,
       durationMs,
-      ...(invites.failedCount > 0
-        ? { error: "Some paid invitations could not be recovered." }
-        : {}),
+      ...(!success ? { error: "Some reconciliation operations failed." } : {}),
     };
   } catch (err: unknown) {
     const errorMsg = err instanceof Error ? err.message : String(err);
@@ -429,6 +453,10 @@ export async function runFullReconciliationSuite(
 
     return {
       success: false,
+      failedPaidCount: 0,
+      failedPendingCount: 0,
+      failedInviteCount: 0,
+      failedReportCount: 0,
       repairedPaidCount: 0,
       repairedInviteCount: 0,
       checkedPendingCount: 0,
