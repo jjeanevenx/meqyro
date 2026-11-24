@@ -1,4 +1,5 @@
 import "server-only";
+import { randomUUID } from "node:crypto";
 import { deliverCompletedReports } from "@/features/email/completed-report-delivery";
 
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
@@ -37,7 +38,12 @@ export async function acquireOperationalLock(
   const cutoff = new Date(now.getTime() - timeoutMinutes * 60 * 1000).toISOString();
 
   // Clean stale locks
-  await supabase.from("operational_locks").delete().eq("job_name", jobName).lt("locked_at", cutoff);
+  const { error: cleanupError } = await supabase
+    .from("operational_locks")
+    .delete()
+    .eq("job_name", jobName)
+    .lt("locked_at", cutoff);
+  if (cleanupError) throw new Error("Unable to remove stale operational locks.");
 
   // Attempt insert
   const { error } = await supabase.from("operational_locks").insert({
@@ -46,12 +52,18 @@ export async function acquireOperationalLock(
     locked_by: lockedBy,
   });
 
+  if (error && error.code !== "23505") throw new Error("Unable to acquire operational lock.");
   return !error;
 }
 
-export async function releaseOperationalLock(jobName: string): Promise<void> {
+export async function releaseOperationalLock(jobName: string, lockedBy: string): Promise<void> {
   const supabase = createSupabaseSecretClient();
-  await supabase.from("operational_locks").delete().eq("job_name", jobName);
+  const { error } = await supabase
+    .from("operational_locks")
+    .delete()
+    .eq("job_name", jobName)
+    .eq("locked_by", lockedBy);
+  if (error) throw new Error("Unable to release operational lock.");
 }
 
 /**
@@ -66,7 +78,8 @@ export async function reconcileUnfulfilledPaidOrders(): Promise<{ repairedCount:
     .eq("status", "PAID")
     .limit(50);
 
-  if (error || !paidOrders || paidOrders.length === 0) {
+  if (error) throw new Error("Unable to load paid orders.");
+  if (!paidOrders || paidOrders.length === 0) {
     return { repairedCount: 0 };
   }
 
@@ -144,7 +157,7 @@ export async function reconcilePendingOrders(): Promise<{
   const supabase = createSupabaseSecretClient();
   const fifteenMinutesAgo = new Date(Date.now() - 15 * 60 * 1000).toISOString();
 
-  const { data: pendingOrders } = await supabase
+  const { data: pendingOrders, error } = await supabase
     .from("orders")
     .select(
       "id, order_number, amount, currency, product_code, payment_provider, provider_payment_id, created_at, payment_attempts(id, provider_attempt_id, status, created_at)",
@@ -154,6 +167,7 @@ export async function reconcilePendingOrders(): Promise<{
     .lt("created_at", fifteenMinutesAgo)
     .limit(20);
 
+  if (error) throw new Error("Unable to load pending orders.");
   if (!pendingOrders || pendingOrders.length === 0) {
     return { checkedCount: 0, confirmedCount: 0, expiredCount: 0 };
   }
@@ -165,8 +179,12 @@ export async function reconcilePendingOrders(): Promise<{
     const attempts = order.payment_attempts as Array<{
       provider_attempt_id?: string;
       status: string;
+      created_at: string;
+      id: string;
     }>;
-    const latestAttempt = attempts?.[attempts.length - 1];
+    const latestAttempt = [...(attempts ?? [])].sort(
+      (a, b) => Date.parse(b.created_at) - Date.parse(a.created_at) || b.id.localeCompare(a.id),
+    )[0];
 
     if (!latestAttempt?.provider_attempt_id || !order.payment_provider) continue;
 
@@ -220,7 +238,8 @@ export async function expireStaleSessions(): Promise<{ expiredCount: number }> {
     .lt("expires_at", now)
     .select("id");
 
-  if (error || !expiredSessions) {
+  if (error) throw new Error("Unable to expire stale sessions.");
+  if (!expiredSessions) {
     return { expiredCount: 0 };
   }
 
@@ -241,20 +260,24 @@ export async function cleanupExpiredTokens(): Promise<{ cleanedCount: number }> 
   if (rateCleanupError) throw new Error("Unable to clean expired rate limits");
 
   // Reject expired pending data requests
-  const { data: expiredRequests } = await supabase
+  const { data: expiredRequests, error: requestError } = await supabase
     .from("data_requests")
     .update({ status: "REJECTED" })
     .eq("status", "PENDING")
     .lt("expires_at", now)
     .select("id");
 
+  if (requestError) throw new Error("Unable to reject expired data requests.");
+
   // Revoke expired recovery tokens
-  const { data: expiredTokens } = await supabase
+  const { data: expiredTokens, error: tokenError } = await supabase
     .from("recovery_tokens")
     .update({ revoked_at: now })
     .is("revoked_at", null)
     .lt("expires_at", now)
     .select("id");
+
+  if (tokenError) throw new Error("Unable to revoke expired recovery tokens.");
 
   const cleanedCount = (expiredRequests?.length ?? 0) + (expiredTokens?.length ?? 0);
   return { cleanedCount };
@@ -267,7 +290,8 @@ export async function runFullReconciliationSuite(
   lockedBy = "cron_scheduler",
 ): Promise<ReconciliationReport> {
   const startTime = Date.now();
-  const lockAcquired = await acquireOperationalLock("master_reconciliation", lockedBy);
+  const lockOwner = `${lockedBy}:${randomUUID()}`;
+  const lockAcquired = await acquireOperationalLock("master_reconciliation", lockOwner);
 
   if (!lockAcquired) {
     logEvent("warn", "reconciliation_lock_busy", { lockedBy });
@@ -358,6 +382,6 @@ export async function runFullReconciliationSuite(
       error: errorMsg,
     };
   } finally {
-    await releaseOperationalLock("master_reconciliation");
+    await releaseOperationalLock("master_reconciliation", lockOwner);
   }
 }
