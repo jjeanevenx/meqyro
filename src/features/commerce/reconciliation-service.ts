@@ -125,7 +125,9 @@ export async function reconcileUnfulfilledPaidOrders(
 }
 
 /** Recover invite dependencies even when the payment transaction already committed. */
-export async function reconcileIncompleteInviteActivations(assertLease?: () => Promise<void>): Promise<{
+export async function reconcileIncompleteInviteActivations(
+  assertLease?: () => Promise<void>,
+): Promise<{
   repairedCount: number;
   failedCount: number;
 }> {
@@ -171,7 +173,9 @@ export async function reconcileIncompleteInviteActivations(assertLease?: () => P
 /**
  * Checks pending orders against gateway endpoints.
  */
-export async function reconcilePendingOrders(assertLease?: () => Promise<void>): Promise<{
+export async function reconcilePendingOrders(
+  assertLease?: () => Promise<void>,
+): Promise<{
   checkedCount: number;
   confirmedCount: number;
   expiredCount: number;
