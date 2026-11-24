@@ -7,6 +7,7 @@ import { logEvent } from "@/lib/observability/logger";
 export async function deliverCompletedReports(
   limit = 5,
   completedSessionId?: string,
+  assertLease?: () => Promise<void>,
 ): Promise<void> {
   const db = createSupabaseSecretClient();
   const { data, error } = await db.rpc("pending_report_deliveries", {
@@ -15,6 +16,7 @@ export async function deliverCompletedReports(
   });
   if (error) throw error;
   for (const row of (data ?? []) as { session_id: string; order_id: string }[]) {
+    await assertLease?.();
     await sendPurchaseConfirmationForOrder(row.order_id, row.session_id).catch((error: unknown) => {
       logEvent("warn", "completed_report_retry_failed", {
         orderId: row.order_id,
