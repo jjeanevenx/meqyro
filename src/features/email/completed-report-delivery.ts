@@ -8,16 +8,18 @@ export async function deliverCompletedReports(
   limit = 5,
   completedSessionId?: string,
   assertLease?: () => Promise<void>,
-): Promise<void> {
+): Promise<{ failedCount: number }> {
   const db = createSupabaseSecretClient();
   const { data, error } = await db.rpc("pending_report_deliveries", {
     p_limit: limit,
     p_session_id: completedSessionId ?? null,
   });
   if (error) throw error;
+  let failedCount = 0;
   for (const row of (data ?? []) as { session_id: string; order_id: string }[]) {
     await assertLease?.();
     await sendPurchaseConfirmationForOrder(row.order_id, row.session_id).catch((error: unknown) => {
+      failedCount += 1;
       logEvent("warn", "completed_report_retry_failed", {
         orderId: row.order_id,
         sessionId: row.session_id,
@@ -25,4 +27,5 @@ export async function deliverCompletedReports(
       });
     });
   }
+  return { failedCount };
 }
