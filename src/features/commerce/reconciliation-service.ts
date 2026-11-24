@@ -173,9 +173,7 @@ export async function reconcileIncompleteInviteActivations(
 /**
  * Checks pending orders against gateway endpoints.
  */
-export async function reconcilePendingOrders(
-  assertLease?: () => Promise<void>,
-): Promise<{
+export async function reconcilePendingOrders(assertLease?: () => Promise<void>): Promise<{
   checkedCount: number;
   confirmedCount: number;
   expiredCount: number;
