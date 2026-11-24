@@ -1,0 +1,44 @@
+[
+  {
+    "sessionId": "0dccac8a-d305-4c9e-8e54-eb03acbc6add",
+    "rawCorrect": 20,
+    "overallScore": 952,
+    "timeouts": 1,
+    "expiredItems": [
+      {
+        "questionId": "3597fdba-5d2c-495d-a3d7-b39fc970c078",
+        "startedAt": "2026-10-22T02:19:50.231574+00:00",
+        "expiresAt": "2026-10-22T02:20:50.231574+00:00",
+        "limitSeconds": 60
+      }
+    ],
+    "createdAt": "2026-10-22T02:19:51.0558+00:00"
+  },
+  {
+    "sessionId": "ca0ba621-f3b7-4563-80b6-3d2cfa3f3bed",
+    "rawCorrect": 18,
+    "overallScore": 857,
+    "timeouts": 3,
+    "expiredItems": [
+      {
+        "questionId": "1c975267-323d-4373-9ba1-093c4792ba58",
+        "startedAt": "2026-10-22T02:16:23.710093+00:00",
+        "expiresAt": "2026-10-22T02:17:08.710093+00:00",
+        "limitSeconds": 45
+      },
+      {
+        "questionId": "6a755dab-602a-4d16-8cdf-a0b81c0cc494",
+        "startedAt": "2026-10-22T02:16:25.097666+00:00",
+        "expiresAt": "2026-10-22T02:17:10.097666+00:00",
+        "limitSeconds": 45
+      },
+      {
+        "questionId": "89b40e65-9b40-4d8a-a61d-8c2e403a05bd",
+        "startedAt": "2026-10-22T02:16:28.675213+00:00",
+        "expiresAt": "2026-10-22T02:17:28.675213+00:00",
+        "limitSeconds": 60
+      }
+    ],
+    "createdAt": "2026-10-22T02:16:29.938092+00:00"
+  }
+]
