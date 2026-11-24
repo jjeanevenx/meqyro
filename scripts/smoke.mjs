@@ -71,8 +71,11 @@ try {
   await verify("/pt/quizzes/coupledna/play", "quiz-runner");
 
   // Editorial & Institutional
-  await verify("/pt/articles", "Artigos");
-  await verify("/pt/articles/how-logical-reasoning-works", "Como funciona o raciocínio");
+  await verify("/pt/articles", "Blog de autoconhecimento: mente, dinheiro e relacionamentos");
+  await verify(
+    "/pt/articles/how-logical-reasoning-works",
+    "Raciocínio lógico: o que é e como desenvolver no dia a dia",
+  );
   await verify("/pt/contact", "support@meqyro.com");
   await verify("/pt/cookies", "Cookies");
   await verify("/pt/legal/privacy", "Política de Privacidade");
