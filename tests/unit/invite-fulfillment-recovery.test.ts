@@ -1,6 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { fulfillOrder } from "@/features/commerce/fulfillment-service";
-import { reconcileIncompleteInviteActivations } from "@/features/commerce/reconciliation-service";
+import {
+  reconcileIncompleteInviteActivations,
+  reconcileUnfulfilledPaidOrders,
+} from "@/features/commerce/reconciliation-service";
 
 const state = vi.hoisted(() => ({
   status: "PENDING",
@@ -141,6 +144,20 @@ describe("Paid invitation recovery", () => {
       ["PENDING_PAYMENT", "ACTIVE", "REDEEMED", "QUIZ_STARTED", "COMPLETED"],
     ]);
     expect(state.retryUpdates).toHaveLength(1);
+  });
+
+  it("counts failed paid orders and continues processing the rest of the batch", async () => {
+    state.status = "PAID";
+    state.slots = [
+      { id: "broken", order_id: "paid-1" },
+      { id: "recoverable", order_id: "paid-2" },
+    ];
+    state.rpc.mockResolvedValueOnce({ data: null, error: { message: "offline" } });
+    await expect(reconcileUnfulfilledPaidOrders()).resolves.toEqual({
+      repairedCount: 1,
+      failedCount: 1,
+    });
+    expect(state.rpc).toHaveBeenCalledTimes(2);
   });
 
   it("reports a failed recovery lookup instead of claiming an empty successful batch", async () => {
