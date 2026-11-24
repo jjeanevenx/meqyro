@@ -48,7 +48,11 @@ const evidence: Record<string, unknown>[] = [];
 const nativeFetch = globalThis.fetch;
 let edgeHandler: (request: Request) => Promise<Response>;
 let auditReady = false;
-type Mail = { to: string; text: string; attachments: { filename: string; content: string }[] };
+type Mail = {
+  to: string;
+  text: string;
+  attachments: { filename: string; content: string; encoding?: string }[];
+};
 const messages: Mail[] = [];
 
 beforeAll(async () => {
@@ -69,7 +73,10 @@ beforeAll(async () => {
       ...message,
       attachments: message.attachments.map((attachment) => ({
         ...attachment,
-        content: Buffer.from(attachment.content, "utf8").toString("base64"),
+        content:
+          attachment.encoding === "base64"
+            ? attachment.content
+            : Buffer.from(attachment.content, "utf8").toString("base64"),
       })),
     });
     return { messageId: `local-email-${randomUUID()}`, accepted: [message.to], rejected: [] };
