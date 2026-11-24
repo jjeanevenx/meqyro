@@ -96,8 +96,28 @@ export async function findPaidEntitlement(
       sourceSessionId: grants[0].session_id,
     };
 
+  if (productCode === "COUPLEDNA") {
+    const { data: inviteReportGrants, error: inviteReportError } = await db
+      .from("result_access_grants")
+      .select("id,order_id,session_id,orders!inner(status)")
+      .in("session_id", buyerSessions)
+      .eq("product_code", "COUPLEDNA_INVITE")
+      .eq("grant_type", "PREMIUM_REPORT")
+      .eq("orders.status", "FULFILLED")
+      .gt("created_at", cutoff.toISOString())
+      .order("created_at", { ascending: false })
+      .limit(1);
+    if (inviteReportError) throw inviteReportError;
+    if (inviteReportGrants?.[0])
+      return {
+        id: inviteReportGrants[0].id,
+        orderId: inviteReportGrants[0].order_id as string,
+        sourceSessionId: inviteReportGrants[0].session_id,
+      };
+  }
+
   if (includeCouple && productCode === "COUPLEDNA") {
-    const { data: invite } = await db
+    const { data: invite, error: inviteError } = await db
       .from("couple_invites")
       .select("initiator_session_id,partner_session_id")
       .or(`initiator_session_id.eq.${sessionId},partner_session_id.eq.${sessionId}`)
@@ -105,11 +125,25 @@ export async function findPaidEntitlement(
       .order("created_at", { ascending: false })
       .limit(1)
       .maybeSingle();
+    if (inviteError) throw new Error("Unable to verify paid access. Please try again.");
     const other =
       invite?.initiator_session_id === sessionId
         ? invite.partner_session_id
         : invite?.initiator_session_id;
     if (other) return findPaidEntitlement(other, productCode, false);
+
+    const { data: guestSlot, error: slotError } = await db
+      .from("couple_invite_slots")
+      .select("host_session_id")
+      .eq("guest_session_id", sessionId)
+      .in("status", ["REDEEMED", "QUIZ_STARTED", "COMPLETED"])
+      .order("created_at", { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    if (slotError) throw new Error("Unable to verify paid access. Please try again.");
+    if (guestSlot?.host_session_id) {
+      return findPaidEntitlement(guestSlot.host_session_id as string, productCode, false);
+    }
   }
   return null;
 }

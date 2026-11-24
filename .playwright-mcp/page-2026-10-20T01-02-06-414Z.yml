@@ -1,0 +1,8 @@
+- generic [active] [ref=f2e1]:
+  - main [ref=f2e8]:
+    - region [ref=f2e9]:
+      - heading "Informação" [level=1] [ref=f2e10]
+      - paragraph [ref=f2e11]: "Observe esta sequência: lua → chave → árvore → barco."
+      - button "Continuando…" [disabled] [ref=f2e22]
+  - button "Open Next.js Dev Tools" [ref=f2e18] [cursor=pointer]
+  - alert [ref=f2e7]

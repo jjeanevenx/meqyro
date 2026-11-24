@@ -244,6 +244,8 @@ export type Dictionary = {
     disclaimer: string;
     shareTitle: string;
     noResultFound: string;
+    loadErrorTitle: string;
+    loadErrorDescription: string;
     startQuizCta: string;
   };
   checkout: {
@@ -389,6 +391,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Este teste destina-se ao autoconhecimento e reflexão pessoal, sem caráter diagnóstico, clínico ou financeiro.",
       shareTitle: "Compartilhe seu resultado",
       noResultFound: "Nenhum resultado recente encontrado",
+      loadErrorTitle: "Não foi possível carregar seu resultado",
+      loadErrorDescription:
+        "Tente carregar novamente. Se comprou um relatório, você também pode recuperar o acesso pelo e-mail da compra.",
       startQuizCta: "Iniciar Desafio",
     },
     checkout: {
@@ -569,6 +574,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "This assessment is intended solely for personal reflection and self-discovery. It does not constitute clinical, diagnostic or financial advice.",
       shareTitle: "Share your results",
       noResultFound: "No recent results found",
+      loadErrorTitle: "We couldn't load your result",
+      loadErrorDescription:
+        "Try loading it again. If you purchased a report, you can also recover access using your purchase email.",
       startQuizCta: "Start Challenge",
     },
     checkout: {
@@ -749,6 +757,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Esta evaluación está destinada exclusivamente al autoconocimiento y reflexión personal, sin carácter clínico o financiero.",
       shareTitle: "Comparte tu resultado",
       noResultFound: "No se encontraron resultados recientes",
+      loadErrorTitle: "No pudimos cargar tu resultado",
+      loadErrorDescription:
+        "Intenta cargarlo de nuevo. Si compraste un informe, también puedes recuperar el acceso con el correo de la compra.",
       startQuizCta: "Comenzar Desafío",
     },
     checkout: {
@@ -929,6 +940,9 @@ export const dictionaries: Record<Locale, Dictionary> = {
         "Ce test est destiné uniquement à la réflexion personnelle et au développement personnel. Il ne constitue aucunement un avis clinique ou financier.",
       shareTitle: "Partagez votre résultat",
       noResultFound: "Aucun résultat récent trouvé",
+      loadErrorTitle: "Impossible de charger votre résultat",
+      loadErrorDescription:
+        "Réessayez de le charger. Si vous avez acheté un rapport, vous pouvez aussi récupérer l’accès avec l’adresse e-mail de votre achat.",
       startQuizCta: "Démarrer le Défi",
     },
     checkout: {

@@ -4,3 +4,6 @@ prototype/
 public/
 supabase/
 coverage/
+.playwright-mcp/
+.agents/
+next-env.d.ts

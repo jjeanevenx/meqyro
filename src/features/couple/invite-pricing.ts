@@ -30,21 +30,44 @@ export async function calculateInvitePrice(
 ): Promise<InvitePriceResult> {
   const db = createSupabaseSecretClient();
 
-  // Count confirmed and pending slots for this host
-  const { data: slots, error: slotsError } = await db
+  // Load all slots for this host so we can expire stale pending slots,
+  // count active capacity, and assign a monotonic slot_number without collision.
+  const { data: allSlots, error: slotsError } = await db
     .from("couple_invite_slots")
-    .select("status")
-    .eq("host_session_id", hostSessionId)
-    .in("status", ["ACTIVE", "REDEEMED", "QUIZ_STARTED", "COMPLETED", "PENDING_PAYMENT"]);
+    .select("id, status, slot_number, pending_expires_at")
+    .eq("host_session_id", hostSessionId);
 
   if (slotsError) {
     throw new Error(`Failed to count invite slots: ${slotsError.message}`);
   }
 
-  const confirmedCount = (slots ?? []).filter((s) =>
+  const now = new Date();
+  const stalePendingIds = (allSlots ?? [])
+    .filter(
+      (s) =>
+        s.status === "PENDING_PAYMENT" &&
+        typeof s.pending_expires_at === "string" &&
+        new Date(s.pending_expires_at) <= now,
+    )
+    .map((s) => s.id as string);
+
+  if (stalePendingIds.length > 0) {
+    await db
+      .from("couple_invite_slots")
+      .update({ status: "CANCELLED" })
+      .in("id", stalePendingIds)
+      .eq("status", "PENDING_PAYMENT");
+  }
+
+  const staleSet = new Set(stalePendingIds);
+  const slots = (allSlots ?? []).map((s) =>
+    staleSet.has(s.id as string) ? { ...s, status: "CANCELLED" } : s,
+  );
+
+  const confirmedCount = slots.filter((s) =>
     ["ACTIVE", "REDEEMED", "QUIZ_STARTED", "COMPLETED"].includes(s.status),
   ).length;
-  const pendingCount = (slots ?? []).filter((s) => s.status === "PENDING_PAYMENT").length;
+  const pendingCount = slots.filter((s) => s.status === "PENDING_PAYMENT").length;
   const totalActive = confirmedCount + pendingCount;
 
   if (totalActive >= MAX_COUPLEDNA_INVITES) {
@@ -97,7 +120,11 @@ export async function calculateInvitePrice(
   // Discounted if: there is already a confirmed slot OR a legacy purchase
   const isDiscounted = confirmedCount > 0 || hasLegacyPurchase;
   const amount = isDiscounted ? Math.floor(basePrice / 3) : basePrice;
-  const slotNumber = totalActive + 1;
+  const maxSlotNumber = slots.reduce(
+    (max, s) => Math.max(max, typeof s.slot_number === "number" ? s.slot_number : 0),
+    0,
+  );
+  const slotNumber = maxSlotNumber + 1;
 
   return { amount, currency, slotNumber, isDiscounted };
 }

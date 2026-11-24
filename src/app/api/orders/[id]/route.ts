@@ -4,6 +4,9 @@ import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { createSupabaseSecretClient } from "@/lib/supabase/server";
 import { fulfillOrder } from "@/features/commerce/fulfillment-service";
 import { sendPurchaseConfirmationForOrder } from "@/features/commerce/webhook-handler";
+import { assertTransition, orderTransitions, type OrderState } from "@/lib/domain/states";
+import { logEvent } from "@/lib/observability/logger";
+import { cancelInviteSlot } from "@/features/couple/couple-invite-service";
 
 type RouteProps = {
   params: Promise<{ id: string }>;
@@ -29,8 +32,10 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
 
     return NextResponse.json({ order });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Erro ao buscar pedido.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    logEvent("error", "order_lookup_failed", {
+      error: err instanceof Error ? err.message : "Unknown",
+    });
+    return NextResponse.json({ error: "Erro ao buscar pedido." }, { status: 400 });
   }
 }
 
@@ -57,17 +62,25 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
 
     if (body.action === "cancel") {
       if (["CREATED", "PROCESSING", "PENDING"].includes(order.status)) {
-        await supabase
+        assertTransition("order", order.status as OrderState, "CANCELLED", orderTransitions);
+        const { data: cancelledOrder } = await supabase
           .from("orders")
           .update({ status: "CANCELLED", updated_at: new Date().toISOString() })
           .eq("id", id)
-          .in("status", ["CREATED", "PROCESSING", "PENDING"]);
+          .in("status", ["CREATED", "PROCESSING", "PENDING"])
+          .select("couple_invite_slot_id")
+          .maybeSingle();
+        if (cancelledOrder?.couple_invite_slot_id) {
+          await cancelInviteSlot(cancelledOrder.couple_invite_slot_id as string);
+        }
       }
       return NextResponse.json({ order: await getOrderById(id, authOptions) });
     }
 
     if (order.status === "FULFILLED") {
-      return NextResponse.json({ order });
+      await fulfillOrder(order.id, "fulfilled_status_recovery");
+      await sendPurchaseConfirmationForOrder(order.id).catch(() => {});
+      return NextResponse.json({ order: await getOrderById(id, authOptions) });
     }
 
     if (order.paymentProvider !== "stripe") {
@@ -108,11 +121,19 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       await fulfillOrder(order.id, "status_reconciliation", providerStatus.transactionId);
       await sendPurchaseConfirmationForOrder(order.id).catch(() => {});
     } else if (providerStatus.status === "EXPIRED") {
-      await supabase
-        .from("orders")
-        .update({ status: "EXPIRED", updated_at: new Date().toISOString() })
-        .eq("id", id)
-        .in("status", ["CREATED", "PROCESSING", "PENDING"]);
+      if (["CREATED", "PROCESSING", "PENDING"].includes(order.status)) {
+        assertTransition("order", order.status as OrderState, "EXPIRED", orderTransitions);
+        const { data: expiredOrder } = await supabase
+          .from("orders")
+          .update({ status: "EXPIRED", updated_at: new Date().toISOString() })
+          .eq("id", id)
+          .in("status", ["CREATED", "PROCESSING", "PENDING"])
+          .select("couple_invite_slot_id")
+          .maybeSingle();
+        if (expiredOrder?.couple_invite_slot_id) {
+          await cancelInviteSlot(expiredOrder.couple_invite_slot_id as string);
+        }
+      }
     }
 
     return NextResponse.json({
@@ -120,7 +141,9 @@ export async function POST(req: NextRequest, { params }: RouteProps) {
       paymentStatus: providerStatus.status,
     });
   } catch (err: unknown) {
-    const message = err instanceof Error ? err.message : "Erro ao reconciliar pedido.";
-    return NextResponse.json({ error: message }, { status: 400 });
+    logEvent("error", "order_reconciliation_failed", {
+      error: err instanceof Error ? err.message : "Unknown",
+    });
+    return NextResponse.json({ error: "Erro ao reconciliar pedido." }, { status: 400 });
   }
 }

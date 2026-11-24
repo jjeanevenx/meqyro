@@ -68,13 +68,36 @@ const checkoutCopyByLocale: Record<
   },
 };
 
+const productTitlesByCode: Record<string, Record<string, string>> = {
+  MONEYDNA: {
+    pt: "Meqyro — Relatório MoneyDNA",
+    en: "Meqyro — MoneyDNA Report",
+    es: "Meqyro — Informe MoneyDNA",
+    fr: "Meqyro — Rapport MoneyDNA",
+  },
+  COUPLEDNA: {
+    pt: "Meqyro — Relatório CoupleDNA",
+    en: "Meqyro — CoupleDNA Report",
+    es: "Meqyro — Informe CoupleDNA",
+    fr: "Meqyro — Rapport CoupleDNA",
+  },
+  COUPLEDNA_INVITE: {
+    pt: "Meqyro — Convite e Relatório CoupleDNA",
+    en: "Meqyro — CoupleDNA Invite & Report",
+    es: "Meqyro — Invitación e Informe CoupleDNA",
+    fr: "Meqyro — Invitation et Rapport CoupleDNA",
+  },
+};
+
 function checkoutCopy(locale: string, productCode: string) {
   const copy = checkoutCopyByLocale[locale] ?? checkoutCopyByLocale.pt;
-  if (productCode.toUpperCase() === "BRAINRANK") return copy;
+  const code = productCode.toUpperCase();
+  if (code === "BRAINRANK") return copy;
+  const localizedProduct = productTitlesByCode[code]?.[locale] ?? productTitlesByCode[code]?.pt;
 
   return {
     ...copy,
-    product: `Meqyro — ${productCode}`,
+    product: localizedProduct ?? `Meqyro — ${productCode}`,
   };
 }
 

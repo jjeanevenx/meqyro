@@ -98,9 +98,14 @@ try {
   console.log("PASS /api/admin/metrics (401 Unauthorized Gate)");
 
   // Verify authenticated admin metrics succeeds (200)
-  await verify("/api/admin/metrics", '"metrics"', {
+  const metricsResponse = await fetch(`${baseUrl}/api/admin/metrics`, {
     headers: { "x-admin-token": adminSecret },
   });
+  const metrics = await metricsResponse.json();
+  if (!metricsResponse.ok || !metrics.metrics || metrics.databaseStatus !== "CONNECTED") {
+    throw new Error("/api/admin/metrics failed: a connected integration database is required");
+  }
+  console.log("PASS /api/admin/metrics (200, database connected)");
   await verify("/sitemap.xml", "<urlset");
   await verify("/robots.txt", "Disallow");
 } finally {
