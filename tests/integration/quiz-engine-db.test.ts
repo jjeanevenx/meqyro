@@ -6,9 +6,11 @@ import {
   saveAnswer,
   completeQuizSession,
   getActiveSession,
+  getSessionQuestions,
   UnauthorizedSessionError,
 } from "@/features/quiz-engine/session-service";
 import { isSupabaseAvailable } from "./db-check";
+import { createSupabaseSecretClient } from "@/lib/supabase/server";
 
 const isOnline = await isSupabaseAvailable();
 
@@ -55,6 +57,46 @@ describe.skipIf(!isOnline)(
 
       expect(saveResult.success).toBe(true);
       expect(saveResult.currentPosition).toBe(2);
+    });
+
+    it("rejects an option belonging to another question without storing an answer", async () => {
+      const { session, token } = await startQuizSession({
+        quizSlug: "moneydna",
+        locale: "pt",
+        market: "BR",
+      });
+      const questions = await getSessionQuestions(session.id, "pt");
+      const choices = questions.filter((question) => question.options.length > 0);
+      expect(choices.length).toBeGreaterThan(1);
+      await expect(
+        saveAnswer({
+          sessionId: session.id,
+          token,
+          questionId: choices[0].id,
+          optionId: choices[1].options[0].id,
+        }),
+      ).rejects.toThrow("Option does not belong to this question");
+      expect((await getActiveSession(session.id, token))?.answers).toEqual({});
+    });
+
+    it("rejects a foreign question even for a legacy session without assigned rows", async () => {
+      const current = await startQuizSession({ quizSlug: "moneydna", locale: "pt", market: "BR" });
+      const foreign = await startQuizSession({ quizSlug: "coupledna", locale: "pt", market: "BR" });
+      const question = (await getSessionQuestions(foreign.session.id, "pt"))[0];
+      const answer = {
+        sessionId: current.session.id,
+        token: current.token,
+        questionId: question.id,
+        numericValue: 3,
+      };
+      await expect(saveAnswer(answer)).rejects.toThrow("Question does not belong to this attempt");
+      const { error } = await createSupabaseSecretClient()
+        .from("quiz_session_questions")
+        .delete()
+        .eq("session_id", current.session.id);
+      expect(error).toBeNull();
+      await expect(saveAnswer(answer)).rejects.toThrow("Question does not belong to this attempt");
+      expect((await getActiveSession(current.session.id, current.token))?.answers).toEqual({});
     });
 
     it("completes full BrainRank session on server and computes score", async () => {
