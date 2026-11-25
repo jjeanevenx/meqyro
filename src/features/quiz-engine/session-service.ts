@@ -857,7 +857,7 @@ export async function saveAnswer(input: {
 
   const { data: session, error: sessionError } = await supabase
     .from("quiz_sessions")
-    .select("id, status, access_token_hash, expires_at, current_position")
+    .select("id, status, access_token_hash, expires_at, current_position, quiz_version_id")
     .eq("id", input.sessionId)
     .single();
 
@@ -887,14 +887,23 @@ export async function saveAnswer(input: {
 
   if (assignedQuestionError) throw new Error("Failed to validate assigned question");
   if (!sqRow) {
-    const { count } = await supabase
+    const { count, error: countError } = await supabase
       .from("quiz_session_questions")
       .select("question_id", { count: "exact", head: true })
       .eq("session_id", input.sessionId);
 
-    if (count && count > 0) {
+    if (countError || count === null) throw new Error("Failed to validate attempt questions");
+    if (count > 0) {
       throw new Error("Question does not belong to this attempt");
     }
+    const { data: legacyQuestion, error: legacyError } = await supabase
+      .from("questions")
+      .select("id")
+      .eq("id", input.questionId)
+      .eq("quiz_version_id", session.quiz_version_id)
+      .maybeSingle();
+    if (legacyError) throw new Error("Failed to validate legacy question");
+    if (!legacyQuestion) throw new Error("Question does not belong to this attempt");
   }
 
   if (sqRow?.time_limit_seconds) {
@@ -906,6 +915,17 @@ export async function saveAnswer(input: {
     };
   }
   if (input.timeout) throw new Error("Timeout requires a timed question");
+
+  if (input.optionId) {
+    const { data: option, error: optionError } = await supabase
+      .from("options")
+      .select("id")
+      .eq("id", input.optionId)
+      .eq("question_id", input.questionId)
+      .maybeSingle();
+    if (optionError) throw new Error("Failed to validate answer option");
+    if (!option) throw new Error("Option does not belong to this question");
+  }
 
   // Upsert answer
   if (session.status !== "IN_PROGRESS") {
