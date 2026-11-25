@@ -13,6 +13,7 @@ import { hashToken } from "@/features/privacy/consent-service";
 import type { ActiveSession, PartialResultSummary, ScoringAnswer } from "./contracts";
 import { buildBrainRankTimingAudit } from "@/features/scoring/brainrank-timing";
 import { brainRankScoringV1, type BrainRankItem } from "@/features/scoring/brainrank";
+import { requireBrainRankAnswerKey } from "@/features/scoring/brainrank-answer-key";
 import { personalityMapScoringV1, type PersonalityItem } from "@/features/scoring/personality-map";
 import { careerFitScoringV1, type CareerFitItem } from "@/features/scoring/careerfit";
 import { moneyDnaScoringV1, type MoneyDnaItem } from "@/features/scoring/moneydna";
@@ -1120,12 +1121,7 @@ export async function completeQuizSession(input: {
 
   if (quizSlug === "brainrank") {
     for (const question of rawQuestions) {
-      const correct = (question.options ?? []).filter(
-        (option) => option.scoring_value?.isCorrect === true,
-      );
-      if (correct.length !== 1) {
-        throw new Error("Invalid BrainRank answer key");
-      }
+      requireBrainRankAnswerKey(question.options ?? []);
     }
   }
 
@@ -1171,15 +1167,14 @@ export async function completeQuizSession(input: {
   } else if (quizSlug === "brainrank") {
     const brainRankItems: BrainRankItem[] = rawQuestions.map((q) => {
       const options = Array.isArray(q.options) ? q.options : [];
-      const correctOpt = options.find((opt) => opt.scoring_value?.isCorrect === true);
-      if (!correctOpt) throw new Error("Invalid BrainRank answer key");
+      const correctOptionId = requireBrainRankAnswerKey(options);
       const scoringKey = q.scoring_key ?? {};
 
       return {
         id: q.id,
         dimension: (scoringKey.dimension as BrainRankItem["dimension"]) ?? "PATTERN_RECOGNITION",
         difficulty: (scoringKey.difficulty as BrainRankItem["difficulty"]) ?? "MEDIUM",
-        correctOptionId: correctOpt.id,
+        correctOptionId,
       };
     });
 
