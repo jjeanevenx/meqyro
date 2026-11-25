@@ -959,20 +959,26 @@ export async function saveAnswer(input: {
 
   const updatedPosition = input.nextPosition ?? session.current_position;
 
-  await supabase
+  const { data: updatedSession, error: updateError } = await supabase
     .from("quiz_sessions")
     .update({
       status: "IN_PROGRESS",
       current_position: updatedPosition,
       updated_at: new Date().toISOString(),
     })
-    .eq("id", input.sessionId);
+    .eq("id", input.sessionId)
+    .in("status", ["CREATED", "IN_PROGRESS"])
+    .gt("expires_at", new Date().toISOString())
+    .select("id")
+    .maybeSingle();
+  if (updateError || !updatedSession) throw new Error("Failed to update active session");
 
-  await supabase
+  const { error: inviteUpdateError } = await supabase
     .from("couple_invite_slots")
     .update({ status: "QUIZ_STARTED" })
     .eq("guest_session_id", input.sessionId)
     .eq("status", "REDEEMED");
+  if (inviteUpdateError) throw new Error("Failed to update invite progress");
 
   return { success: true, currentPosition: updatedPosition };
 }
