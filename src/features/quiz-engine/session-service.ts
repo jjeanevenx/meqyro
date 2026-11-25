@@ -1118,6 +1118,17 @@ export async function completeQuizSession(input: {
     throw new Error("Failed to load answers for scoring");
   }
 
+  if (quizSlug === "brainrank") {
+    for (const question of rawQuestions) {
+      const correct = (question.options ?? []).filter(
+        (option) => option.scoring_value?.isCorrect === true,
+      );
+      if (correct.length !== 1) {
+        throw new Error("Invalid BrainRank answer key");
+      }
+    }
+  }
+
   if (answers.length < rawQuestions.length) {
     throw new IncompleteQuizSubmissionError(
       `Answered ${answers.length} of ${rawQuestions.length} questions required`,
@@ -1161,13 +1172,14 @@ export async function completeQuizSession(input: {
     const brainRankItems: BrainRankItem[] = rawQuestions.map((q) => {
       const options = Array.isArray(q.options) ? q.options : [];
       const correctOpt = options.find((opt) => opt.scoring_value?.isCorrect === true);
+      if (!correctOpt) throw new Error("Invalid BrainRank answer key");
       const scoringKey = q.scoring_key ?? {};
 
       return {
         id: q.id,
         dimension: (scoringKey.dimension as BrainRankItem["dimension"]) ?? "PATTERN_RECOGNITION",
         difficulty: (scoringKey.difficulty as BrainRankItem["difficulty"]) ?? "MEDIUM",
-        correctOptionId: correctOpt?.id ?? options[0]?.id ?? "",
+        correctOptionId: correctOpt.id,
       };
     });
 
