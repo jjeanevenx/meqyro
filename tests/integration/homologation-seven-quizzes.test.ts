@@ -1,5 +1,6 @@
 import { pdfText } from "../pdf-text";
 import { renderTransactionalEmail } from "@/lib/email/branded-template";
+import { resolveEmailSender } from "@/lib/email/sender";
 import { createOrderOrHistoricalFixture as createOrder } from "./commerce-fixtures";
 import { readFileSync, writeFileSync } from "node:fs";
 import { randomUUID } from "node:crypto";
@@ -90,6 +91,7 @@ beforeAll(async () => {
     "createClient",
     "nodemailer",
     "renderTransactionalEmail",
+    "resolveEmailSender",
     transpileModule(source, { compilerOptions: { module: ModuleKind.None } }).outputText,
   )(
     {
@@ -101,6 +103,7 @@ beforeAll(async () => {
     createClient,
     { createTransport: () => ({ sendMail: providerSend, close: () => {} }) },
     renderTransactionalEmail,
+    resolveEmailSender,
   );
   vi.stubGlobal("fetch", ((input: RequestInfo | URL, init?: RequestInit) => {
     const url = input instanceof Request ? input.url : String(input);
