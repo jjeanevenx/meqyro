@@ -5,6 +5,14 @@ import { anonymousSessionCookie } from "@/lib/security/anonymous-session";
 import { isLocale } from "@/lib/i18n/config";
 import type { Market } from "@/lib/market/market-context";
 
+export const dynamic = "force-dynamic";
+
+const privateHeaders = {
+  "Cache-Control": "private, no-store",
+  "Referrer-Policy": "no-referrer",
+  "X-Content-Type-Options": "nosniff",
+};
+
 type RouteProps = {
   params: Promise<{ id: string }>;
 };
@@ -20,7 +28,10 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
     const sessionToken = tokenFromCookie ?? tokenFromHeader ?? tokenFromQuery;
 
     if (!sessionToken) {
-      return NextResponse.json({ error: "Token de sessão não fornecido." }, { status: 401 });
+      return NextResponse.json(
+        { error: "Token de sessão não fornecido." },
+        { status: 401, headers: privateHeaders },
+      );
     }
 
     const localeParam = req.nextUrl.searchParams.get("locale") ?? "pt";
@@ -35,15 +46,24 @@ export async function GET(req: NextRequest, { params }: RouteProps) {
       market: marketParam,
     });
 
-    return NextResponse.json({ result });
+    return NextResponse.json({ result }, { headers: privateHeaders });
   } catch (err: unknown) {
     const raw = err instanceof Error ? err.message : "";
     if (raw.includes("Token de acesso inválido")) {
-      return NextResponse.json({ error: "Acesso não autorizado ao resultado." }, { status: 403 });
+      return NextResponse.json(
+        { error: "Acesso não autorizado ao resultado." },
+        { status: 403, headers: privateHeaders },
+      );
     }
     if (raw.includes("Sessão não encontrada") || raw.includes("Resultado ainda não calculado")) {
-      return NextResponse.json({ error: "Resultado não encontrado." }, { status: 404 });
+      return NextResponse.json(
+        { error: "Resultado não encontrado." },
+        { status: 404, headers: privateHeaders },
+      );
     }
-    return NextResponse.json({ error: "Erro ao carregar resultado." }, { status: 400 });
+    return NextResponse.json(
+      { error: "Erro ao carregar resultado." },
+      { status: 400, headers: privateHeaders },
+    );
   }
 }
