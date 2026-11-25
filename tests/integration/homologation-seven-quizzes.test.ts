@@ -429,9 +429,14 @@ describe("Homologation audit: complete paid delivery for seven quizzes in four l
     const before = messages.length;
     await sendPurchaseConfirmationForOrder(order.id);
     expect(messages).toHaveLength(before + 1);
-    expect(Buffer.from(messages.at(-1)!.attachments[0].content, "base64").toString("utf8")).toBe(
-      await (await download(first.session.id, first.token)).text(),
+    const attachmentText = await pdfText(
+      Buffer.from(messages.at(-1)!.attachments[0].content, "base64"),
     );
+    const downloaded = await download(first.session.id, first.token);
+    expect(downloaded.status).toBe(200);
+    const downloadedText = await pdfText(new Uint8Array(await downloaded.arrayBuffer()));
+    expect(downloadedText.length).toBeGreaterThan(0);
+    expect(attachmentText).toBe(downloadedText);
     await setCoupleConsent(second.session.id, second.token, false);
     expect((await download(first.session.id, first.token)).status).toBe(403);
     expect(
