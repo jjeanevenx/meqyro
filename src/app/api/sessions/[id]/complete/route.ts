@@ -58,7 +58,14 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
           : 400;
 
     return NextResponse.json(
-      { error: errMessage || "Failed to complete quiz" },
+      {
+        error:
+          status === 403
+            ? "Unauthorized session access"
+            : status === 422
+              ? "Incomplete quiz submission"
+              : "Failed to complete quiz",
+      },
       { status, headers: { "x-request-id": requestId } },
     );
   }

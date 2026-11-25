@@ -63,7 +63,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
 
     const status = isUnauthorized ? 403 : 400;
     return NextResponse.json(
-      { error: errMessage || "Failed to save answer" },
+      { error: isUnauthorized ? "Unauthorized session access" : "Failed to save answer" },
       { status, headers: { "x-request-id": requestId } },
     );
   }
