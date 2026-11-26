@@ -568,7 +568,7 @@ export async function redeemInviteSlot(input: {
     throw new Error("Invite code has expired.");
   }
 
-  const { error: updateError } = await db
+  const { data: redeemed, error: updateError } = await db
     .from("couple_invite_slots")
     .update({
       status: "REDEEMED",
@@ -576,10 +576,24 @@ export async function redeemInviteSlot(input: {
       redeemed_at: new Date().toISOString(),
     })
     .eq("invite_code", normalizedCode)
-    .eq("status", "ACTIVE");
+    .eq("status", "ACTIVE")
+    .select("id")
+    .maybeSingle();
 
   if (updateError) {
     throw new Error(`Failed to redeem invite slot: ${updateError.message}`);
+  }
+  if (!redeemed) {
+    const { data: winner, error: winnerError } = await db
+      .from("couple_invite_slots")
+      .select("guest_session_id,status")
+      .eq("id", slot.id)
+      .maybeSingle();
+    if (winnerError || !winner) throw new Error("Unable to verify invite redemption.");
+    if (winner.guest_session_id !== input.guestSessionId) throw new Error("ALREADY_REDEEMED");
+    if (!["REDEEMED", "QUIZ_STARTED", "COMPLETED"].includes(winner.status as string)) {
+      throw new Error("Invite slot is no longer redeemable.");
+    }
   }
 
   await syncGuestRedemptionRecords(
@@ -603,29 +617,23 @@ async function syncGuestRedemptionRecords(
   guestSessionId: string,
   inviteCode: string,
 ): Promise<void> {
-  // 1. Ensure couple_invites exists and has partner_session_id set
-  const { data: existingInvite } = await db
+  // Activation owns the host's invitation and initial consent. Guest retries may
+  // bind the partner, but must never renew the host's authorization or expiry.
+  const { data: existingInvite, error: inviteError } = await db
     .from("couple_invites")
-    .select("id, partner_session_id")
+    .select("id, initiator_session_id, partner_session_id")
     .eq("invite_code", inviteCode)
     .maybeSingle();
 
-  let inviteId = existingInvite?.id as string | undefined;
-  if (!inviteId) {
-    const { data: createdInvite } = await db
-      .from("couple_invites")
-      .insert({
-        invite_code: inviteCode,
-        initiator_session_id: hostSessionId,
-        partner_session_id: guestSessionId,
-        status: "ACCEPTED",
-        expires_at: new Date(Date.now() + 14 * 86_400_000).toISOString(),
-      })
-      .select("id")
-      .maybeSingle();
-    inviteId = createdInvite?.id as string | undefined;
-  } else if (!existingInvite?.partner_session_id) {
-    await db
+  if (inviteError || !existingInvite || existingInvite.initiator_session_id !== hostSessionId) {
+    throw new Error("Unable to verify the activated invitation.");
+  }
+  const inviteId = existingInvite.id as string;
+  if (existingInvite.partner_session_id && existingInvite.partner_session_id !== guestSessionId) {
+    throw new Error("ALREADY_REDEEMED");
+  }
+  if (!existingInvite.partner_session_id) {
+    const { data: bound, error: bindError } = await db
       .from("couple_invites")
       .update({
         partner_session_id: guestSessionId,
@@ -633,31 +641,34 @@ async function syncGuestRedemptionRecords(
         updated_at: new Date().toISOString(),
       })
       .eq("id", inviteId)
-      .is("partner_session_id", null);
+      .is("partner_session_id", null)
+      .select("id")
+      .maybeSingle();
+    if (bindError) throw new Error("Unable to persist invite participant.");
+    if (!bound) {
+      const { data: winner, error: winnerError } = await db
+        .from("couple_invites")
+        .select("partner_session_id")
+        .eq("id", inviteId)
+        .maybeSingle();
+      if (winnerError || !winner) throw new Error("Unable to verify invite participant.");
+      if (winner.partner_session_id !== guestSessionId) throw new Error("ALREADY_REDEEMED");
+    }
   }
 
-  // 2. Ensure both host and guest consents exist for this invite & slot
-  if (inviteId) {
-    await db.from("couple_consents").upsert(
-      [
-        {
-          invite_id: inviteId,
-          invite_slot_id: slotId,
-          session_id: hostSessionId,
-          can_share_comparison: true,
-          consented_at: new Date().toISOString(),
-        },
-        {
-          invite_id: inviteId,
-          invite_slot_id: slotId,
-          session_id: guestSessionId,
-          can_share_comparison: true,
-          consented_at: new Date().toISOString(),
-        },
-      ],
-      { onConflict: "invite_id,session_id" },
-    );
-  }
+  // Initialize only the accepting guest. A replay cannot overwrite a later
+  // withdrawal; renewing consent belongs to the explicit consent endpoint.
+  const { error: consentError } = await db.from("couple_consents").upsert(
+    {
+      invite_id: inviteId,
+      invite_slot_id: slotId,
+      session_id: guestSessionId,
+      can_share_comparison: true,
+      consented_at: new Date().toISOString(),
+    },
+    { onConflict: "invite_id,session_id", ignoreDuplicates: true },
+  );
+  if (consentError) throw new Error("Unable to persist guest comparison consent.");
 }
 
 /**
@@ -839,13 +850,14 @@ export async function getSlotComparison(input: {
   }
 
   // 3. Check consents
-  const { data: inviteRow } = await db
+  const { data: inviteRow, error: inviteError } = await db
     .from("couple_invites")
     .select("id")
     .eq("invite_code", slot.inviteCode)
     .maybeSingle();
+  if (inviteError) throw new Error("Unable to verify comparison consent. Please retry.");
 
-  const { data: consents } = inviteRow
+  const { data: consents, error: consentError } = inviteRow
     ? await db
         .from("couple_consents")
         .select("session_id, can_share_comparison")
@@ -854,17 +866,16 @@ export async function getSlotComparison(input: {
         .from("couple_consents")
         .select("session_id, can_share_comparison")
         .eq("invite_slot_id", slot.id);
+  if (consentError) throw new Error("Unable to verify comparison consent. Please retry.");
 
-  // If no explicit consent rows exist yet for a redeemed slot, default to true (created on activation/redemption)
+  // Missing authorization is not consent, including incomplete legacy records.
   const hostConsentRow = consents?.find((c) => c.session_id === slot.hostSessionId);
   const guestConsentRow = slot.guestSessionId
     ? consents?.find((c) => c.session_id === slot.guestSessionId)
     : undefined;
 
-  const hostConsented = hostConsentRow ? Boolean(hostConsentRow.can_share_comparison) : true;
-  const guestConsented = guestConsentRow
-    ? Boolean(guestConsentRow.can_share_comparison)
-    : Boolean(slot.guestSessionId);
+  const hostConsented = Boolean(hostConsentRow?.can_share_comparison);
+  const guestConsented = Boolean(guestConsentRow?.can_share_comparison);
   const consentGiven = isHost ? hostConsented : guestConsented;
 
   if (!slot.guestSessionId) {

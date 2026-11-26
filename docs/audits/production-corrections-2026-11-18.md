@@ -180,4 +180,18 @@ Pasta: `C:/Users/ingev/.codex/visualizations/2026/11/18/01a1ec3b-339d-74e1-a256-
 - `production-schema-bootstrap.sql`: estrutura provisionada, sem INSERT/COPY de dados de usuário.
 - `before-corrections/` e `before-corrections.patch`: referência do estado local anterior às correções.
 
+## Revisão e sincronização de 26/11/2026
+
+O pull de `codex/production-recovery` incorporou 21 commits até `daa2c62`; depois, `origin/development` foi incorporada por fast-forward até `f2b5daa0b8b9545c9d6f1c1dbe1333d0840e60d3`, acrescentando dez commits de integridade das respostas, progresso de sessão e proteção dos erros da API. A correção local foi preservada em stash e reaplicada sem conflitos. Os arquivos privados de `vercel-production/` ficaram fora da operação.
+
+A revisão encontrou uma falha adicional no resgate de convites: repetir o resgate podia substituir consentimento retirado por `true`, inclusive do anfitrião. A consulta de comparação por slot também aceitava consentimento ausente e ignorava falhas de leitura. O resgate agora inicializa apenas o consentimento ausente do próprio convidado e preserva registros existentes; a comparação exige consentimentos persistidos de ambos e propaga falhas de consulta. A atualização condicional do resgate confere o participante que venceu a concorrência antes de sincronizar o convite. A sincronização não recria o convite nem renova sua validade.
+
+Foram acrescentadas 12 regressões unitárias para revogação, consentimento ausente, erros de persistência/consulta e resgate concorrente, além de assertions com banco real na matriz existente de múltiplos convites. As regressões de revogação reproduziram a falha antes da correção. No candidato integrado, passaram 545 testes unitários em 64 arquivos; o Docker local estava indisponível, portanto o novo cenário com banco real depende da CI e não é apresentado como aceite remoto.
+
+O runbook de backup foi corrigido: remove a afirmação não comprovada de retenção/PITR, exige ensaio em destino isolado e elimina a restauração destrutiva genérica sobre Production. Isso corrige o procedimento documentado; não comprova contratação de backup ou restauração executada.
+
+O build integrado concluiu com sucesso, gerando 172 páginas estáticas; ESLint integral, formatação dos arquivos alterados e TypeScript executado após o build também passaram.
+
+A leitura atual da Vercel encontrou o Preview protegido `dpl_P9S5bgA9QAAbDM8AB3PDT9oUByeN`, derivado `1916f2f56691af5dacaa92514c3bd603559eea8f` de `f2b5daa`, servindo o endereço estável. Ele ainda não contém a correção de consentimento descrita nesta revisão. As evidências do fluxo MoneyDNA de 21/11 permanecem históricas; não são uma nova execução no candidato de 26/11.
+
 Fontes: [limites de cron da Vercel](https://vercel.com/docs/schedules/cron-jobs/usage-and-pricing), [configuração de schemas do PostgREST](https://supabase.com/kb/troubleshooting/pgrst106-the-schema-must-be-one-of-the-following-error-when-querying-an-exposed-schema), [tabela Windows-1252](https://encoding.spec.whatwg.org/index-windows-1252.txt). Testes locais e metadados ACTIVE/READY não substituem aceite externo de vendas.
