@@ -348,6 +348,47 @@ describe.skipIf(!isOnline)(
       expect(guest1Comp1.inviteCode).toBeNull();
       expect(guest1Comp1.comparison?.bilateralUnlocked).toBe(true);
 
+      // Replaying guest redemption cannot restore either participant's withdrawn consent.
+      const consentDb = createSupabaseSecretClient();
+      for (const participantId of [host1.id, guest1.id]) {
+        const { error: revokeError } = await consentDb
+          .from("couple_consents")
+          .update({ can_share_comparison: false })
+          .eq("invite_slot_id", slot1.id)
+          .eq("session_id", participantId);
+        expect(revokeError).toBeNull();
+        await redeemInviteSlot({
+          inviteCode: code1,
+          guestSessionId: guest1.id,
+          guestToken: guest1Token,
+        });
+        const { data: consent, error: consentError } = await consentDb
+          .from("couple_consents")
+          .select("can_share_comparison")
+          .eq("invite_slot_id", slot1.id)
+          .eq("session_id", participantId)
+          .single();
+        expect(consentError).toBeNull();
+        expect(consent?.can_share_comparison).toBe(false);
+        const blocked = await getSlotComparison({
+          slotId: slot1.id,
+          sessionId: guest1.id,
+          sessionToken: guest1Token,
+          locale: "pt",
+        });
+        expect(blocked.state).toBe("CONSENT_REQUIRED");
+        expect(blocked.comparison).toBeUndefined();
+        expect(blocked.report).toBeUndefined();
+
+        // Restore only this test fixture before exercising the next participant.
+        const { error: restoreError } = await consentDb
+          .from("couple_consents")
+          .update({ can_share_comparison: true })
+          .eq("invite_slot_id", slot1.id)
+          .eq("session_id", participantId);
+        expect(restoreError).toBeNull();
+      }
+
       // 8. Guest Isolation: Guest 1 CANNOT access Guest 2's or Guest 3's slots, comparisons, or results
       await expect(
         getSlotComparison({
